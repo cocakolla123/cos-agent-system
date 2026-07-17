@@ -135,3 +135,11 @@ own config, command prose, and code — but it can **never** change any agent's 
 approve commands, `APPROVAL_POLICY.md`, the audit log, or the guardrail logic itself
 (`learning.is_change_allowed` hard-blocks those paths). A generated agent's read/draft-only
 posture is not self-modifiable.
+
+## V2.2 — Per-account agents (M10)
+
+When `connector_accounts` defines multiple instances of a connector type (e.g. `gmail-personal`
++ `gmail-work`), `factory.propose_agents(..., accounts=...)` proposes **per-workspace comms
+agents** (`cos-comms-<workspace>`) whose tool grants are drawn ONLY from that workspace's
+instance namespaces (`tool_prefix`). Isolation is enforced at the tool-grant level — a work
+agent physically holds no personal-account tool, and vice versa.

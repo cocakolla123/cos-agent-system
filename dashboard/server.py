@@ -61,6 +61,12 @@ try:
 except Exception:  # pragma: no cover - defensive
     _learning = None
 
+# V2.2 (M10): multi-account connectors — accounts panel + auth-request modal.
+try:
+    import accounts as _accounts
+except Exception:  # pragma: no cover - defensive
+    _accounts = None
+
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
 
@@ -612,6 +618,19 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .obj-title {{ font-weight:600; font-size:.9rem; }}
 .obj-timeline {{ font-size:.82rem; color:#3a4a58; margin-top:.2rem; }}
 .tl-step {{ white-space:nowrap; }}
+.acct-row {{ margin:.3rem 0; padding:.45rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; font-size:.9rem; }}
+.acct-dot {{ font-weight:700; margin-right:.2rem; }}
+.acct-id {{ color:#3a4a58; margin:0 .35rem; }}
+.ws-chip {{ display:inline-block; padding:0 .5rem; background:#e3eefb; color:#0d5aa7; border-radius:9px; font-size:.75rem; }}
+.acct-meta {{ color:#8a8a90; font-size:.78rem; margin-left:.35rem; }}
+.acct-fix {{ color:#b8144f; font-size:.8rem; margin-top:.25rem; }}
+.auth-overlay {{ position:fixed; inset:0; background:rgba(20,20,30,.55); z-index:1000; display:flex; align-items:center; justify-content:center; }}
+.auth-box {{ background:#fff; border-radius:14px; padding:1.3rem 1.5rem; max-width:440px; box-shadow:0 12px 40px rgba(0,0,0,.25); }}
+.auth-box h3 {{ margin:.1rem 0 .6rem; }}
+.auth-reason {{ color:#3a4a58; }}
+.auth-note {{ color:#8a8a90; font-size:.8rem; }}
+.auth-buttons {{ margin-top:.8rem; display:flex; gap:.5rem; }}
+.auth-refuse {{ color:#b8144f; }}
 .linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
 .linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
 .linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
@@ -666,6 +685,8 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 <h2>Recent meeting summaries</h2>
 {meetings_html}
 
+{accounts_html}
+
 <h2>Autonomous polling</h2>
 <div class="quick-line" style="margin-bottom:1rem">A free 60-second tick checks whether any
 connector below is actually due before spending anything — most ticks cost nothing. Each
@@ -673,6 +694,8 @@ connector has its own interval and active window; outside its window it just ski
 {schedule_html}
 
 {self_learning_html}
+
+{auth_modal_html}
 
 <h2>New task</h2>
 <form id="taskForm">
@@ -1183,6 +1206,113 @@ def maybe_start_learn_loop(message):
         return ""
 
 
+_ACCOUNT_STATE_DOTS = {
+    "connected": ("✓", "#0e7d4f"), "needs_auth": ("✗", "#b8144f"),
+    "declined": ("🚫", "#666"), "unknown": ("•", "#999"),
+}
+
+
+def render_accounts_section():
+    """The 'Accounts & connections' panel (M10). Empty string if unavailable."""
+    if _accounts is None:
+        return ""
+    try:
+        rows, report = _accounts.summarize_accounts(
+            CONFIG, _accounts.read_status(DASHBOARD_DIR),
+            _accounts.declined_ids(DASHBOARD_DIR))
+    except Exception:
+        return ""
+    body = []
+    for r in rows:
+        dot, color = _ACCOUNT_STATE_DOTS.get(r["state"], ("•", "#999"))
+        fix = ""
+        if r["state"] == "needs_auth":
+            fix = ('<div class="acct-fix">Needs login — add/re-auth this connector in '
+                   "Claude's connector settings, then Check now.</div>")
+        elif r["state"] == "declined":
+            fix = '<div class="acct-fix">Declined by you — the system will never ask again.</div>'
+        body.append(
+            '<div class="acct-row"><span class="acct-dot" style="color:%s">%s</span> '
+            '<strong>%s</strong> <span class="acct-id">%s</span> '
+            '<span class="ws-chip">%s</span> '
+            '<span class="acct-meta">%s</span>%s</div>' % (
+                color, dot, html.escape(r["label"]),
+                html.escape(r["identity"] or ""),
+                html.escape(r["workspace"]),
+                html.escape(("checked " + r["checked_at"]) if r["checked_at"] else "never checked"),
+                fix))
+    if not body:
+        body.append(
+            '<div class="quick-line">No connector accounts configured yet. Multiple '
+            "accounts of the same type (e.g. a second Gmail) work by adding the "
+            "connector again as a separate named instance in Claude's connector "
+            "settings — each with its own login. /cos-accounts (or Check now) then "
+            "detects it, probes who it's logged in as, and binds it to a workspace "
+            "automatically.</div>")
+    return (
+        "<h2>🔌 Accounts &amp; connections <button class=\"small\" "
+        "onclick=\"probeAccounts()\">Check now</button></h2>"
+        '<div class="quick-line" style="margin-bottom:.4rem">%s</div>'
+        '<div id="accountsResult" class="result"></div>%s'
+        "<script>async function probeAccounts(){"
+        "document.getElementById('accountsResult').textContent='probing...';"
+        "const r=await post('/probe-accounts',{});"
+        "document.getElementById('accountsResult').textContent=r.message;"
+        "setTimeout(()=>location.reload(),2500);}</script>" % (
+            html.escape(report), "".join(body)))
+
+
+def render_auth_modal():
+    """Fixed-position auth-request popup (M10). Empty string when none pending.
+
+    The only question the system ever asks the user — Authorize launches the
+    browser flow; Not now snoozes; Refuse is permanent.
+    """
+    if _accounts is None:
+        return ""
+    try:
+        pending = _accounts.pending_auth_requests(DASHBOARD_DIR)
+    except Exception:
+        return ""
+    if not pending:
+        return ""
+    req = pending[0]  # one at a time — no popup stacking
+    acc = next((a for a in _accounts.load_accounts(CONFIG)
+                if a["id"] == req["id"]), {})
+    label = acc.get("label", req["id"])
+    reason = req.get("reason") or "This connector needs a login before it can be used."
+    return f"""
+<div id="authModal" class="auth-overlay">
+  <div class="auth-box">
+    <h3>🔐 Authorization needed</h3>
+    <p><strong>{html.escape(label)}</strong></p>
+    <p class="auth-reason">{html.escape(reason)}</p>
+    <p class="auth-note">Authorize opens your browser to log in — the final consent screen is
+    the provider's own page; nothing is accessed until you complete it. Refuse is permanent:
+    the system will never ask about this connector again.</p>
+    <div class="auth-buttons">
+      <button class="primary" onclick="authRespond('authorized')">Authorize</button>
+      <button class="small" onclick="authRespond('snoozed')">Not now</button>
+      <button class="small auth-refuse" onclick="authRespond('declined')">Refuse</button>
+    </div>
+    <div id="authResult" class="result"></div>
+  </div>
+</div>
+<script>
+async function authRespond(outcome) {{
+  const r = await post("/auth-response", {{id: "{html.escape(req["id"])}", outcome: outcome}});
+  document.getElementById("authResult").textContent = r.message || "";
+  if (outcome === "authorized") {{
+    document.getElementById("authResult").textContent = "waiting for you to finish logging in…";
+    setTimeout(() => location.reload(), 8000);
+  }} else {{
+    document.getElementById("authModal").remove();
+  }}
+}}
+</script>
+"""
+
+
 def render_self_learning_section():
     """The 'Self-learning mode' toggle card (M9). Empty if the module is absent."""
     if _learning is None:
@@ -1265,6 +1395,15 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/graph-version":
             self._send_json({"v": dashboard_version()})
             return
+        if parsed.path == "/auth-requests":
+            pending = []
+            if _accounts is not None:
+                try:
+                    pending = _accounts.pending_auth_requests(DASHBOARD_DIR)
+                except Exception:
+                    pending = []
+            self._send_json({"requests": pending})
+            return
         if parsed.path != "/":
             self.send_response(404)
             self.end_headers()
@@ -1313,6 +1452,8 @@ class Handler(BaseHTTPRequestHandler):
             command_center=command_center,
             live_refresh_js=render_live_refresh_js(),
             self_learning_html=render_self_learning_section(),
+            accounts_html=render_accounts_section(),
+            auth_modal_html=render_auth_modal(),
         )
         self._send_html(page)
 
@@ -1644,6 +1785,71 @@ class Handler(BaseHTTPRequestHandler):
             state = "on" if on else "off"
             code_state = "may fix its own code" if code_on else "drafts code fixes as tasks"
             self._send_json({"message": f"self-learning {state} ({code_state})"})
+            return
+
+        if self.path == "/probe-accounts":
+            # V2.2 (M10): background probe of every connector account instance.
+            try:
+                log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
+                subprocess.Popen(
+                    [
+                        "claude", "-p", "/global:cos-accounts --probe",
+                        "--permission-mode", "dontAsk",
+                        "--allowedTools", POLL_TOOLS,
+                        "--output-format", "text",
+                    ],
+                    cwd=ORCHESTRATOR_CWD, stdout=log, stderr=subprocess.STDOUT,
+                )
+                self._send_json({"message": "probing all accounts in the background — "
+                                            "this page will refresh shortly"})
+            except OSError as exc:
+                self._send_json({"message": f"could not start probe: {exc}"}, 500)
+            return
+
+        if self.path == "/auth-response":
+            # V2.2 (M10): the auth popup's answer. Refuse is permanent.
+            if _accounts is None:
+                self._send_json({"message": "accounts module unavailable"}, 500)
+                return
+            account_id = data.get("id", "")
+            outcome = data.get("outcome", "")
+            try:
+                req = _accounts.resolve_auth_request(DASHBOARD_DIR, account_id, outcome)
+            except ValueError as exc:
+                self._send_json({"message": str(exc)}, 400)
+                return
+            if req is None:
+                self._send_json({"message": f"no auth request for '{account_id}'"}, 404)
+                return
+            if _audit is not None:
+                _audit.record(COS_DIR, f"auth:{account_id}", outcome,
+                              actor="dashboard", detail="auth popup response")
+            if outcome == "authorized":
+                auth_url = req.get("auth_url") or ""
+                if auth_url:
+                    try:
+                        subprocess.Popen(["open", auth_url])
+                    except OSError:
+                        pass
+                # background re-probe so the panel flips to "connected" once
+                # the user finishes the browser login
+                try:
+                    log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
+                    subprocess.Popen(
+                        ["claude", "-p", "/global:cos-accounts --probe",
+                         "--permission-mode", "dontAsk",
+                         "--allowedTools", POLL_TOOLS,
+                         "--output-format", "text"],
+                        cwd=ORCHESTRATOR_CWD, stdout=log,
+                        stderr=subprocess.STDOUT)
+                except OSError:
+                    pass
+                msg = "browser opened — finish the login there; re-checking in the background"
+            elif outcome == "snoozed":
+                msg = "snoozed — I'll ask again next session"
+            else:
+                msg = "refused — this connector will never be asked about again"
+            self._send_json({"message": msg})
             return
 
         self.send_response(404)

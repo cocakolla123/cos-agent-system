@@ -78,3 +78,10 @@ a freelance client, or something else?") — and nothing else. Persist confirmed
 Summarize: nodes/edges added or refreshed, workspaces discovered (with kind), any connectors that
 were unavailable, and any residual questions asked. Forward a one-line `Memory update:` to
 `cos-knowledge`. **Nothing external was sent or modified** — say so explicitly.
+
+## Multi-account note (V2.2, M10)
+Connector *instances* are accounts: run `accounts.detect_instances` on the discovered tool list
+and treat each instance separately — probe each via `/cos-accounts`, skip any the user has
+**declined** (`accounts.is_declined`), and tag every record a module emits with the instance's
+bound workspace so graph isolation holds automatically. Two Gmail instances are two different
+workspaces' data, never merged.

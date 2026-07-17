@@ -310,7 +310,22 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
       unprocessed corrections. Immutable guardrail zone: the approve commands, `APPROVAL_POLICY.md`,
       `audit.py`, and `learning.py` itself can never be self-modified; connectors stay read-only.
 
-All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (108 unit tests). The dashboard
+- [x] **M10 (V2.2) — Multi-account connectors.** One MCP connection = one OAuth = one account;
+      multiple accounts (two Gmails, two Slacks) are multiple **named connector instances**, each
+      with its own OAuth and tool namespace — verified live against a real Gmail MCP
+      (identity-revealing read-only probe). `dashboard/accounts.py` (account schema/validation,
+      probe status, instance detection from the tool list, **auth-request queue**),
+      `commands/cos-accounts.md` (enumerate → identity probe → auth asks → automatic workspace
+      binding → agent updates), dashboard **Accounts & connections panel** (per-account state:
+      connected / needs auth / declined) and the **auth modal popup** — the only question the
+      system ever asks: Authorize (opens the browser flow, re-probes to confirm) / Not now /
+      **Refuse (permanent, never asked again, reported as declined-by-user)**. Factory proposes
+      **per-workspace comms agents** granted ONLY their workspace's account-instance tools —
+      confidentiality isolation at the tool-grant level. Honest limitation: the final OAuth
+      consent screen is the provider's own browser page; the dashboard initiates and confirms
+      the flow but cannot complete it for the user.
+
+All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (127 unit tests). The dashboard
 still serves zero-config (V1 view) and every V2 surface is additive + guarded.
 
 ### Runtime note

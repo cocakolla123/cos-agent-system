@@ -73,7 +73,14 @@ def validate(config, available_tools=None):
                         "tool '%s' for action_type '%s' is not in the discovered "
                         "tool set" % (v, k)))
 
-    # 3. live-refresh interval
+    # 3. connector accounts (M10) — delegated to accounts.py when present
+    try:
+        import accounts as _accounts
+        findings.extend(_accounts.validate_accounts(config))
+    except ImportError:  # pragma: no cover - accounts module optional
+        pass
+
+    # 4. live-refresh interval
     lrs = config.get("live_refresh_seconds")
     if lrs is not None:
         try:

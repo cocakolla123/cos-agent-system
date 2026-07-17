@@ -55,12 +55,18 @@ _CONNECTOR_FALLBACK = {
 }
 
 
-def propose_agents(g, connectors=None, registry=None):
+def propose_agents(g, connectors=None, registry=None, accounts=None):
     """Return a sorted, de-duplicated list of agent specs justified by the graph.
 
     ``connectors`` is only used as a **fallback** when the graph is empty, so a
     brand-new deployment still gets the V1 role set. When the graph has content,
     proposals are evidence-driven.
+
+    ``accounts`` (M10): normalized ``connector_accounts`` entries (see
+    ``accounts.load_accounts``). When present, comms-style agents are proposed
+    **per workspace**, granted ONLY that workspace's account-instance tools —
+    isolation enforced at the tool-grant level, so a work agent physically
+    cannot read personal email.
     """
     specs = {}
     for name, model, mission, resp in _ALWAYS:
@@ -87,8 +93,43 @@ def propose_agents(g, connectors=None, registry=None):
         specs.setdefault(spec["name"], spec)
     for spec in _project_builder_agents(g):
         specs.setdefault(spec["name"], spec)
+    for spec in _per_account_comms_agents(accounts):
+        specs.setdefault(spec["name"], spec)
 
     return [specs[k] for k in sorted(specs)]
+
+
+def _per_account_comms_agents(accounts):
+    """One comms agent per workspace that has email/messaging account instances
+    (M10). The grant is drawn ONLY from that workspace's instances'
+    ``tool_prefix`` namespaces — never another workspace's."""
+    if not accounts:
+        return []
+    by_ws = {}
+    for a in accounts:
+        if a.get("kind") in ("email", "messaging") and a.get("workspace"):
+            by_ws.setdefault(a["workspace"], []).append(a)
+    out = []
+    for ws in sorted(by_ws):
+        accs = by_ws[ws]
+        grants = ["%s* (read/search only)" % a["tool_prefix"] for a in accs]
+        bindings = ["%s → %s" % (a["id"], ws) for a in accs]
+        idents = ", ".join(a.get("account") or a["id"] for a in accs)
+        out.append(_spec(
+            "cos-comms-%s" % ws, ws, "sonnet",
+            "Triage and draft communications for the '%s' workspace only "
+            "(%s) — draft-only, no send tool." % (ws, idents),
+            ["Triage new messages/email for this workspace's accounts",
+             "Draft replies in the user's voice (drafts only)",
+             "Surface who is waiting on the user",
+             "NEVER read or reference another workspace's accounts"],
+            allowed_extra=grants,
+            evidence=["account binding: " + "; ".join(bindings)],
+            justification="Workspace '%s' has its own %d communication "
+                          "account(s); a dedicated agent scoped to exactly "
+                          "those tools keeps confidential info isolated by "
+                          "construction." % (ws, len(accs))))
+    return out
 
 
 def _domain_system_agents(g):

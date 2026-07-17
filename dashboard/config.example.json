@@ -29,6 +29,18 @@
   "live_refresh": false,
   "live_refresh_seconds": 20,
 
+  "_comment_connector_accounts": "V2.2 (M10): multiple accounts of the same connector type (e.g. two Gmails) on one machine. Each entry is one named MCP connector instance with its own OAuth; tool_prefix is that instance's tool namespace, so agents can be granted exactly one account's tools. workspace binds the account to an M3 workspace (personal/employer/...). /cos-accounts probes each instance (identity + auth status -> account-status.json); the dashboard shows the panel and pops the auth modal when a login is needed.",
+  "connector_accounts": [
+    {"id": "gmail-personal", "kind": "email", "label": "Personal Gmail",
+     "account": "you@gmail.com", "workspace": "personal",
+     "tool_prefix": "mcp__gmail_personal__",
+     "probe_tool": "mcp__gmail_personal__search_threads"},
+    {"id": "gmail-work", "kind": "email", "label": "Work Gmail",
+     "account": "you@yourco.com", "workspace": "employer",
+     "tool_prefix": "mcp__gmail_work__",
+     "probe_tool": "mcp__gmail_work__search_threads"}
+  ],
+
   "_comment_self_learning": "V2.1 (M9): auto self-learning mode. When the user reports a miss in chat, the system remediates, diagnoses why it was missed, fixes the cause itself (config/instructions/code, gated by its test suite with auto-rollback + guardrails), and records the lesson. self_modify_code=false drafts code fixes as tasks instead of applying them. learn_tools is the /cos-learn subprocess grant — local file tools + Agent, never an external mutating tool. Toggleable live from the dashboard.",
   "self_learning": true,
   "self_modify_code": true,

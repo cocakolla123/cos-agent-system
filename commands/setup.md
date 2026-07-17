@@ -179,3 +179,12 @@ reported, not mistaken for "nothing there." New dashboard action types can be ad
 `factory.propose_agents` returns the V1 connector-gated role set, so `/setup` behaves exactly as
 before. This addendum is additive — a pre-V2 deployment that never runs `/cos-research` is
 unaffected.
+
+**Multi-account (V2.2, M10):** during Step 1 discovery, run
+`accounts.detect_instances(<discovered tools>)` (`../dashboard/accounts.py`). If any connector
+kind has ≥2 instances (two Gmails, two Slacks), create `connector_accounts` entries for each,
+then run `/cos-accounts --probe` to learn each instance's identity and bind it to a workspace
+(ask only if ambiguous). Pass the accounts into `factory.propose_agents(graph,
+accounts=accounts.load_accounts(config))` so workspaces with their own communication accounts
+get per-workspace comms agents granted ONLY their instance's tools. Auth asks go through the
+dashboard's popup queue (`accounts.enqueue_auth_request`) — never inline; Refuse is permanent.

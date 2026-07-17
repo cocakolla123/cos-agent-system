@@ -10,3 +10,11 @@ dashboard/launchd-poll.log
 dashboard/launchd-poll.err
 dashboard/.setup-complete
 dashboard/server.log
+dashboard/learn.log
+dashboard/account-status.json
+dashboard/auth-requests.json
+dashboard/accounts.log
+dashboard/style-feedback-queue.md
+dashboard/chat-log.md
+dashboard/chat-session.json
+dashboard/entry-chat-sessions.json
