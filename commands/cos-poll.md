@@ -6,9 +6,14 @@ description: Lightweight autonomous check-in, scoped per connector. Fired by pol
 
 Arguments: $ARGUMENTS — `--scope=<connectors>` (comma-separated subset of whatever connectors
 are defined in `dashboard/poll-config.json` — the caller, `poll-tick.sh` or the dashboard's
-"Poll now," already decided which are due) and/or `--force` (used by "Poll now" to run the
-full scope regardless of schedule). If no `--scope` is given and this is a bare manual
-invocation (not via `poll-tick.sh`), run a `general` sweep (below) only.
+"Poll now," already decided which are due) and/or `--force` (ignore the schedule gate). If no
+`--scope` is given and this is a bare manual invocation (not via `poll-tick.sh`), run a
+`general` sweep (below) only.
+
+**Dashboard "Poll now" = full sweep.** The dashboard passes `--scope=<every configured
+connector> --force`. In that case run **every** listed connector's anything-new scan AND the
+`general` scope afterward unconditionally (not only on escalation) — the user pressed the
+button to get a complete check of messages, email, tickets, calendar, and the queue, right now.
 
 You run in the main session as the orchestrator. Holds no mutating tool — same posture as
 `/cos`. Each scope is intentionally narrow — re-checking known things is cheap; rediscovering

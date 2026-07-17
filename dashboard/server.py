@@ -624,7 +624,10 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .slack-preview code {{ background:#e8e8ea; padding:.1rem .3rem; border-radius:4px; font-family:ui-monospace,monospace; }}
 </style></head><body>
 <h1>CoS Dashboard</h1>
-<div class="subtitle">{today} · last checked: {last_poll}</div>
+<div class="subtitle">{today} · last checked: {last_poll}
+  <button class="small" onclick="pollNow()" title="Full sweep: checks every configured connector (messages, email, tickets, calendar, ...) plus the general re-check">Poll now</button>
+</div>
+<div id="pollResult" class="result"></div>
 
 <div id="chatBubble" class="chat-bubble" onclick="toggleChat()">💬</div>
 <div id="chatPanel" class="chat-box chat-panel-hidden">
@@ -642,8 +645,7 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 
 {command_center}
 
-<h2>Approval queue — pending ({pending_count}) <button class="small" onclick="pollNow()">Poll now</button></h2>
-<div id="pollResult" class="result"></div>
+<h2>Approval queue — pending ({pending_count})</h2>
 {queue_html}
 
 {drafted_section}
@@ -1577,10 +1579,18 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if self.path == "/poll-now":
+            # "Poll now" is a FULL sweep: every configured connector's
+            # anything-new scan (--scope=all of them) plus the general
+            # re-check — not just the bare general sweep.
+            poll_cfg = read_json(os.path.join(DASHBOARD_DIR, "poll-config.json"),
+                                 DEFAULT_POLL_CONFIG)
+            scopes = ",".join(poll_connectors(poll_cfg))
+            prompt = ("/global:cos-poll --scope=%s --force" % scopes
+                      if scopes else "/global:cos-poll --force")
             try:
                 result = subprocess.run(
                     [
-                        "claude", "-p", "/global:cos-poll --force",
+                        "claude", "-p", prompt,
                         "--permission-mode", "dontAsk",
                         "--allowedTools", POLL_TOOLS,
                         "--output-format", "text",
