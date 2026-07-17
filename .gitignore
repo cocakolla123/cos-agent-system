@@ -1,0 +1,10 @@
+dashboard/__pycache__/
+dashboard/workspace/
+dashboard/config.json
+dashboard/poll-config.json
+dashboard/poll-last-run.json
+dashboard/poll-log.md
+dashboard/launchd-poll.log
+dashboard/launchd-poll.err
+dashboard/.setup-complete
+dashboard/server.log

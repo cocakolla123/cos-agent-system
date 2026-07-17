@@ -1,0 +1,22 @@
+{
+  "_comment": "Copy this to config.json and fill in real values, or let /setup generate it. Any key you omit falls back to the safe default documented in ../PLAN.md.",
+
+  "workspace_dir": null,
+  "orchestrator_cwd": null,
+
+  "ticket_host": "https://your-org.atlassian.net",
+  "ticket_system_name": "Jira",
+
+  "action_tools": {
+    "message_send": "mcp__example__messaging_send_message_draft"
+  },
+
+  "base_tools": "Read,Edit,Agent",
+  "chat_tools": "Read,Agent",
+  "revise_tools": "Read,Edit,Agent",
+  "poll_tools": "Read,Edit,Agent",
+
+  "domain_tag": "YourDomain",
+  "domain_keywords": ["example-keyword", "example-system-name"],
+  "domain_url_keywords": ["example.internal.tool"]
+}
