@@ -27,5 +27,10 @@
 
   "_comment_live_refresh": "V2 (M7): when true, the dashboard polls /graph-version and reloads when the approval queue or knowledge graph changes. Off by default (V1 behavior). live_refresh_seconds is the poll interval (min 5).",
   "live_refresh": false,
-  "live_refresh_seconds": 20
+  "live_refresh_seconds": 20,
+
+  "_comment_self_learning": "V2.1 (M9): auto self-learning mode. When the user reports a miss in chat, the system remediates, diagnoses why it was missed, fixes the cause itself (config/instructions/code, gated by its test suite with auto-rollback + guardrails), and records the lesson. self_modify_code=false drafts code fixes as tasks instead of applying them. learn_tools is the /cos-learn subprocess grant — local file tools + Agent, never an external mutating tool. Toggleable live from the dashboard.",
+  "self_learning": true,
+  "self_modify_code": true,
+  "learn_tools": "Read,Edit,Bash,Agent"
 }

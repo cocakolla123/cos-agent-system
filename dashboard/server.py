@@ -54,6 +54,13 @@ try:
 except Exception:  # pragma: no cover - defensive
     _audit = None
 
+# V2.1 (M9): self-learning correction loop. Guarded; with the module missing or
+# the toggle off, chat behaves exactly as before.
+try:
+    import learning as _learning
+except Exception:  # pragma: no cover - defensive
+    _learning = None
+
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
 
@@ -77,6 +84,12 @@ DEFAULT_CONFIG = {
     "domain_tag": "Domain",
     "domain_keywords": [],
     "domain_url_keywords": [],
+    # V2.1 (M9): self-learning correction loop. learn_tools is the subprocess
+    # grant for /cos-learn — local file tools + Agent; NO external mutating
+    # tool, so dontAsk is safe (external actions still go via the queue).
+    "self_learning": True,
+    "self_modify_code": True,
+    "learn_tools": "Read,Edit,Bash,Agent",
 }
 CONFIG_PATH_DEFAULT = os.path.join(TEMPLATE_DASHBOARD_DIR, "config.json")
 
@@ -99,7 +112,8 @@ def load_config(path):
     return cfg
 
 
-CONFIG = load_config(_arg_after("--config") or CONFIG_PATH_DEFAULT)
+CONFIG_PATH = _arg_after("--config") or CONFIG_PATH_DEFAULT
+CONFIG = load_config(CONFIG_PATH)
 COS_DIR = _arg_after("--workspace") or CONFIG["workspace_dir"]
 DASHBOARD_DIR = TEMPLATE_DASHBOARD_DIR
 # V2 (M7): optional live refresh — off by default, so V1 behavior is unchanged.
@@ -113,6 +127,7 @@ BASE_TOOLS = CONFIG["base_tools"]
 CHAT_TOOLS = CONFIG["chat_tools"]
 REVISE_TOOLS = CONFIG["revise_tools"]
 POLL_TOOLS = CONFIG["poll_tools"]
+LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
 DOMAIN_TAG = CONFIG["domain_tag"]
 ICONS = {"message_send": "💬", "ticket_update": "🎫", "calendar_change": "📅"}
 DEFAULT_ICON = "🔧"
@@ -655,6 +670,8 @@ connector below is actually due before spending anything — most ticks cost not
 connector has its own interval and active window; outside its window it just skips.</div>
 {schedule_html}
 
+{self_learning_html}
+
 <h2>New task</h2>
 <form id="taskForm">
 <textarea name="text" rows="2" placeholder="Describe what you want the agents to look at..."></textarea>
@@ -1126,6 +1143,83 @@ def render_live_refresh_js():
     )
 
 
+def maybe_start_learn_loop(message):
+    """If ``message`` reads as a correction and self-learning is on: enqueue it,
+    launch the /cos-learn loop in the background (non-blocking), and return the
+    acknowledgment line to append to the chat reply. Returns "" otherwise.
+
+    The background subprocess only holds LEARN_TOOLS (local file tools + Agent —
+    no external mutating tool), so ``dontAsk`` is safe here: the loop can fix its
+    own code/config but can never act externally without the approval queue.
+    """
+    if _learning is None or not _learning.self_learning_enabled(CONFIG):
+        return ""
+    try:
+        hint = _learning.classify_feedback(message)
+        if not hint:
+            return ""
+        rec = _learning.make_correction(message, hint=hint, source="chat")
+        _learning.enqueue(COS_DIR, rec)
+        try:
+            log = open(os.path.join(DASHBOARD_DIR, "learn.log"), "a")
+            subprocess.Popen(
+                [
+                    "claude", "-p", "/global:cos-learn --next",
+                    "--permission-mode", "dontAsk",
+                    "--allowedTools", LEARN_TOOLS,
+                    "--output-format", "text",
+                ],
+                cwd=ORCHESTRATOR_CWD, stdout=log, stderr=subprocess.STDOUT,
+            )
+            return ("\n\n🧠 Noted as a correction (%s) — investigating in the "
+                    "background why this was missed; the fix and reasoning will "
+                    "land in lessons-learned." % rec["id"])
+        except OSError:
+            return ("\n\n🧠 Correction queued (%s); it will be processed on the "
+                    "next poll cycle." % rec["id"])
+    except Exception:  # pragma: no cover - defensive: chat must never break
+        return ""
+
+
+def render_self_learning_section():
+    """The 'Self-learning mode' toggle card (M9). Empty if the module is absent."""
+    if _learning is None:
+        return ""
+    on = _learning.self_learning_enabled(CONFIG)
+    code_on = _learning.self_modify_enabled(CONFIG)
+    n_pending = 0
+    try:
+        n_pending = len(_learning.pending(COS_DIR))
+    except Exception:
+        pass
+    pending_note = (" · %d correction(s) pending" % n_pending) if n_pending else ""
+    return f"""
+<h2>🧠 Self-learning</h2>
+<div class="quick-line" style="margin-bottom:.6rem">When you tell the chat something was missed
+or wrong, the system fetches it, reasons about <em>why</em> it was missed, fixes the cause
+(config, instructions, or its own code — gated by its test suite with automatic rollback), and
+records the lesson. It never touches anything external; approval gating is untouchable.</div>
+<div class="quick-line">
+  <label><input type="checkbox" id="slMaster" {"checked" if on else ""}
+    onchange="setSelfLearning()"> Auto self-learning mode</label>
+  &nbsp;&nbsp;
+  <label><input type="checkbox" id="slCode" {"checked" if code_on else ""} {"" if on else "disabled"}
+    onchange="setSelfLearning()"> May fix its own code (otherwise drafts fixes as tasks)</label>
+  <span style="color:#5b6b7a">{pending_note}</span>
+</div>
+<div id="slResult" class="result"></div>
+<script>
+async function setSelfLearning() {{
+  const master = document.getElementById("slMaster").checked;
+  const code = document.getElementById("slCode").checked;
+  document.getElementById("slCode").disabled = !master;
+  const res = await post("/set-self-learning", {{self_learning: master, self_modify_code: code}});
+  document.getElementById("slResult").textContent = res.message || "";
+}}
+</script>
+"""
+
+
 def render_command_center(requested_ws=None):
     """Render the V2 graph-powered command-center block, or "" if unavailable.
 
@@ -1216,6 +1310,7 @@ class Handler(BaseHTTPRequestHandler):
             ),
             command_center=command_center,
             live_refresh_js=render_live_refresh_js(),
+            self_learning_html=render_self_learning_section(),
         )
         self._send_html(page)
 
@@ -1245,6 +1340,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             cfg, cfg_path = get_chat_session()
             append_chat_log("you", message)
+            learn_note = maybe_start_learn_loop(message)
             session_flag = ["--resume", cfg["session_id"]] if cfg.get("started") else [
                 "--session-id", cfg["session_id"]
             ]
@@ -1263,6 +1359,8 @@ class Handler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 output = (result.stdout or result.stderr or "").strip() or "(no output)"
+                if learn_note:
+                    output = output + learn_note
                 cfg["started"] = True
                 write_json(cfg_path, cfg)
                 append_chat_log("assistant", output)
@@ -1514,6 +1612,28 @@ class Handler(BaseHTTPRequestHandler):
             }
             write_json(cfg_path, cfg)
             self._send_json({"message": f"{connector} schedule saved"})
+            return
+
+        if self.path == "/set-self-learning":
+            # V2.1 (M9): the "auto self-learning mode" switch. Merges the two
+            # keys into config.json (created if missing) and updates the live
+            # CONFIG so the change applies without a restart.
+            on = bool(data.get("self_learning"))
+            code_on = bool(data.get("self_modify_code")) and on
+            file_cfg = {}
+            try:
+                with open(CONFIG_PATH, "r") as f:
+                    file_cfg = json.load(f)
+            except (FileNotFoundError, json.JSONDecodeError):
+                pass
+            file_cfg["self_learning"] = on
+            file_cfg["self_modify_code"] = code_on
+            write_json(CONFIG_PATH, file_cfg)
+            CONFIG["self_learning"] = on
+            CONFIG["self_modify_code"] = code_on
+            state = "on" if on else "off"
+            code_state = "may fix its own code" if code_on else "drafts code fixes as tasks"
+            self._send_json({"message": f"self-learning {state} ({code_state})"})
             return
 
         self.send_response(404)

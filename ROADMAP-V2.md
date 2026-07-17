@@ -297,7 +297,20 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
 - [x] **M8 — Hardening.** `validate_config.py`, action-type registry (config-driven `action_types`),
       `audit.py` (append-only log wired into `set_status`), `preflight.py`. Issues #30–#33.
 
-All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (86 unit tests). The dashboard
+- [x] **M9 (V2.1) — Self-learning correction loop.** When the user reports a miss in chat
+      ("you're missing the email from Acme"), the system runs capture → remediate → diagnose →
+      self-modify → learn & verify: `dashboard/learning.py` (deterministic core: feedback
+      classifier, correction queue, root-cause checks — staleness / coverage gap / filter cutoff /
+      connector down / normalization / correlation — ledger with recurrence-based generalization,
+      **guardrails** and snapshot-based auto-revert), `commands/cos-learn.md` (the loop; every
+      self-change gated by the full test suite + py_compile with automatic rollback; code fixes
+      applied autonomously when `self_modify_code` is on, drafted as tasks when off),
+      chat auto-detect + background loop launch in `server.py`, a **"Self-learning" dashboard
+      toggle** (`/set-self-learning`, live, persisted to config.json), and `/cos-poll` pickup of
+      unprocessed corrections. Immutable guardrail zone: the approve commands, `APPROVAL_POLICY.md`,
+      `audit.py`, and `learning.py` itself can never be self-modified; connectors stay read-only.
+
+All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (108 unit tests). The dashboard
 still serves zero-config (V1 view) and every V2 surface is additive + guarded.
 
 ### Runtime note

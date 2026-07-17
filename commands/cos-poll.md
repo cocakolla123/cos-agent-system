@@ -103,6 +103,11 @@ anything external:
    auto-create it**. Agent creation stays an explicit, approved `/setup` step.
 5. **Regenerate views.** `python3 ../dashboard/graph.py <graph-dir> --render` so the markdown
    views stay in sync.
+6. **Process corrections (V2.1, M9).** If self-learning is enabled
+   (`learning.self_learning_enabled` on `dashboard/config.json`) and
+   `<workspace>/correction-queue.jsonl` has `pending` entries, run `/cos-learn --next` for each,
+   oldest first — this catches corrections the chat couldn't process at the time (subprocess
+   failed, toggle was off, machine was busy).
 
 All of this is additive: a deployment without the V2 modules runs the original poll scopes
 above unchanged.

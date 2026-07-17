@@ -127,3 +127,11 @@ agents justified by what the **knowledge graph** actually contains, via `dashboa
   Step 0 rule above still applies), and writes to `~/.claude/agents/global/` only after the user
   approves. Each agent is tagged with its `workspace` so its memory and graph view are isolated
   (see `../dashboard/workspaces.py`).
+
+## V2.1 — Self-learning note (M9)
+
+The self-learning loop (`../dashboard/learning.py` + `/cos-learn`) may modify this deployment's
+own config, command prose, and code — but it can **never** change any agent's tool grants, the
+approve commands, `APPROVAL_POLICY.md`, the audit log, or the guardrail logic itself
+(`learning.is_change_allowed` hard-blocks those paths). A generated agent's read/draft-only
+posture is not self-modifiable.
