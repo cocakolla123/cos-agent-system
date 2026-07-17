@@ -35,3 +35,24 @@ send tool by default; `commands/cos-approve-confirmed.md`'s three-way status mod
 whether the messaging connector's send scope is already approved, or default to a draft-mode
 mapping and let the recurring-failure mechanism promote it if a real send later starts working
 without one.
+
+## 2026-07-16 (V2 M1 — Python version floor discovered)
+
+**What happened:** While building the V2 knowledge-graph library, running `python3 -m py_compile
+dashboard/server.py` under macOS system Python (`/usr/bin/python3`, 3.9.6) failed with
+`SyntaxError: f-string expression part cannot include a backslash` at the meeting-notes card
+template. `server.py` uses an f-string whose expression embeds a `"\n\n..."` literal — legal only
+on **Python 3.12+**. V1 was authored/verified on a newer Python (homebrew 3.14 here), so the
+floor was real but undocumented. A deployer whose default `python3` is 3.9–3.11 would hit a
+cryptic crash on `serve.sh` startup.
+
+**Fix / workaround:** Documented the **Python 3.12+ requirement** and kept new V2 modules
+(`dashboard/graph.py`) compatible with a wider range (verified passing on 3.9 and 3.14) so the
+graph tooling isn't gated harder than the dashboard already is. Longer term the offending
+f-string can be refactored (hoist the `"\n\nAction items:\n"` literal into a variable) to lower
+the floor, but that's a separate cleanup, not required for M1.
+
+**Where this is now encoded:** this entry; `serve.sh` should state the 3.12+ requirement (follow-up).
+**Rule: run `py_compile` under the *oldest* Python a deployer might have as their default
+`python3`, not just the newest one on the author's machine — a version-gated syntax error is a
+silent floor that only surfaces on someone else's box.**

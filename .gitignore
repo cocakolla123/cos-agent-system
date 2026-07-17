@@ -1,4 +1,6 @@
 dashboard/__pycache__/
+dashboard/tests/__pycache__/
+dashboard/graph/
 dashboard/workspace/
 dashboard/config.json
 dashboard/poll-config.json

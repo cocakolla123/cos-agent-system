@@ -268,5 +268,19 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
   no default path resolves outside `template/`.
 
 ## Status
-- [ ] M0 — docs (this file + PLAN.md pointer + lessons seed) and issues created
-- [ ] M1–M8 — not started
+- [x] **M0** — docs (this file + `PLAN.md` pointer + lessons entry) and the private repo
+      `cocakolla123/cos-agent-system` created; 33 issues filed, labeled M1–M8.
+- [x] **M1 — Knowledge graph foundation.** `dashboard/graph.py` (stdlib only): node/edge schema
+      with stable-id dedup (`<workspace>:<type>:<natural-key>`), JSONL load/save (deterministic,
+      sorted), `upsert_node`/`upsert_edge` (in-place merge; noisy-OR confidence; source union;
+      freshness stamps), `query`/`neighbors`/`merge_nodes`, `is_stale`/`stale_nodes`, idempotent
+      `render_views` (per-workspace + index markdown), and a small CLI (`--render/--stats/--stale`).
+      Tests in `dashboard/tests/test_graph.py` (19 cases, stdlib `unittest`) — all pass on Python
+      3.9 and 3.14. Additive: no existing behavior changed; dashboard still serves zero-config.
+      Covers issues #1–#4. **Note:** the graph store lives under the (gitignored) workspace at
+      `workspace/graph/`; it is created by the research engine in M2, not by M1.
+- [ ] M2–M8 — not started
+
+### Runtime note
+`dashboard/server.py` requires **Python 3.12+** (an f-string with an embedded backslash). New V2
+modules stay compatible with 3.9+ where practical. See `lessons-learned.md` (2026-07-16).
