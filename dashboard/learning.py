@@ -315,6 +315,67 @@ GUARDRAIL_PATHS = [
 GUARDRAIL_BASENAMES = ["APPROVAL_POLICY.md"]
 
 
+GUARDRAIL_HASHES_FILE = "guardrail-hashes.json"
+
+
+def _all_guardrail_paths(template_root):
+    out = []
+    for rel in GUARDRAIL_PATHS:
+        p = os.path.join(template_root, rel)
+        if os.path.exists(p):
+            out.append(p)
+    return out
+
+
+def compute_guardrail_hashes(template_root):
+    """SHA-256 of every guardrail file. The advisory `is_change_allowed` check
+    is model-followed, not kernel-enforced — these hashes are the detection
+    layer: the server and poll verify them so any drift (however it happened)
+    is surfaced within minutes, not discovered by accident."""
+    import hashlib
+    hashes = {}
+    for p in _all_guardrail_paths(template_root):
+        h = hashlib.sha256()
+        with open(p, "rb") as f:
+            h.update(f.read())
+        rel = os.path.relpath(p, template_root).replace(os.sep, "/")
+        hashes[rel] = h.hexdigest()
+    return hashes
+
+
+def write_guardrail_baseline(ws_dir, template_root, now=None):
+    os.makedirs(ws_dir, exist_ok=True)
+    path = os.path.join(ws_dir, GUARDRAIL_HASHES_FILE)
+    data = {"ts": graph.iso(now),
+            "hashes": compute_guardrail_hashes(template_root)}
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, sort_keys=True)
+        f.write("\n")
+    os.replace(tmp, path)
+    return data
+
+
+def verify_guardrails(ws_dir, template_root):
+    """Compare current guardrail hashes to the baseline.
+
+    Returns ``(drifted, baseline_exists)`` where ``drifted`` is the list of
+    relative paths whose hash changed or that disappeared. No baseline yet →
+    ``([], False)`` — callers should write one rather than alarm.
+    """
+    path = os.path.join(ws_dir, GUARDRAIL_HASHES_FILE)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            baseline = json.load(f).get("hashes", {})
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        return [], False
+    current = compute_guardrail_hashes(template_root)
+    drifted = sorted(set(
+        [rel for rel, h in baseline.items() if current.get(rel) != h] +
+        [rel for rel in current if rel not in baseline]))
+    return drifted, True
+
+
 def is_change_allowed(template_root, path):
     """May the self-learning loop modify ``path``? False for anything outside
     the template root, any guardrail file, and any APPROVAL_POLICY.md."""

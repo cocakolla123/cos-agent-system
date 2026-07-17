@@ -62,14 +62,34 @@ def correlate(g, now=None, min_members=2):
         nodes = sorted(by_ws[ws], key=lambda x: x["id"])
         sigs = {n["id"]: _signature(g, n) for n in nodes}
         uf = _UnionFind(n["id"] for n in nodes)
-        # union any two nodes sharing a signature token
+        # Strong tokens (explicit refs/subjects) union directly. Person tokens
+        # alone are weak — one shared attendee/owner (e.g. the user's manager,
+        # who touches everything) must NOT merge unrelated work into a single
+        # mega-objective. Rule: union on a shared strong token, or on >= 2
+        # shared person tokens between a pair.
         token_to_node = {}
         for nid in sorted(sigs):
             for tok in sorted(sigs[nid]):
+                if tok.startswith("person:"):
+                    continue
                 if tok in token_to_node:
                     uf.union(token_to_node[tok], nid)
                 else:
                     token_to_node[tok] = nid
+        person_groups = {}
+        for nid in sorted(sigs):
+            for tok in sorted(sigs[nid]):
+                if tok.startswith("person:"):
+                    person_groups.setdefault(tok, []).append(nid)
+        pair_person_counts = {}
+        for tok in sorted(person_groups):
+            members = person_groups[tok]
+            for i, a in enumerate(members):
+                for b in members[i + 1:]:
+                    key = (a, b)
+                    pair_person_counts[key] = pair_person_counts.get(key, 0) + 1
+                    if pair_person_counts[key] >= 2:
+                        uf.union(a, b)
         # build components
         comps = {}
         for nid in sorted(sigs):

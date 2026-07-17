@@ -67,8 +67,22 @@ done
 
 poll_tools=$(jq -r '.poll_tools // "Read,Edit,Agent"' "$MAIN_CFG" 2>/dev/null || echo "Read,Edit,Agent")
 
-"$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" \
+# M12: track attempted vs completed separately — the attempt time above stops
+# immediate re-fires, but a timed-out/failed run must not look like a success.
+COMPLETED="$DASH_DIR/poll-last-completed.json"
+[ -f "$COMPLETED" ] || echo '{}' > "$COMPLETED"
+
+if "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \
-  >> "$DASH_DIR/launchd-poll.log" 2>> "$DASH_DIR/launchd-poll.err"
+  >> "$DASH_DIR/launchd-poll.log" 2>> "$DASH_DIR/launchd-poll.err"; then
+  done_epoch=$(TZ="$TZ_NAME" date +%s)
+  for connector in "${due[@]}"; do
+    tmp=$(mktemp)
+    jq --arg c "$connector" --arg now "$done_epoch" '.[$c] = ($now | tonumber)' "$COMPLETED" > "$tmp"
+    mv "$tmp" "$COMPLETED"
+  done
+else
+  echo "$(date '+%Y-%m-%dT%H:%M:%S') poll FAILED (scope=$scope, exit=$?)" >> "$DASH_DIR/launchd-poll.err"
+fi

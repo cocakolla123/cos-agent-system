@@ -112,9 +112,13 @@ for the `tools:` frontmatter — never invent a tool name.
 2. Write `<workspace>/APPROVAL_POLICY.md` if Step 2's question 4 produced any never-autonomous
    categories — plain markdown list, one line per category. `/cos`, `/cos-approve`, and
    `/cos-approve-confirmed` already look for this exact filename.
-3. Copy `commands/{cos,cos-approve,cos-approve-confirmed,cos-revise,cos-poll,cos-process-inbox}.md`
-   into `~/.claude/commands/global/` verbatim (they're already generic — no per-deployment
-   edits needed).
+3. Copy **all ten** orchestration commands into `~/.claude/commands/global/` verbatim
+   (they're already generic — no per-deployment edits needed):
+   `commands/{cos,cos-approve,cos-approve-confirmed,cos-revise,cos-poll,cos-process-inbox,cos-research,cos-learn,cos-accounts,cos-uninstall}.md`.
+   The last three are the V2 commands — the dashboard's chat correction loop, accounts probe,
+   and poll's incremental research all invoke them as `/global:cos-*` subprocesses; omitting
+   them makes every one of those calls fail silently with "Unknown command" (this exact gap
+   shipped once — see `../lessons-learned.md` 2026-07-17).
 
 ## Step 6 — register local polling
 

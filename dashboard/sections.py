@@ -198,21 +198,38 @@ def render_sections(g, registry=None, active=None):
             + body + "</div>")
 
 
+# M12: mtime-keyed graph cache — Graph.load re-reads both JSONL files per GET.
+_GRAPH_CACHE = {"key": None, "graph": None}
+
+
 def load_for_dashboard(workspace_dir, requested_ws=None):
     """Convenience for server.py: load graph + registry + resolve active ws.
 
     Returns ``(graph_or_None, registry, active_ws)``. Never raises — a missing or
     unreadable graph yields ``(None, empty_registry, None)`` so the dashboard
-    degrades to its V1 view.
+    degrades to its V1 view. The graph load is cached by (mtime, size) of both
+    JSONL files, so unchanged graphs cost one stat per request.
     """
     import os
     reg = _ws.Registry.load(workspace_dir)
     active = _ws.resolve_active(reg, requested_ws)
     gdir = os.path.join(workspace_dir, "graph")
+    key = []
+    for name in (_graph.Graph.NODES_FILE, _graph.Graph.EDGES_FILE):
+        try:
+            st = os.stat(os.path.join(gdir, name))
+            key.append((st.st_mtime_ns, st.st_size))
+        except OSError:
+            key.append(None)
+    key = (gdir, tuple(key))
+    if _GRAPH_CACHE["key"] == key:
+        return _GRAPH_CACHE["graph"], reg, active
     try:
         g = _graph.Graph.load(gdir)
         if not g.nodes:
             g = None
     except Exception:
         g = None
+    _GRAPH_CACHE["key"] = key
+    _GRAPH_CACHE["graph"] = g
     return g, reg, active

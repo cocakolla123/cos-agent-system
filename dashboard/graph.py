@@ -41,10 +41,35 @@ can make runs deterministic and tests can assert exact timestamps.
 
 from __future__ import annotations
 
+import contextlib
 import datetime as _dt
 import json
 import os
 import re
+
+
+@contextlib.contextmanager
+def file_lock(path):
+    """Advisory exclusive lock via a ``.lock`` sidecar (fcntl.flock).
+
+    V2 has several writers (server threads, poll/learn/probe subprocesses) on
+    shared files; this serializes read-modify-write cycles so a status flip
+    can't be lost to a concurrent rewrite. No-op where fcntl is unavailable
+    (Windows) — behavior there stays last-write-wins, as before.
+    """
+    lock_path = str(path) + ".lock"
+    try:
+        import fcntl
+    except ImportError:  # pragma: no cover - non-POSIX
+        yield
+        return
+    os.makedirs(os.path.dirname(lock_path) or ".", exist_ok=True)
+    with open(lock_path, "w") as f:
+        fcntl.flock(f, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(f, fcntl.LOCK_UN)
 
 # ---------------------------------------------------------------------------
 # Vocabulary (advisory — upsert does not reject unknown types, so research
@@ -172,12 +197,14 @@ class Graph:
         return g
 
     def save(self, graph_dir):
-        """Persist deterministically (sorted, sorted keys) for clean diffs."""
+        """Persist deterministically (sorted, sorted keys) for clean diffs.
+        Serialized against concurrent savers via file_lock."""
         os.makedirs(graph_dir, exist_ok=True)
-        _write_jsonl(os.path.join(graph_dir, self.NODES_FILE),
-                     [self.nodes[k] for k in sorted(self.nodes)])
-        _write_jsonl(os.path.join(graph_dir, self.EDGES_FILE),
-                     [self.edges[k] for k in sorted(self.edges)])
+        with file_lock(os.path.join(graph_dir, "graph")):
+            _write_jsonl(os.path.join(graph_dir, self.NODES_FILE),
+                         [self.nodes[k] for k in sorted(self.nodes)])
+            _write_jsonl(os.path.join(graph_dir, self.EDGES_FILE),
+                         [self.edges[k] for k in sorted(self.edges)])
 
     # -- mutation -----------------------------------------------------------
 

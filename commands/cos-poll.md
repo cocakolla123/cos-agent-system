@@ -116,3 +116,10 @@ anything external:
 
 All of this is additive: a deployment without the V2 modules runs the original poll scopes
 above unchanged.
+
+## Queue hygiene (M12)
+In the `general` scope, if `approval-queue.md` contains entries in a terminal state
+(`approved`/`rejected`/`stale`/`superseded`) older than **90 days**, move them to
+`approval-queue-archive.md` exactly the way the dashboard's "Clear archive" does (append,
+never delete; the audit log already holds every transition). This keeps the working file —
+and every parse of it — small without waiting for the user to click the button.

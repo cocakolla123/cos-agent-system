@@ -56,3 +56,17 @@ the floor, but that's a separate cleanup, not required for M1.
 **Rule: run `py_compile` under the *oldest* Python a deployer might have as their default
 `python3`, not just the newest one on the author's machine — a version-gated syntax error is a
 silent floor that only surfaces on someone else's box.**
+
+## 2026-07-17 (V2 review — commands existed but were never installed)
+
+**What happened:** V2 added three commands (`cos-research`, `cos-learn`, `cos-accounts`) that
+the dashboard and poll invoke as `/global:cos-*` subprocesses — but `/setup` Step 5's copy list
+still named only the six V1 commands. On any fresh deployment, every V2 subprocess (chat
+correction loop, accounts probe, incremental research) would have failed with "Unknown
+command," silently, into log files.
+
+**Fix / workaround:** Step 5.3 now copies all nine commands and names the failure mode.
+
+**Where this is now encoded:** `commands/setup.md` Step 5.3. **Rule: any new `/global:`-invoked
+command MUST be added to `/setup`'s copy list in the same change that introduces it — grep
+`server.py` and `commands/*.md` for `/global:` and diff against the copy list before shipping.**

@@ -73,6 +73,15 @@ try:
 except Exception:  # pragma: no cover - defensive
     _context = None
 
+# M12: advisory file locking for shared-file read-modify-write cycles.
+try:
+    from graph import file_lock as _file_lock
+except Exception:  # pragma: no cover - defensive
+    import contextlib as _ctx
+
+    def _file_lock(_path):  # no-op fallback
+        return _ctx.nullcontext()
+
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
 
@@ -140,6 +149,10 @@ CHAT_TOOLS = CONFIG["chat_tools"]
 REVISE_TOOLS = CONFIG["revise_tools"]
 POLL_TOOLS = CONFIG["poll_tools"]
 LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
+# M12: the scheduler lesson, applied to the server too — schedulers and app
+# launchers often run with a minimal PATH that doesn't include `claude`.
+# Resolution order: env CLAUDE_BIN > config claude_bin > bare "claude".
+CLAUDE_BIN = os.environ.get("CLAUDE_BIN") or CONFIG.get("claude_bin") or "claude"
 DOMAIN_TAG = CONFIG["domain_tag"]
 ICONS = {"message_send": "💬", "ticket_update": "🎫", "calendar_change": "📅"}
 DEFAULT_ICON = "🔧"
@@ -255,8 +268,25 @@ def parse_blocks(text):
     return entries
 
 
+# M12: mtime-keyed parse cache — the dashboard re-reads the queue on every GET;
+# at thousands of entries the regex parse dominates page latency. Invalidation
+# is by (mtime, size), so any writer (server, poll, learn) busts it naturally.
+_QUEUE_CACHE = {"key": None, "entries": None}
+
+
 def parse_approval_queue():
-    return parse_blocks(read_file(os.path.join(COS_DIR, "approval-queue.md")))
+    path = os.path.join(COS_DIR, "approval-queue.md")
+    try:
+        st = os.stat(path)
+        key = (st.st_mtime_ns, st.st_size)
+    except OSError:
+        key = None
+    if key is not None and _QUEUE_CACHE["key"] == key:
+        return _QUEUE_CACHE["entries"]
+    entries = parse_blocks(read_file(path))
+    _QUEUE_CACHE["key"] = key
+    _QUEUE_CACHE["entries"] = entries
+    return entries
 
 
 def parse_meeting_notes():
@@ -281,8 +311,15 @@ def last_poll_line():
 
 def set_status(entry_id, new_status, note=None, from_status="pending"):
     """Flip the most recent block matching from_status for entry_id to new_status.
-    Bookkeeping only — does not execute anything. Returns True if a block was updated."""
+    Bookkeeping only — does not execute anything. Returns True if a block was updated.
+    The whole read-modify-write runs under a file lock (M12) so a concurrent
+    poll/learn subprocess rewrite can't swallow the flip."""
     path = os.path.join(COS_DIR, "approval-queue.md")
+    with _file_lock(path):
+        return _set_status_locked(path, entry_id, new_status, note, from_status)
+
+
+def _set_status_locked(path, entry_id, new_status, note, from_status):
     text = read_file(path)
     pattern = re.compile(
         r"(### " + re.escape(entry_id) + r"\n(?:(?!\n### ).)*?- status: )" + re.escape(from_status),
@@ -637,6 +674,9 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .auth-note {{ color:#8a8a90; font-size:.8rem; }}
 .auth-buttons {{ margin-top:.8rem; display:flex; gap:.5rem; }}
 .auth-refuse {{ color:#b8144f; }}
+.guardrail-alert {{ margin:.6rem 0; padding:.7rem 1rem; background:#fff2f4; border:2px solid #e0526f; border-radius:10px; font-size:.9rem; }}
+.start-research-card {{ margin:1rem 0; padding:1rem 1.2rem; background:#f2fff5; border:1px solid #bfe5bf; border-radius:12px; }}
+.start-research-card h2 {{ margin:.1rem 0 .4rem; }}
 .linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
 .linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
 .linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
@@ -666,8 +706,12 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
   <div class="result" id="chatResult"></div>
 </div>
 
+{guardrail_banner}
+
 <h2>Today <span></span></h2>
 <pre>{daily}</pre>
+
+{start_research_html}
 
 {command_center}
 
@@ -701,6 +745,8 @@ connector has its own interval and active window; outside its window it just ski
 {schedule_html}
 
 {self_learning_html}
+
+{recent_learnings_html}
 
 {auth_modal_html}
 
@@ -1177,6 +1223,18 @@ def render_live_refresh_js():
     )
 
 
+def spawn_background(cmd, logname):
+    """Popen with output appended to a dashboard log file. Closes the parent's
+    handle immediately (the child holds its own dup), so repeated spawns don't
+    leak file descriptors."""
+    log = open(os.path.join(DASHBOARD_DIR, logname), "a")
+    try:
+        return subprocess.Popen(cmd, cwd=ORCHESTRATOR_CWD, stdout=log,
+                                stderr=subprocess.STDOUT)
+    finally:
+        log.close()
+
+
 def maybe_start_learn_loop(message):
     """If ``message`` reads as a correction and self-learning is on: enqueue it,
     launch the /cos-learn loop in the background (non-blocking), and return the
@@ -1195,16 +1253,13 @@ def maybe_start_learn_loop(message):
         rec = _learning.make_correction(message, hint=hint, source="chat")
         _learning.enqueue(COS_DIR, rec)
         try:
-            log = open(os.path.join(DASHBOARD_DIR, "learn.log"), "a")
-            subprocess.Popen(
+            spawn_background(
                 [
-                    "claude", "-p", "/global:cos-learn --next",
+                    CLAUDE_BIN, "-p", "/global:cos-learn --next",
                     "--permission-mode", "dontAsk",
                     "--allowedTools", LEARN_TOOLS,
                     "--output-format", "text",
-                ],
-                cwd=ORCHESTRATOR_CWD, stdout=log, stderr=subprocess.STDOUT,
-            )
+                ], "learn.log")
             return ("\n\n🧠 Noted as a correction (%s) — investigating in the "
                     "background why this was missed; the fix and reasoning will "
                     "land in lessons-learned." % rec["id"])
@@ -1227,6 +1282,81 @@ def _graph_is_empty():
         return not _g.Graph.load(os.path.join(COS_DIR, "graph")).nodes
     except Exception:
         return True
+
+
+def render_guardrail_banner():
+    """M12: integrity check over the guardrail files (approval surface,
+    audit log, learning module). The advisory is_change_allowed() check is
+    model-followed; this hash check is the enforcement backstop — any drift
+    shows a red banner within one page load. No baseline yet → write one."""
+    if _learning is None:
+        return ""
+    root = os.path.dirname(TEMPLATE_DASHBOARD_DIR)
+    try:
+        drifted, has_baseline = _learning.verify_guardrails(COS_DIR, root)
+        if not has_baseline:
+            _learning.write_guardrail_baseline(COS_DIR, root)
+            return ""
+        if not drifted:
+            return ""
+    except Exception:
+        return ""
+    files = ", ".join(html.escape(f) for f in drifted)
+    return (
+        '<div class="guardrail-alert">⚠️ <strong>Guardrail files changed:</strong> %s — '
+        "the approval-safety surface was modified outside the normal flow. If YOU updated "
+        "the template intentionally, re-baseline; otherwise inspect these files now. "
+        '<button class="small" onclick="rebaselineGuardrails()">I made this change — re-baseline</button>'
+        '<span id="rebaselineResult" class="result"></span></div>'
+        "<script>async function rebaselineGuardrails(){"
+        "const r=await post('/rebaseline-guardrails',{});"
+        "document.getElementById('rebaselineResult').textContent=r.message;"
+        "setTimeout(()=>location.reload(),1200);}</script>" % files)
+
+
+def render_start_research():
+    """M12: the missing first-run action — a prominent card on a fresh
+    deployment that kicks off /cos-research from the dashboard, so the full
+    bootstrap (context → research → graph → agents) needs no terminal."""
+    if _graph_is_empty() is False:
+        return ""
+    return (
+        '<div class="start-research-card">'
+        "<h2>🚀 Ready when you are</h2>"
+        '<div class="quick-line">Nothing researched yet. I can crawl your connected accounts '
+        "(read-only), build your knowledge graph, discover your workspaces, and propose your "
+        "agents — using any context you added above as the highest-confidence source.</div>"
+        '<button class="primary" onclick="startResearch()">Research my workspace now</button>'
+        '<div id="researchResult" class="result"></div>'
+        "<script>async function startResearch(){"
+        "document.getElementById('researchResult').textContent='researching in the background — "
+        "this can take a few minutes; the page will refresh as findings land...';"
+        "const r=await post('/start-research',{});"
+        "document.getElementById('researchResult').textContent=r.message;"
+        "setTimeout(()=>location.reload(),20000);}</script></div>")
+
+
+def render_recent_learnings():
+    """M12: make the self-learning loop visible — the last few corrections
+    (symptom → root cause → change) instead of burying them in log files."""
+    if _learning is None:
+        return ""
+    try:
+        ledger = _learning._read_jsonl(os.path.join(COS_DIR, _learning.LEDGER_FILE))
+    except Exception:
+        return ""
+    if not ledger:
+        return ""
+    rows = []
+    for ev in ledger[-3:][::-1]:
+        rows.append(
+            '<li><strong>%s</strong> → %s → <em>%s</em>%s</li>' % (
+                html.escape(ev.get("text", "")[:80]),
+                html.escape(ev.get("root_cause", "?")),
+                html.escape(ev.get("change", "no change")[:120]),
+                " ✓" if ev.get("verified") else ""))
+    return ('<div class="quick-line" style="margin-top:.5rem"><strong>Recently learned:</strong>'
+            "<ul>%s</ul></div>" % "".join(rows))
 
 
 def render_context_modal():
@@ -1481,7 +1611,30 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b)
 
+    _ALLOWED_HOSTS = ("127.0.0.1", "localhost", "[::1]")
+
+    def _origin_ok(self):
+        """M12 hardening: reject requests not addressed to localhost.
+
+        Blocks DNS-rebinding (a hostile page pointing its own hostname at
+        127.0.0.1 — the browser then sends that hostname in Host) and any
+        cross-origin caller. Same-origin browser requests and curl to
+        127.0.0.1 pass unchanged.
+        """
+        host = (self.headers.get("Host") or "").rsplit(":", 1)[0].lower()
+        if host not in self._ALLOWED_HOSTS:
+            return False
+        origin = self.headers.get("Origin")
+        if origin:
+            ohost = urlparse(origin).hostname or ""
+            if ohost.lower() not in self._ALLOWED_HOSTS:
+                return False
+        return True
+
     def do_GET(self):
+        if not self._origin_ok():
+            self._send_json({"message": "forbidden: non-local Host/Origin"}, 403)
+            return
         parsed = urlparse(self.path)
         if parsed.path == "/graph-version":
             self._send_json({"v": dashboard_version()})
@@ -1546,10 +1699,16 @@ class Handler(BaseHTTPRequestHandler):
             accounts_html=render_accounts_section(),
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
+            guardrail_banner=render_guardrail_banner(),
+            start_research_html=render_start_research(),
+            recent_learnings_html=render_recent_learnings(),
         )
         self._send_html(page)
 
     def do_POST(self):
+        if not self._origin_ok():
+            self._send_json({"message": "forbidden: non-local Host/Origin"}, 403)
+            return
         length = int(self.headers.get("Content-Length", 0) or 0)
         raw = self.rfile.read(length) if length else b"{}"
         try:
@@ -1582,7 +1741,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 result = subprocess.run(
                     [
-                        "claude", "-p", message,
+                        CLAUDE_BIN, "-p", message,
                         *session_flag,
                         "--permission-mode", "dontAsk",
                         "--allowedTools", CHAT_TOOLS,
@@ -1625,7 +1784,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 result = subprocess.run(
                     [
-                        "claude", "-p", message,
+                        CLAUDE_BIN, "-p", message,
                         *session_flag,
                         "--permission-mode", "dontAsk",
                         "--allowedTools", CHAT_TOOLS,
@@ -1730,7 +1889,7 @@ class Handler(BaseHTTPRequestHandler):
                 # this in a fresh deployment, since it is a real trade-off (see PLAN.md).
                 result = subprocess.run(
                     [
-                        "claude", "-p", f"/global:cos-approve-confirmed {entry_id}",
+                        CLAUDE_BIN, "-p", f"/global:cos-approve-confirmed {entry_id}",
                         "--permission-mode", "bypassPermissions",
                         "--allowedTools", allowed,
                         "--output-format", "text",
@@ -1795,7 +1954,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 result = subprocess.run(
                     [
-                        "claude", "-p", f"/global:cos-revise {entry_id} {json.dumps(feedback)}",
+                        CLAUDE_BIN, "-p", f"/global:cos-revise {entry_id} {json.dumps(feedback)}",
                         "--permission-mode", "dontAsk",
                         "--allowedTools", REVISE_TOOLS,
                         "--output-format", "text",
@@ -1823,7 +1982,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 result = subprocess.run(
                     [
-                        "claude", "-p", prompt,
+                        CLAUDE_BIN, "-p", prompt,
                         "--permission-mode", "dontAsk",
                         "--allowedTools", POLL_TOOLS,
                         "--output-format", "text",
@@ -1922,19 +2081,45 @@ class Handler(BaseHTTPRequestHandler):
                                         "the ➕ button"})
             return
 
+        if self.path == "/start-research":
+            # M12: first-run bootstrap from the dashboard — full research crawl.
+            try:
+                spawn_background(
+                    [CLAUDE_BIN, "-p", "/global:cos-research --full",
+                     "--permission-mode", "dontAsk",
+                     "--allowedTools", POLL_TOOLS,
+                     "--output-format", "text"], "research.log")
+                self._send_json({"message": "research started in the background — "
+                                            "watch the Command Center fill in "
+                                            "(details in research.log)"})
+            except OSError as exc:
+                self._send_json({"message": f"could not start research: {exc}"}, 500)
+            return
+
+        if self.path == "/rebaseline-guardrails":
+            # M12: user acknowledges an intentional guardrail-file change.
+            if _learning is None:
+                self._send_json({"message": "learning module unavailable"}, 500)
+                return
+            root = os.path.dirname(TEMPLATE_DASHBOARD_DIR)
+            _learning.write_guardrail_baseline(COS_DIR, root)
+            if _audit is not None:
+                _audit.record(COS_DIR, "guardrails", "rebaselined",
+                              actor="dashboard",
+                              detail="user confirmed intentional change")
+            self._send_json({"message": "guardrail baseline updated"})
+            return
+
         if self.path == "/probe-accounts":
             # V2.2 (M10): background probe of every connector account instance.
             try:
-                log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
-                subprocess.Popen(
+                spawn_background(
                     [
-                        "claude", "-p", "/global:cos-accounts --probe",
+                        CLAUDE_BIN, "-p", "/global:cos-accounts --probe",
                         "--permission-mode", "dontAsk",
                         "--allowedTools", POLL_TOOLS,
                         "--output-format", "text",
-                    ],
-                    cwd=ORCHESTRATOR_CWD, stdout=log, stderr=subprocess.STDOUT,
-                )
+                    ], "accounts.log")
                 self._send_json({"message": "probing all accounts in the background — "
                                             "this page will refresh shortly"})
             except OSError as exc:
@@ -1969,14 +2154,11 @@ class Handler(BaseHTTPRequestHandler):
                 # background re-probe so the panel flips to "connected" once
                 # the user finishes the browser login
                 try:
-                    log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
-                    subprocess.Popen(
-                        ["claude", "-p", "/global:cos-accounts --probe",
+                    spawn_background(
+                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe",
                          "--permission-mode", "dontAsk",
                          "--allowedTools", POLL_TOOLS,
-                         "--output-format", "text"],
-                        cwd=ORCHESTRATOR_CWD, stdout=log,
-                        stderr=subprocess.STDOUT)
+                         "--output-format", "text"], "accounts.log")
                 except OSError:
                     pass
                 msg = "browser opened — finish the login there; re-checking in the background"

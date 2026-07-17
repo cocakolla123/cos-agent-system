@@ -5,6 +5,8 @@ dashboard/workspace/
 dashboard/config.json
 dashboard/poll-config.json
 dashboard/poll-last-run.json
+dashboard/poll-last-completed.json
+dashboard/research.log
 dashboard/poll-log.md
 dashboard/launchd-poll.log
 dashboard/launchd-poll.err

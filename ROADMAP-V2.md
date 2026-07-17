@@ -337,7 +337,28 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
       intake available forever. Processed files move to `context-inbox/processed/`, never
       deleted.
 
-All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (139 unit tests). The dashboard
+- [x] **M12 (V2.4) — Whole-system review fixes.** From a fresh-eyes audit of everything built:
+      **(critical)** `/setup` now installs all ten commands — the three V2 commands
+      (`cos-research`/`cos-learn`/`cos-accounts`) were never in the copy list, so every V2
+      subprocess would have failed "Unknown command" on a fresh deployment (rule + lesson
+      recorded); a **"Research my workspace now"** card completes the first-run loop from the
+      dashboard (no terminal needed); **guardrail integrity hashes** — the advisory
+      `is_change_allowed` check now has an enforcement backstop: SHA-256 baseline of the
+      approval surface, verified on every page load, red banner + audit-logged re-baseline
+      button on drift. **(high)** `CLAUDE_BIN` honored by every server subprocess (the
+      scheduler-PATH lesson, applied); correlation no longer merges on a single shared person
+      (the everyone's-manager mega-objective bug) — strong tokens or ≥2 shared people required;
+      advisory `file_lock` (flock) serializes queue/graph read-modify-write against concurrent
+      subprocess writers; **Host/Origin check** rejects non-localhost requests (DNS-rebinding /
+      CSRF hardening). **(rest)** `serve.sh` fails fast on Python < 3.12 and warns on missing
+      `claude`; poll-tick records attempted vs **completed** timestamps (a timed-out poll no
+      longer looks successful); mtime-keyed caches for the queue parse and graph load;
+      Popen log-handle leak fixed; factory's project-builder consults registry kinds;
+      workspace inference caps confidence on mixed-signal org clusters; 90-day queue
+      auto-archive in poll; `/cos-uninstall` for clean removal; README rewritten for V2;
+      GitHub Actions CI (3.9 + 3.12 matrix).
+
+All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (145 unit tests). The dashboard
 still serves zero-config (V1 view) and every V2 surface is additive + guarded.
 
 ### Runtime note

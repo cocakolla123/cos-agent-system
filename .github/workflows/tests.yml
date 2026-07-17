@@ -1,0 +1,36 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # 3.9 = the oldest interpreter the V2 modules support;
+        # 3.12 = the dashboard server's floor (f-string syntax).
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Unit tests (stdlib only — no deps to install)
+        run: python -m unittest discover -s dashboard/tests -p 'test_*.py' -v
+      - name: Compile dashboard server (3.12+ only)
+        if: matrix.python-version == '3.12'
+        run: python -m py_compile dashboard/server.py
+      - name: Compile all V2 modules (every version)
+        run: >
+          python -m py_compile dashboard/graph.py dashboard/research.py
+          dashboard/workspaces.py dashboard/factory.py dashboard/correlate.py
+          dashboard/sections.py dashboard/audit.py dashboard/validate_config.py
+          dashboard/preflight.py dashboard/learning.py dashboard/accounts.py
+          dashboard/context_intake.py
+      - name: Config example is valid JSON and validates clean
+        run: |
+          python -c "import json; json.load(open('dashboard/config.example.json'))"
+          cd dashboard && python validate_config.py config.example.json

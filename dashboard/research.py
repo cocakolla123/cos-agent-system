@@ -135,6 +135,9 @@ def infer_workspaces(records):
         kind_hint = attrs.get("workspace_kind") or _guess_kind(r)
         c["kind_votes"][kind_hint] = c["kind_votes"].get(kind_hint, 0) + 1
         c["signals"][signal[0]] = signal[1]
+        c["provisional"] = c.get("provisional", set())
+        if r.get("workspace"):
+            c["provisional"].add(graph.slug(r["workspace"]))
         c["conf_sum"] += float(r.get("confidence", 1.0))
         c["n"] += 1
 
@@ -142,13 +145,20 @@ def infer_workspaces(records):
     for wsid in sorted(clusters):
         c = clusters[wsid]
         kind = _top_vote(c["kind_votes"])
+        confidence = round(c["conf_sum"] / max(c["n"], 1), 3)
+        # M12: an org token that pulls together records whose provisional
+        # workspaces disagree (e.g. a shared vendor org spanning employer and
+        # freelance work) is a merge risk — cap confidence so the command
+        # surfaces it for confirmation instead of adopting it silently.
+        if len(c.get("provisional", set())) > 1:
+            confidence = min(confidence, 0.6)
         proposals.append({
             "id": wsid,
             "kind": kind,
             "label": _label_for(wsid, kind),
             "members": sorted(set(c["members"])),
             "evidence": c["signals"],
-            "confidence": round(c["conf_sum"] / max(c["n"], 1), 3),
+            "confidence": confidence,
         })
     return proposals
 

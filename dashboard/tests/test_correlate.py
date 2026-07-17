@@ -53,15 +53,36 @@ class TestCorrelate(unittest.TestCase):
         kinds = [n["type"] for n in correlate.timeline(g, oid)]
         self.assertEqual(kinds, ["Channel", "Meeting", "Ticket", "PR"])
 
-    def test_shared_participant_groups(self):
+    def test_single_shared_person_does_NOT_group(self):
+        # One shared person is a weak signal — the user's manager touches
+        # everything; merging on it collapses unrelated work (M12 fix).
         g = graph.Graph()
         g.upsert_node("Person", "emp", "mel", now=_t(1))
         g.upsert_node("Meeting", "emp", "m1", now=_t(1))
         g.upsert_node("Ticket", "emp", "T1", now=_t(1))
         g.upsert_edge("emp:meeting:m1", "emp:person:mel", "attends", now=_t(1))
         g.upsert_edge("emp:ticket:t1", "emp:person:mel", "owned_by", now=_t(1))
-        ids = correlate.correlate(g, now=_t(2))
-        self.assertEqual(len(ids), 1)
+        self.assertEqual(correlate.correlate(g, now=_t(2)), [])
+
+    def test_two_shared_people_group(self):
+        g = graph.Graph()
+        for p in ("mel", "sam"):
+            g.upsert_node("Person", "emp", p, now=_t(1))
+        g.upsert_node("Meeting", "emp", "m1", now=_t(1))
+        g.upsert_node("Ticket", "emp", "T1", now=_t(1))
+        for n, e in (("emp:meeting:m1", "attends"), ("emp:ticket:t1", "owned_by")):
+            g.upsert_edge(n, "emp:person:mel", e, now=_t(1))
+            g.upsert_edge(n, "emp:person:sam", e, now=_t(1))
+        self.assertEqual(len(correlate.correlate(g, now=_t(2))), 1)
+
+    def test_person_plus_ref_groups(self):
+        g = graph.Graph()
+        g.upsert_node("Person", "emp", "mel", now=_t(1))
+        g.upsert_node("Meeting", "emp", "m1", attrs={"refs": ["T1"]}, now=_t(1))
+        g.upsert_node("Ticket", "emp", "T1", attrs={"refs": ["T1"]}, now=_t(1))
+        g.upsert_edge("emp:meeting:m1", "emp:person:mel", "attends", now=_t(1))
+        g.upsert_edge("emp:ticket:t1", "emp:person:mel", "owned_by", now=_t(1))
+        self.assertEqual(len(correlate.correlate(g, now=_t(2))), 1)
 
     def test_no_cross_workspace_objective(self):
         g = graph.Graph()

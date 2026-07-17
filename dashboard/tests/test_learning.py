@@ -185,3 +185,53 @@ class TestToggle(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestGuardrailIntegrity(unittest.TestCase):
+    def _root(self, d):
+        os.makedirs(os.path.join(d, "commands"), exist_ok=True)
+        os.makedirs(os.path.join(d, "dashboard"), exist_ok=True)
+        for rel in learning.GUARDRAIL_PATHS:
+            p = os.path.join(d, rel)
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            with open(p, "w") as f:
+                f.write("original %s\n" % rel)
+        return d
+
+    def test_baseline_then_clean(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._root(d)
+            ws = os.path.join(d, "ws")
+            learning.write_guardrail_baseline(ws, root, now=_t(1))
+            drifted, has = learning.verify_guardrails(ws, root)
+            self.assertTrue(has)
+            self.assertEqual(drifted, [])
+
+    def test_drift_detected(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._root(d)
+            ws = os.path.join(d, "ws")
+            learning.write_guardrail_baseline(ws, root, now=_t(1))
+            with open(os.path.join(root, "commands", "cos-approve.md"), "a") as f:
+                f.write("tampered\n")
+            drifted, has = learning.verify_guardrails(ws, root)
+            self.assertTrue(has)
+            self.assertEqual(drifted, ["commands/cos-approve.md"])
+
+    def test_no_baseline_is_not_alarm(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._root(d)
+            drifted, has = learning.verify_guardrails(os.path.join(d, "ws"), root)
+            self.assertFalse(has)
+            self.assertEqual(drifted, [])
+
+    def test_rebaseline_clears_drift(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = self._root(d)
+            ws = os.path.join(d, "ws")
+            learning.write_guardrail_baseline(ws, root, now=_t(1))
+            with open(os.path.join(root, "dashboard", "audit.py"), "a") as f:
+                f.write("changed\n")
+            self.assertTrue(learning.verify_guardrails(ws, root)[0])
+            learning.write_guardrail_baseline(ws, root, now=_t(2))
+            self.assertEqual(learning.verify_guardrails(ws, root)[0], [])

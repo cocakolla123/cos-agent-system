@@ -91,7 +91,7 @@ def propose_agents(g, connectors=None, registry=None, accounts=None):
         specs.setdefault(spec["name"], spec)
     for spec in _job_search_agents(g, registry):
         specs.setdefault(spec["name"], spec)
-    for spec in _project_builder_agents(g):
+    for spec in _project_builder_agents(g, registry):
         specs.setdefault(spec["name"], spec)
     for spec in _per_account_comms_agents(accounts):
         specs.setdefault(spec["name"], spec)
@@ -187,10 +187,20 @@ def _job_search_agents(g, registry):
         justification="A job-search workspace/entities were discovered.")]
 
 
-def _project_builder_agents(g):
+def _project_builder_agents(g, registry=None):
+    # A workspace counts as "personal" if the registry says its kind is
+    # personal (M12 fix — a workspace named "side-projects" with kind=personal
+    # qualifies), falling back to the literal id for registry-less callers.
+    def _is_personal(ws):
+        if registry is not None:
+            w = registry.get(ws) if hasattr(registry, "get") else None
+            if isinstance(w, dict) and w.get("kind"):
+                return w["kind"] == "personal"
+        return _kindish(ws) == "personal"
+
     repos = [n for n in g.nodes.values()
              if n.get("type") in ("Repository", "Project")
-             and _kindish(n["workspace"]) == "personal"]
+             and _is_personal(n["workspace"])]
     if not repos:
         return []
     ws = _dominant_workspace(repos)
