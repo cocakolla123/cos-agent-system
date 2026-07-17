@@ -168,6 +168,13 @@ When the V2 modules are present, `/setup` runs discovery *by research*, not by q
    kinds — see `/cos-research` Step 4 — and the never-autonomous approval categories for
    `APPROVAL_POLICY.md`).
 
+**Config check + preflight:** before writing `config.json`, run `validate_config.validate(...)`
+(`../dashboard/validate_config.py`) and fix any `error` findings (missing baseline tool grants,
+empty/unknown `action_tools`, bad JSON) — these otherwise fail silently. Before crawling in
+Step 1, run the `preflight` probe (see `/cos-research` Step 0) so an unreachable connector is
+reported, not mistaken for "nothing there." New dashboard action types can be added via
+`config.json`'s `action_types` registry (icon + label) with no code change.
+
 **Fallback:** if the graph is empty (no connectors reachable, or research skipped),
 `factory.propose_agents` returns the V1 connector-gated role set, so `/setup` behaves exactly as
 before. This addendum is additive — a pre-V2 deployment that never runs `/cos-research` is

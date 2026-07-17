@@ -267,7 +267,7 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
 - Cross-cutting: grep the tree for brand/product strings before declaring a generalization done;
   no default path resolves outside `template/`.
 
-## Status
+## Status — V2 complete (M0–M8)
 - [x] **M0** — docs (this file + `PLAN.md` pointer + lessons entry) and the private repo
       `cocakolla123/cos-agent-system` created; 33 issues filed, labeled M1–M8.
 - [x] **M1 — Knowledge graph foundation.** `dashboard/graph.py` (stdlib only): node/edge schema
@@ -279,7 +279,26 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
       3.9 and 3.14. Additive: no existing behavior changed; dashboard still serves zero-config.
       Covers issues #1–#4. **Note:** the graph store lives under the (gitignored) workspace at
       `workspace/graph/`; it is created by the research engine in M2, not by M1.
-- [ ] M2–M8 — not started
+- [x] **M2 — Research engine.** `research.py` (normalized records → graph ingest, stub
+      auto-creation, idempotent; `infer_workspaces` clustering) + `commands/cos-research.md`
+      (auth preflight, 6 discovery modules, workspace inference). Issues #5–#12.
+- [x] **M3 — Multi-workspace.** `workspaces.py` (registry, isolation detection, active-workspace
+      resolution). Issues #13–#15.
+- [x] **M4 — Dynamic agent factory.** `factory.py` (graph-evidence proposals, richer spec,
+      markdown renderer, connector-gated fallback) + `agents/README.md` + `setup.md` addenda.
+      Issues #17–#20.
+- [x] **M5 — Workstream correlation.** `correlate.py` (Objective nodes, deterministic union-find,
+      timeline). Issue #21.
+- [x] **M6 — Dashboard population.** `sections.py` (9 graph-powered sections + Objective timeline
+      cards + workspace switcher) wired additively + guarded into `server.py`. Issues #16, #22–#26.
+- [x] **M7 — Continuous learning.** `cos-poll.md` V2 addendum (incremental research, freshness,
+      re-correlation, agent re-eval propose-only) + optional live refresh (`/graph-version` +
+      gated client poll, off by default). Issues #27–#29.
+- [x] **M8 — Hardening.** `validate_config.py`, action-type registry (config-driven `action_types`),
+      `audit.py` (append-only log wired into `set_status`), `preflight.py`. Issues #30–#33.
+
+All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (86 unit tests). The dashboard
+still serves zero-config (V1 view) and every V2 surface is additive + guarded.
 
 ### Runtime note
 `dashboard/server.py` requires **Python 3.12+** (an f-string with an embedded backslash). New V2

@@ -47,6 +47,13 @@ try:
 except Exception:  # pragma: no cover - defensive
     _sections = None
 
+# V2 (M8, issue #32): append-only audit log of status changes. Guarded so a
+# missing module never affects the dashboard.
+try:
+    import audit as _audit
+except Exception:  # pragma: no cover - defensive
+    _audit = None
+
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
 
@@ -109,6 +116,21 @@ POLL_TOOLS = CONFIG["poll_tools"]
 DOMAIN_TAG = CONFIG["domain_tag"]
 ICONS = {"message_send": "💬", "ticket_update": "🎫", "calendar_change": "📅"}
 DEFAULT_ICON = "🔧"
+# V2 (M8, issue #31): action-type registry — new action types can be added via
+# config.json's "action_types": {"<type>": {"icon": "🚀", "label": "Deploys"}}
+# without editing this file. Config wins over the built-in defaults above.
+ACTION_TYPES = dict(CONFIG.get("action_types") or {})
+for _at, _meta in ACTION_TYPES.items():
+    if isinstance(_meta, dict) and _meta.get("icon"):
+        ICONS[_at] = _meta["icon"]
+
+
+def action_label(action_type):
+    """Human label for an action type (config registry first, else prettified)."""
+    meta = ACTION_TYPES.get(action_type)
+    if isinstance(meta, dict) and meta.get("label"):
+        return meta["label"]
+    return action_type.replace("_", " ").title()
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
 PRIORITY_LABELS = {"high": "🔴 High", "medium": "🟡 Medium", "low": "⚪ Low"}
 
@@ -253,6 +275,9 @@ def set_status(entry_id, new_status, note=None, from_status="pending"):
             new_text = new_text[:insert_at] + marker + new_text[insert_at:]
     with open(path, "w") as f:
         f.write(new_text)
+    if _audit is not None:
+        _audit.record(COS_DIR, entry_id, new_status, from_status=from_status,
+                      actor="dashboard", detail=note or "")
     return True
 
 

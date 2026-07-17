@@ -11,6 +11,11 @@
     "message_send": "mcp__example__messaging_send_message_draft"
   },
 
+  "_comment_action_types": "V2 (M8): register extra dashboard action types (icon + label) without editing server.py. Built-ins: message_send, ticket_update, calendar_change.",
+  "action_types": {
+    "message_send": {"icon": "💬", "label": "Message"}
+  },
+
   "base_tools": "Read,Edit,Agent",
   "chat_tools": "Read,Agent",
   "revise_tools": "Read,Edit,Agent",

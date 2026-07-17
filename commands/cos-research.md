@@ -30,9 +30,12 @@ written into the file-based knowledge graph (`dashboard/graph.py`) as nodes + ed
 
 ## Step 0 — Connector auth preflight
 For each connector category you intend to crawl, make **one** cheap read-only probe (e.g. a
-1-item search). If it errors with an auth/permission failure, record the category as
-`unavailable` and **continue with what's reachable** — never treat a connector outage as "no
-results." Report the unavailable set at the end so the user can `/mcp` re-auth.
+1-item search). Collect the outcomes as `{connector, ok, error}` and pass them through
+`preflight.summarize(results)` (`dashboard/preflight.py`) to get an available/unavailable split
+and a one-line report. If a category is `unavailable` (auth/permission failure or outage),
+**continue with what's reachable** (`preflight.should_continue` is true as long as one connector
+works) — never treat a connector outage as "no results." Report the unavailable set at the end so
+the user can `/mcp` re-auth.
 
 ## Step 1 — Run the discovery modules
 Dispatch the modules for the in-scope categories. Each module **reads** its connector and emits
