@@ -82,3 +82,27 @@ task.
 
 Never execute anything external — no send, no ticket comment/transition, no calendar/domain
 mutation. Everything actionable goes through the approval queue.
+
+## V2 addendum — continuous learning (see `../ROADMAP-V2.md`)
+
+When the V2 modules are present, the `general` scope also keeps the knowledge graph and the
+proposed-agent set current — still **read-only against connectors**, still queue-only for
+anything external:
+
+1. **Incremental research.** Run `/cos-research --incremental` so sources changed since the last
+   run are re-read and upserted into the graph. Because upsert dedups by stable id, this only
+   refreshes freshness/confidence on things already known — it never re-asks the user anything
+   already in the graph.
+2. **Freshness refresh.** Anything not re-observed decays; `graph.stale_nodes()` flags nodes past
+   the freshness horizon so the dashboard can show them as ⚠️ rather than as current fact.
+3. **Re-correlate.** Re-run `correlate.correlate(graph)` so new items join (or form) the right
+   `Objective` workstream. It's idempotent — existing objectives are updated in place.
+4. **Re-evaluate agents (propose only).** Run `factory.propose_agents(graph)`. If the graph now
+   justifies an agent that doesn't exist yet (e.g. a new external system appeared), **queue a
+   proposal** — a task in `tasks/inbox.md` describing the agent and its evidence — and **never
+   auto-create it**. Agent creation stays an explicit, approved `/setup` step.
+5. **Regenerate views.** `python3 ../dashboard/graph.py <graph-dir> --render` so the markdown
+   views stay in sync.
+
+All of this is additive: a deployment without the V2 modules runs the original poll scopes
+above unchanged.

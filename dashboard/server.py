@@ -95,6 +95,9 @@ def load_config(path):
 CONFIG = load_config(_arg_after("--config") or CONFIG_PATH_DEFAULT)
 COS_DIR = _arg_after("--workspace") or CONFIG["workspace_dir"]
 DASHBOARD_DIR = TEMPLATE_DASHBOARD_DIR
+# V2 (M7): optional live refresh — off by default, so V1 behavior is unchanged.
+LIVE_REFRESH = bool(CONFIG.get("live_refresh", False))
+LIVE_REFRESH_SECONDS = int(CONFIG.get("live_refresh_seconds", 20) or 20)
 ORCHESTRATOR_CWD = CONFIG["orchestrator_cwd"]
 JIRA_HOST = CONFIG["ticket_host"]
 TICKET_SYSTEM_NAME = CONFIG["ticket_system_name"]
@@ -836,6 +839,7 @@ async function sendChat() {{
 document.getElementById("chatInput")?.addEventListener("keydown", (e) => {{
   if (e.key === "Enter" && !e.shiftKey) {{ e.preventDefault(); sendChat(); }}
 }});
+{live_refresh_js}
 </script>
 </body></html>
 """
@@ -1058,6 +1062,45 @@ def render_schedule_section(cfg):
     return "".join(blocks)
 
 
+def dashboard_version():
+    """A cheap change token: combined mtimes of the files the page is built from.
+
+    Used by the optional live-refresh poll (M7) to decide whether new findings
+    have landed. Never raises.
+    """
+    paths = [
+        os.path.join(COS_DIR, "approval-queue.md"),
+        os.path.join(COS_DIR, "graph", "nodes.jsonl"),
+        os.path.join(COS_DIR, "graph", "edges.jsonl"),
+    ]
+    stamp = []
+    for p in paths:
+        try:
+            stamp.append(str(os.path.getmtime(p)))
+        except OSError:
+            stamp.append("0")
+    return "-".join(stamp)
+
+
+def render_live_refresh_js():
+    """Return the auto-refresh script, or "" when the feature is disabled."""
+    if not LIVE_REFRESH:
+        return ""
+    return (
+        "\n(function(){\n"
+        "  let last=null;\n"
+        "  setInterval(async function(){\n"
+        "    try{\n"
+        "      const r=await fetch('/graph-version',{cache:'no-store'});\n"
+        "      const j=await r.json();\n"
+        "      if(last!==null && j.v!==last){ location.reload(); }\n"
+        "      last=j.v;\n"
+        "    }catch(e){}\n"
+        "  }, " + str(max(5, LIVE_REFRESH_SECONDS) * 1000) + ");\n"
+        "})();\n"
+    )
+
+
 def render_command_center(requested_ws=None):
     """Render the V2 graph-powered command-center block, or "" if unavailable.
 
@@ -1098,6 +1141,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path == "/graph-version":
+            self._send_json({"v": dashboard_version()})
+            return
         if parsed.path != "/":
             self.send_response(404)
             self.end_headers()
@@ -1144,6 +1190,7 @@ class Handler(BaseHTTPRequestHandler):
                 {c: list(days) for c, days in selected_by_connector.items()}
             ),
             command_center=command_center,
+            live_refresh_js=render_live_refresh_js(),
         )
         self._send_html(page)
 

@@ -18,5 +18,9 @@
 
   "domain_tag": "YourDomain",
   "domain_keywords": ["example-keyword", "example-system-name"],
-  "domain_url_keywords": ["example.internal.tool"]
+  "domain_url_keywords": ["example.internal.tool"],
+
+  "_comment_live_refresh": "V2 (M7): when true, the dashboard polls /graph-version and reloads when the approval queue or knowledge graph changes. Off by default (V1 behavior). live_refresh_seconds is the poll interval (min 5).",
+  "live_refresh": false,
+  "live_refresh_seconds": 20
 }
