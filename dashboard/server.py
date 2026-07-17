@@ -37,7 +37,15 @@ import re
 import subprocess
 import sys
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
+
+# V2 (M6): graph-powered command-center sections. Optional and fully guarded —
+# if these modules are missing or the graph is unreadable, the dashboard renders
+# exactly as it did in V1 (see render_command_center()).
+try:
+    import sections as _sections
+except Exception:  # pragma: no cover - defensive
+    _sections = None
 
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
@@ -545,6 +553,22 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .tag-calendar {{ background:#e3fdf0; color:#0e7d4f; }}
 .tag-domain {{ background:#fde3e9; color:#b8144f; }}
 .tag-meeting {{ background:#e3f2fd; color:#0d5aa7; }}
+.graph-command-center {{ margin:1rem 0 1.5rem; padding:1rem 1.1rem; background:#f7fbff; border:1px solid #d6e6f5; border-radius:12px; }}
+.graph-command-center > h2 {{ margin:.1rem 0 .6rem; }}
+.cc-sub {{ font-weight:400; font-size:.8rem; color:#5b6b7a; }}
+.graph-section {{ margin:.5rem 0 .9rem; }}
+.graph-section h3 {{ margin:.3rem 0 .35rem; font-size:.95rem; }}
+.graph-section ul {{ margin:.1rem 0; padding-left:1.1rem; }}
+.graph-section li {{ margin:.12rem 0; font-size:.9rem; }}
+.sec-count {{ display:inline-block; min-width:1.2rem; padding:0 .4rem; background:#e3eefb; color:#0d5aa7; border-radius:8px; font-size:.72rem; }}
+.sec-type {{ color:#5b6b7a; font-size:.76rem; text-transform:uppercase; letter-spacing:.02em; }}
+.sec-sub {{ color:#5b6b7a; font-size:.82rem; }}
+.ws-switcher a {{ margin:0 .15rem; text-decoration:none; color:#0d5aa7; }}
+.ws-switcher a.ws-active {{ font-weight:700; text-decoration:underline; }}
+.objective-card {{ margin:.35rem 0; padding:.5rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; }}
+.obj-title {{ font-weight:600; font-size:.9rem; }}
+.obj-timeline {{ font-size:.82rem; color:#3a4a58; margin-top:.2rem; }}
+.tl-step {{ white-space:nowrap; }}
 .linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
 .linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
 .linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
@@ -572,6 +596,8 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 
 <h2>Today <span></span></h2>
 <pre>{daily}</pre>
+
+{command_center}
 
 <h2>Approval queue — pending ({pending_count}) <button class="small" onclick="pollNow()">Poll now</button></h2>
 <div id="pollResult" class="result"></div>
@@ -1032,6 +1058,27 @@ def render_schedule_section(cfg):
     return "".join(blocks)
 
 
+def render_command_center(requested_ws=None):
+    """Render the V2 graph-powered command-center block, or "" if unavailable.
+
+    Fully guarded: no knowledge graph, missing V2 modules, or any rendering
+    error all degrade to an empty string, so the dashboard falls back to its V1
+    view instead of erroring.
+    """
+    if _sections is None:
+        return ""
+    try:
+        g, registry, active = _sections.load_for_dashboard(COS_DIR, requested_ws)
+        return _sections.render_sections(g, registry, active)
+    except Exception as exc:  # pragma: no cover - defensive
+        try:
+            with open(os.path.join(DASHBOARD_DIR, "server.log"), "a") as f:
+                f.write("command_center render error: %r\n" % (exc,))
+        except OSError:
+            pass
+        return ""
+
+
 class Handler(BaseHTTPRequestHandler):
     def _send_json(self, obj, code=200):
         body = json.dumps(obj).encode()
@@ -1050,10 +1097,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(b)
 
     def do_GET(self):
-        if urlparse(self.path).path != "/":
+        parsed = urlparse(self.path)
+        if parsed.path != "/":
             self.send_response(404)
             self.end_headers()
             return
+        requested_ws = (parse_qs(parsed.query).get("workspace", [None]) or [None])[0]
+        command_center = render_command_center(requested_ws)
         label, daily = latest_daily_log()
         entries = parse_approval_queue()
         pending = sorted(
@@ -1093,6 +1143,7 @@ class Handler(BaseHTTPRequestHandler):
             selected_days_by_connector_json=json.dumps(
                 {c: list(days) for c, days in selected_by_connector.items()}
             ),
+            command_center=command_center,
         )
         self._send_html(page)
 
