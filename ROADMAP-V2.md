@@ -325,7 +325,19 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
       consent screen is the provider's own browser page; the dashboard initiates and confirms
       the flow but cannot complete it for the user.
 
-All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (127 unit tests). The dashboard
+- [x] **M11 (V2.3) — Startup context intake.** On a fresh deployment (empty graph, no prior
+      choice) the dashboard opens a **startup popup before any research/agent generation**:
+      paste text or attach files (**md / txt / pdf / docx**) → saved to
+      `<workspace>/context-inbox/` (`dashboard/context_intake.py`: base64 upload, extension +
+      size validation, path-traversal-safe filenames, provided/skipped choice marker) and
+      ingested by `/cos-research`/`/setup` as the **highest-confidence source**
+      (`source=user-context`, confidence 0.95) that seeds workspace inference and pre-answers
+      setup questions — a fact the user already stated is never asked again. Skipping is
+      recorded and the popup never auto-opens again; a top-bar **➕ Add context** button keeps
+      intake available forever. Processed files move to `context-inbox/processed/`, never
+      deleted.
+
+All V2 modules are Python stdlib only and pass on 3.9 and 3.14 (139 unit tests). The dashboard
 still serves zero-config (V1 view) and every V2 surface is additive + guarded.
 
 ### Runtime note

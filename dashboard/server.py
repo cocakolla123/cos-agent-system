@@ -67,6 +67,12 @@ try:
 except Exception:  # pragma: no cover - defensive
     _accounts = None
 
+# V2.3 (M11): startup context intake — the "give me context first" popup.
+try:
+    import context_intake as _context
+except Exception:  # pragma: no cover - defensive
+    _context = None
+
 TEMPLATE_DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 PORT = 8765
 
@@ -645,6 +651,7 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 <h1>CoS Dashboard</h1>
 <div class="subtitle">{today} · last checked: {last_poll}
   <button class="small" onclick="pollNow()" title="Full sweep: checks every configured connector (messages, email, tickets, calendar, ...) plus the general re-check">Poll now</button>
+  <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">➕ Add context</button>
 </div>
 <div id="pollResult" class="result"></div>
 
@@ -696,6 +703,8 @@ connector has its own interval and active window; outside its window it just ski
 {self_learning_html}
 
 {auth_modal_html}
+
+{context_modal_html}
 
 <h2>New task</h2>
 <form id="taskForm">
@@ -1212,6 +1221,88 @@ _ACCOUNT_STATE_DOTS = {
 }
 
 
+def _graph_is_empty():
+    try:
+        import graph as _g
+        return not _g.Graph.load(os.path.join(COS_DIR, "graph")).nodes
+    except Exception:
+        return True
+
+
+def render_context_modal():
+    """The startup context-intake popup (M11) + its reopen logic.
+
+    Auto-opens only on a fresh deployment (empty graph, no prior choice); after
+    that it stays available behind the top-bar "Add context" button. Returns ""
+    when the module is missing.
+    """
+    if _context is None:
+        return ""
+    auto = False
+    try:
+        auto = _context.should_offer(COS_DIR, _graph_is_empty())
+        n_pending = len(_context.pending_files(COS_DIR))
+    except Exception:
+        n_pending = 0
+    pending_note = ("%d context file(s) waiting for the next research run." % n_pending
+                    if n_pending else "")
+    display = "flex" if auto else "none"
+    skip_label = "Skip — research on your own" if auto else "Close"
+    return f"""
+<div id="contextModal" class="auth-overlay" style="display:{display}">
+  <div class="auth-box" style="max-width:520px">
+    <h3>📋 Give me some context?</h3>
+    <p class="auth-reason">Before I research your accounts and build your agents, you can give
+    me a head start: paste anything (who you are, what you work on, current projects) or attach
+    files — <strong>.md, .txt, .pdf, .docx</strong> (resume, project doc, team notes). This
+    seeds the knowledge graph as your own highest-confidence facts. Totally optional — skip and
+    I'll figure things out from your connectors instead.</p>
+    <textarea id="ctxText" rows="5" style="width:100%" placeholder="Paste context here — e.g. 'I'm a systems engineer at Acme working on contact-center routing; side project: an iOS app; also job hunting for staff roles.'"></textarea>
+    <input type="file" id="ctxFiles" accept=".md,.txt,.pdf,.docx" multiple style="margin-top:.5rem">
+    <div class="auth-buttons">
+      <button class="primary" onclick="ctxSave()">Save context</button>
+      <button class="small" onclick="ctxSkip()">{skip_label}</button>
+    </div>
+    <div id="ctxResult" class="result">{html.escape(pending_note)}</div>
+  </div>
+</div>
+<script>
+function ctxOpen() {{ document.getElementById("contextModal").style.display = "flex"; }}
+async function ctxSkip() {{
+  { "await post('/context-skip', {});" if auto else "" }
+  document.getElementById("contextModal").style.display = "none";
+}}
+function _readB64(file) {{
+  return new Promise((res, rej) => {{
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",", 2)[1] || "");
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  }});
+}}
+async function ctxSave() {{
+  const out = document.getElementById("ctxResult");
+  const text = document.getElementById("ctxText").value.trim();
+  const files = document.getElementById("ctxFiles").files;
+  if (!text && !files.length) {{ out.textContent = "nothing to save — paste text or pick a file"; return; }}
+  let msgs = [];
+  if (text) {{
+    const r = await post("/context-text", {{text: text}});
+    msgs.push(r.message);
+  }}
+  for (const f of files) {{
+    const b64 = await _readB64(f);
+    const r = await post("/context-file", {{filename: f.name, data_b64: b64}});
+    msgs.push(r.message);
+  }}
+  out.textContent = msgs.join(" · ");
+  document.getElementById("ctxText").value = "";
+  setTimeout(() => {{ document.getElementById("contextModal").style.display = "none"; }}, 1800);
+}}
+</script>
+"""
+
+
 def render_accounts_section():
     """The 'Accounts & connections' panel (M10). Empty string if unavailable."""
     if _accounts is None:
@@ -1454,6 +1545,7 @@ class Handler(BaseHTTPRequestHandler):
             self_learning_html=render_self_learning_section(),
             accounts_html=render_accounts_section(),
             auth_modal_html=render_auth_modal(),
+            context_modal_html=render_context_modal(),
         )
         self._send_html(page)
 
@@ -1785,6 +1877,49 @@ class Handler(BaseHTTPRequestHandler):
             state = "on" if on else "off"
             code_state = "may fix its own code" if code_on else "drafts code fixes as tasks"
             self._send_json({"message": f"self-learning {state} ({code_state})"})
+            return
+
+        if self.path == "/context-text":
+            # V2.3 (M11): pasted startup context.
+            if _context is None:
+                self._send_json({"message": "context module unavailable"}, 500)
+                return
+            try:
+                path = _context.save_text(COS_DIR, data.get("text", ""))
+                _context.record_choice(COS_DIR, "provided")
+                self._send_json({"message": "context saved (%s) — it will seed "
+                                            "the next research run" %
+                                            os.path.basename(path)})
+            except ValueError as exc:
+                self._send_json({"message": str(exc)}, 400)
+            return
+
+        if self.path == "/context-file":
+            # V2.3 (M11): uploaded startup context file (base64 from the page JS).
+            if _context is None:
+                self._send_json({"message": "context module unavailable"}, 500)
+                return
+            try:
+                path = _context.save_file(COS_DIR, data.get("filename", ""),
+                                          data.get("data_b64", ""))
+                _context.record_choice(COS_DIR, "provided")
+                self._send_json({"message": "%s saved" % os.path.basename(path)})
+            except ValueError as exc:
+                self._send_json({"message": str(exc)}, 400)
+            return
+
+        if self.path == "/context-skip":
+            if _context is None:
+                self._send_json({"message": "context module unavailable"}, 500)
+                return
+            try:
+                _context.record_choice(COS_DIR, "skipped")
+            except ValueError as exc:
+                self._send_json({"message": str(exc)}, 400)
+                return
+            self._send_json({"message": "skipped — I'll research on my own; "
+                                        "you can add context anytime with "
+                                        "the ➕ button"})
             return
 
         if self.path == "/probe-accounts":

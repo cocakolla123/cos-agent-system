@@ -188,3 +188,9 @@ then run `/cos-accounts --probe` to learn each instance's identity and bind it t
 accounts=accounts.load_accounts(config))` so workspaces with their own communication accounts
 get per-workspace comms agents granted ONLY their instance's tools. Auth asks go through the
 dashboard's popup queue (`accounts.enqueue_auth_request`) — never inline; Refuse is permanent.
+
+**Startup context (V2.3, M11):** before Step 1, the dashboard's startup popup may have
+collected pasted text / files into `<workspace>/context-inbox/`. `/cos-research` ingests them
+as the highest-confidence source (see its "User-provided context" section) — run it (or at
+minimum read those files) BEFORE asking the user anything in Step 2: a question already
+answered by their own context must never be asked again.

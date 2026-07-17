@@ -85,3 +85,13 @@ and treat each instance separately — probe each via `/cos-accounts`, skip any 
 **declined** (`accounts.is_declined`), and tag every record a module emits with the instance's
 bound workspace so graph isolation holds automatically. Two Gmail instances are two different
 workspaces' data, never merged.
+
+## User-provided context (V2.3, M11) — read this FIRST
+Before Step 0, check `<workspace>/context-inbox/` via `context_intake.pending_files`
+(`dashboard/context_intake.py`). These are files the user pasted/uploaded through the
+dashboard's startup popup (md/txt read directly; pdf/docx via the Read tool). Treat them as the
+**highest-confidence source**: extract entities/facts as records with
+`source="user-context"` and `confidence=0.95`, and use them to seed workspace inference
+(an employer or project the user *told* you about outranks anything inferred). After ingesting
+a file, `context_intake.mark_processed(ws, path)` — never delete it. User-stated facts also
+resolve ambiguities that would otherwise generate a Step 4 question.
