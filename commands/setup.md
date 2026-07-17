@@ -150,3 +150,25 @@ with an unrelated deployment.
 - Re-running `/setup` later with neither flag re-runs full discovery — connectors change over
   time — and Step 0's marker-file check (above) keeps that safe on the deployment's own repeat
   runs.
+
+## V2 addendum — research-first agent generation (see `../ROADMAP-V2.md`)
+
+When the V2 modules are present, `/setup` runs discovery *by research*, not by questionnaire:
+
+1. After Step 1 (connector discovery), run **`/cos-research --full`** to populate the knowledge
+   graph from the connectors (read-only). This replaces most of what Step 2 used to *ask* — the
+   user's projects, systems, channels, tickets, and workspaces are discovered, not typed.
+2. In Step 3, decide agents with **`factory.propose_agents(graph)`** (`../dashboard/factory.py`)
+   instead of the connector-only role table. Show the proposal list — each with its mission,
+   evidence, and justification — and generate only what the user approves.
+3. In Step 4, write each approved agent with **`factory.render_agent_md(spec)`**, substituting the
+   exact fully-qualified MCP tool names for the tool categories the spec names. The Step 0
+   collision check and the "no mutating tool on any specialist" rule still apply unchanged.
+4. Ask the user only the **residual** questions research couldn't answer (ambiguous workspace
+   kinds — see `/cos-research` Step 4 — and the never-autonomous approval categories for
+   `APPROVAL_POLICY.md`).
+
+**Fallback:** if the graph is empty (no connectors reachable, or research skipped),
+`factory.propose_agents` returns the V1 connector-gated role set, so `/setup` behaves exactly as
+before. This addendum is additive — a pre-V2 deployment that never runs `/cos-research` is
+unaffected.

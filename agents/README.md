@@ -103,3 +103,27 @@ uses. If a deployment already exists there (check for any existing `cos-*.md` fi
 global dir, or an existing `~/.claude/cos/` directory, before writing anything), `/setup` must
 stop and ask rather than silently overwrite — this is a real risk on a machine that already
 runs a hand-built or template-based CoS system, not just a theoretical one.
+
+---
+
+## V2 — Dynamic agent factory (see `../ROADMAP-V2.md`, `../dashboard/factory.py`)
+
+V1 (above) generates a fixed role set gated by **connector presence**. V2 additionally proposes
+agents justified by what the **knowledge graph** actually contains, via `dashboard/factory.py`:
+
+- **Evidence-driven, not connector-driven.** A Salesforce node cluster → a Salesforce agent; a
+  distinct external system (Genesys, Zendesk, …) with tickets/incidents/deploys → an Investigation
+  agent for it; job-search entities → a Job Search agent; personal repos/projects → a Project
+  Builder agent. `factory.propose_agents(graph)` returns the list; when the graph is empty it
+  falls back to the V1 connector-gated roles, so a brand-new deployment is unchanged.
+- **Richer spec (every generated agent).** `Mission · Responsibilities · Allowed tools ·
+  Forbidden tools · Private memory · Shared memory · Approval policy · Escalation rules · Inputs ·
+  Outputs · Confidence requirements` — plus the evidence and justification for why it exists.
+  `factory.render_agent_md(spec)` produces the file; `/setup` substitutes the exact
+  fully-qualified MCP tool names for the tool *categories* the spec names.
+- **Still read/draft-only, still collision-safe, still approval-gated.** Every proposed agent's
+  `forbidden_tools` include the mutating verbs (send/post/merge/deploy/delete/…); the factory
+  never writes agents itself — `/setup` presents the proposal list, checks for collisions (the
+  Step 0 rule above still applies), and writes to `~/.claude/agents/global/` only after the user
+  approves. Each agent is tagged with its `workspace` so its memory and graph view are isolated
+  (see `../dashboard/workspaces.py`).
