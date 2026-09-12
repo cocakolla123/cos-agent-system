@@ -24,12 +24,18 @@ from __future__ import annotations
 
 import graph
 
-# Node types that can belong to a workstream.
-CORRELATABLE = {"Channel", "Ticket", "Meeting", "PR", "Document", "Incident"}
+# Node types that can belong to a workstream. ``Action`` is here so an
+# obligation lands on the timeline of the work it belongs to, which is what
+# makes a workstream card answer "and what do I do about it?" rather than just
+# narrating history.
+CORRELATABLE = {"Channel", "Ticket", "Meeting", "PR", "Document", "Incident",
+                "Action"}
 
-# The order a timeline reads in (earliest kind of activity first).
+# The order a timeline reads in (earliest kind of activity first). Action is
+# last by design — it is the open end of the story, the "next action" this
+# module's docstring promises.
 _TIMELINE_ORDER = ["Channel", "Meeting", "Ticket", "PR", "Deployment",
-                   "Document", "Incident"]
+                   "Document", "Incident", "Action"]
 
 
 def _signature(g, node):

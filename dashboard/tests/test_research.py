@@ -116,5 +116,102 @@ class TestWorkspaceInference(unittest.TestCase):
         self.assertIn("personal:repository:sideproj", members)
 
 
+class TestWindowAudit(unittest.TestCase):
+    """Crawl-reach detection: a source fed from too narrow a slice of time."""
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def _graph(self, recs):
+        g = graph.Graph()
+        research.ingest(g, recs, now=self.NOW)
+        return g
+
+    def _row(self, audit, source):
+        return next(r for r in audit if r["source"] == source)
+
+    def test_declared_window_below_floor_is_short(self):
+        g = self._graph([research.record(
+            "Action", "js", "a1", attrs={"window_days": 2}, source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertEqual(row["declared_days"], 2)
+        self.assertTrue(row["short"])
+
+    def test_declared_window_at_floor_is_not_short(self):
+        g = self._graph([research.record(
+            "Action", "js", "a1", attrs={"window_days": 90}, source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertFalse(row["short"])
+
+    def test_undeclared_window_is_short_even_when_nodes_exist(self):
+        """The regression this exists for: the crawl recorded no window_days at
+        all, so its reach is unknown — and unknown reach is the finding."""
+        g = self._graph([research.record(
+            "Action", "js", "a1", attrs={"last_activity": "2026-09-11"},
+            source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertIsNone(row["declared_days"])
+        self.assertTrue(row["short"])
+
+    def test_undeclared_but_observed_reach_clears_floor(self):
+        g = self._graph([research.record(
+            "Action", "js", "old", attrs={"last_activity": "2026-01-01"},
+            source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertFalse(row["short"])
+        self.assertEqual(row["oldest"], "2026-01-01")
+
+    def test_declaration_beats_a_quiet_observed_window(self):
+        """A genuinely quiet 90 days must not read as a narrow crawl."""
+        g = self._graph([research.record(
+            "Action", "js", "a1",
+            attrs={"window_days": 90, "last_activity": "2026-09-11"},
+            source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertFalse(row["short"])
+        self.assertEqual(row["reach_days"], 90)
+
+    def test_last_verified_is_not_evidence(self):
+        """Crawl recency must never count as reach — the is_dormant lesson."""
+        g = self._graph([research.record("Action", "js", "a1", source="gmail")])
+        row = self._row(research.window_audit(g, now=self.NOW), "gmail")
+        self.assertIsNone(row["observed_days"])
+        self.assertIsNone(row["oldest"])
+        self.assertTrue(row["short"])
+
+    def test_multi_source_node_counts_against_every_connector(self):
+        g = self._graph([research.record(
+            "Action", "js", "a1", attrs={"window_days": 90},
+            source="gmail, indeed")])
+        audit = research.window_audit(g, now=self.NOW)
+        self.assertEqual({r["source"] for r in audit}, {"gmail", "indeed"})
+        self.assertFalse(self._row(audit, "indeed")["short"])
+
+    def test_window_gaps_lists_only_short_sources(self):
+        g = self._graph([
+            research.record("Action", "js", "a1",
+                            attrs={"window_days": 90}, source="gmail"),
+            research.record("Action", "js", "a2",
+                            attrs={"window_days": 3}, source="notion"),
+        ])
+        gaps = research.window_gaps(g, now=self.NOW)
+        self.assertEqual([r["source"] for r in gaps], ["notion"])
+
+    def test_worst_reach_sorts_first(self):
+        g = self._graph([
+            research.record("Action", "js", "a1",
+                            attrs={"window_days": 30}, source="notion"),
+            research.record("Action", "js", "a2",
+                            attrs={"window_days": 2}, source="gmail"),
+            research.record("Action", "js", "a3",
+                            attrs={"window_days": 90}, source="asana"),
+        ])
+        audit = research.window_audit(g, now=self.NOW)
+        self.assertEqual([r["source"] for r in audit],
+                         ["gmail", "notion", "asana"])
+
+    def test_empty_graph_audits_clean(self):
+        self.assertEqual(research.window_audit(graph.Graph()), [])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

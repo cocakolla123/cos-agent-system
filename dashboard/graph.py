@@ -79,12 +79,33 @@ def file_lock(path):
 NODE_TYPES = [
     "Workspace", "Project", "Repository", "Channel", "Ticket", "Meeting",
     "PR", "Deployment", "Document", "Person", "Incident", "Decision",
-    "Objective",
+    "Objective", "Action",
 ]
 
 # Default staleness horizon used by is_stale()/stale_nodes() when the caller
 # does not override it. A node not re-verified within this many days is stale.
 DEFAULT_MAX_AGE_DAYS = 14
+
+# Default dormancy horizon used by is_dormant(). Measured against the node's
+# *source activity* (attrs['last_activity']), not against crawl recency — see
+# activity_days(). A year of real-world silence means history, not current work.
+DEFAULT_MAX_IDLE_DAYS = 365
+
+# attrs['status'] values that assert an engagement is over. Deliberately narrow:
+# only words that can only mean "this ended". "closed"/"done"/"completed" are
+# excluded — a completed document or a closed ticket is normal lifecycle, and
+# sections.py already handles Ticket status separately.
+TERMINAL_STATUSES = frozenset(
+    {"concluded", "ended", "terminated", "offboarded", "cancelled", "canceled"})
+
+# attrs['status'] values that mean an **Action** no longer needs doing. Read
+# only by is_open_action(), never by is_concluded() — the distinction is the
+# whole point: "done" on a Document or a Ticket is ordinary lifecycle (see
+# TERMINAL_STATUSES above), but "done" on an obligation is the one word that
+# takes it off the to-do list.
+DONE_STATUSES = frozenset(
+    {"done", "completed", "complete", "submitted", "resolved", "paid",
+     "closed", "dismissed"})
 
 
 # ---------------------------------------------------------------------------
@@ -113,11 +134,15 @@ def _parse_iso(s):
         return _dt.datetime.strptime(s, "%Y-%m-%dT%H:%M:%SZ").replace(
             tzinfo=_dt.timezone.utc)
     except (ValueError, TypeError):
-        # Be lenient about anything reasonably ISO-shaped.
+        # Be lenient about anything reasonably ISO-shaped — including the
+        # date-only form discovery modules use for attrs['last_activity'].
+        # Always return *aware* UTC: a naive result here would blow up every
+        # caller that subtracts it from _utcnow().
         try:
-            return _dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
+            parsed = _dt.datetime.fromisoformat(s.replace("Z", "+00:00"))
         except (ValueError, TypeError):
             return None
+        return parsed if parsed.tzinfo else parsed.replace(tzinfo=_dt.timezone.utc)
 
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
@@ -440,6 +465,136 @@ def freshness_days(node, now=None):
     if last is None:
         return None
     return (_utcnow(now) - last).total_seconds() / 86400.0
+
+
+def activity_days(node, now=None):
+    """Age in days of the node's *underlying evidence*, or ``None`` if unknown.
+
+    Distinct from ``freshness_days``, and the distinction matters: freshness
+    answers "when did the crawler last look at this", activity answers "when did
+    the real-world thing last actually happen". A 2019 calendar re-read by
+    tonight's poll is maximally *fresh* and totally *inactive*, so freshness
+    alone can never tell a live project from a relic. Discovery modules record
+    the latter as ``attrs['last_activity']`` (ISO date or timestamp).
+    """
+    last = _parse_iso((node.get("attrs", {}) or {}).get("last_activity"))
+    if last is None:
+        return None
+    return (_utcnow(now) - last).total_seconds() / 86400.0
+
+
+def is_dormant(node, now=None, max_idle_days=DEFAULT_MAX_IDLE_DAYS):
+    """True if the node is history rather than current work.
+
+    Three ways to be dormant: a discovery module said so outright
+    (``attrs['dormant']``), it is vendor sample data (``attrs['likely_demo']``),
+    or its newest real-world activity is older than ``max_idle_days``. A node
+    with no ``last_activity`` at all is **not** dormant — most node kinds never
+    record one, and silently hiding them would trade a false-positive problem
+    for a worse false-negative one. Suppression needs positive evidence of age,
+    not just absence of evidence.
+
+    ``likely_demo`` is checked here rather than left to each caller because a
+    demo is never dormant *by date*: the vendor's onboarding sample ships with
+    plausible near-term due dates (the Asana starter project's "Task 1" is due
+    next week, forever), so the activity clock reads it as live work. The
+    research module already states the rule — "a demo is not work" — and this
+    is where that statement has to be enforced to bind.
+    """
+    attrs = node.get("attrs", {}) or {}
+    if attrs.get("dormant") or attrs.get("likely_demo"):
+        return True
+    age = activity_days(node, now=now)
+    return age is not None and age > max_idle_days
+
+
+def is_concluded(node):
+    """True if something explicitly declared this work over.
+
+    The third question in the set, and not answerable by either of the others.
+    ``is_stale`` asks "when did we last look", ``is_dormant`` asks "when did
+    this last happen" — both infer from *silence*, so both need time to pass
+    before they say anything. A concluded engagement is an *assertion*: a
+    termination email, a closed contract, an offboarding notice. It is loud,
+    dated, and immediate, and it routinely lands on work whose evidence is days
+    old and whose activity clock will not trip for another year.
+
+    Recorded by discovery modules as ``attrs['concluded']`` (with
+    ``concluded_on`` / ``concluded_by`` carrying the date and the evidence) or
+    as an unambiguous ``attrs['status']`` — see TERMINAL_STATUSES.
+    """
+    a = node.get("attrs", {}) or {}
+    if a.get("concluded"):
+        return True
+    status = a.get("status")
+    return isinstance(status, str) and status.strip().lower() in TERMINAL_STATUSES
+
+
+def is_current(node, now=None, max_idle_days=DEFAULT_MAX_IDLE_DAYS):
+    """True if ``node`` can honestly be presented as live work.
+
+    The single predicate "current work" views should ask. Work is current until
+    it has either gone quiet long enough (dormant) or been declared finished
+    (concluded); either one alone disqualifies it.
+    """
+    return not is_dormant(node, now=now, max_idle_days=max_idle_days) \
+        and not is_concluded(node)
+
+
+# ---------------------------------------------------------------------------
+# Obligations — "what must I do", as opposed to "what exists"
+# ---------------------------------------------------------------------------
+#
+# The three predicates above all answer questions about a *thing*: is it fresh,
+# is it active, is it over. None of them can answer the question a chief of
+# staff exists to answer — **what do I have to do next?** — because that is not
+# a property of an entity at all. A document, a repo and a workstream can every
+# one of them be fresh, active and unconcluded while the user still owes
+# nothing. Meanwhile the assessment due on Friday is not an entity the crawler
+# would ever have minted a node for.
+#
+# So obligations are their own node type (``Action``) with their own clock
+# (``attrs['due']``) and their own end state (DONE_STATUSES). Discovery modules
+# emit them; sections.next_actions() ranks them.
+
+
+def due_days(node, now=None):
+    """Days until ``attrs['due']`` — negative when overdue, ``None`` if undated.
+
+    An undated obligation is still an obligation ("pay the AMF", no deadline
+    stated), so callers must treat ``None`` as "no deadline known", never as
+    "nothing to do".
+    """
+    attrs = node.get("attrs", {}) or {}
+    # 'due_on' is what the tracker connectors already emit (Asana, and the
+    # shape most issue trackers expose), so accept it rather than making every
+    # module rewrite a field it already has right.
+    due = _parse_iso(attrs.get("due") or attrs.get("due_on"))
+    if due is None:
+        return None
+    return (due - _utcnow(now)).total_seconds() / 86400.0
+
+
+def is_overdue(node, now=None):
+    """True if this obligation had a deadline and it has passed."""
+    days = due_days(node, now=now)
+    return days is not None and days < 0
+
+
+def is_open_action(node, now=None):
+    """True if ``node`` is an obligation the user still has to act on.
+
+    Open means: it is an Action, nothing has declared it finished, and it is
+    otherwise current. Note the deliberate asymmetry with ``is_overdue`` — a
+    missed deadline makes an action *more* urgent, never less, so an overdue
+    action stays open until something says it was actually done.
+    """
+    if node.get("type") != "Action":
+        return False
+    status = (node.get("attrs", {}) or {}).get("status")
+    if isinstance(status, str) and status.strip().lower() in DONE_STATUSES:
+        return False
+    return is_current(node, now=now)
 
 
 # ---------------------------------------------------------------------------

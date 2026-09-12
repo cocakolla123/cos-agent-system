@@ -197,6 +197,186 @@ class TestPersistenceAndViews(unittest.TestCase):
             self.assertIn("emp.md", snap1)
 
 
+class TestDormancy(unittest.TestCase):
+    """Source activity (attrs['last_activity']) vs. crawl recency (last_verified).
+
+    Regression guard for the stale-container correction: a 2019 Key
+    Club calendar re-read by tonight's poll is maximally fresh and entirely
+    inactive, and the dashboard showed it as a current project.
+    """
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def test_freshly_crawled_relic_is_fresh_but_dormant(self):
+        g = graph.Graph()
+        n = g.upsert_node("Project", "volunteer", "district-9-north",
+                          attrs={"last_activity": "2019-08-02"}, now=self.NOW)
+        self.assertFalse(graph.is_stale(n, now=self.NOW))
+        self.assertTrue(graph.is_dormant(n, now=self.NOW))
+
+    def test_recent_activity_is_not_dormant(self):
+        g = graph.Graph()
+        n = g.upsert_node("Project", "work", "live",
+                          attrs={"last_activity": "2026-08-20"}, now=self.NOW)
+        self.assertFalse(graph.is_dormant(n, now=self.NOW))
+
+    def test_explicit_dormant_flag_wins_without_a_date(self):
+        g = graph.Graph()
+        n = g.upsert_node("Project", "travel", "empty-cal",
+                          attrs={"dormant": True}, now=self.NOW)
+        self.assertTrue(graph.is_dormant(n, now=self.NOW))
+
+    def test_no_activity_evidence_is_not_dormant(self):
+        """Absence of evidence must not suppress: most nodes never set one."""
+        g = graph.Graph()
+        n = g.upsert_node("Ticket", "work", "T-9", now=self.NOW)
+        self.assertIsNone(graph.activity_days(n, now=self.NOW))
+        self.assertFalse(graph.is_dormant(n, now=self.NOW))
+
+    def test_activity_days_measures_the_source_not_the_crawl(self):
+        g = graph.Graph()
+        n = g.upsert_node("Project", "grad-school", "asu-2023-ssem1",
+                          attrs={"last_activity": "2023-08-26"}, now=self.NOW)
+        self.assertAlmostEqual(graph.freshness_days(n, now=self.NOW), 0.0, places=1)
+        self.assertGreater(graph.activity_days(n, now=self.NOW), 1000)
+
+
+class TestConcluded(unittest.TestCase):
+    """An explicit ending, vs. the two time-based predicates.
+
+    Regression guard for the concluded-engagement correction: the ClientCo
+    Life Tasks contract concluded 2026-08-27 on documents last edited
+    2026-08-04. Both dates are recent, so neither staleness nor dormancy can
+    ever reach this — only the announcement can.
+    """
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def test_concluded_work_is_fresh_and_active_and_still_not_current(self):
+        g = graph.Graph()
+        n = g.upsert_node("Document", "clientco", "life-tasks-guide",
+                          attrs={"last_activity": "2026-08-04",
+                                 "concluded": True,
+                                 "concluded_on": "2026-08-27"}, now=self.NOW)
+        self.assertFalse(graph.is_stale(n, now=self.NOW))
+        self.assertFalse(graph.is_dormant(n, now=self.NOW))
+        self.assertTrue(graph.is_concluded(n))
+        self.assertFalse(graph.is_current(n, now=self.NOW))
+
+    def test_terminal_status_concludes(self):
+        g = graph.Graph()
+        for status in ("concluded", "Terminated", "  offboarded  "):
+            n = g.upsert_node("Project", "work", graph.slug(status),
+                              attrs={"status": status}, now=self.NOW)
+            self.assertTrue(graph.is_concluded(n), status)
+
+    def test_ordinary_lifecycle_words_do_not_conclude(self):
+        """'done'/'closed'/'completed' are normal, and handled elsewhere."""
+        g = graph.Graph()
+        for status in ("open", "done", "closed", "completed", "in-progress"):
+            n = g.upsert_node("Ticket", "work", graph.slug(status),
+                              attrs={"status": status}, now=self.NOW)
+            self.assertFalse(graph.is_concluded(n), status)
+
+    def test_no_status_evidence_is_not_concluded(self):
+        """Same asymmetry as dormancy: suppression needs positive evidence."""
+        g = graph.Graph()
+        n = g.upsert_node("Project", "work", "live", now=self.NOW)
+        self.assertFalse(graph.is_concluded(n))
+        self.assertTrue(graph.is_current(n, now=self.NOW))
+
+    def test_dormant_still_fails_is_current(self):
+        """is_current must keep honouring the older predicate, not replace it."""
+        g = graph.Graph()
+        n = g.upsert_node("Project", "volunteer", "district-9-north",
+                          attrs={"last_activity": "2019-08-02"}, now=self.NOW)
+        self.assertFalse(graph.is_concluded(n))
+        self.assertFalse(graph.is_current(n, now=self.NOW))
+
+
+class TestObligations(unittest.TestCase):
+    """Action nodes — "what must I do", which no entity predicate can answer.
+
+    Regression guard for corr-20260912T103414-to-do-lists-dashboard: the graph
+    held 88 correctly-discovered nodes and zero obligations, so the dashboard
+    could only ever show an inventory.
+    """
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def _action(self, key, **attrs):
+        g = graph.Graph()
+        return g.upsert_node("Action", "job-search", key, attrs=attrs,
+                             now=self.NOW)
+
+    def test_due_days_counts_down_and_goes_negative(self):
+        soon = self._action("a", due="2026-09-18T23:59:00-07:00")
+        self.assertAlmostEqual(graph.due_days(soon, now=self.NOW), 6.79, places=1)
+        self.assertFalse(graph.is_overdue(soon, now=self.NOW))
+        late = self._action("b", due="2026-09-01")
+        self.assertLess(graph.due_days(late, now=self.NOW), 0)
+        self.assertTrue(graph.is_overdue(late, now=self.NOW))
+
+    def test_undated_obligation_is_still_open(self):
+        """None means 'no deadline known', never 'nothing to do'."""
+        n = self._action("pay-amf")
+        self.assertIsNone(graph.due_days(n, now=self.NOW))
+        self.assertFalse(graph.is_overdue(n, now=self.NOW))
+        self.assertTrue(graph.is_open_action(n, now=self.NOW))
+
+    def test_overdue_action_stays_open(self):
+        """Being late makes an action more urgent, never finished."""
+        n = self._action("payments-app", due="2026-08-01")
+        self.assertTrue(graph.is_overdue(n, now=self.NOW))
+        self.assertTrue(graph.is_open_action(n, now=self.NOW))
+
+    def test_done_statuses_close_an_action(self):
+        for status in ("done", "Submitted", "  PAID  "):
+            n = self._action(graph.slug(status), status=status)
+            self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
+
+    def test_done_status_does_not_conclude_other_node_types(self):
+        """DONE_STATUSES is for Actions only — it must not leak into
+        is_concluded, where 'closed'/'done' are ordinary lifecycle."""
+        g = graph.Graph()
+        n = g.upsert_node("Document", "work", "spec", attrs={"status": "done"},
+                          now=self.NOW)
+        self.assertFalse(graph.is_concluded(n))
+        self.assertTrue(graph.is_current(n, now=self.NOW))
+
+    def test_non_action_is_never_an_open_action(self):
+        g = graph.Graph()
+        n = g.upsert_node("Document", "work", "spec", now=self.NOW)
+        self.assertFalse(graph.is_open_action(n, now=self.NOW))
+
+    def test_due_on_is_accepted_as_well_as_due(self):
+        """Trackers already emit 'due_on'; don't make them rewrite it."""
+        n = self._action("ticketish", due_on="2026-09-20")
+        self.assertGreater(graph.due_days(n, now=self.NOW), 0)
+
+
+class TestDemoIsNotWork(unittest.TestCase):
+    """A vendor's onboarding sample ships with plausible near-term due dates,
+    so the activity clock can never catch it — only the flag can."""
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def test_likely_demo_is_dormant_despite_a_future_due_date(self):
+        g = graph.Graph()
+        n = g.upsert_node("Ticket", "personal", "asana-task-1", name="Task 1",
+                          attrs={"likely_demo": True, "status": "open",
+                                 "due_on": "2026-09-16"}, now=self.NOW)
+        self.assertIsNone(graph.activity_days(n, now=self.NOW))
+        self.assertTrue(graph.is_dormant(n, now=self.NOW))
+        self.assertFalse(graph.is_current(n, now=self.NOW))
+
+    def test_a_real_ticket_with_a_due_date_stays_current(self):
+        g = graph.Graph()
+        n = g.upsert_node("Ticket", "work", "T-9", attrs={"due_on": "2026-09-16"},
+                          now=self.NOW)
+        self.assertTrue(graph.is_current(n, now=self.NOW))
+
+
 def _snapshot_views(views_dir):
     out = {}
     for name in sorted(os.listdir(views_dir)):

@@ -682,8 +682,18 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .auth-buttons {{ margin-top:.8rem; display:flex; gap:.5rem; }}
 .auth-refuse {{ color:#b8144f; }}
 .guardrail-alert {{ margin:.6rem 0; padding:.7rem 1rem; background:#fff2f4; border:2px solid #e0526f; border-radius:10px; font-size:.9rem; }}
+.coverage-note {{ margin:.6rem 0; padding:.6rem 1rem; background:#fffaf0; border:1px solid #e0b25c; border-radius:10px; font-size:.85rem; color:#6b4e1f; }}
 .start-research-card {{ margin:1rem 0; padding:1rem 1.2rem; background:#f2fff5; border:1px solid #bfe5bf; border-radius:12px; }}
 .start-research-card h2 {{ margin:.1rem 0 .4rem; }}
+.today-brief {{ margin:.4rem 0 .8rem; padding:.8rem 1rem; background:#fffbe9; border:1px solid #efdc9e; border-radius:10px; font-size:.95rem; }}
+.tb-line {{ margin:.25rem 0; }}
+.tb-overdue {{ color:#b8144f; }}
+.today-brief a {{ color:#0d5aa7; }}
+.obj-next {{ font-size:.88rem; margin:.25rem 0; }}
+.obj-next a {{ color:#0d5aa7; text-decoration:none; }}
+.obj-next-none {{ color:#8a8a90; }}
+.obj-details summary {{ font-size:.78rem; color:#5b6b7a; cursor:pointer; margin-top:.2rem; }}
+.graph-section a {{ color:inherit; text-decoration:underline dotted; }}
 .linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
 .linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
 .linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
@@ -714,8 +724,10 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 </div>
 
 {guardrail_banner}
+{coverage_banner}
 
 <h2>Today <span></span></h2>
+{today_brief}
 <pre>{daily}</pre>
 
 {start_research_html}
@@ -1291,6 +1303,47 @@ def _graph_is_empty():
         return True
 
 
+def render_coverage_banner():
+    """Surface connectors whose crawl reach can't account for the 90-day floor.
+
+    The escalation for a *recurring* `email:filter_cutoff`: twice now a crawl
+    silently collapsed to a couple of days of a connector, and both times the
+    answer was an instruction to cover more — prose with nothing reading it,
+    which is how it managed to fail the same way twice. `window_audit` computes
+    the finding; this is what makes someone see it, on the same footing as the
+    guardrail-drift check rather than only when a research run remembers to
+    print it.
+
+    Advisory, not an alarm — under-reach degrades an answer, it does not break
+    safety — so it renders amber and never blocks the page.
+    """
+    if _sections is None:
+        return ""
+    try:
+        import graph as _g
+        import research as _research
+        g = _g.Graph.load(os.path.join(COS_DIR, "graph"))
+        if not g.nodes:
+            return ""
+        gaps = _research.window_gaps(g)
+    except Exception:  # pragma: no cover - defensive: never break the page
+        return ""
+    if not gaps:
+        return ""
+    bits = []
+    for row in gaps[:6]:
+        reach = row["reach_days"]
+        bits.append("%s (%s)" % (
+            html.escape(row["source"]),
+            "reach unknown" if reach is None else "~%gd" % reach))
+    more = "" if len(gaps) <= 6 else " +%d more" % (len(gaps) - 6)
+    return (
+        '<div class="coverage-note">📉 <strong>Partial crawl coverage:</strong> %s%s — '
+        "these connectors can't show they covered the last 90 days, so anything older "
+        "may be missing from the graph. Re-run research for the affected scope to widen it."
+        "</div>" % (", ".join(bits), more))
+
+
 def render_guardrail_banner():
     """M12: integrity check over the guardrail files (approval surface,
     audit log, learning module). The advisory is_change_allowed() check is
@@ -1661,6 +1714,13 @@ class Handler(BaseHTTPRequestHandler):
             return
         requested_ws = (parse_qs(parsed.query).get("workspace", [None]) or [None])[0]
         command_center = render_command_center(requested_ws)
+        today_brief = ""
+        if _sections is not None:
+            try:
+                gg, _reg, _act = _sections.load_for_dashboard(COS_DIR, requested_ws)
+                today_brief = _sections.render_today_brief(gg, _act)
+            except Exception:
+                today_brief = ""
         label, daily = latest_daily_log()
         entries = parse_approval_queue()
         pending = sorted(
@@ -1707,8 +1767,10 @@ class Handler(BaseHTTPRequestHandler):
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
             guardrail_banner=render_guardrail_banner(),
+            coverage_banner=render_coverage_banner(),
             start_research_html=render_start_research(),
             recent_learnings_html=render_recent_learnings(),
+            today_brief=today_brief,
         )
         self._send_html(page)
 

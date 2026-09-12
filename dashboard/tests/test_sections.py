@@ -132,5 +132,243 @@ class TestRender(unittest.TestCase):
             self.assertEqual(active, "personal")
 
 
+class TestDormantSuppression(unittest.TestCase):
+    """Sections that claim to show *current* work must drop history.
+
+    Regression guard for the stale-container correction.
+    """
+
+    def _g(self):
+        g = _rich_graph()
+        g.upsert_node("Project", "volunteer", "district-9-north",
+                      name="District 9 North",
+                      attrs={"last_activity": "2019-08-02"}, now=_t(1))
+        g.upsert_node("Project", "personal", "asana-demo", name="Vendor starter project",
+                      attrs={"dormant": True}, now=_t(1))
+        return g
+
+    def test_dormant_project_is_not_a_current_project(self):
+        ids = [i["id"] for i in sections.projects(self._g())]
+        self.assertNotIn("volunteer:project:district-9-north", ids)
+
+    def test_live_projects_still_listed(self):
+        ids = [i["id"] for i in sections.projects(self._g())]
+        self.assertIn("freelance:project:clientsite", ids)
+        self.assertIn("personal:repository:sideproj", ids)
+
+    def test_dormant_demo_dropped_from_personal_projects(self):
+        ids = [i["id"] for i in sections.personal_projects(self._g())]
+        self.assertNotIn("personal:project:asana-demo", ids)
+        self.assertIn("personal:repository:sideproj", ids)
+
+    def test_objective_over_only_dormant_members_is_not_a_priority(self):
+        g = self._g()
+        g.upsert_node("Objective", "personal", "asana-starter",
+                      name="Workstream: asana-starter", now=_t(1))
+        g.upsert_edge("personal:project:asana-demo",
+                      "personal:objective:asana-starter", "part_of", now=_t(1))
+        ids = [i["id"] for i in sections.daily_priorities(g)]
+        self.assertNotIn("personal:objective:asana-starter", ids)
+
+    def test_objective_with_one_live_member_survives(self):
+        g = self._g()
+        g.upsert_node("Objective", "personal", "mixed", now=_t(1))
+        g.upsert_edge("personal:project:asana-demo",
+                      "personal:objective:mixed", "part_of", now=_t(1))
+        g.upsert_edge("personal:repository:sideproj",
+                      "personal:objective:mixed", "part_of", now=_t(1))
+        ids = [i["id"] for i in sections.daily_priorities(g)]
+        self.assertIn("personal:objective:mixed", ids)
+
+    def test_items_expose_the_dormant_flag(self):
+        for i in sections.projects(self._g()):
+            self.assertIn("dormant", i)
+            self.assertFalse(i["dormant"])
+
+
+class TestConcludedSuppression(unittest.TestCase):
+    """Explicitly-ended work must leave the current-work views immediately.
+
+    Regression guard for the concluded-engagement correction: everything
+    here is recent enough to pass every freshness and dormancy check, which is
+    exactly why the dashboard kept showing it.
+    """
+
+    def _g(self):
+        g = _rich_graph()
+        g.upsert_node("Document", "clientco", "life-tasks-guide",
+                      name="Feather Life Tasks — Workflow Guide",
+                      attrs={"modified": "2026-08-04", "concluded": True,
+                             "concluded_on": "2026-08-27",
+                             "concluded_by": "gmail:1a0452f7b074ec93"}, now=_t(1))
+        g.upsert_node("Objective", "clientco", "life-tasks-feather",
+                      name="Workstream: life-tasks-feather",
+                      attrs={"concluded": True}, now=_t(1))
+        g.upsert_edge("clientco:document:life-tasks-guide",
+                      "clientco:objective:life-tasks-feather", "part_of", now=_t(1))
+        # a live workstream alongside it, so the tests prove the filter is
+        # selective rather than just emptying the card
+        g.upsert_node("Objective", "employer", "ship-feature",
+                      name="Workstream: ship-feature", now=_t(1))
+        g.upsert_edge("employer:ticket:t-1", "employer:objective:ship-feature",
+                      "part_of", now=_t(1))
+        return g
+
+    def test_concluded_objective_is_not_a_daily_priority(self):
+        ids = [i["id"] for i in sections.daily_priorities(self._g())]
+        self.assertNotIn("clientco:objective:life-tasks-feather", ids)
+
+    def test_objective_over_only_concluded_members_is_not_a_priority(self):
+        """Even unmarked itself, a workstream is only as live as its members."""
+        g = self._g()
+        g.nodes["clientco:objective:life-tasks-feather"]["attrs"].pop("concluded")
+        ids = [i["id"] for i in sections.daily_priorities(g)]
+        self.assertNotIn("clientco:objective:life-tasks-feather", ids)
+
+    def test_concluded_workstream_card_is_not_rendered(self):
+        html = sections.render_sections(self._g())
+        self.assertNotIn("life-tasks-feather", html)
+
+    def test_live_workstream_card_still_rendered(self):
+        html = sections.render_sections(self._g())
+        self.assertIn("Workstreams", html)
+        self.assertIn("ship-feature", html)
+
+    def test_items_expose_the_concluded_flag(self):
+        for i in sections.projects(self._g()):
+            self.assertIn("concluded", i)
+            self.assertFalse(i["concluded"])
+
+
+class TestNextActions(unittest.TestCase):
+    """The to-do list.
+
+    Regression guard for corr-20260912T103414-to-do-lists-dashboard: every
+    section rendered nouns, so a user asking "what do I need to do?" got an
+    inventory of documents and workstream cards instead of an answer.
+    """
+
+    NOW = dt.datetime(2026, 9, 12, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def _g(self):
+        g = graph.Graph()
+        g.upsert_node("Action", "job-search", "vendor-a-assessment",
+                      name="Take the Vendor-A coding assessment",
+                      attrs={"due": "2026-09-18T23:59:00-07:00",
+                             "priority": "high"}, now=self.NOW)
+        g.upsert_node("Action", "personal", "payments-balance",
+                      name="Pay a payments app negative balance ($205.60)",
+                      attrs={"due": "2026-08-15", "priority": "high"},
+                      now=self.NOW)
+        g.upsert_node("Action", "job-search", "lapsed-cert",
+                      name="Renew the lapsed certification",
+                      attrs={"priority": "high"}, now=self.NOW)
+        g.upsert_node("Action", "job-search", "already-sent",
+                      name="Submit availability form",
+                      attrs={"status": "submitted"}, now=self.NOW)
+        # a vendor onboarding sample with a plausible near-term due date
+        g.upsert_node("Ticket", "personal", "asana-demo", name="Task 1",
+                      attrs={"likely_demo": True, "status": "open",
+                             "due_on": "2026-09-15"}, now=self.NOW)
+        # an ordinary entity: fresh, active, and not a to-do
+        g.upsert_node("Document", "job-search", "tracker",
+                      name="Job Applications Tracker", now=self.NOW)
+        return g
+
+    def test_overdue_first_then_soonest_due_then_undated(self):
+        titles = [i["title"] for i in sections.next_actions(self._g())]
+        self.assertEqual(titles, [
+            "Pay a payments app negative balance ($205.60)",      # overdue
+            "Take the Vendor-A coding assessment",     # due in 6 days
+            "Renew the lapsed certification",   # undated
+        ])
+
+    def test_satisfied_obligation_is_off_the_list(self):
+        ids = [i["id"] for i in sections.next_actions(self._g())]
+        self.assertNotIn("job-search:action:already-sent", ids)
+
+    def test_demo_task_never_reaches_the_todo_list(self):
+        """The exact junk the inventory used to surface as a priority."""
+        ids = [i["id"] for i in sections.next_actions(self._g())]
+        self.assertNotIn("personal:ticket:asana-demo", ids)
+
+    def test_plain_documents_are_not_todos(self):
+        ids = [i["id"] for i in sections.next_actions(self._g())]
+        self.assertNotIn("job-search:document:tracker", ids)
+
+    def test_deadline_is_spelled_out_for_the_reader(self):
+        by_id = {i["id"]: i for i in sections.next_actions(self._g())}
+        self.assertIn("overdue by",
+                      by_id["personal:action:payments-balance"]["sub"])
+        self.assertTrue(by_id["personal:action:payments-balance"]["overdue"])
+        self.assertIn("due in",
+                      by_id["job-search:action:vendor-a-assessment"]["sub"])
+
+    def test_real_dated_ticket_is_included(self):
+        g = self._g()
+        g.upsert_node("Ticket", "employer", "T-7", name="Ship the fix",
+                      attrs={"status": "open", "due_on": "2026-09-14"},
+                      now=self.NOW)
+        ids = [i["id"] for i in sections.next_actions(g)]
+        self.assertIn("employer:ticket:t-7", ids)
+
+    def test_workspace_filter_applies(self):
+        ids = [i["id"] for i in sections.next_actions(self._g(), ws="personal")]
+        self.assertEqual(ids, ["personal:action:payments-balance"])
+
+    def test_todo_section_renders_first(self):
+        g = self._g()
+        # an undated priority, so Daily Priorities is non-empty and actually
+        # renders (empty sections are omitted) — and so the ordering assertion
+        # below has two real sections to compare
+        g.upsert_node("Ticket", "employer", "T-5", name="Ship feature",
+                      attrs={"priority": "high", "status": "open"},
+                      now=self.NOW)
+        html = sections.render_sections(g)
+        self.assertIn("To-Do / Next Actions", html)
+        self.assertLess(html.index("To-Do / Next Actions"),
+                        html.index("Daily Priorities"))
+
+    def test_empty_graph_still_degrades_to_nothing(self):
+        self.assertEqual(sections.next_actions(graph.Graph()), [])
+
+
+class TestCoverageReport(unittest.TestCase):
+    """A zero must be visible, because 'nothing due' and 'nothing ever looked'
+    render identically. Escalation for the recurring unknown:coverage_gap
+    signature."""
+
+    def test_report_covers_every_section(self):
+        report = sections.coverage_report(_rich_graph())
+        self.assertEqual([r["section"] for r in report],
+                         [label for label, _ in sections.SECTIONS])
+        self.assertTrue(all("count" in r for r in report))
+
+    def test_empty_graph_reports_every_section_unanswered(self):
+        self.assertEqual(sections.unanswered_questions(graph.Graph()),
+                         [label for label, _ in sections.SECTIONS])
+
+    def test_populated_sections_are_not_flagged(self):
+        unanswered = sections.unanswered_questions(_rich_graph())
+        self.assertNotIn("Blocked Work", unanswered)
+        self.assertNotIn("People Waiting", unanswered)
+
+    def test_missing_todos_are_flagged_as_unanswered(self):
+        """The exact gap that reached the user unannounced."""
+        self.assertIn("To-Do / Next Actions",
+                      sections.unanswered_questions(_rich_graph()))
+
+    def test_a_broken_section_counts_as_a_gap_not_a_crash(self):
+        original = sections.SECTIONS[:]
+        def boom(g, ws=None):
+            raise RuntimeError("connector exploded")
+        sections.SECTIONS.append(("Exploding", boom))
+        try:
+            self.assertIn("Exploding",
+                          sections.unanswered_questions(_rich_graph()))
+        finally:
+            sections.SECTIONS[:] = original
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

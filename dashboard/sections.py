@@ -19,6 +19,13 @@ Attribute conventions a discovery module sets (all optional):
   - Document/anything ``attrs['job_application']`` truthy
   - ``attrs['client']`` truthy marks freelance work
   - Meeting ``attrs['when']`` ISO string for ordering
+  - anything ``attrs['concluded']`` truthy (+ ``concluded_on``/``concluded_by``)
+    marks work an explicit event declared over — dropped from current-work views
+    however recently it was touched
+  - ``Action`` nodes are obligations (the to-do list): ``attrs['due']`` ISO
+    date/timestamp, ``attrs['status']`` (see ``graph.DONE_STATUSES``),
+    ``attrs['priority']``, and ``attrs['evidence']`` naming where the obligation
+    was stated. Tickets with a ``due_on`` join them in the same section.
 """
 
 from __future__ import annotations
@@ -45,44 +52,143 @@ def _pri(n):
     return _PRIORITY_RANK.get((n.get("attrs", {}) or {}).get("priority", "low"), 2)
 
 
+def _url(n):
+    a = n.get("attrs", {}) or {}
+    for k in ("url", "view_url", "html_link", "permalink", "link"):
+        v = a.get(k)
+        if v and str(v).startswith("http"):
+            return str(v)
+    return ""
+
+
 def _item(n, sub=""):
     return {"id": n["id"], "title": n.get("name", n["id"]),
-            "type": n.get("type"), "sub": sub,
-            "meta": n.get("last_verified", ""), "stale": _graph.is_stale(n)}
+            "type": n.get("type"), "sub": sub, "url": _url(n),
+            "meta": n.get("last_verified", ""), "stale": _graph.is_stale(n),
+            "dormant": _graph.is_dormant(n), "concluded": _graph.is_concluded(n),
+            "overdue": _graph.is_overdue(n), "due_days": _graph.due_days(n)}
+
+
+def _current(nodes):
+    """Drop nodes that aren't live work from a section claiming to show it.
+
+    The graph is a record of everything found, including history — a service
+    club that ended in 2019, a finished school term, a demo project, a contract
+    that was terminated last week. Those are worth keeping (the user may ask
+    about them) but presenting them as live work is a wrong answer, not merely
+    a noisy one. Sections that answer "what is going on now" filter here; the
+    graph and its views still hold the lot.
+
+    Two independent disqualifiers, and a section needs both (``is_current``):
+    silence for long enough, or an explicit statement that the work is over.
+    Recency cannot stand in for the second — a contract concluded a fortnight
+    ago sits on documents edited a month ago, all of it perfectly fresh.
+    """
+    return [n for n in nodes if _graph.is_current(n)]
+
+
+def _live_objective(g, n):
+    """An Objective is only as current as the members it groups.
+
+    This has to propagate up the correlation layer or it leaks: suppressing a
+    dead project while still showing the workstream built over it just moves
+    the wrong answer one card across. An Objective with no members left is
+    judged on its own attrs.
+    """
+    if n.get("type") != "Objective":
+        return True
+    members = correlate.timeline(g, n["id"])
+    return not members or any(_graph.is_current(m) for m in members)
 
 
 # ---------------------------------------------------------------------------
 # section data functions
 # ---------------------------------------------------------------------------
 
+def _days_label(n):
+    """Human deadline phrase for an obligation, or its priority if undated."""
+    days = _graph.due_days(n)
+    if days is None:
+        return (n.get("attrs", {}) or {}).get("priority", "")
+    if days < 0:
+        n_days = int(-days) + 1          # any part of a day late reads as a day
+        return "overdue by %d day%s" % (n_days, "" if n_days == 1 else "s")
+    if days < 1:
+        return "due today"
+    n_days = int(days)
+    return "due in %d day%s" % (n_days, "" if n_days == 1 else "s")
+
+
+def _action_rank(n):
+    """Soonest-first, with undated obligations after dated ones by priority.
+
+    Overdue items sort to the very top for free: their ``due_days`` is the most
+    negative number in the set, and being late never demotes an obligation.
+    """
+    days = _graph.due_days(n)
+    if days is None:
+        return (1, _pri(n), n.get("name", n["id"]))
+    return (0, days, n.get("name", n["id"]))
+
+
+def next_actions(g, ws=None, limit=10):
+    """**The to-do list** — what the user actually has to go and do.
+
+    Every other section on this dashboard answers "what exists in your world":
+    the projects, the documents, the workstreams, the people. That is an
+    inventory, and an inventory is not an answer to "what should I do today" —
+    a user looking at nine cards of correctly-discovered nouns still has to do
+    the chief-of-staff's job themselves, which is the one job the system was
+    supposed to do for them.
+
+    So this section reads the obligations the discovery modules extract as
+    ``Action`` nodes (see Step 1c of ``commands/cos-research.md``), plus the
+    open dated tickets the trackers already give us, and ranks them by when
+    they are actually due. It is deliberately first in SECTIONS: the answer
+    goes at the top, and the supporting inventory goes underneath it.
+    """
+    out = [n for n in g.query(type_="Action", workspace=ws)
+           if _graph.is_open_action(n)]
+    for n in _current(g.query(type_="Ticket", workspace=ws)):
+        attrs = n.get("attrs", {}) or {}
+        if attrs.get("status") in ("closed", "done"):
+            continue
+        if _graph.due_days(n) is not None:
+            out.append(n)
+    out.sort(key=_action_rank)
+    return [_item(n, _days_label(n)) for n in out[:limit]]
+
+
 def daily_priorities(g, ws=None, limit=8):
     """Open Objectives + high-signal Tickets, ranked by priority then freshness."""
-    cands = g.query(type_="Objective", workspace=ws) + \
-        [n for n in g.query(type_="Ticket", workspace=ws)
+    cands = _current([n for n in g.query(type_="Objective", workspace=ws)
+                      if _live_objective(g, n)]) + \
+        [n for n in _current(g.query(type_="Ticket", workspace=ws))
          if (n.get("attrs", {}) or {}).get("status") not in ("closed", "done")]
     cands.sort(key=lambda n: (_pri(n), n.get("last_verified", "")), reverse=False)
     return [_item(n, (n.get("attrs", {}) or {}).get("priority", "")) for n in cands[:limit]]
 
 
 def people_waiting(g, ws=None):
-    out = [_item(n, "waiting on you") for n in g.query(workspace=ws)
+    out = [_item(n, "waiting on you") for n in _current(g.query(workspace=ws))
            if _truthy(n, "waiting_on_user")]
     return sorted(out, key=lambda x: x["title"])
 
 
 def blocked_work(g, ws=None):
-    return sorted((_item(n, "blocked") for n in g.query(workspace=ws) if _blocked(n)),
+    return sorted((_item(n, "blocked") for n in _current(g.query(workspace=ws)) if _blocked(n)),
                   key=lambda x: x["title"])
 
 
 def investigations(g, ws=None):
-    inc = g.query(type_="Incident", workspace=ws)
+    inc = _current(g.query(type_="Incident", workspace=ws))
     return sorted((_item(n, (n.get("attrs", {}) or {}).get("system", "incident"))
                    for n in inc), key=lambda x: x["meta"], reverse=True)
 
 
 def projects(g, ws=None):
-    out = g.query(type_="Project", workspace=ws) + g.query(type_="Repository", workspace=ws)
+    out = _current(g.query(type_="Project", workspace=ws) +
+                   g.query(type_="Repository", workspace=ws))
     return [_item(n) for n in sorted(out, key=lambda n: n["id"])]
 
 
@@ -94,26 +200,27 @@ def meetings(g, ws=None, limit=6):
 
 
 def job_applications(g, ws=None):
-    out = [n for n in g.query(workspace=ws)
+    out = [n for n in _current(g.query(workspace=ws))
            if _truthy(n, "job_application") or n.get("type") == "JobApplication"]
     return [_item(n, (n.get("attrs", {}) or {}).get("stage", "")) for n in
             sorted(out, key=lambda n: n["id"])]
 
 
 def freelance_work(g, ws=None):
-    out = [n for n in g.query(workspace=ws) if _truthy(n, "client")]
+    out = [n for n in _current(g.query(workspace=ws)) if _truthy(n, "client")]
     return [_item(n, (n.get("attrs", {}) or {}).get("client", "")) for n in
             sorted(out, key=lambda n: n["id"])]
 
 
 def personal_projects(g, ws=None):
-    out = [n for n in (g.query(type_="Repository") + g.query(type_="Project"))
+    out = [n for n in _current(g.query(type_="Repository") + g.query(type_="Project"))
            if n["workspace"] == "personal" and (ws in (None, "personal"))]
     return [_item(n) for n in sorted(out, key=lambda n: n["id"])]
 
 
 # The section registry: (label, function). Order = dashboard order.
 SECTIONS = [
+    ("To-Do / Next Actions", next_actions),
     ("Daily Priorities", daily_priorities),
     ("People Waiting", people_waiting),
     ("Blocked Work", blocked_work),
@@ -124,6 +231,42 @@ SECTIONS = [
     ("Freelance Work", freelance_work),
     ("Personal Projects", personal_projects),
 ]
+
+
+# ---------------------------------------------------------------------------
+# Coverage — make a silent pipeline gap announce itself
+# ---------------------------------------------------------------------------
+
+def coverage_report(g, ws=None):
+    """How many items back each section: ``[{"section", "count"}]``.
+
+    Two corrections in a row (the 2019 service club relics, and this dashboard
+    having no to-do list) had the same root cause — a discovery module never
+    collected something it should have — and both stayed invisible until the
+    user happened to notice. They stayed invisible for a structural reason
+    worth fixing rather than patching a third time: **an empty section and a
+    section the pipeline never fed look exactly alike.** ``_render_section``
+    drops an empty section entirely, so "you have nothing due" and "nothing has
+    ever looked for what you have due" both render as blank space.
+
+    This makes the difference legible. It does not decide which case a zero is
+    — only the crawl knows that — it just refuses to let a zero pass silently,
+    so ``/cos-research`` can report "Job Applications: 0" at the end of a run
+    and a gap gets caught by the system instead of by the user.
+    """
+    out = []
+    for label, fn in SECTIONS:
+        try:
+            count = len(fn(g, ws))
+        except Exception:
+            count = 0          # a broken section is a gap, not a crash
+        out.append({"section": label, "count": count})
+    return out
+
+
+def unanswered_questions(g, ws=None):
+    """Just the section labels with no data behind them."""
+    return [r["section"] for r in coverage_report(g, ws) if r["count"] == 0]
 
 
 # ---------------------------------------------------------------------------
@@ -150,34 +293,113 @@ def render_workspace_switcher(registry, active):
             'Workspace: ' + " · ".join(opts) + "</div>")
 
 
+def _slug_anchor(label):
+    return "sec-" + "".join(c if c.isalnum() else "-" for c in label.lower())
+
+
+def _render_title(it):
+    """Item title, linked to its source when the node carries a URL."""
+    t = _esc(it["title"])
+    if it.get("url"):
+        return '<a href="%s" target="_blank" rel="noopener">%s</a>' % (
+            _esc(it["url"]), t)
+    return t
+
+
 def _render_section(label, items):
     if not items:
         return ""
     rows = []
     for it in items:
         stale = ' <span title="stale">⚠️</span>' if it.get("stale") else ""
+        late = ' <span title="overdue">🔴</span>' if it.get("overdue") else ""
         sub = ' <span class="sec-sub">%s</span>' % _esc(it["sub"]) if it["sub"] else ""
-        rows.append('<li><span class="sec-type">%s</span> %s%s%s</li>' % (
-            _esc(it.get("type", "")), _esc(it["title"]), sub, stale))
-    return ('<section class="graph-section"><h3>%s <span class="sec-count">%d</span></h3>'
-            '<ul>%s</ul></section>' % (_esc(label), len(items), "".join(rows)))
+        rows.append('<li><span class="sec-type">%s</span> %s%s%s%s</li>' % (
+            _esc(it.get("type", "")), _render_title(it), sub, late, stale))
+    return ('<section class="graph-section" id="%s"><h3>%s <span class="sec-count">%d</span></h3>'
+            '<ul>%s</ul></section>' % (
+                _slug_anchor(label), _esc(label), len(items), "".join(rows)))
 
 
 def _render_objectives(g, ws):
-    objs = g.query(type_="Objective", workspace=ws)
+    """The Workstreams card — same currency test as every other current-work view.
+
+    This card renders the correlation layer directly rather than going through
+    SECTIONS, so it needs the filter applied explicitly; without it a workstream
+    stays on the page as a headline card long after ``daily_priorities`` has
+    stopped listing it, which is the louder of the two wrong answers.
+    """
+    objs = [o for o in _current(g.query(type_="Objective", workspace=ws))
+            if _live_objective(g, o)]
     if not objs:
         return ""
     cards = []
     for o in sorted(objs, key=lambda n: n["id"]):
         steps = correlate.timeline(g, o["id"])
+        # Decluttered card (first-run feedback): headline + the open Action if
+        # the workstream has one, with the full item chain folded behind a
+        # <details> so the card answers "what is this and what do I do" at a
+        # glance instead of narrating every document title.
+        open_actions = [s for s in steps if s.get("type") == "Action"
+                        and _graph.is_open_action(s)]
+        if open_actions:
+            act = min(open_actions, key=_action_rank)
+            next_line = ('<div class="obj-next">→ <a href="#%s">%s</a>'
+                         '<span class="sec-sub"> %s</span></div>' % (
+                             _slug_anchor("To-Do / Next Actions"),
+                             _esc(act.get("name", act["id"])),
+                             _esc(_days_label(act))))
+        else:
+            next_line = ('<div class="obj-next obj-next-none">no open action — '
+                         '<a href="#%s">see to-dos</a></div>' %
+                         _slug_anchor("To-Do / Next Actions"))
         chain = " → ".join('<span class="tl-step">%s: %s</span>' % (
-            _esc(s.get("type")), _esc(s.get("name", s["id"]))) for s in steps)
-        cards.append('<div class="objective-card"><div class="obj-title">%s</div>'
-                     '<div class="obj-timeline">%s</div></div>' % (
-                         _esc(o.get("name", o["id"])), chain))
+            _esc(s.get("type")), _render_title(_item(s))) for s in steps)
+        cards.append(
+            '<div class="objective-card"><div class="obj-title">%s '
+            '<span class="sec-sub">(%d items)</span></div>%s'
+            '<details class="obj-details"><summary>linked items</summary>'
+            '<div class="obj-timeline">%s</div></details></div>' % (
+                _esc(o.get("name", o["id"])), len(steps), next_line, chain))
     return ('<section class="graph-section objectives"><h3>Workstreams '
             '<span class="sec-count">%d</span></h3>%s</section>' % (
                 len(objs), "".join(cards)))
+
+
+def render_today_brief(g, active=None, today=None):
+    """The generated 'what does today look like' summary (first-run feedback:
+    'there is no summary for today'). Composed, not crawled: overdue + due-today
+    obligations, today's meetings, and the top priorities, each linking down
+    into its section. Returns "" with no graph."""
+    if g is None or not g.nodes:
+        return ""
+    import datetime as _dtm
+    today = today or _dtm.date.today().isoformat()
+    todos = next_actions(g, active, limit=50)
+    overdue = [t for t in todos if t.get("overdue")]
+    due_today = [t for t in todos if t.get("due_days") is not None
+                 and 0 <= t["due_days"] < 1]
+    meetings_today = [m for m in meetings(g, active, limit=20)
+                      if str(m.get("sub", "")).startswith(today)]
+    top = [t for t in todos if t not in overdue and t not in due_today][:3]
+    parts = []
+    if overdue:
+        parts.append('<div class="tb-line tb-overdue">🔴 <strong>%d overdue:</strong> %s</div>' % (
+            len(overdue), " · ".join(_render_title(t) for t in overdue[:4])))
+    if due_today:
+        parts.append('<div class="tb-line">⏰ <strong>Due today:</strong> %s</div>' % (
+            " · ".join(_render_title(t) for t in due_today[:4])))
+    if meetings_today:
+        parts.append('<div class="tb-line">📅 <strong>Meetings:</strong> %s</div>' % (
+            " · ".join(_render_title(m) for m in meetings_today[:4])))
+    if top:
+        parts.append('<div class="tb-line">▶ <strong>Next up:</strong> %s</div>' % (
+            " · ".join(_render_title(t) for t in top)))
+    if not parts:
+        parts.append('<div class="tb-line">Nothing due or scheduled today — '
+                     '<a href="#%s">see the full to-do list</a>.</div>' %
+                     _slug_anchor("To-Do / Next Actions"))
+    return '<div class="today-brief">%s</div>' % "".join(parts)
 
 
 def render_sections(g, registry=None, active=None):

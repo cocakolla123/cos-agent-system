@@ -28,6 +28,16 @@ do nothing except say the feature is off. If `self_modify_code` is false, steps 
   that fails its gates never survives.
 - **Never re-ask what's known.** Check the graph and the corrections ledger before asking the
   user anything.
+- **Shared files stay generic — the user's life never enters the template.** The template
+  (code, tests, command prose, `lessons-learned.md`) is shared with every deployment; the
+  user's data lives ONLY under `workspace/` and `config.json`. When a self-change needs an
+  example, an assertion fixture, or a lesson narrative, **anonymize it first**: no personal
+  names, org/company names, email addresses or subjects, document titles, dollar amounts, or
+  correction ids with personal context — write "a service-club calendar dead since 2019", not
+  the club's name; "a client org's removal email", not the sender. The engineering lesson
+  must survive anonymization intact; if it can't, the specifics belong in the workspace
+  ledger, not the template. (This rule exists because the first live deployment's fixes
+  embedded real names into tests and lessons — cleaned by hand once, never again.)
 
 ## Step 1 — Capture
 If given raw text, build the record with `learning.make_correction(text)` and

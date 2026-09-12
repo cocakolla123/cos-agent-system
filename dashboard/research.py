@@ -220,6 +220,132 @@ def _label_for(wsid, kind):
     return pretty if kind == "unknown" else "%s (%s)" % (pretty, kind)
 
 
+# ---------------------------------------------------------------------------
+# Crawl reach — make an under-reaching connector announce itself
+# ---------------------------------------------------------------------------
+
+# Default floor the research command is instructed to cover per connector.
+DEFAULT_WINDOW_FLOOR_DAYS = 90
+
+# attrs keys that carry a real-world *evidence* date, newest-wins. Deliberately
+# excludes the node-level 'last_verified': that is crawl recency, and confusing
+# the two is the exact mistake is_dormant() exists to prevent.
+EVIDENCE_DATE_KEYS = (
+    "last_activity", "due", "due_on", "submitted", "completed_on",
+    "concluded_on", "invited", "noticed", "suspended_noticed",
+)
+
+
+def window_audit(g, floor_days=DEFAULT_WINDOW_FLOOR_DAYS, now=None):
+    """Per-source crawl reach: ``[{"source", "nodes", "declared_days",
+    "observed_days", "oldest", "reach_days", "short"}]``, worst reach first.
+
+    The companion to ``sections.coverage_report``. That one catches a section
+    nothing ever fed; this one catches a section fed from **too narrow a slice
+    of time** — a failure that produces a plausible, populated, wrong answer
+    instead of a conspicuous blank, and so is strictly harder to notice.
+
+    It exists because the prose fix didn't hold. A correction traced to Gmail's
+    top-N collapsing to a ~2-day window was answered by instructing the crawl to
+    cover at least 90 days and to record ``attrs['window_days']``. The next
+    correction was the same class again: the oldest Gmail-derived node was one
+    day old, `window_days` was recorded on precisely zero nodes, and two
+    assessment obligations sitting 3 and 8 weeks back had been invisible the
+    whole time. An instruction with nothing reading it is a comment, not a
+    control — the same lesson ``is_dormant`` learned about ``likely_demo``.
+
+    Two signals, declared beating observed:
+
+    - ``declared_days`` — the largest ``attrs['window_days']`` any node from
+      that source carries, i.e. what the crawl *claims* it covered.
+    - ``observed_days`` — age of the oldest evidence date actually present.
+      Only a lower bound (a genuinely quiet 90 days looks like a narrow crawl),
+      which is why it never overrides a declaration.
+
+    ``short`` is True when the source declared nothing at all — an undeclared
+    reach is unknown, and unknown reach is the finding — or when it declared
+    less than ``floor_days``. An undeclared source whose observed reach already
+    clears the floor is not flagged: the evidence speaks for itself.
+    """
+    by_source = {}
+    for node in g.nodes.values():
+        for src in _sources_of(node):
+            by_source.setdefault(src, []).append(node)
+
+    out = []
+    for src, nodes in by_source.items():
+        declared = [n.get("attrs", {}).get("window_days") for n in nodes]
+        declared = [d for d in declared if isinstance(d, (int, float))]
+        declared_days = max(declared) if declared else None
+
+        ages = [a for a in (_evidence_age_days(n, now=now) for n in nodes)
+                if a is not None]
+        observed_days = max(ages) if ages else None
+
+        reach = declared_days
+        if reach is None:
+            reach = observed_days
+        elif observed_days is not None:
+            reach = max(reach, observed_days)
+
+        if declared_days is None:
+            short = not (observed_days is not None and observed_days >= floor_days)
+        else:
+            short = declared_days < floor_days
+
+        out.append({
+            "source": src,
+            "nodes": len(nodes),
+            "declared_days": declared_days,
+            "observed_days": None if observed_days is None else round(observed_days, 1),
+            "oldest": _oldest_evidence(nodes),
+            "reach_days": None if reach is None else round(reach, 1),
+            "short": short,
+        })
+    # worst (shortest known reach) first; unknown reach sorts worst of all.
+    out.sort(key=lambda r: (not r["short"],
+                            float("inf") if r["reach_days"] is None else r["reach_days"],
+                            r["source"]))
+    return out
+
+
+def window_gaps(g, floor_days=DEFAULT_WINDOW_FLOOR_DAYS, now=None):
+    """Just the sources that can't show they covered ``floor_days``."""
+    return [r for r in window_audit(g, floor_days=floor_days, now=now)
+            if r["short"]]
+
+
+def _sources_of(node):
+    """A node's contributing connectors. ``source`` is a comma-joined string
+    once more than one module has touched the node (see graph._merge_sources),
+    and a shared node must count against every crawl that fed it."""
+    raw = node.get("source") or ""
+    return [s.strip() for s in raw.split(",") if s.strip()] or ["unknown"]
+
+
+def _evidence_dates(node):
+    attrs = node.get("attrs", {}) or {}
+    out = []
+    for key in EVIDENCE_DATE_KEYS:
+        parsed = graph._parse_iso(attrs.get(key))
+        if parsed is not None:
+            out.append(parsed)
+    return out
+
+
+def _evidence_age_days(node, now=None):
+    dates = _evidence_dates(node)
+    if not dates:
+        return None
+    age = (graph._utcnow(now) - min(dates)).total_seconds() / 86400.0
+    return max(age, 0.0)
+
+
+def _oldest_evidence(nodes):
+    dates = [d for n in nodes for d in _evidence_dates(n)]
+    return min(dates).date().isoformat() if dates else None
+
+
 if __name__ == "__main__":
     import json
     import sys
