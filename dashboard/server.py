@@ -722,7 +722,12 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .side-panel {{ display:none; }}
 @media (min-width: 1280px) {{
   .side-panel {{ display:block; position:fixed; top:16px; right:16px; width:300px; max-height:92vh; overflow-y:auto; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding: .8rem 1rem; z-index:50; }}
-  body {{ margin-right:348px; }}
+  /* Center the content column within the space LEFT of the fixed sidebar —
+     a bare margin-right here leaves body's auto left margin to swallow all
+     the slack and shoves the page off-center (first-run feedback). */
+  body {{ max-width: 980px;
+         margin-left: max(1.5rem, calc((100vw - 348px - 980px) / 2));
+         margin-right: 348px; }}
   .side-panel h3 {{ margin:.2rem 0 .5rem; }}
   .side-panel .today-brief {{ margin:.2rem 0 .6rem; }}
 }}
