@@ -21,6 +21,9 @@
   "revise_tools": "Read,Edit,Agent",
   "poll_tools": "Read,Edit,Agent",
 
+  "_comment_research_tools": "V2.4: the /start-research subprocess grant. Research MUST hold Write+Bash (to persist the graph via graph.py) and Glob/Grep (local FS discovery) on top of the baseline — the narrow poll grant starves it silently (first-run lesson, 2026-09-12). /setup appends the deployment's discovered READ-ONLY MCP tool names (search/get/list/read) here and to poll_tools/chat_tools; never a mutating MCP tool.",
+  "research_tools": "Read,Edit,Write,Bash,Glob,Grep,Agent,ToolSearch,WebSearch",
+
   "domain_tag": "YourDomain",
   "domain_keywords": ["example-keyword", "example-system-name"],
   "domain_url_keywords": ["example.internal.tool"],

@@ -28,6 +28,9 @@ _BASELINE = {
     "revise_tools": {"Read", "Edit", "Agent"},
     "poll_tools": {"Read", "Edit", "Agent"},
     "base_tools": {"Read", "Edit", "Agent"},
+    # research must be able to persist the graph (Write/Bash) and scan the
+    # local FS (Glob/Grep) — under dontAsk a missing grant is a silent no-op.
+    "research_tools": {"Read", "Edit", "Write", "Bash", "Glob", "Grep", "Agent"},
 }
 
 

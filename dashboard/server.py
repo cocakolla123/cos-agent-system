@@ -36,6 +36,7 @@ import os
 import re
 import subprocess
 import sys
+import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 
@@ -149,6 +150,12 @@ CHAT_TOOLS = CONFIG["chat_tools"]
 REVISE_TOOLS = CONFIG["revise_tools"]
 POLL_TOOLS = CONFIG["poll_tools"]
 LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
+# V2.4: research needs a wider grant than polling — it must persist the graph
+# (Write/Bash for graph.py) and scan the local FS (Glob/Grep). MCP read tools
+# get appended by /setup (or by hand) once discovered; connectors stay
+# read-only by instruction + by omitting every mutating MCP tool from this list.
+RESEARCH_TOOLS = CONFIG.get(
+    "research_tools", "Read,Edit,Write,Bash,Glob,Grep,Agent,ToolSearch,WebSearch")
 # M12: the scheduler lesson, applied to the server too — schedulers and app
 # launchers often run with a minimal PATH that doesn't include `claude`.
 # Resolution order: env CLAUDE_BIN > config claude_bin > bare "claude".
@@ -1735,14 +1742,12 @@ class Handler(BaseHTTPRequestHandler):
             cfg, cfg_path = get_chat_session()
             append_chat_log("you", message)
             learn_note = maybe_start_learn_loop(message)
-            session_flag = ["--resume", cfg["session_id"]] if cfg.get("started") else [
-                "--session-id", cfg["session_id"]
-            ]
-            try:
-                result = subprocess.run(
+
+            def _run_chat(flag):
+                return subprocess.run(
                     [
                         CLAUDE_BIN, "-p", message,
-                        *session_flag,
+                        *flag,
                         "--permission-mode", "dontAsk",
                         "--allowedTools", CHAT_TOOLS,
                         "--output-format", "text",
@@ -1752,7 +1757,22 @@ class Handler(BaseHTTPRequestHandler):
                     text=True,
                     timeout=300,
                 )
+
+            try:
+                session_flag = (["--resume", cfg["session_id"]]
+                                if cfg.get("started")
+                                else ["--session-id", cfg["session_id"]])
+                result = _run_chat(session_flag)
                 output = (result.stdout or result.stderr or "").strip() or "(no output)"
+                # Self-heal a dead/stale session (V2.4, found on first real run):
+                # a recorded session id the CLI no longer knows ("No conversation
+                # found") must not surface as an error — start fresh and retry.
+                if "No conversation found" in output or (
+                        result.returncode != 0 and "session" in output.lower()):
+                    cfg["session_id"] = str(uuid.uuid4())
+                    cfg["started"] = False
+                    result = _run_chat(["--session-id", cfg["session_id"]])
+                    output = (result.stdout or result.stderr or "").strip() or "(no output)"
                 if learn_note:
                     output = output + learn_note
                 cfg["started"] = True
@@ -2083,11 +2103,14 @@ class Handler(BaseHTTPRequestHandler):
 
         if self.path == "/start-research":
             # M12: first-run bootstrap from the dashboard — full research crawl.
+            # Uses RESEARCH_TOOLS (not POLL_TOOLS): the crawl must Write/Bash to
+            # persist the graph and Glob/Grep the local FS — the narrow polling
+            # grant silently starved it of every one of those (first-run lesson).
             try:
                 spawn_background(
                     [CLAUDE_BIN, "-p", "/global:cos-research --full",
                      "--permission-mode", "dontAsk",
-                     "--allowedTools", POLL_TOOLS,
+                     "--allowedTools", RESEARCH_TOOLS,
                      "--output-format", "text"], "research.log")
                 self._send_json({"message": "research started in the background — "
                                             "watch the Command Center fill in "

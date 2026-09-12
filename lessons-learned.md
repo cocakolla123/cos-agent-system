@@ -70,3 +70,26 @@ command," silently, into log files.
 **Where this is now encoded:** `commands/setup.md` Step 5.3. **Rule: any new `/global:`-invoked
 command MUST be added to `/setup`'s copy list in the same change that introduces it — grep
 `server.py` and `commands/*.md` for `/global:` and diff against the copy list before shipping.**
+
+## 2026-09-12 (first real run — three findings in ten minutes)
+
+**What happened:** The first real deployment (fresh machine, dashboard "Research my workspace
+now") surfaced three defects no shim-gate had caught: (1) `/start-research` ran with the narrow
+`poll_tools` grant (`Read,Edit,Agent`) — under `dontAsk`, `Write`/`Bash`/`Glob`/`Grep` and every
+MCP read were silently denied, so research diagnosed brilliantly but couldn't persist a single
+graph node; (2) the dashboard chat carried test residue — a `chat-session.json` created during a
+shim-based live gate pointed at a session id the real CLI never had, so the user's first message
+died with "No conversation found"; (3) that failure surfaced raw instead of self-healing.
+
+**Fix / workaround:** New `research_tools` config key (baseline includes Write/Bash/Glob/Grep;
+/setup appends discovered READ-ONLY MCP tools) used by `/start-research`; `validate_config`
+enforces its baseline. Chat now detects a dead session and silently retries with a fresh
+session id. Test artifacts (`chat-log.md`, `chat-session.json`) removed; live gates must point
+`DASHBOARD_DIR`-writing flows at a temp dir, not the real dashboard dir.
+
+**Where this is now encoded:** `server.py` (`RESEARCH_TOOLS`, chat self-heal),
+`config.example.json`, `validate_config.py`. **Rules: (a) any subprocess grant paired with
+`dontAsk` must be validated against what the command actually needs — a missing tool is a
+silent no-op, not an error; (b) a stored session id is a cache, not a fact — always self-heal
+on resume failure; (c) live gates that exercise the real server must never leave state files
+in the repo's dashboard dir.**
