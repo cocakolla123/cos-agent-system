@@ -694,6 +694,48 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .obj-next-none {{ color:#8a8a90; }}
 .obj-details summary {{ font-size:.78rem; color:#5b6b7a; cursor:pointer; margin-top:.2rem; }}
 .graph-section a {{ color:inherit; text-decoration:underline dotted; }}
+/* M13: LinkedIn-Jobs-style task board — compact list left, big detail right */
+.todo-board {{ display:grid; grid-template-columns: minmax(280px, 340px) 1fr; gap:14px; align-items:start; }}
+@media (max-width: 979px) {{ .todo-board {{ grid-template-columns: 1fr; }} }}
+.todo-list {{ max-height:560px; overflow-y:auto; padding-right:2px; }}
+.todo-row {{ background:#fff; border:1px solid #e2e2e7; border-radius:10px; padding:.6rem .8rem; margin-bottom:.5rem; cursor:pointer; font-size:.9rem; box-shadow:0 1px 2px rgba(0,0,0,.06); }}
+.todo-row:hover {{ box-shadow:0 2px 6px rgba(0,0,0,.12); }}
+.todo-selected {{ border-color:#0d5aa7; box-shadow:inset 3px 0 0 #0d5aa7, 0 2px 6px rgba(0,0,0,.10); }}
+.todo-high {{ border-left:4px solid #e0526f; }}
+.todo-medium {{ border-left:4px solid #e8b93c; }}
+.todo-low {{ border-left:4px solid #c9c9d0; }}
+.todo-badge {{ margin-right:.25rem; }}
+.todo-late {{ color:#b8144f; font-weight:600; font-size:.82rem; }}
+.todo-detail {{ position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }}
+.td-empty {{ color:#8a8a90; text-align:center; padding:3rem 0; }}
+.tm-title {{ width:100%; font-size:1.1rem; font-weight:700; border:1px solid transparent; border-radius:8px; padding:.35rem .5rem; }}
+.tm-title:hover, .tm-title:focus {{ border-color:#e2e2e7; }}
+.tm-meta {{ margin:.4rem 0; display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }}
+#tmNote {{ width:100%; margin-top:.3rem; }}
+.tm-evidence {{ margin:.2rem 0 .5rem; }}
+.tm-controls {{ display:flex; gap:.5rem; align-items:center; margin:.5rem 0; flex-wrap:wrap; }}
+.tm-chat {{ border-top:1px solid #eee; margin-top:.6rem; padding-top:.5rem; }}
+.tm-chat-log {{ max-height:200px; overflow-y:auto; font-size:.88rem; }}
+.tm-msg {{ background:#f4f4f6; border-radius:8px; padding:.35rem .6rem; margin:.25rem 0; white-space:pre-wrap; }}
+.tm-you {{ background:#e3eefb; }}
+.tm-thinking {{ color:#8a8a90; }}
+.side-panel {{ display:none; }}
+@media (min-width: 1280px) {{
+  .side-panel {{ display:block; position:fixed; top:16px; right:16px; width:300px; max-height:92vh; overflow-y:auto; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding: .8rem 1rem; z-index:50; }}
+  body {{ margin-right:348px; }}
+  .side-panel h3 {{ margin:.2rem 0 .5rem; }}
+  .side-panel .today-brief {{ margin:.2rem 0 .6rem; }}
+}}
+.cal-box {{ margin-top:.6rem; }}
+.cal-head {{ font-weight:700; font-size:.9rem; margin-bottom:.3rem; }}
+.cal {{ width:100%; border-collapse:collapse; font-size:.78rem; text-align:center; }}
+.cal th {{ color:#8a8a90; font-weight:500; padding:.15rem; }}
+.cal td {{ padding:.22rem .1rem; border-radius:6px; }}
+.cal-out {{ color:#c9c9d0; }}
+.cal-today {{ background:#0d5aa7; color:#fff; font-weight:700; }}
+.cal-marked {{ background:#e3eefb; }}
+.cal-today.cal-marked {{ background:#0d5aa7; }}
+.cal-dot {{ color:#e0526f; font-size:.7rem; vertical-align:top; }}
 .linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
 .linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
 .linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
@@ -705,6 +747,7 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .slack-preview {{ background:#f8f8fa; border:1px solid #e5e5e7; border-radius:8px; padding:.7rem .9rem; font-size:.9rem; min-height:1.5em; margin-bottom:.4rem; }}
 .slack-preview code {{ background:#e8e8ea; padding:.1rem .3rem; border-radius:4px; font-family:ui-monospace,monospace; }}
 </style></head><body>
+{side_panel}
 <h1>CoS Dashboard</h1>
 <div class="subtitle">{today} · last checked: {last_poll}
   <button class="small" onclick="pollNow()" title="Full sweep: checks every configured connector (messages, email, tickets, calendar, ...) plus the general re-check">Poll now</button>
@@ -1633,6 +1676,53 @@ async function setSelfLearning() {{
 """
 
 
+def _graph_node(node_id):
+    """Fetch one node from the workspace graph, or None. Never raises."""
+    try:
+        import graph as _g
+        gg = _g.Graph.load(os.path.join(COS_DIR, "graph"))
+        return gg.get(node_id)
+    except Exception:
+        return None
+
+
+def update_graph_node(node_id, name=None, note=None, priority=None, status=None):
+    """M13: direct task edits from the dashboard (title, notes, priority,
+    mark-done). Locked read-modify-write; audit-logged; returns (ok, message)."""
+    import graph as _g
+    gdir = os.path.join(COS_DIR, "graph")
+    with _file_lock(os.path.join(gdir, "node-update")):
+        gg = _g.Graph.load(gdir)
+        n = gg.get(node_id)
+        if n is None:
+            return False, "no such item: %s" % node_id
+        attrs = n.setdefault("attrs", {})
+        changed = []
+        if name and name != n.get("name"):
+            n["name"] = name
+            changed.append("title")
+        if note is not None and note != attrs.get("note", ""):
+            attrs["note"] = note
+            changed.append("notes")
+        if priority and priority != attrs.get("priority"):
+            attrs["priority"] = priority
+            changed.append("priority→" + priority)
+        if status:
+            attrs["status"] = status
+            if status == "done":
+                attrs["done_on"] = _g.iso()
+            changed.append("status→" + status)
+        if not changed:
+            return True, "no changes"
+        n["last_verified"] = _g.iso()
+        gg.save(gdir)
+        gg.render_views(gdir)
+        if _audit is not None:
+            _audit.record(COS_DIR, node_id, ",".join(changed),
+                          actor="dashboard", detail="task edit")
+        return True, "saved: " + ", ".join(changed)
+
+
 def render_command_center(requested_ws=None):
     """Render the V2 graph-powered command-center block, or "" if unavailable.
 
@@ -1715,12 +1805,20 @@ class Handler(BaseHTTPRequestHandler):
         requested_ws = (parse_qs(parsed.query).get("workspace", [None]) or [None])[0]
         command_center = render_command_center(requested_ws)
         today_brief = ""
+        side_panel = ""
         if _sections is not None:
             try:
                 gg, _reg, _act = _sections.load_for_dashboard(COS_DIR, requested_ws)
                 today_brief = _sections.render_today_brief(gg, _act)
+                cal = _sections.render_calendar(gg, _act)
+                if today_brief or cal:
+                    # M13: the live deployment's right-hand rail — today's
+                    # summary + calendar, fixed on wide screens.
+                    side_panel = ('<aside class="side-panel">'
+                                  "<h3>Today</h3>%s%s</aside>" % (today_brief, cal))
             except Exception:
                 today_brief = ""
+                side_panel = ""
         label, daily = latest_daily_log()
         entries = parse_approval_queue()
         pending = sorted(
@@ -1771,6 +1869,7 @@ class Handler(BaseHTTPRequestHandler):
             start_research_html=render_start_research(),
             recent_learnings_html=render_recent_learnings(),
             today_brief=today_brief,
+            side_panel=side_panel,
         )
         self._send_html(page)
 
@@ -1860,6 +1959,18 @@ class Handler(BaseHTTPRequestHandler):
                     f"{entry.get('short_summary','')}. Current draft: {entry.get('proposed_tool_call','')}. "
                     f"Context: {entry.get('context','')}. Now discuss: {message}"
                 )
+            elif not sess.get("started") and not entry:
+                # M13: the same per-item chat serves graph to-dos — seed from
+                # the Action node instead of a queue entry.
+                node = _graph_node(entry_id)
+                if node:
+                    a = node.get("attrs", {}) or {}
+                    message = (
+                        f"We're discussing this to-do from my knowledge graph (id {entry_id}): "
+                        f"{node.get('name','')}. Notes: {a.get('note','')}. "
+                        f"Due: {a.get('due','none')}. Evidence: {a.get('evidence','')}. "
+                        f"Workspace: {node.get('workspace','')}. Now discuss: {message}"
+                    )
             session_flag = ["--resume", sess["session_id"]] if sess.get("started") else [
                 "--session-id", sess["session_id"]
             ]
@@ -2161,6 +2272,22 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json({"message": "skipped — I'll research on my own; "
                                         "you can add context anytime with "
                                         "the ➕ button"})
+            return
+
+        if self.path == "/action-update":
+            # M13: task-card edits — title/notes/priority/mark-done.
+            status = data.get("status")
+            if status and status not in ("done", "open"):
+                self._send_json({"message": "invalid status"}, 400)
+                return
+            try:
+                ok, msg = update_graph_node(
+                    data.get("id", ""), name=(data.get("name") or "").strip() or None,
+                    note=data.get("note"), priority=data.get("priority"),
+                    status=status)
+                self._send_json({"message": msg}, 200 if ok else 404)
+            except Exception as exc:
+                self._send_json({"message": f"update failed: {exc}"}, 500)
             return
 
         if self.path == "/start-research":

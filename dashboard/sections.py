@@ -366,6 +366,190 @@ def _render_objectives(g, ws):
                 len(objs), "".join(cards)))
 
 
+def _todo_row_data(g, n):
+    """Everything the expand-modal needs, carried on data-* attributes (the V3
+    apostrophe lesson: dynamic values ride datasets, never inline JS strings)."""
+    a = n.get("attrs", {}) or {}
+    return {
+        "id": n["id"],
+        "title": n.get("name", n["id"]),
+        "note": str(a.get("note", "")),
+        "evidence": str(a.get("evidence", "")),
+        "priority": str(a.get("priority", "medium")),
+        "due": str(a.get("due", "")),
+        "ws": n.get("workspace", ""),
+        "url": _url(n),
+        "duelabel": _days_label(n),
+        "overdue": "1" if _graph.is_overdue(n) else "",
+    }
+
+
+def render_todo_board(g, ws=None, limit=25):
+    """The interactive to-do list (M13) — the live deployment's task-card UX
+    ported onto Action nodes: a compact scrollable list, critical/overdue on
+    top, each row expanding into a front-and-center modal with description,
+    per-task chat, direct edit, mark-done, and priority control."""
+    nodes = [n for n in g.query(type_="Action", workspace=ws)
+             if _graph.is_open_action(n)]
+    for n in _current(g.query(type_="Ticket", workspace=ws)):
+        attrs = n.get("attrs", {}) or {}
+        if attrs.get("status") in ("closed", "done"):
+            continue
+        if _graph.due_days(n) is not None:
+            nodes.append(n)
+    nodes.sort(key=_action_rank)
+    if not nodes:
+        return ""
+    rows = []
+    for n in nodes[:limit]:
+        d = _todo_row_data(g, n)
+        data = " ".join('data-%s="%s"' % (k, _esc(v)) for k, v in d.items())
+        pri = d["priority"]
+        badge = {"high": "🔺", "medium": "▪️", "low": "▫️"}.get(pri, "▪️")
+        late = ' <span class="todo-late">%s</span>' % _esc(d["duelabel"]) \
+            if d["overdue"] else (
+                ' <span class="sec-sub">%s</span>' % _esc(d["duelabel"])
+                if d["duelabel"] else "")
+        rows.append(
+            '<div class="todo-row todo-%s" %s onclick="todoOpen(this)">'
+            '<span class="todo-badge">%s</span> %s%s</div>' % (
+                _esc(pri), data, badge, _esc(d["title"]), late))
+    # LinkedIn-Jobs pattern: compact card list on the left, the selected task
+    # expanded big in a sticky detail pane beside it; first task auto-opens.
+    detail = """
+<div class="todo-detail" id="todoDetail">
+  <div class="td-empty" id="tdEmpty">Select a task</div>
+  <div id="tdBody" style="display:none">
+    <input id="tmTitle" class="tm-title" />
+    <div class="tm-meta"><span id="tmWs" class="ws-chip"></span>
+      <span id="tmDue" class="sec-sub"></span>
+      <a id="tmLink" target="_blank" rel="noopener" style="display:none">open source ↗</a></div>
+    <div class="tm-controls">
+      <select id="tmPriority">
+        <option value="high">🔺 high priority</option><option value="medium">▪️ medium</option>
+        <option value="low">▫️ low</option>
+      </select>
+      <button class="primary" onclick="todoDone()">✓ Mark done</button>
+      <button class="small" onclick="todoSave()">Save changes</button>
+    </div>
+    <textarea id="tmNote" rows="5" placeholder="Description / notes..."></textarea>
+    <div class="tm-evidence sec-sub" id="tmEvidence"></div>
+    <div id="tmResult" class="result"></div>
+    <div class="tm-chat">
+      <div class="quick-line">Chat about this task</div>
+      <div class="tm-chat-log" id="tmChatLog"></div>
+      <div class="chat-input-row">
+        <textarea id="tmChatInput" rows="2" placeholder="Ask about it, plan it, break it down..."></textarea>
+        <button class="small" onclick="todoChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let _todoId = null;
+function todoOpen(el) {
+  document.querySelectorAll(".todo-row").forEach(r => r.classList.remove("todo-selected"));
+  el.classList.add("todo-selected");
+  const d = el.dataset;
+  _todoId = d.id;
+  document.getElementById("tdEmpty").style.display = "none";
+  document.getElementById("tdBody").style.display = "block";
+  document.getElementById("tmTitle").value = d.title;
+  document.getElementById("tmNote").value = d.note;
+  document.getElementById("tmPriority").value = d.priority || "medium";
+  document.getElementById("tmWs").textContent = d.ws;
+  document.getElementById("tmDue").textContent = d.duelabel || (d.due ? ("due " + d.due) : "no deadline");
+  document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
+  const link = document.getElementById("tmLink");
+  if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
+  document.getElementById("tmChatLog").innerHTML = "";
+  document.getElementById("tmResult").textContent = "";
+  if (window.innerWidth < 980) {
+    document.getElementById("todoDetail").scrollIntoView({behavior: "smooth"});
+  }
+}
+async function todoSave() {
+  const r = await post("/action-update", {id: _todoId,
+    name: document.getElementById("tmTitle").value,
+    note: document.getElementById("tmNote").value,
+    priority: document.getElementById("tmPriority").value});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => location.reload(), 900);
+}
+async function todoDone() {
+  const r = await post("/action-update", {id: _todoId, status: "done"});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => location.reload(), 900);
+}
+async function todoChat() {
+  const input = document.getElementById("tmChatInput");
+  const log = document.getElementById("tmChatLog");
+  const msg = input.value.trim();
+  if (!msg) return;
+  log.innerHTML += "<div class='tm-msg tm-you'>" + msg.replace(/</g, "&lt;") + "</div>";
+  input.value = "";
+  log.innerHTML += "<div class='tm-msg tm-thinking' id='tmThinking'>…</div>";
+  const r = await post("/entry-chat", {id: _todoId, message: msg});
+  document.getElementById("tmThinking")?.remove();
+  log.innerHTML += "<div class='tm-msg'>" + (r.message || "").replace(/</g, "&lt;") + "</div>";
+  log.scrollTop = log.scrollHeight;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const first = document.querySelector(".todo-row");
+  if (first && window.innerWidth >= 980) todoOpen(first);
+});
+</script>"""
+    return ('<section class="graph-section" id="%s"><h3>To-Do / Next Actions '
+            '<span class="sec-count">%d</span></h3>'
+            '<div class="quick-line">critical &amp; overdue on top — click a task to open it</div>'
+            '<div class="todo-board"><div class="todo-list">%s</div>%s</div></section>' % (
+                _slug_anchor("To-Do / Next Actions"), len(nodes),
+                "".join(rows), detail))
+
+
+def render_calendar(g, ws=None, today=None):
+    """A small month calendar for the sidebar: dots on days with meetings or
+    due obligations, today highlighted."""
+    if g is None or not g.nodes:
+        return ""
+    import calendar as _cal
+    import datetime as _dtm
+    t = _dtm.date.fromisoformat(today) if today else _dtm.date.today()
+    marks = {}
+    for n in g.query(type_="Meeting", workspace=ws):
+        when = str((n.get("attrs", {}) or {}).get("when", ""))[:10]
+        if when:
+            marks.setdefault(when, []).append("📅 " + n.get("name", "")[:40])
+    for n in g.query(type_="Action", workspace=ws):
+        if not _graph.is_open_action(n):
+            continue
+        due = str((n.get("attrs", {}) or {}).get("due", ""))[:10]
+        if due:
+            marks.setdefault(due, []).append("⏰ " + n.get("name", "")[:40])
+    cal = _cal.Calendar(firstweekday=6)
+    rows = ["<tr>" + "".join("<th>%s</th>" % d for d in
+                             ("S", "M", "T", "W", "T", "F", "S")) + "</tr>"]
+    for week in cal.monthdatescalendar(t.year, t.month):
+        cells = []
+        for day in week:
+            iso = day.isoformat()
+            cls = []
+            if day.month != t.month:
+                cls.append("cal-out")
+            if day == t:
+                cls.append("cal-today")
+            if iso in marks:
+                cls.append("cal-marked")
+            title = _esc("; ".join(marks.get(iso, [])))
+            cells.append('<td class="%s" title="%s">%d%s</td>' % (
+                " ".join(cls), title, day.day,
+                "<span class='cal-dot'>•</span>" if iso in marks else ""))
+        rows.append("<tr>" + "".join(cells) + "</tr>")
+    return ('<div class="cal-box"><div class="cal-head">%s</div>'
+            '<table class="cal">%s</table></div>' % (
+                t.strftime("%B %Y"), "".join(rows)))
+
+
 def render_today_brief(g, active=None, today=None):
     """The generated 'what does today look like' summary (first-run feedback:
     'there is no summary for today'). Composed, not crawled: overdue + due-today
@@ -409,8 +593,13 @@ def render_sections(g, registry=None, active=None):
     parts = []
     if registry is not None:
         parts.append(render_workspace_switcher(registry, active))
+    # M13: the task board is the front of the page (the answer), before the
+    # workstream/inventory cards (the evidence) — LinkedIn-Jobs split view.
+    parts.append(render_todo_board(g, active))
     parts.append(_render_objectives(g, active))
     for label, fn in SECTIONS:
+        if label == "To-Do / Next Actions":
+            continue  # rendered first, above
         parts.append(_render_section(label, fn(g, active)))
     body = "".join(p for p in parts if p)
     if not body.strip():
