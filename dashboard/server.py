@@ -2549,11 +2549,50 @@ class Handler(BaseHTTPRequestHandler):
             raise
 
 
+POLL_TICK_SECONDS = 300
+
+
+def start_poll_ticker():
+    """In-process poll scheduler: fire poll-tick.sh every POLL_TICK_SECONDS
+    while the dashboard runs. External schedulers can't always do this —
+    macOS TCC silently denies launchd agents access to ~/Downloads and
+    friends ("Operation not permitted" on the script itself) — but this
+    server already holds the user's own file access, so polling works
+    wherever the deployment lives, on any platform, with zero scheduler
+    setup. All real gating (per-connector intervals, day/time windows,
+    attempted-vs-completed bookkeeping) stays in poll-tick.sh, so ticks are
+    idempotent and a parallel cron/launchd job remains harmless."""
+    script = os.path.join(DASHBOARD_DIR, "poll-tick.sh")
+    if not os.path.exists(script):
+        return None
+    import threading
+    import time as _time
+
+    def _loop():
+        while True:
+            try:
+                subprocess.run(["/bin/bash", script], cwd=DASHBOARD_DIR,
+                               env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN},
+                               timeout=1800)
+            except Exception as exc:
+                try:
+                    with open(os.path.join(DASHBOARD_DIR, "launchd-poll.err"), "a") as f:
+                        f.write("in-process tick failed: %r\n" % (exc,))
+                except OSError:
+                    pass
+            _time.sleep(POLL_TICK_SECONDS)
+
+    t = threading.Thread(target=_loop, daemon=True, name="poll-ticker")
+    t.start()
+    return t
+
+
 def main():
     os.makedirs(DASHBOARD_DIR, exist_ok=True)
     cfg_path = os.path.join(DASHBOARD_DIR, "poll-config.json")
     if not os.path.exists(cfg_path):
         write_json(cfg_path, DEFAULT_POLL_CONFIG)
+    start_poll_ticker()
     server = ThreadingHTTPServer(("127.0.0.1", PORT), Handler)
     print(f"CoS dashboard running at http://127.0.0.1:{PORT} (Ctrl+C to stop)")
     try:
