@@ -522,6 +522,145 @@ def apply_auth_directives(output):
     return cleaned
 
 
+# ---------------------------------------------------------------------------
+# M14: additional mailboxes — first-party connectors allow one Google account,
+# so every extra mailbox gets its own LOCAL MCP server instance. The dashboard
+# automates everything automatable: registering the server, launching the
+# sign-in, detecting completion, granting read-only tools, kicking the probe.
+# The only irreducibly-manual pieces are Google's own: a one-time OAuth client
+# (keys file) per deployment, and the per-account consent click.
+# ---------------------------------------------------------------------------
+
+GMAIL_MCP_PKG = "@gongrzhe/server-gmail-autoauth-mcp"
+GMAIL_MCP_DIR = os.path.expanduser("~/.gmail-mcp")
+GMAIL_KEYS_PATH = os.path.join(GMAIL_MCP_DIR, "gcp-oauth.keys.json")
+# Read-only subset only — send/modify/delete tools are never granted, same
+# posture as every other connector in this system.
+GMAIL_MCP_READ_TOOLS = ("search_emails", "read_email", "list_email_labels")
+_GRANT_KEYS = ("research_tools", "poll_tools", "chat_tools", "learn_tools")
+
+
+def mailbox_server_name(name):
+    slug = re.sub(r"[^a-z0-9-]+", "-", (name or "").strip().lower()).strip("-")
+    return ("gmail-" + slug) if slug else ""
+
+
+def mailbox_token_path(server):
+    return os.path.join(GMAIL_MCP_DIR, "credentials-%s.json" % server)
+
+
+def _mcp_registered(server):
+    try:
+        r = subprocess.run([CLAUDE_BIN, "mcp", "get", server],
+                           capture_output=True, text=True, timeout=30)
+        return r.returncode == 0
+    except Exception:
+        return False
+
+
+def _adopt_default_token(server):
+    """The upstream `auth` flow may ignore GMAIL_CREDENTIALS_PATH and write the
+    default ~/.gmail-mcp/credentials.json — claim it for this instance. Safe:
+    the dashboard runs one auth flow at a time."""
+    default = os.path.join(GMAIL_MCP_DIR, "credentials.json")
+    target = mailbox_token_path(server)
+    if os.path.exists(default) and not os.path.exists(target):
+        try:
+            os.rename(default, target)
+        except OSError:
+            pass
+
+
+def mailbox_status(name):
+    server = mailbox_server_name(name)
+    if server:
+        _adopt_default_token(server)
+    return {
+        "server": server,
+        "keys_present": os.path.exists(GMAIL_KEYS_PATH),
+        "keys_path": GMAIL_KEYS_PATH,
+        "registered": bool(server) and _mcp_registered(server),
+        "authorized": bool(server) and os.path.exists(mailbox_token_path(server)),
+    }
+
+
+def grant_mailbox_tools(server):
+    """Idempotently append the instance's read-only tools to every grant list
+    in config.json, then hot-reload the in-process grant globals so research/
+    poll/chat subprocesses pick them up without a server restart."""
+    new = ["mcp__%s__%s" % (server, t) for t in GMAIL_MCP_READ_TOOLS]
+    changed = False
+    with _file_lock(CONFIG_PATH):
+        cfg = read_json(CONFIG_PATH, {})
+        for key in _GRANT_KEYS:
+            cur = [t for t in (cfg.get(key) or "").split(",") if t]
+            add = [t for t in new if t not in cur]
+            if add:
+                cfg[key] = ",".join(cur + add)
+                changed = True
+        if changed:
+            write_json(CONFIG_PATH, cfg)
+    if changed:
+        global CONFIG, CHAT_TOOLS, POLL_TOOLS, LEARN_TOOLS, RESEARCH_TOOLS
+        CONFIG = load_config(CONFIG_PATH)
+        CHAT_TOOLS = CONFIG["chat_tools"]
+        POLL_TOOLS = CONFIG["poll_tools"]
+        LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
+        RESEARCH_TOOLS = CONFIG.get(
+            "research_tools", DEFAULT_CONFIG.get("research_tools", ""))
+    return changed
+
+
+def add_mailbox(name):
+    """Drive the whole flow as far as it can go right now; returns a status
+    dict whose `step` tells the UI what (if anything) to ask of the user."""
+    server = mailbox_server_name(name)
+    if not server or server == "gmail-":
+        return {"step": "error", "message": "give the account a short name, e.g. 'asu'"}
+    os.makedirs(GMAIL_MCP_DIR, exist_ok=True)
+    st = mailbox_status(name)
+    if not st["keys_present"]:
+        st["step"] = "needs_keys"
+        st["message"] = ("one-time setup: a Google OAuth client key file is needed "
+                         "(every deployment must use its own — Google requires it)")
+        return st
+    if not st["registered"]:
+        r = subprocess.run(
+            [CLAUDE_BIN, "mcp", "add", server, "--scope", "user",
+             "-e", "GMAIL_OAUTH_PATH=" + GMAIL_KEYS_PATH,
+             "-e", "GMAIL_CREDENTIALS_PATH=" + mailbox_token_path(server),
+             "--", "npx", "-y", GMAIL_MCP_PKG],
+            capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            return {"step": "error",
+                    "message": "mcp add failed: " + (r.stderr or r.stdout)[-300:]}
+        st["registered"] = True
+    if not st["authorized"]:
+        env = {**os.environ,
+               "GMAIL_OAUTH_PATH": GMAIL_KEYS_PATH,
+               "GMAIL_CREDENTIALS_PATH": mailbox_token_path(server)}
+        log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
+        try:
+            subprocess.Popen(["npx", "-y", GMAIL_MCP_PKG, "auth"],
+                             cwd=GMAIL_MCP_DIR, env=env,
+                             stdout=log, stderr=subprocess.STDOUT)
+        finally:
+            log.close()
+        st["step"] = "auth_started"
+        st["message"] = ("a Google sign-in window is opening — pick the %s account "
+                         "and approve read access" % name)
+        return st
+    granted = grant_mailbox_tools(server)
+    if _audit is not None:
+        _audit.record(COS_DIR, "mailbox:" + server,
+                      "connected" + (",tools-granted" if granted else ""),
+                      actor="dashboard", detail="local Gmail MCP instance")
+    st["step"] = "connected"
+    st["message"] = ("%s connected — read-only tools granted; probing identity "
+                     "and binding a workspace now" % server)
+    return st
+
+
 def append_chat_log(role, text):
     ts = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     with open(os.path.join(DASHBOARD_DIR, "chat-log.md"), "a") as f:
@@ -1682,17 +1821,51 @@ def render_accounts_section():
         "<h2>🔌 Accounts &amp; connections <button class=\"small\" "
         "onclick=\"probeAccounts()\">Check now</button> "
         "<button class=\"small\" onclick=\"connectAccount()\">➕ Connect an account</button></h2>"
-        "<div class=\"quick-line\" id=\"connectHint\" style=\"display:none;margin-bottom:.4rem\">"
-        "Connector settings opened in a new tab — connect the service there and finish its "
-        "login, then come back and hit <strong>Check now</strong>: the new account is probed, "
-        "identified, and bound to a workspace automatically. <strong>Second account of the "
-        "same service?</strong> Custom/remote connectors can be added again as a separate "
-        "named instance, but first-party connectors (Gmail, Calendar, Drive) support one "
-        "account each — for a second mailbox, either auto-forward it into the connected one "
-        "(simplest) or add a local MCP server for it via <code>claude mcp add</code>.</div>"
-        "<script>function connectAccount(){"
-        "window.open('" + CONNECTOR_SETTINGS_URL + "','_blank');"
-        "document.getElementById('connectHint').style.display='block';}</script>"
+        "<div id=\"connectForm\" style=\"display:none;margin:.4rem 0\">"
+        "<div class=\"quick-line\">First account of a service: connect it in "
+        "<a href=\"" + CONNECTOR_SETTINGS_URL + "\" target=\"_blank\">Claude's connector "
+        "settings</a>, then hit <strong>Check now</strong>. <strong>Second Gmail "
+        "account?</strong> The built-in connector only holds one Google login, so extra "
+        "mailboxes get their own local, read-only server — name it and start below; the "
+        "dashboard automates every step it can and tells you the moments it needs you.</div>"
+        "<input id=\"mbName\" placeholder=\"short name, e.g. asu\" style=\"max-width:12rem\"> "
+        "<button class=\"small\" onclick=\"startMailbox()\">Start</button>"
+        "<div id=\"connectStatus\" class=\"result\"></div></div>"
+        "<script>"
+        "function connectAccount(){const f=document.getElementById('connectForm');"
+        "f.style.display=f.style.display==='none'?'block':'none';}"
+        "async function startMailbox(){"
+        "const name=document.getElementById('mbName').value.trim();"
+        "const out=document.getElementById('connectStatus');"
+        "if(!name){out.textContent='give it a short name, e.g. asu';return;}"
+        "out.textContent='working...';"
+        "const st=await post('/add-mailbox',{name:name});renderMailboxStep(st,name);}"
+        "function renderMailboxStep(st,name){"
+        "const out=document.getElementById('connectStatus');"
+        "if(st.step==='needs_keys'){"
+        "out.innerHTML=\"<strong>One-time setup (once per computer, then never again):"
+        "</strong><ol>\"+"
+        "\"<li><a href='https://console.cloud.google.com/apis/credentials' target='_blank'>"
+        "Open Google Cloud Console → Credentials</a></li>\"+"
+        "\"<li>Enable the <a href='https://console.cloud.google.com/apis/library/"
+        "gmail.googleapis.com' target='_blank'>Gmail API</a> for the project</li>\"+"
+        "\"<li>Create Credentials → OAuth client ID → type <em>Desktop app</em></li>\"+"
+        "\"<li>Download the JSON and save it as <code>\"+st.keys_path+\"</code></li></ol>\"+"
+        "\"<button class='small' onclick='startMailbox()'>I saved the key file — continue"
+        "</button>\";}"
+        "else if(st.step==='auth_started'){"
+        "out.textContent=st.message+' — waiting for the sign-in to finish...';"
+        "pollMailbox(name);}"
+        "else if(st.step==='connected'){out.textContent=st.message;"
+        "setTimeout(()=>location.reload(),4000);}"
+        "else{out.textContent=st.message||'error';}}"
+        "async function pollMailbox(name){"
+        "for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,3000));"
+        "try{const r=await fetch('/mailbox-status?name='+encodeURIComponent(name),"
+        "{cache:'no-store'});const st=await r.json();"
+        "if(st.authorized){const done=await post('/add-mailbox',{name:name});"
+        "renderMailboxStep(done,name);return;}}catch(e){}}}"
+        "</script>"
         '<div class="quick-line" style="margin-bottom:.4rem">%s</div>'
         '<div id="accountsResult" class="result"></div>%s'
         "<script>async function probeAccounts(){"
@@ -1906,6 +2079,13 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/graph-version":
             self._send_json({"v": dashboard_version()})
             return
+        if parsed.path == "/mailbox-status":
+            name = (parse_qs(parsed.query).get("name", [""]) or [""])[0]
+            try:
+                self._send_json(mailbox_status(name))
+            except Exception as exc:
+                self._send_json({"step": "error", "message": str(exc)}, 500)
+            return
         if parsed.path == "/entry-chat-log":
             # Per-task chat history — the page re-renders from this on every
             # task open, and polls it when a slow reply outlives the browser's
@@ -2042,7 +2222,12 @@ class Handler(BaseHTTPRequestHandler):
                     "settings; the OAuth consent still happens in the user's own browser, "
                     "and after they finish, accounts are re-probed and bound to workspaces "
                     "automatically. The line is hidden from the user, so also say plainly "
-                    "what to do in the page that opens.) User message: " + message)
+                    "what to do in the page that opens. Exception — a SECOND account of a "
+                    "service that's already connected (e.g. another Gmail): the built-in "
+                    "connectors hold one login each, so instead point the user to the "
+                    "Accounts panel's '➕ Connect an account' flow on this dashboard, which "
+                    "sets up a local read-only server for the extra mailbox and automates "
+                    "everything except Google's own consent clicks.) User message: " + message)
 
             def _run_chat(flag):
                 return subprocess.run(
@@ -2476,6 +2661,27 @@ class Handler(BaseHTTPRequestHandler):
                               actor="dashboard",
                               detail="user confirmed intentional change")
             self._send_json({"message": "guardrail baseline updated"})
+            return
+
+        if self.path == "/add-mailbox":
+            # M14: connect an additional mailbox as its own local MCP server.
+            # Re-POSTing is safe at every step — the flow resumes wherever it
+            # left off (keys → register → auth → grant+probe).
+            try:
+                st = add_mailbox(data.get("name", ""))
+            except Exception as exc:
+                self._send_json({"step": "error", "message": f"failed: {exc}"}, 500)
+                return
+            if st.get("step") == "connected":
+                try:
+                    spawn_background(
+                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe",
+                         "--permission-mode", "dontAsk",
+                         "--allowedTools", POLL_TOOLS,
+                         "--output-format", "text"], "accounts.log")
+                except OSError:
+                    pass
+            self._send_json(st, 200 if st.get("step") != "error" else 400)
             return
 
         if self.path == "/probe-accounts":

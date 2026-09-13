@@ -63,3 +63,15 @@ isolation follows automatically.
 Per account: state (connected ✓ / needs auth ✗ / declined 🚫 / unknown), identity, workspace,
 and the exact fix for anything broken. One-line summary from `accounts.summarize_accounts`.
 Forward a `Memory update:` to `cos-knowledge`. Nothing external was sent or modified.
+
+## Local mailbox instances (M14)
+
+First-party connectors hold exactly one Google login, so every ADDITIONAL mailbox is a local
+MCP server instance named `gmail-<shortname>` (registered user-scope via `claude mcp add`,
+package `@gongrzhe/server-gmail-autoauth-mcp`, per-instance `GMAIL_CREDENTIALS_PATH` token).
+The dashboard's "➕ Connect an account" flow creates these; treat their tools
+(`mcp__gmail-<shortname>__search_emails|read_email|list_email_labels`) as a full gmail-kind
+account instance in Steps 1–5: probe identity with a cheap `search_emails` (e.g. newest
+message's To: header), bind by the probed address's domain like any other account, and grant
+per-workspace comms agents only that instance's tools. Only the read-only tool subset is ever
+granted anywhere — the instance has no send/modify/delete grants to begin with.
