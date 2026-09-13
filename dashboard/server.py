@@ -2674,10 +2674,14 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if st.get("step") == "connected":
                 try:
+                    # RESEARCH_TOOLS, not POLL_TOOLS: the probe must Write
+                    # account-status.json / config updates — the narrow poll
+                    # grant silently starves it (same lesson as first-run
+                    # research; it happened again here).
                     spawn_background(
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe",
                          "--permission-mode", "dontAsk",
-                         "--allowedTools", POLL_TOOLS,
+                         "--allowedTools", RESEARCH_TOOLS,
                          "--output-format", "text"], "accounts.log")
                 except OSError:
                     pass
@@ -2686,12 +2690,16 @@ class Handler(BaseHTTPRequestHandler):
 
         if self.path == "/probe-accounts":
             # V2.2 (M10): background probe of every connector account instance.
+            # RESEARCH_TOOLS: the probe writes account-status.json and config
+            # bindings — POLL_TOOLS starved it of Write and it could only
+            # stage results it couldn't apply (2026-09-13, second instance of
+            # the narrow-grant lesson).
             try:
                 spawn_background(
                     [
                         CLAUDE_BIN, "-p", "/global:cos-accounts --probe",
                         "--permission-mode", "dontAsk",
-                        "--allowedTools", POLL_TOOLS,
+                        "--allowedTools", RESEARCH_TOOLS,
                         "--output-format", "text",
                     ], "accounts.log")
                 self._send_json({"message": "probing all accounts in the background — "

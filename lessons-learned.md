@@ -461,3 +461,118 @@ not "append-only," it is "append only to files that already exist" — ship the 
 `/setup` or grant `Write`; (d) an unattended run cannot report what it never attempted, so every
 "if the modules are present, also do X" clause needs a positive check that X was actually
 possible — the unexplained-zero rule, applied to capability instead of to data.**
+
+## 2026-09-13 — the grant gap recurred, and a missing log has no second chance
+
+**What happened:** The next `general` run (20:14:22Z, ~16 min after the one above) hit the
+identical wall: `Write` denied, `Bash` denied, V2 addendum steps 1–5 skipped again. No new task —
+the dedup key `poll:grant-gap-v2-addendum` already existed — but the recurrence itself is the
+finding, and it kills two hypotheses the single first observation left open. It is **not a
+first-run artifact**: the missing `poll-log.md` does not get created by the second run either, so
+the file's absence is self-perpetuating and every run stays unlogged forever rather than only the
+first. And it is **not launch-path-specific**: this run came from a manual invocation, not from
+`poll-tick.sh:75-79` or `server.py:2331`, and was denied the same way — the grant travels with the
+command, so "just run it by hand" is not a workaround.
+
+**What that changes about the fix's priority:** the previous entry's response was "recorded only,"
+which the recurrence rule (2026-09-12, fourth correction, rule (d)) already forbids on a second
+occurrence. Note also that the escalation was *available and declined*: `config.json` is an
+existing file, so `Edit` alone is enough for the poll to widen its own `poll_tools`. It did not,
+because a `dontAsk` job that can grant itself `Bash` has no meaningful grant at all — which is
+itself the argument for delegation (option b) over widening (option a).
+
+**Where this is now encoded:** this entry;
+`dashboard/workspace/tasks/inbox.md` key `poll:grant-gap-v2-addendum`, occurrence 2.
+**Rules: (a) a bootstrap file a command cannot create is not "missing on the first run," it is
+missing permanently — absence that blocks its own repair never shows up as a growing problem, so
+size it from the first sighting rather than waiting to see if it recurs; (b) a capability gap
+observed once through one launch path is untested elsewhere — re-observe it through a different
+entry point before concluding the launcher is at fault, because a per-command grant fails
+identically from every direction; (c) a process must never hold the permission to widen its own
+permissions, and finding that it does is a finding in its own right — here `Edit` over
+`config.json` silently subsumed every grant the config names.**
+
+**Addendum, occurrence 3 (same day, third `general` run):** recorded on the existing dedup key
+rather than as its own section, because the pattern is unchanged — but one new fact narrows the
+fix. `poll_tools` grants `Agent`, and this run used it (a subagent inventoried the workspace,
+since the poll has no `Glob`/`Grep`). **The subagent was denied `Bash` too**, and finished by
+`Read`-probing paths one at a time. A subagent inherits the parent session's permission mode
+instead of carrying a grant of its own, so "the poll already has `Agent` — just delegate the V2
+steps to a subagent" is not a fix; it relocates the silent no-op one level down. Option (b)
+survives only in its literal form: a server-side `spawn_background` **subprocess** started with
+`RESEARCH_TOOLS`, i.e. a fresh CLI invocation with its own grant. **Rule: "delegate it to an
+agent" and "spawn it as a subprocess" are not the same escape hatch — only a new process gets a
+new grant, and an in-session subagent is bounded by whatever denied its parent. Check which one a
+proposed fix means before believing it routes around a permission wall.**
+
+**Addendum, occurrence 4 (same day, 20:52Z `general` run):** the symptom held a fourth time —
+`Write` denied, V2 addenda 1–5 unreachable, `poll-log.md` still absent after four runs — but the
+*diagnosis in the three entries above is wrong in a way that matters.* They record "`Bash`
+denied." This run ran `date`, `ls`, `cat`, `tail` and `grep` inside the dashboard directory
+without any prompt. What it could not do was **invoke an interpreter** (`python3 -c "print('ok')"`
+and an absolute `/opt/homebrew/bin/python3.14 graph.py --help` both refused) or **reach a path
+outside the working directory**. The wall is a command-level sandbox over read-only shell, not an
+absent tool. That inverts the cheapest remaining fix: option (a) — "widen `poll_tools` to
+`Read,Edit,Write,Bash,Agent`" — targets a grant that was never the binding constraint, while every
+addendum step still needs precisely the operation the sandbox blocks.
+
+**Rules: (a) a capability is not one bit — "Bash" is a family of very differently-privileged
+operations, and a run that probes it with `ls` and concludes "Bash works", or is refused `python3`
+and concludes "Bash is denied", has measured the wrong thing; gate a capability with the *exact*
+call the work requires, never with a convenient proxy for it; (b) a symptom observed identically
+four times is not a diagnosis confirmed four times — three runs agreed with each other and were
+all wrong about the mechanism, because each inherited the previous run's framing instead of
+re-probing; when a finding recurs, re-derive the cause at least once rather than incrementing a
+counter, since a confidently-worded prior observation is the thing most likely to stop the next
+run from looking; (c) the permission profile of a hand-typed command is not the same artifact as
+the grant its automated launchers pass — occurrence 2 asserted the two were denied identically and
+occurrence 4 contradicts it, so measure both rather than generalising from whichever one you
+happen to be running in.**
+
+**Addendum, occurrence 5 (same day, fifth `general` run, hand-typed):** `poll-log.md` still
+absent after five runs — `Write` denied explicitly this time, so the bootstrap gap is permanent,
+not a profile accident. But the run also **falsifies occurrence 4 the way occurrence 4 falsified
+occurrences 1–3.** Here `Bash` was denied *outright* at the tool level: `ls` inside the working
+directory was refused, not merely `python3`. Occurrence 4 observed read-only shell working in the
+cwd and concluded the wall was a command-level sandbox rather than an absent tool. Both
+observations are accurate; they describe **two different walls, one run apart, same machine, same
+day.** The constraint is therefore not a stable property of the command — it varies per
+invocation, which no single run can detect from the inside.
+
+What that costs: five consecutive runs have been characterising `poll_tools` by probing a
+hand-typed session that **is not running under `poll_tools`**. This run held `ToolSearch` and
+completed live MCP calendar reads, neither of which `poll_tools` grants, while lacking `Bash`,
+which the automated path may well have. The manual session is not a subset or a superset of the
+automated grant; it is a different set. So occurrence 2's "manual runs are denied identically"
+and occurrence 4's "widening the grant targets a non-binding constraint" are both unsupported —
+each generalised from the wrong artifact — and the wall the *scheduler* actually hits is still
+unmeasured.
+
+**Where this is now encoded:** this addendum; `dashboard/workspace/tasks/inbox.md` key
+`poll:grant-gap-v2-addendum`, occurrence 5. **Rules: (a) when a symptom recurs and each run's
+diagnosis contradicts the last, stop diagnosing the symptom and suspect the *measurement
+environment* — three mutually inconsistent readings of one constraint mean the thing being varied
+is the observer, not the wall; (b) a permission finding is only valid for the launch path that
+produced it, so record the launch path beside every such observation and refuse to generalise
+across paths without a second measurement — the cheap discipline that would have caught this at
+occurrence 2; (c) an unattended job's grant can only be characterised from inside an unattended
+run: instrument the scheduler to write down what it was actually denied, because a human
+reproducing the command by hand is running a different program.**
+
+**Addendum, occurrence 6 (same day, sixth `general` run, hand-typed):** no new class — recorded
+because it **replicates** occurrence 5's claim, which occurrence 5 could only assert once. `Bash`
+and `Write` denied outright at the tool level; `ToolSearch` and live MCP calendar reads worked
+again. New: `Glob`/`Grep` are not *denied* in a hand-typed session, they are **absent from the
+deferred-tool registry entirely** (`ToolSearch "select:Glob,Grep"` → no matching tools), so
+occurrences 1–5 were wrong even to frame them as a grant shortfall here. Across the two runs that
+agree, the manual session is neither subset nor superset of `poll_tools`: it holds tools the grant
+never names and lacks tools the grant does name. So the correct reading of occurrences 1–4 is not
+"weak evidence about the grant" but "measurements of a different artifact," and the scheduler's
+actual wall remains unmeasured six runs in.
+
+Also newly observed rather than predicted: `general` is the only scope `poll-config.json` defines,
+and `general` contains no inbound-mail check, so every run reads zero new email *by construction*
+while the one path that would (V2 addendum 1) is blocked. **Rule: when two open findings are
+recorded as "must be fixed together," check on each recurrence whether the compound effect is now
+observable — a predicted interaction that has quietly been happening for six runs is a different
+size of problem from a hypothetical one, and the log of either finding alone never shows it.**
