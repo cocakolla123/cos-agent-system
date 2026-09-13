@@ -428,6 +428,62 @@ def get_entry_chat_session(entry_id):
     return sessions[entry_id], sessions, path
 
 
+def entry_chat_log_path():
+    return os.path.join(DASHBOARD_DIR, "entry-chat-log.json")
+
+
+def append_entry_chat(entry_id, role, text):
+    """Persist a per-task chat message. The browser renders from this file, so
+    a reply survives the tab closing, a page reload, or a different browser —
+    the in-page log is just a view of it."""
+    path = entry_chat_log_path()
+    logmap = read_json(path, {})
+    logmap.setdefault(entry_id, []).append({
+        "role": role, "text": text,
+        "ts": datetime.datetime.now().astimezone().isoformat(timespec="seconds")})
+    write_json(path, logmap)
+
+
+_COS_ACTION_RE = re.compile(r"^\s*COS-ACTION:\s*(\{.*\})\s*$", re.MULTILINE)
+
+_DIRECTIVE_STATUSES = frozenset({"done", "dismissed", "open"})
+_DIRECTIVE_PRIORITIES = frozenset({"high", "medium", "low"})
+
+
+def apply_chat_directives(entry_id, output):
+    """The per-task chat's only write path: the model ends its reply with a
+    `COS-ACTION: {...}` line and the *server* applies it through the same
+    locked, audited update_graph_node the task card's buttons use. The chat
+    subprocess itself keeps zero write tools, and a directive can only touch
+    the task under discussion — any id inside the JSON is ignored."""
+    applied = []
+    for m in _COS_ACTION_RE.finditer(output):
+        try:
+            d = json.loads(m.group(1))
+        except ValueError:
+            continue
+        status = str(d.get("status") or "").strip().lower() or None
+        if status not in _DIRECTIVE_STATUSES:
+            status = None
+        priority = str(d.get("priority") or "").strip().lower() or None
+        if priority not in _DIRECTIVE_PRIORITIES:
+            priority = None
+        note = d.get("note") if isinstance(d.get("note"), str) else None
+        if not (status or priority or note):
+            continue
+        try:
+            ok, msg = update_graph_node(entry_id, note=note,
+                                        priority=priority, status=status)
+        except Exception as exc:
+            ok, msg = False, "directive failed: %r" % (exc,)
+        if ok and msg != "no changes":
+            applied.append(msg)
+    cleaned = _COS_ACTION_RE.sub("", output).strip()
+    if applied:
+        cleaned = (cleaned + "\n\n" if cleaned else "") + "✅ " + "; ".join(applied)
+    return cleaned
+
+
 def append_chat_log(role, text):
     ts = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     with open(os.path.join(DASHBOARD_DIR, "chat-log.md"), "a") as f:
@@ -1794,6 +1850,15 @@ class Handler(BaseHTTPRequestHandler):
         if parsed.path == "/graph-version":
             self._send_json({"v": dashboard_version()})
             return
+        if parsed.path == "/entry-chat-log":
+            # Per-task chat history — the page re-renders from this on every
+            # task open, and polls it when a slow reply outlives the browser's
+            # fetch timeout (Safari kills fetches at ~60s; the model can take
+            # longer, and the server finishes + persists regardless).
+            qid = (parse_qs(parsed.query).get("id", [""]) or [""])[0]
+            logmap = read_json(entry_chat_log_path(), {})
+            self._send_json({"messages": logmap.get(qid, [])})
+            return
         if parsed.path == "/auth-requests":
             pending = []
             if _accounts is not None:
@@ -1955,6 +2020,7 @@ class Handler(BaseHTTPRequestHandler):
             if not message:
                 self._send_json({"message": "(empty message, not sent)"}, 400)
                 return
+            append_entry_chat(entry_id, "you", message)
             entries = parse_approval_queue()
             entry = next((e for e in entries if e.get("id") == entry_id and e.get("status") == "pending"), None)
             sess, sessions, sess_path = get_entry_chat_session(entry_id)
@@ -1974,7 +2040,17 @@ class Handler(BaseHTTPRequestHandler):
                         f"We're discussing this to-do from my knowledge graph (id {entry_id}): "
                         f"{node.get('name','')}. Notes: {a.get('note','')}. "
                         f"Due: {a.get('due','none')}. Evidence: {a.get('evidence','')}. "
-                        f"Workspace: {node.get('workspace','')}. Now discuss: {message}"
+                        f"Workspace: {node.get('workspace','')}. "
+                        # The chat has no write tools; this directive line is
+                        # its only lever, and the server applies it (audited,
+                        # this task only) before showing the reply.
+                        'You can change this task by ending your reply with one line exactly like '
+                        'COS-ACTION: {"status": "dismissed"} '
+                        '— allowed fields: status (done|dismissed|open), priority (high|medium|low), '
+                        'note (replacement notes). Emit it whenever the user asks to remove, dismiss, '
+                        'skip, or complete this task ("don\'t bother", "not doing this" means status '
+                        'dismissed), or to change its priority or notes. The line is hidden from the '
+                        f'user, so also say plainly what you did. Now discuss: {message}'
                     )
             session_flag = ["--resume", sess["session_id"]] if sess.get("started") else [
                 "--session-id", sess["session_id"]
@@ -1994,11 +2070,14 @@ class Handler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 output = (result.stdout or result.stderr or "").strip() or "(no output)"
+                output = apply_chat_directives(entry_id, output) or "(no output)"
                 sess["started"] = True
                 sessions[entry_id] = sess
                 write_json(sess_path, sessions)
+                append_entry_chat(entry_id, "assistant", output[:4000])
                 self._send_json({"message": output[:4000]})
             except subprocess.TimeoutExpired:
+                append_entry_chat(entry_id, "assistant", "(timed out after 300s)")
                 self._send_json({"message": "timed out after 300s"}, 504)
             return
 

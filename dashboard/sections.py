@@ -462,7 +462,7 @@ function todoOpen(el) {
   document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
   const link = document.getElementById("tmLink");
   if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
-  document.getElementById("tmChatLog").innerHTML = "";
+  loadTodoChat(d.id);
   document.getElementById("tmResult").textContent = "";
   if (window.innerWidth < 980) {
     document.getElementById("todoDetail").scrollIntoView({behavior: "smooth"});
@@ -481,18 +481,56 @@ async function todoDone() {
   document.getElementById("tmResult").textContent = r.message;
   setTimeout(() => location.reload(), 900);
 }
+function escChat(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+async function fetchTodoChat(id) {
+  try {
+    const r = await fetch("/entry-chat-log?id=" + encodeURIComponent(id), {cache: "no-store"});
+    return (await r.json()).messages || [];
+  } catch (e) { return null; }
+}
+async function loadTodoChat(id) {
+  const log = document.getElementById("tmChatLog");
+  log.innerHTML = "";
+  const msgs = await fetchTodoChat(id);
+  if (_todoId !== id || !msgs || !msgs.length) return;
+  log.innerHTML = msgs.map(m =>
+    "<div class='tm-msg" + (m.role === "you" ? " tm-you" : "") + "'>" + escChat(m.text) + "</div>"
+  ).join("");
+  log.scrollTop = log.scrollHeight;
+}
 async function todoChat() {
   const input = document.getElementById("tmChatInput");
   const log = document.getElementById("tmChatLog");
   const msg = input.value.trim();
   if (!msg) return;
-  log.innerHTML += "<div class='tm-msg tm-you'>" + msg.replace(/</g, "&lt;") + "</div>";
+  const id = _todoId;
+  const prior = ((await fetchTodoChat(id)) || []).length;
+  log.innerHTML += "<div class='tm-msg tm-you'>" + escChat(msg) + "</div>";
   input.value = "";
-  log.innerHTML += "<div class='tm-msg tm-thinking' id='tmThinking'>…</div>";
-  const r = await post("/entry-chat", {id: _todoId, message: msg});
+  log.innerHTML += "<div class='tm-msg tm-thinking' id='tmThinking'>thinking… (a reply can take a minute)</div>";
+  let reply = null;
+  try {
+    const r = await post("/entry-chat", {id: id, message: msg});
+    reply = r.message;
+  } catch (e) {
+    // Safari aborts fetches at ~60s while the model is still thinking; the
+    // server finishes and persists the reply anyway — poll the log for it.
+    reply = await pollTodoReply(id, prior);
+  }
+  if (_todoId !== id) return;
   document.getElementById("tmThinking")?.remove();
-  log.innerHTML += "<div class='tm-msg'>" + (r.message || "").replace(/</g, "&lt;") + "</div>";
+  log.innerHTML += "<div class='tm-msg'>" +
+    escChat(reply || "(no reply yet — reopen this task shortly)") + "</div>";
   log.scrollTop = log.scrollHeight;
+}
+async function pollTodoReply(id, prior) {
+  for (let i = 0; i < 100; i++) {
+    await new Promise(res => setTimeout(res, 3000));
+    const msgs = await fetchTodoChat(id);
+    if (msgs && msgs.length >= prior + 2 && msgs[msgs.length - 1].role === "assistant")
+      return msgs[msgs.length - 1].text;
+  }
+  return null;
 }
 document.addEventListener("DOMContentLoaded", () => {
   const first = document.querySelector(".todo-row");
