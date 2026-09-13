@@ -484,6 +484,44 @@ def apply_chat_directives(entry_id, output):
     return cleaned
 
 
+_COS_AUTH_RE = re.compile(r"^\s*COS-AUTH:\s*(\{.*\})\s*$", re.MULTILINE)
+
+CONNECTOR_SETTINGS_URL = "https://claude.ai/settings/connectors"
+
+
+def apply_auth_directives(output):
+    """Both chats' hook into the auth-popup flow: a reply ending with
+    `COS-AUTH: {"id": ..., "reason": ...}` enqueues an authorization request,
+    which the dashboard surfaces as the existing popup (Authorize opens the
+    connector-settings page; Refuse stays permanent). The OAuth consent itself
+    always happens in the user's own browser — this only asks the question."""
+    if _accounts is None:
+        return output
+    queued = []
+    for m in _COS_AUTH_RE.finditer(output):
+        try:
+            d = json.loads(m.group(1))
+        except ValueError:
+            continue
+        account_id = str(d.get("id") or "").strip()
+        if not account_id:
+            continue
+        try:
+            req = _accounts.enqueue_auth_request(
+                DASHBOARD_DIR, account_id,
+                reason=str(d.get("reason") or ""),
+                auth_url=str(d.get("auth_url") or "") or CONNECTOR_SETTINGS_URL)
+        except Exception:
+            continue
+        if req is not None:
+            queued.append(account_id)
+    cleaned = _COS_AUTH_RE.sub("", output).strip()
+    if queued:
+        cleaned = ((cleaned + "\n\n" if cleaned else "")
+                   + "🔐 authorization popup raised for: " + ", ".join(queued))
+    return cleaned
+
+
 def append_chat_log(role, text):
     ts = datetime.datetime.now().astimezone().isoformat(timespec="seconds")
     with open(os.path.join(DASHBOARD_DIR, "chat-log.md"), "a") as f:
@@ -1317,6 +1355,9 @@ def dashboard_version():
         os.path.join(COS_DIR, "approval-queue.md"),
         os.path.join(COS_DIR, "graph", "nodes.jsonl"),
         os.path.join(COS_DIR, "graph", "edges.jsonl"),
+        # auth popups appear live: a chat-queued auth request bumps the
+        # version, so the open page reloads and shows the modal.
+        os.path.join(DASHBOARD_DIR, "auth-requests.json"),
     ]
     stamp = []
     for p in paths:
@@ -1636,7 +1677,17 @@ def render_accounts_section():
             "automatically.</div>")
     return (
         "<h2>🔌 Accounts &amp; connections <button class=\"small\" "
-        "onclick=\"probeAccounts()\">Check now</button></h2>"
+        "onclick=\"probeAccounts()\">Check now</button> "
+        "<button class=\"small\" onclick=\"connectAccount()\">➕ Connect an account</button></h2>"
+        "<div class=\"quick-line\" id=\"connectHint\" style=\"display:none;margin-bottom:.4rem\">"
+        "Connector settings opened in a new tab — add the connector there (for a second "
+        "account of the same type, add it again as a separate named instance, e.g. "
+        "<em>gmail-school</em>) and finish its login. Then come back and hit "
+        "<strong>Check now</strong>: the new account is probed, identified, and bound to a "
+        "workspace automatically.</div>"
+        "<script>function connectAccount(){"
+        "window.open('" + CONNECTOR_SETTINGS_URL + "','_blank');"
+        "document.getElementById('connectHint').style.display='block';}</script>"
         '<div class="quick-line" style="margin-bottom:.4rem">%s</div>'
         '<div id="accountsResult" class="result"></div>%s'
         "<script>async function probeAccounts(){"
@@ -1973,6 +2024,20 @@ class Handler(BaseHTTPRequestHandler):
             cfg, cfg_path = get_chat_session()
             append_chat_log("you", message)
             learn_note = maybe_start_learn_loop(message)
+            if not cfg.get("started"):
+                # First message seeds the auth-popup lever (mirrors the task
+                # chat's COS-ACTION): the chat has no write tools, so raising
+                # the dashboard's authorization popup is directive-only.
+                message = (
+                    "(You are the Chief-of-Staff dashboard chat. When the user wants to "
+                    "connect or authorize a connector account — e.g. a second Gmail — end "
+                    'your reply with one line exactly like COS-AUTH: {"id": "gmail-asu", '
+                    '"reason": "why it\'s needed"}. The dashboard then shows its '
+                    "authorization popup, whose Authorize button opens Claude's connector "
+                    "settings; the OAuth consent still happens in the user's own browser, "
+                    "and after they finish, accounts are re-probed and bound to workspaces "
+                    "automatically. The line is hidden from the user, so also say plainly "
+                    "what to do in the page that opens.) User message: " + message)
 
             def _run_chat(flag):
                 return subprocess.run(
@@ -2004,6 +2069,7 @@ class Handler(BaseHTTPRequestHandler):
                     cfg["started"] = False
                     result = _run_chat(["--session-id", cfg["session_id"]])
                     output = (result.stdout or result.stderr or "").strip() or "(no output)"
+                output = apply_auth_directives(output)
                 if learn_note:
                     output = output + learn_note
                 cfg["started"] = True
@@ -2070,7 +2136,8 @@ class Handler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 output = (result.stdout or result.stderr or "").strip() or "(no output)"
-                output = apply_chat_directives(entry_id, output) or "(no output)"
+                output = apply_chat_directives(entry_id, output)
+                output = apply_auth_directives(output) or "(no output)"
                 sess["started"] = True
                 sessions[entry_id] = sess
                 write_json(sess_path, sessions)
@@ -2441,12 +2508,11 @@ class Handler(BaseHTTPRequestHandler):
                 _audit.record(COS_DIR, f"auth:{account_id}", outcome,
                               actor="dashboard", detail="auth popup response")
             if outcome == "authorized":
-                auth_url = req.get("auth_url") or ""
-                if auth_url:
-                    try:
-                        subprocess.Popen(["open", auth_url])
-                    except OSError:
-                        pass
+                auth_url = req.get("auth_url") or CONNECTOR_SETTINGS_URL
+                try:
+                    subprocess.Popen(["open", auth_url])
+                except OSError:
+                    pass
                 # background re-probe so the panel flips to "connected" once
                 # the user finishes the browser login
                 try:
