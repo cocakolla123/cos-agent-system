@@ -125,14 +125,19 @@ for the `tools:` frontmatter — never invent a tool name.
 1. Write `dashboard/poll-config.json`: one entry per fast-check connector from Step 1 (interval
    in minutes, days, start/end time — default to weekdays 07:00–19:00 unless the user says
    otherwise) plus `"timezone"`.
-2. Register `dashboard/poll-tick.sh` with a local scheduler (launchd on macOS, cron elsewhere).
-   **Known lesson: a scheduler's minimal environment often lacks the `claude` binary's install
-   directory on `PATH`** — explicitly set `CLAUDE_BIN` to the resolved absolute path of the
-   `claude` binary (find it, e.g. `which claude`) in whatever environment block the scheduler
-   config supports, rather than relying on inherited `PATH`.
-3. Tell the user exactly what was registered and how to check/undo it (the literal
-   launchd/cron command), and remind them `dashboard/serve.sh` is still run manually, not
-   auto-started.
+2. Nothing else is required: the dashboard server runs an **in-process ticker** that fires
+   `dashboard/poll-tick.sh` every 5 minutes while it's up (the script's own per-connector
+   interval/window gating decides whether anything actually runs). Tell the user polling is
+   active whenever the dashboard is running.
+3. Only if the user wants polling *while the dashboard is down*, additionally register
+   `poll-tick.sh` with an external scheduler (cron; ticks are idempotent, so overlap with the
+   in-process ticker is harmless) — and know the two lessons that came from trying this:
+   **(a)** a scheduler's minimal environment often lacks the `claude` binary's install
+   directory on `PATH` — set `CLAUDE_BIN` to the resolved absolute path explicitly;
+   **(b) macOS launchd agents are TCC-denied access to protected folders** (Downloads,
+   Documents, Desktop) — a deployment living there fails with "Operation not permitted" on
+   the script itself, which is exactly why the in-process ticker is the default. Tell the
+   user the literal command registered and how to undo it.
 
 ## Step 7 — summarize and record
 

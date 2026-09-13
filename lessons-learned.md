@@ -412,3 +412,9 @@ crawl worked and the *mapping* failed; (e) gmail has now produced three misses u
 distinct root causes (`filter_cutoff` ×2, `normalization`) — on the densest connector, each new
 guard needs its own false-negative check, because every filter added there suppresses more than
 it was aimed at.**
+
+## 2026-09-13 — external schedulers can't be trusted with user-folder deployments
+- **Symptom:** polling never ran on a live deployment — poll-config.json said every 15 min, but no scheduler was registered; when a launchd agent *was* added, every tick died with `Operation not permitted` before the script's first line.
+- **Root cause (two layers):** (1) setup's "register a scheduler" step is easy to skip and nothing detects the gap — a config file describing a schedule looks exactly like a working schedule. (2) macOS TCC denies launchd agents access to protected folders (Downloads/Documents/Desktop), so any deployment living there can't be ticked by launchd at all without the user hand-granting Full Disk Access.
+- **Change:** the dashboard server now runs the ticker in-process (fires poll-tick.sh every 5 min while it serves; the script keeps all interval/window gating, so ticks stay idempotent and an external cron remains an optional, harmless supplement). setup.md Step 6 rewritten accordingly.
+- **Proof:** first in-process tick fired within seconds of server start and recorded poll-last-run.json; a /cos-poll run was live immediately after.
