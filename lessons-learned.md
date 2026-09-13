@@ -418,3 +418,46 @@ it was aimed at.**
 - **Root cause (two layers):** (1) setup's "register a scheduler" step is easy to skip and nothing detects the gap — a config file describing a schedule looks exactly like a working schedule. (2) macOS TCC denies launchd agents access to protected folders (Downloads/Documents/Desktop), so any deployment living there can't be ticked by launchd at all without the user hand-granting Full Disk Access.
 - **Change:** the dashboard server now runs the ticker in-process (fires poll-tick.sh every 5 min while it serves; the script keeps all interval/window gating, so ticks stay idempotent and an external cron remains an optional, harmless supplement). setup.md Step 6 rewritten accordingly.
 - **Proof:** first in-process tick fired within seconds of server start and recorded poll-last-run.json; a /cos-poll run was live immediately after.
+
+## 2026-09-13 — a command whose own grant cannot run its own instructions
+
+**What happened:** The `general` poll run fired by that first in-process tick (19:58:49Z)
+completed every check `Read` can satisfy — empty approval queue, absent style-feedback queue, no
+calendar events, correction queue fully resolved, graph in sync at 121 nodes — and **silently
+skipped all five V2 addendum steps.** `config.json`'s `poll_tools` is `Read,Edit,Agent` plus
+read-only MCP: no `Write`, no `Bash`. The addendum calls for `/cos-research --incremental` (needs
+`Write`/`Bash` to persist a node) and `python3 ../dashboard/graph.py --render` (needs `Bash`).
+Both launch paths pass `poll_tools` verbatim as the entire grant under `dontAsk` —
+`poll-tick.sh:68,75-79` and `server.py:2331` for the "Poll now" button — so every shortfall is a
+no-op, not an error. The run only noticed because it was denied live and went looking for why.
+
+**Not a new kind of bug — the previous entry's sibling.** This is the 2026-09-12 rule (*"any
+subprocess grant paired with `dontAsk` must be validated against what the command actually needs
+— a missing tool is a silent no-op, not an error"*) **violated again, one command over.** That
+fix was applied to `/start-research` alone: a new `RESEARCH_TOOLS` key, plus
+`validate_config.validate()` enforcing its baseline, with `server.py:2446-2449` commenting the
+reasoning. `/cos-poll` then gained a V2 addendum needing the same tools and kept its V1 grant.
+Distinct from the entry above: that one is the *scheduler* failing to start the poll; this one is
+the poll starting fine and being unable to do the work.
+
+**The sharpest instance:** Step 3 orders every run to append to `dashboard/poll-log.md`. With
+only `Edit` granted and no such file, the **first** poll run of any deployment cannot log itself
+— the one artifact that would have made the other silent skips visible is the one the grant
+forbids creating. This run could not, and filed to `tasks/inbox.md` instead.
+
+**Change:** recorded only — `tasks/inbox.md` key `poll:grant-gap-v2-addendum`. The fix is a
+contract decision rather than a patch: widen `poll_tools` and enforce it in `validate_config`, or
+(preferable) have the poll **delegate** its graph work to a `spawn_background` subprocess carrying
+`RESEARCH_TOOLS`, exactly as `/start-research` already does — which keeps an unattended `dontAsk`
+job read-only instead of handing it a write grant.
+
+**Where this is now encoded:** this entry; `dashboard/workspace/tasks/inbox.md`. **Rules: (a) a
+command's instructions and its tool grant are one artifact — a step that needs a new tool is
+unfinished until the grant and `validate_config` change in the same commit, and a per-command
+grant fixed once does not fix its siblings; (b) never make a command's own audit log the thing
+its grant cannot write — logging must be reachable with strictly fewer permissions than the work
+it logs, or the first run's failures are invisible by construction; (c) `Edit` without `Write` is
+not "append-only," it is "append only to files that already exist" — ship the empty file from
+`/setup` or grant `Write`; (d) an unattended run cannot report what it never attempted, so every
+"if the modules are present, also do X" clause needs a positive check that X was actually
+possible — the unexplained-zero rule, applied to capability instead of to data.**

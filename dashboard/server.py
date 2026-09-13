@@ -1669,22 +1669,27 @@ def render_accounts_section():
                 fix))
     if not body:
         body.append(
-            '<div class="quick-line">No connector accounts configured yet. Multiple '
-            "accounts of the same type (e.g. a second Gmail) work by adding the "
-            "connector again as a separate named instance in Claude's connector "
-            "settings — each with its own login. /cos-accounts (or Check now) then "
-            "detects it, probes who it's logged in as, and binds it to a workspace "
-            "automatically.</div>")
+            '<div class="quick-line">No connector accounts configured yet. A second '
+            "account of the same service (e.g. another Gmail) works two ways: "
+            "custom/remote connectors can be added again as a separate named instance "
+            "in Claude's connector settings, but first-party connectors (Gmail, "
+            "Calendar, Drive) allow one Google account each — cover a second mailbox "
+            "by auto-forwarding it into the connected one, or add a local MCP server "
+            "for it (<code>claude mcp add</code>). /cos-accounts (or Check now) then "
+            "detects new instances, probes who each is logged in as, and binds them "
+            "to workspaces automatically.</div>")
     return (
         "<h2>🔌 Accounts &amp; connections <button class=\"small\" "
         "onclick=\"probeAccounts()\">Check now</button> "
         "<button class=\"small\" onclick=\"connectAccount()\">➕ Connect an account</button></h2>"
         "<div class=\"quick-line\" id=\"connectHint\" style=\"display:none;margin-bottom:.4rem\">"
-        "Connector settings opened in a new tab — add the connector there (for a second "
-        "account of the same type, add it again as a separate named instance, e.g. "
-        "<em>gmail-school</em>) and finish its login. Then come back and hit "
-        "<strong>Check now</strong>: the new account is probed, identified, and bound to a "
-        "workspace automatically.</div>"
+        "Connector settings opened in a new tab — connect the service there and finish its "
+        "login, then come back and hit <strong>Check now</strong>: the new account is probed, "
+        "identified, and bound to a workspace automatically. <strong>Second account of the "
+        "same service?</strong> Custom/remote connectors can be added again as a separate "
+        "named instance, but first-party connectors (Gmail, Calendar, Drive) support one "
+        "account each — for a second mailbox, either auto-forward it into the connected one "
+        "(simplest) or add a local MCP server for it via <code>claude mcp add</code>.</div>"
         "<script>function connectAccount(){"
         "window.open('" + CONNECTOR_SETTINGS_URL + "','_blank');"
         "document.getElementById('connectHint').style.display='block';}</script>"
