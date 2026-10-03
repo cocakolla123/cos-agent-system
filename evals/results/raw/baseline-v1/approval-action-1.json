@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-1",
+ "started": "2026-10-03T11:50:44.719092+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"confirm-sow-scope-change-thermal-test-bench\",\n    \"name\": \"Confirm in writing acceptance of the SOW scope change (thermal test bench) so Dana can issue the amended PO\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"requires_outbound\": true,\n      \"counterparty\": \"Dana Whitfield <dana@crestline.example>\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"],\n      \"notes\": \"Dana Whitfield asked Alex to confirm acceptance of adding the thermal test bench to the statement of work by Oct 6; the amended PO is gated on that written confirmation. Next move is Alex's, so not blocked on anyone.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"crestline-sow\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"role_hint\": \"client contact; issues purchase orders and owns the SOW\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-sow\",\n    \"name\": \"Crestline statement of work (SOW)\",\n    \"attrs\": {\n      \"doc_type\": \"statement-of-work\",\n      \"pending_change\": \"Add thermal test bench to scope; amended PO to follow written acceptance\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"owned_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.4665125,
+  "duration_ms": 23592,
+  "duration_api_ms": 22441,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 31732,
+   "cache_read_input_tokens": 220855,
+   "output_tokens": 1549,
+   "output_tokens_details": {
+    "thinking_tokens": 476
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31732,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1172,
+     "cache_read_input_tokens": 63217,
+     "cache_creation_input_tokens": 417,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 417
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 1549,
+    "cacheReadInputTokens": 220855,
+    "cacheCreationInputTokens": 31732,
+    "webSearchRequests": 0,
+    "costUSD": 0.4665125,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 476,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

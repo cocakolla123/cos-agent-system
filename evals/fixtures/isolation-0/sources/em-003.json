@@ -1,0 +1,13 @@
+{
+ "body": "Not work: book your spot for the Tahoe cabin weekend by Oct 4 or we lose the reservation. We can settle up later.",
+ "connector": "email",
+ "date": "2026-09-28T21:00:00Z",
+ "folder": "inbox",
+ "from": "Jordan Kim <jordan.kim@novabio.example>",
+ "id": "em-003",
+ "subject": "Cabin trip!",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

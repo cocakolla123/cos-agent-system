@@ -1,0 +1,13 @@
+{
+ "body": "Correction from People Ops \u2014 the deadline is extended to Oct 10. The Oct 3 date in my last mail is void.",
+ "connector": "email",
+ "date": "2026-09-24T14:30:00Z",
+ "folder": "inbox",
+ "from": "Priya Nair <priya.nair@novabio.example>",
+ "id": "em-002",
+ "subject": "Re: Compliance training assigned",
+ "thread_id": "th-dc0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

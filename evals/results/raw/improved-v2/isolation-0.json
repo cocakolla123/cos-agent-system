@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-0",
+ "started": "2026-10-03T12:05:52.828926+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"q4-capacity-plan-section\", \"name\": \"Send Jordan Kim your section of the Q4 capacity plan\", \"attrs\": {\"due\": \"2026-10-07\", \"priority\": \"high\", \"refs\": [\"q4-capacity-plan\"], \"requested_by\": \"jordan.kim@novabio.example\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"novabio\", \"type\": \"requested_by\"}, {\"to_kind\": \"Project\", \"to_key\": \"q4-capacity-plan\", \"to_workspace\": \"novabio\", \"type\": \"part_of\"}]}, {\"kind\": \"Project\", \"workspace\": \"novabio\", \"key\": \"q4-capacity-plan\", \"name\": \"Q4 capacity plan\", \"attrs\": {\"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []}, {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"jordan-kim\", \"name\": \"Jordan Kim\", \"attrs\": {\"email\": \"jordan.kim@novabio.example\", \"relationship\": \"colleague\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"tahoe-cabin-book-spot\", \"name\": \"Book your spot for the Tahoe cabin weekend\", \"attrs\": {\"due\": \"2026-10-04\", \"priority\": \"high\", \"notes\": \"Reservation is lost if not booked by Oct 4. Jordan also asked to be paid back via Venmo, no deadline stated.\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"personal\", \"type\": \"requested_by\"}]}, {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"jordan-kim\", \"name\": \"Jordan Kim\", \"attrs\": {\"email\": \"jordan.kim@novabio.example\", \"relationship\": \"friend\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Document\", \"workspace\": \"novabio\", \"key\": \"weekly-byte-platform-8-3-release-notes\", \"name\": \"Release notes: Platform 8.3\", \"attrs\": {\"kind\": \"newsletter\", \"from\": \"digest@weeklybyte.example\", \"date\": \"2026-09-25\", \"action_needed\": false, \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters.\", \"evidence\": [\"em-005\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.7, \"edges\": []}]",
+  "total_cost_usd": 0.5963160000000001,
+  "duration_ms": 27097,
+  "duration_api_ms": 25825,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 30752,
+   "cache_read_input_tokens": 480932,
+   "output_tokens": 1930,
+   "output_tokens_details": {
+    "thinking_tokens": 295
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30752,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 995,
+     "cache_read_input_tokens": 64717,
+     "cache_creation_input_tokens": 617,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 617
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 1930,
+    "cacheReadInputTokens": 480932,
+    "cacheCreationInputTokens": 30752,
+    "webSearchRequests": 0,
+    "costUSD": 0.5963160000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 295,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

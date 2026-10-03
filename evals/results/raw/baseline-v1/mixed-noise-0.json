@@ -1,0 +1,64 @@
+{
+ "scenario": "mixed-noise-0",
+ "started": "2026-10-03T11:53:44.691773+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"oncall-handoff-notes\", \"name\": \"Write and post on-call rotation handoff notes\", \"attrs\": {\"due\": \"2026-10-05\", \"priority\": \"high\", \"evidence\": [\"em-001\"], \"requested_by\": \"Priya Nair\", \"refs\": [\"th-002\"], \"detail\": \"Priya Nair asked Alex to write the handoff notes from this rotation and post them by Oct 5; Alex goes on call starting Monday.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"type\": \"requested_by\"}]}, {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"priya-nair\", \"name\": \"Priya Nair\", \"attrs\": {\"email\": \"priya.nair@novabio.example\", \"org\": \"novabio\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}]",
+  "total_cost_usd": 0.5847579999999999,
+  "duration_ms": 31913,
+  "duration_api_ms": 30682,
+  "num_turns": 11,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 31939,
+   "cache_read_input_tokens": 418246,
+   "output_tokens": 2247,
+   "output_tokens_details": {
+    "thinking_tokens": 1017
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31939,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 346,
+     "cache_read_input_tokens": 65998,
+     "cache_creation_input_tokens": 523,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 523
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2247,
+    "cacheReadInputTokens": 418246,
+    "cacheCreationInputTokens": 31939,
+    "webSearchRequests": 0,
+    "costUSD": 0.5847579999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1017,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

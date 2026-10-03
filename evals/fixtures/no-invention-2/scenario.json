@@ -1,0 +1,18 @@
+{
+ "category": "no_invention",
+ "id": "no-invention-2",
+ "note": "conference and webinar promos are noise",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "crestline": "freelance",
+  "harborview": "school",
+  "job-search": "job-search",
+  "novabio": "employer",
+  "personal": "personal"
+ }
+}

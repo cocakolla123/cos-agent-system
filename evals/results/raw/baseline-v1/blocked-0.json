@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-0",
+ "started": "2026-10-03T11:50:44.721478+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"laptop-repair-update-ticket-55012\",\n    \"name\": \"Awaiting update from FixIt Repairs on laptop repair (ticket 55012)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"FixIt Repairs <support@fixitrepairs.example>\",\n      \"refs\": [\"55012\"],\n      \"notes\": \"Alex asked for a status update on 2026-09-22; FixIt replied 2026-09-23 that parts are on order and they will get back to him. No reply since \u2014 next move is theirs. No deadline stated.\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"fixit-repairs-55012\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"fixit-repairs-support\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owner\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"personal\",\n    \"key\": \"fixit-repairs-55012\",\n    \"name\": \"Laptop repair \u2014 ticket 55012 (FixIt Repairs)\",\n    \"attrs\": {\n      \"ticket_id\": \"55012\",\n      \"vendor\": \"FixIt Repairs\",\n      \"dropped_off\": \"2026-09-12\",\n      \"status\": \"awaiting parts\",\n      \"last_update\": \"2026-09-23\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"fixit-repairs-support\", \"type\": \"handled_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"fixit-repairs-support\",\n    \"name\": \"FixIt Repairs Support\",\n    \"attrs\": {\n      \"email\": \"support@fixitrepairs.example\",\n      \"org\": \"FixIt Repairs\",\n      \"role\": \"repair vendor support\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"dealstream-points-promo-2026-09-27\",\n    \"name\": \"DealStream points promotional email\",\n    \"attrs\": {\n      \"kind_detail\": \"marketing solicitation\",\n      \"from\": \"offers@dealstream.example\",\n      \"date\": \"2026-09-27\",\n      \"obligation\": false,\n      \"notes\": \"Vendor solicitation (loyalty points redemption offer) \u2014 matches obligation vocabulary but creates no commitment the user owes or is owed. Not an Action.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5154205,
+  "duration_ms": 27396,
+  "duration_api_ms": 25141,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 32650,
+   "cache_read_input_tokens": 284441,
+   "output_tokens": 1866,
+   "output_tokens_details": {
+    "thinking_tokens": 139
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 32650,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1345,
+     "cache_read_input_tokens": 63569,
+     "cache_creation_input_tokens": 983,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 983
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1866,
+    "cacheReadInputTokens": 284441,
+    "cacheCreationInputTokens": 32650,
+    "webSearchRequests": 0,
+    "costUSD": 0.5154205,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 139,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "category": "user_owes",
+ "id": "user-owes-2",
+ "note": "coursework deadline",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "crestline": "freelance",
+  "harborview": "school",
+  "job-search": "job-search",
+  "novabio": "employer",
+  "personal": "personal"
+ }
+}

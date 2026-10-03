@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2",
+ "started": "2026-10-03T11:51:33.141429+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Read all three fixtures. Here are the records:\n\n```json\n[\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-quarterly-review\",\n    \"name\": \"Crestline quarterly review\",\n    \"attrs\": {\n      \"start\": \"2026-10-16T17:00:00Z\",\n      \"original_start\": \"2026-10-09T17:00:00Z\",\n      \"rescheduled\": true,\n      \"reschedule_note\": \"Dana Whitfield announced in #crestline-eng on 2026-09-29 that the review moved to Oct 16, same time; the calendar invite (cal-001) still shows Oct 9 and is stale.\",\n      \"stale_sources\": [\"cal-001\"],\n      \"attendees\": [\"alex.rivera@mailbox.example\", \"dana@crestline.example\"],\n      \"refs\": [\"cal-001\", \"sl-002\"],\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"announced_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-quarterly-review-metrics-deck\",\n    \"name\": \"Finish the metrics deck for the Crestline quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"requested_by\": \"dana@crestline.example\",\n      \"note\": \"Dana asked for the deck to be done by the review. The review moved from Oct 9 to Oct 16 (newest statement wins), so the deck deadline follows the new date.\",\n      \"refs\": [\"cal-001\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"crestline-quarterly-review\", \"type\": \"for_meeting\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"role\": \"Crestline client contact\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"member_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-eng\",\n    \"name\": \"#crestline-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"actionable\": false,\n      \"note\": \"Informational digest; the source itself states no action is needed. No obligation.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.500027,
+  "duration_ms": 35838,
+  "duration_api_ms": 32944,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29916,
+   "cache_read_input_tokens": 287184,
+   "output_tokens": 2289,
+   "output_tokens_details": {
+    "thinking_tokens": 448
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29916,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1754,
+     "cache_read_input_tokens": 63590,
+     "cache_creation_input_tokens": 908,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 908
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2289,
+    "cacheReadInputTokens": 287184,
+    "cacheCreationInputTokens": 29916,
+    "webSearchRequests": 0,
+    "costUSD": 0.500027,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 448,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

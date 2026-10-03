@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-2",
+ "started": "2026-10-03T12:07:14.621031+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"orchard-ai-take-home-assessment\", \"name\": \"Complete Orchard AI take-home assessment\", \"attrs\": {\"due\": \"2026-09-26\", \"status\": \"submitted\", \"priority\": \"medium\", \"blocked_on\": \"Orchard AI Talent\", \"evidence\": [\"em-001\", \"em-002\"], \"refs\": [\"th-sa2\"], \"notes\": \"Submitted 2026-09-25, one day before the stated Sep 26 deadline; receipt in em-002 closes the obligation. Orchard AI said the team will review and get back within two weeks (by ~2026-10-09).\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"orchard-ai-talent\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"}]}, {\"kind\": \"Person\", \"workspace\": \"job-search\", \"key\": \"orchard-ai-talent\", \"name\": \"Orchard AI Talent\", \"attrs\": {\"email\": \"talent@orchardai.example\", \"org\": \"Orchard AI\", \"role\": \"recruiting contact\", \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weekly-byte-platform-8-3-release-notes\", \"name\": \"Release notes: Platform 8.3\", \"attrs\": {\"publisher\": \"The Weekly Byte\", \"sender\": \"digest@weeklybyte.example\", \"date\": \"2026-09-25\", \"actionable\": false, \"evidence\": [\"em-003\"], \"refs\": [\"th-004\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.5, \"edges\": []}]",
+  "total_cost_usd": 0.5392899999999999,
+  "duration_ms": 34691,
+  "duration_api_ms": 33504,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 31442,
+   "cache_read_input_tokens": 354170,
+   "output_tokens": 1909,
+   "output_tokens_details": {
+    "thinking_tokens": 658
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31442,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 605,
+     "cache_read_input_tokens": 65045,
+     "cache_creation_input_tokens": 979,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 979
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1909,
+    "cacheReadInputTokens": 354170,
+    "cacheCreationInputTokens": 31442,
+    "webSearchRequests": 0,
+    "costUSD": 0.5392899999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 658,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

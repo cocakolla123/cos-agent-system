@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-0",
+ "started": "2026-10-03T11:54:58.621173+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"employer\",\n    \"key\": \"send-staging-db-credentials-sam-okafor\",\n    \"name\": \"Staging DB credentials needed from Sam Okafor to finish migration dry-run\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Sam Okafor <sam.okafor@novabio.example>\",\n      \"evidence\": [\"em-001\"],\n      \"requested_on\": \"2026-09-24\",\n      \"refs\": [\"th-ot0\"],\n      \"notes\": \"Alex asked Sam for the staging DB credentials on 2026-09-24 (and verbally in standup the prior Tuesday). No reply in any source \u2014 still outstanding, next move is Sam's. No deadline stated.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"migration-dry-run\", \"type\": \"part_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"employer\",\n    \"key\": \"sam-okafor\",\n    \"name\": \"Sam Okafor\",\n    \"attrs\": {\n      \"email\": \"sam.okafor@novabio.example\",\n      \"evidence\": [\"em-001\"],\n      \"relationship\": \"colleague at NovaBio; holder of staging DB credentials\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"employer\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"employer\",\n    \"key\": \"migration-dry-run\",\n    \"name\": \"Migration dry-run\",\n    \"attrs\": {\n      \"status\": \"blocked\",\n      \"blocked_on\": \"Sam Okafor <sam.okafor@novabio.example>\",\n      \"evidence\": [\"em-001\"],\n      \"notes\": \"Dry-run cannot be finished without staging DB credentials.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"employer\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"kind_detail\": \"newsletter/digest\",\n      \"from\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"date\": \"2026-09-25\",\n      \"actionable\": false,\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"],\n      \"notes\": \"Informational digest, explicitly states no action needed. Not an obligation.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5581885,
+  "duration_ms": 28266,
+  "duration_api_ms": 27121,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30024,
+   "cache_read_input_tokens": 415307,
+   "output_tokens": 2009,
+   "output_tokens_details": {
+    "thinking_tokens": 197
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30024,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1190,
+     "cache_read_input_tokens": 64236,
+     "cache_creation_input_tokens": 370,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 370
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2009,
+    "cacheReadInputTokens": 415307,
+    "cacheCreationInputTokens": 30024,
+    "webSearchRequests": 0,
+    "costUSD": 0.5581885,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 197,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

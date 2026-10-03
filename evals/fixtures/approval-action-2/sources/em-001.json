@@ -1,0 +1,13 @@
+{
+ "body": "Your lease on unit 2A ends Nov 30. Please reply stating whether you intend to renew by Oct 12.",
+ "connector": "email",
+ "date": "2026-09-28T10:00:00Z",
+ "folder": "inbox",
+ "from": "Oakfield Property <leasing@oakfield.example>",
+ "id": "em-001",
+ "subject": "Lease renewal intent",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

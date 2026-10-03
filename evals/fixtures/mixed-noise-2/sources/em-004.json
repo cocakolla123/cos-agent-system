@@ -1,0 +1,13 @@
+{
+ "body": "This week in infrastructure: five articles on cache invalidation, a podcast, and our jobs board. Unsubscribe anytime.",
+ "connector": "email",
+ "date": "2026-09-29T08:00:00Z",
+ "folder": "inbox",
+ "from": "The Weekly Byte <digest@weeklybyte.example>",
+ "id": "em-004",
+ "subject": "The Weekly Byte \u2014 issue 214",
+ "thread_id": "th-005",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "author": "alex.rivera@mailbox.example",
+ "body": "Review requested from Sam Okafor 9 days ago; no review yet. CI green.",
+ "connector": "code",
+ "date": "2026-09-22T12:00:00Z",
+ "id": "pr-001",
+ "number": 412,
+ "repo": "novabio/ingest",
+ "state": "open",
+ "title": "Add retry budget to ingest workers"
+}

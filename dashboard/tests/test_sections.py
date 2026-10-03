@@ -252,9 +252,14 @@ class TestNextActions(unittest.TestCase):
 
     def _g(self):
         g = graph.Graph()
+        # _days_label reads the real clock, so a hardcoded due date flips
+        # from "due in" to "overdue by" the day it passes — keep this one
+        # relative to today (it broke exactly that way once).
+        soon = (dt.datetime.now(dt.timezone.utc)
+                + dt.timedelta(days=6)).strftime("%Y-%m-%dT23:59:00+00:00")
         g.upsert_node("Action", "job-search", "vendor-a-assessment",
                       name="Take the Vendor-A coding assessment",
-                      attrs={"due": "2026-09-18T23:59:00-07:00",
+                      attrs={"due": soon,
                              "priority": "high"}, now=self.NOW)
         g.upsert_node("Action", "personal", "payments-balance",
                       name="Pay a payments app negative balance ($205.60)",

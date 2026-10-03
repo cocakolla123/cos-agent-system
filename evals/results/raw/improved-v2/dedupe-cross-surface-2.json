@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-2",
+ "started": "2026-10-03T12:05:13.787425+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"harborview\", \"key\": \"cs540-milestone-2-data-pipeline-demo\", \"name\": \"Deliver CS540 milestone 2 data pipeline demo (team Eagle)\", \"attrs\": {\"due\": \"2026-10-13\", \"priority\": \"high\", \"description\": \"Milestone 2 data pipeline demo (ingest, transform, evaluate) due in section Oct 13; Alex owns the transform stage.\", \"owner\": \"alex.rivera@mailbox.example\", \"refs\": [\"th-002\", \"#cs540-team-eagle\", \"CS540 team Eagle \u2014 milestone 2 plan\"], \"evidence\": [\"em-001\", \"doc-004\", \"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"assigned_by\"}, {\"to_kind\": \"Document\", \"to_key\": \"cs540-team-eagle-milestone-2-plan\", \"type\": \"documented_in\"}, {\"to_kind\": \"Channel\", \"to_key\": \"cs540-team-eagle\", \"type\": \"discussed_in\"}, {\"to_kind\": \"Project\", \"to_key\": \"cs540-team-eagle\", \"type\": \"part_of\"}]}, {\"kind\": \"Person\", \"workspace\": \"harborview\", \"key\": \"marcus-bell\", \"name\": \"Prof. Marcus Bell\", \"attrs\": {\"email\": \"marcus.bell@harborview.example\", \"role\": \"course instructor (CS540)\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}, {\"kind\": \"Person\", \"workspace\": \"harborview\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"role\": \"student, team Eagle\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}, {\"kind\": \"Project\", \"workspace\": \"harborview\", \"key\": \"cs540-team-eagle\", \"name\": \"CS540 team Eagle\", \"attrs\": {\"course\": \"CS540\", \"team\": \"Eagle\", \"refs\": [\"#cs540-team-eagle\"], \"evidence\": [\"em-001\", \"doc-004\", \"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"instructed_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"has_member\"}]}, {\"kind\": \"Document\", \"workspace\": \"harborview\", \"key\": \"cs540-team-eagle-milestone-2-plan\", \"name\": \"CS540 team Eagle \u2014 milestone 2 plan\", \"attrs\": {\"author\": \"alex.rivera@mailbox.example\", \"created\": \"2026-09-27T21:00:00Z\", \"stages\": [\"ingest\", \"transform\", \"evaluate\"], \"evidence\": [\"doc-004\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"cs540-team-eagle\", \"type\": \"belongs_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"authored_by\"}]}, {\"kind\": \"Channel\", \"workspace\": \"harborview\", \"key\": \"cs540-team-eagle\", \"name\": \"#cs540-team-eagle\", \"attrs\": {\"platform\": \"slack\", \"evidence\": [\"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"cs540-team-eagle\", \"type\": \"belongs_to\"}]}]",
+  "total_cost_usd": 0.582615,
+  "duration_ms": 38293,
+  "duration_api_ms": 37047,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 31903,
+   "cache_read_input_tokens": 352550,
+   "output_tokens": 3490,
+   "output_tokens_details": {
+    "thinking_tokens": 194
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31903,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1262,
+     "cache_read_input_tokens": 64666,
+     "cache_creation_input_tokens": 1819,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1819
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 3490,
+    "cacheReadInputTokens": 352550,
+    "cacheCreationInputTokens": 31903,
+    "webSearchRequests": 0,
+    "costUSD": 0.582615,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 194,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

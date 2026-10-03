@@ -1,0 +1,13 @@
+{
+ "body": "Please confirm your Oct 9 cleaning appointment by Oct 2 or it will be released.",
+ "connector": "email",
+ "date": "2026-09-28T16:00:00Z",
+ "folder": "inbox",
+ "from": "BrightSmile Dental <frontdesk@brightsmile.example>",
+ "id": "em-003",
+ "subject": "Appointment confirmation needed",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

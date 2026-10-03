@@ -1,0 +1,11 @@
+{
+ "run_id": "baseline-v1",
+ "date": "2026-10-03",
+ "split": "all",
+ "instructions": "instructions/extract_v1.md",
+ "instructions_sha256": "53469b6a54bb88aab47fe9c3357f0c5ec94b359f91c09392bf92163c9044c176",
+ "model": null,
+ "cli_version": "2.1.269 (Claude Code)",
+ "allowed_tools": "Read,Glob",
+ "scenarios": 36
+}

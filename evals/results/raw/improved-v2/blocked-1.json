@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1",
+ "started": "2026-10-03T12:03:58.265315+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n  {\n    \"kind\": \"PR\",\n    \"workspace\": \"novabio\",\n    \"key\": \"novabio-ingest-412\",\n    \"name\": \"PR #412 \u2014 Add retry budget to ingest workers\",\n    \"attrs\": {\n      \"repo\": \"novabio/ingest\",\n      \"number\": 412,\n      \"state\": \"open\",\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"ci\": \"green\",\n      \"review_requested_from\": \"Sam Okafor\",\n      \"review_requested_on\": \"2026-09-13\",\n      \"review_status\": \"none\",\n      \"opened\": \"2026-09-22\",\n      \"refs\": [\"PR 412\", \"novabio/ingest#412\"],\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Repository\", \"to_key\": \"novabio-ingest\", \"to_workspace\": \"novabio\", \"type\": \"in_repository\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"novabio\", \"type\": \"authored_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"review_requested_from\"}\n    ]\n  },\n  {\n    \"kind\": \"Repository\",\n    \"workspace\": \"novabio\",\n    \"key\": \"novabio-ingest\",\n    \"name\": \"novabio/ingest\",\n    \"attrs\": {\n      \"evidence\": [\"pr-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"novabio\",\n    \"key\": \"eng-ingest\",\n    \"name\": \"#eng-ingest\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"PR 412\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Repository\", \"to_key\": \"novabio-ingest\", \"to_workspace\": \"novabio\", \"type\": \"discusses\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"pr-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"sam-okafor\",\n    \"name\": \"Sam Okafor\",\n    \"attrs\": {\n      \"role\": \"requested reviewer on PR 412\",\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"jordan-kim\",\n    \"name\": \"Jordan Kim\",\n    \"attrs\": {\n      \"email\": \"jordan.kim@novabio.example\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"novabio\", \"type\": \"posted_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"pr-412-awaiting-sam-okafor-review\",\n    \"name\": \"PR #412 (retry budget to ingest workers) is stalled awaiting Sam Okafor's review\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Sam Okafor\",\n      \"refs\": [\"PR 412\", \"novabio/ingest#412\"],\n      \"detail\": \"Review was requested from Sam Okafor on ~2026-09-13 and still has no review as of 2026-09-30; CI is green, so the PR is blocked only on the review. Next move is Sam's; the user's available step is a follow-up ping.\",\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"ping-sam-okafor-pr-412-review\",\n    \"name\": \"Ping Sam Okafor again for the PR #412 review\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"refs\": [\"PR 412\"],\n      \"detail\": \"Jordan Kim explicitly suggested re-pinging Sam if the PR is waiting on his review. Requires an outbound message to Sam \u2014 draft and queue for approval.\",\n      \"evidence\": [\"sl-002\", \"pr-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"recipient\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"reply-jordan-kim-pr-412-status\",\n    \"name\": \"Reply to Jordan Kim in #eng-ingest on what is holding PR #412\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"refs\": [\"PR 412\"],\n      \"detail\": \"Jordan Kim asked in #eng-ingest on 2026-09-30 what is holding PR 412; answer is that it is waiting on Sam Okafor's review (CI green). Requires an outbound Slack reply \u2014 draft and queue for approval.\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"novabio\", \"type\": \"recipient\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"novabio\", \"type\": \"in_channel\"},\n      {\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"}\n    ]\n  }\n]",
+  "total_cost_usd": 0.6516875,
+  "duration_ms": 58826,
+  "duration_api_ms": 57683,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 32912,
+   "cache_read_input_tokens": 352065,
+   "output_tokens": 5859,
+   "output_tokens_details": {
+    "thinking_tokens": 604
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 32912,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2336,
+     "cache_read_input_tokens": 64283,
+     "cache_creation_input_tokens": 3211,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 3211
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 5859,
+    "cacheReadInputTokens": 352065,
+    "cacheCreationInputTokens": 32912,
+    "webSearchRequests": 0,
+    "costUSD": 0.6516875,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 604,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

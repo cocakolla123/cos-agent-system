@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-2",
+ "started": "2026-10-03T12:04:57.806715+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"harborview\",\n    \"key\": \"harborview-spring-registration-forms\",\n    \"name\": \"Submit Harborview spring course registration forms\",\n    \"attrs\": {\n      \"due\": \"2026-10-08\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-dc2\"],\n      \"notes\": \"Original notice (em-001) stated Oct 15; the registrar's correction (em-002, 2026-09-22) supersedes it with the correct deadline of Oct 8.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"harborview-registrar\", \"to_workspace\": \"harborview\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"harborview-registrar\",\n    \"name\": \"Harborview Registrar\",\n    \"attrs\": {\n      \"email\": \"registrar@harborview.example\",\n      \"org\": \"Harborview\",\n      \"role\": \"registrar\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```\n\nNotes on what I did and did not emit:\n\n- **`em-001` + `em-002` collapse to one obligation.** Same thread (`th-dc2`), same sender; the Sep 22 correction restates the deadline, so the newest statement wins \u2014 `due: 2026-10-08`, not Oct 15. Both ids are kept as evidence so the supersession is auditable.\n- **`em-003` produced no Action.** The Weekly Byte is a bulk newsletter (articles, podcast, jobs board, unsubscribe footer) \u2014 the user owes nothing and is owed nothing, so it fails the standing test.\n- No `status` is set: nothing in the sources shows the forms submitted, and as of today (2026-10-03) the obligation is outstanding with five days left.",
+  "total_cost_usd": 0.4470305,
+  "duration_ms": 26587,
+  "duration_api_ms": 25534,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29928,
+   "cache_read_input_tokens": 224121,
+   "output_tokens": 1426,
+   "output_tokens_details": {
+    "thinking_tokens": 274
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29928,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 905,
+     "cache_read_input_tokens": 63455,
+     "cache_creation_input_tokens": 1055,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1055
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 1426,
+    "cacheReadInputTokens": 224121,
+    "cacheCreationInputTokens": 29928,
+    "webSearchRequests": 0,
+    "costUSD": 0.4470305,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 274,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

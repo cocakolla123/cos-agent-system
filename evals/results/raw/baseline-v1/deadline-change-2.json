@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-2",
+ "started": "2026-10-03T11:52:02.113859+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"school\",\n  \"key\": \"submit-spring-course-registration-forms\",\n  \"name\": \"Submit spring course registration forms to Harborview Registrar\",\n  \"attrs\": {\n   \"due\": \"2026-10-08\",\n   \"priority\": \"high\",\n   \"evidence\": [\"em-001\", \"em-002\"],\n   \"note\": \"Original notice (em-001) said Oct 15; the registrar's correction (em-002, 2026-09-22) supersedes it with Oct 8.\",\n   \"refs\": [\"th-dc2\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.95,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"harborview-registrar\", \"type\": \"requested_by\"},\n   {\"to_kind\": \"Document\", \"to_key\": \"harborview-spring-registration-notice\", \"type\": \"relates_to\"}\n  ]\n },\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"school\",\n  \"key\": \"harborview-registrar\",\n  \"name\": \"Harborview Registrar\",\n  \"attrs\": {\n   \"email\": \"registrar@harborview.example\",\n   \"org\": \"Harborview\",\n   \"role\": \"registrar office\",\n   \"evidence\": [\"em-001\", \"em-002\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": []\n },\n {\n  \"kind\": \"Document\",\n  \"workspace\": \"school\",\n  \"key\": \"harborview-spring-registration-notice\",\n  \"name\": \"Spring registration deadline notice (corrected)\",\n  \"attrs\": {\n   \"thread_id\": \"th-dc2\",\n   \"original_due\": \"2026-10-15\",\n   \"corrected_due\": \"2026-10-08\",\n   \"corrected_on\": \"2026-09-22\",\n   \"evidence\": [\"em-001\", \"em-002\"],\n   \"refs\": [\"th-dc2\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"harborview-registrar\", \"type\": \"authored_by\"}\n  ]\n },\n {\n  \"kind\": \"Document\",\n  \"workspace\": \"personal\",\n  \"key\": \"weekly-byte-issue-214\",\n  \"name\": \"The Weekly Byte \u2014 issue 214\",\n  \"attrs\": {\n   \"sender\": \"digest@weeklybyte.example\",\n   \"date\": \"2026-09-29\",\n   \"type\": \"newsletter\",\n   \"actionable\": false,\n   \"note\": \"Promotional/subscription digest; no obligation on the user.\",\n   \"evidence\": [\"em-003\"],\n   \"refs\": [\"th-004\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": []\n }\n]",
+  "total_cost_usd": 0.6023550000000001,
+  "duration_ms": 32896,
+  "duration_api_ms": 31435,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 30841,
+   "cache_read_input_tokens": 479880,
+   "output_tokens": 2157,
+   "output_tokens_details": {
+    "thinking_tokens": 542
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30841,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 931,
+     "cache_read_input_tokens": 64569,
+     "cache_creation_input_tokens": 854,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 854
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 2157,
+    "cacheReadInputTokens": 479880,
+    "cacheCreationInputTokens": 30841,
+    "webSearchRequests": 0,
+    "costUSD": 0.6023550000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 542,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

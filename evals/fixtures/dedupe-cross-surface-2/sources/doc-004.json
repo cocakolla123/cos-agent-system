@@ -1,0 +1,8 @@
+{
+ "author": "alex.rivera@mailbox.example",
+ "body": "Plan for the data pipeline demo due Oct 13: ingest, transform, evaluate. Alex owns the transform stage.",
+ "connector": "docs",
+ "date": "2026-09-27T21:00:00Z",
+ "id": "doc-004",
+ "title": "CS540 team Eagle \u2014 milestone 2 plan"
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2",
+ "started": "2026-10-03T12:07:07.685415+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Read both sources. Here are the records:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"reschedule-meridian-systems-interview\",\n    \"name\": \"Meridian recruiting owes a response to the interview reschedule request\",\n    \"attrs\": {\n      \"description\": \"Alex asked Meridian recruiting on 2026-09-25 to move the Oct 2 systems interview slot later that week and offered to share availability. No reply appears in any source, so the next move is theirs and the original slot is still unresolved.\",\n      \"priority\": \"high\",\n      \"blocked_on\": \"recruiting@meridian.example (Meridian recruiting)\",\n      \"original_slot\": \"2026-10-02\",\n      \"direction\": \"owed_to_user\",\n      \"refs\": [\"th-ot2\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"meridian-systems-interview-2026-10-02\", \"to_workspace\": \"job-search\", \"type\": \"relates_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"job-search\",\n    \"key\": \"meridian-systems-interview-2026-10-02\",\n    \"name\": \"Meridian systems interview (Oct 2 slot, reschedule requested)\",\n    \"attrs\": {\n      \"date\": \"2026-10-02\",\n      \"status\": \"reschedule_requested\",\n      \"counterparty\": \"recruiting@meridian.example\",\n      \"note\": \"Slot referenced only in the user's outbound reschedule request; no confirmation of the slot or of a new time exists in the sources.\",\n      \"refs\": [\"th-ot2\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"organized_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"meridian-recruiting\",\n    \"name\": \"Meridian recruiting\",\n    \"attrs\": {\n      \"email\": \"recruiting@meridian.example\",\n      \"role\": \"recruiting contact (role address)\",\n      \"organization\": \"Meridian\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.98,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"sender\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-29\",\n      \"actionable\": false,\n      \"note\": \"Bulk newsletter with an unsubscribe footer; its jobs board and article list are promotional content, not an obligation.\",\n      \"refs\": [\"th-003\"],\n      \"evidence\": [\"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```\n\nTwo judgment calls worth naming: I gave the reschedule request no `attrs.due` \u2014 Oct 2 is the interview slot the source states, not a stated deadline for Meridian's reply, so it sits in `attrs.original_slot` rather than being promoted to an invented deadline. And `em-002` produced no Action: a newsletter's jobs board and \"unsubscribe anytime\" are solicitation, not something the user owes or is owed.",
+  "total_cost_usd": 0.4349655,
+  "duration_ms": 31221,
+  "duration_api_ms": 29704,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 29520,
+   "cache_read_input_tokens": 161221,
+   "output_tokens": 2365,
+   "output_tokens_details": {
+    "thinking_tokens": 631
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29520,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2057,
+     "cache_read_input_tokens": 63403,
+     "cache_creation_input_tokens": 699,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 699
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 6,
+    "outputTokens": 2365,
+    "cacheReadInputTokens": 161221,
+    "cacheCreationInputTokens": 29520,
+    "webSearchRequests": 0,
+    "costUSD": 0.4349655,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 631,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

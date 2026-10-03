@@ -1,0 +1,64 @@
+{
+ "scenario": "user-owes-0",
+ "started": "2026-10-03T12:07:30.716241+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"send-revised-onboarding-doc-jordan-kim\",\n    \"name\": \"Send Jordan Kim the revised onboarding doc (updated VPN steps)\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"jordan.kim@novabio.example\",\n      \"detail\": \"Jordan Kim reports the onboarding runbook still shows the old VPN steps and asked for the revised onboarding doc by Monday Oct 6, ahead of the new-hire class the following week. Alex confirmed on 2026-09-26 that it would be delivered before Oct 6; no source shows it sent.\",\n      \"refs\": [\n        \"th-uo0\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"jordan-kim\",\n        \"to_workspace\": \"novabio\",\n        \"type\": \"owed_to\"\n      },\n      {\n        \"to_kind\": \"Document\",\n        \"to_key\": \"onboarding-runbook\",\n        \"to_workspace\": \"novabio\",\n        \"type\": \"about\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"jordan-kim\",\n    \"name\": \"Jordan Kim\",\n    \"attrs\": {\n      \"email\": \"jordan.kim@novabio.example\",\n      \"role_hint\": \"owns new-hire onboarding / runbook upkeep\",\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"novabio\",\n    \"key\": \"onboarding-runbook\",\n    \"name\": \"New-hire onboarding doc / runbook\",\n    \"attrs\": {\n      \"issue\": \"Still documents the old VPN steps; revision pending.\",\n      \"needed_by\": \"2026-10-06\",\n      \"evidence\": [\n        \"em-001\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"jordan-kim\",\n        \"to_workspace\": \"novabio\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.49209099999999995,
+  "duration_ms": 27144,
+  "duration_api_ms": 24415,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30550,
+   "cache_read_input_tokens": 289232,
+   "output_tokens": 1677,
+   "output_tokens_details": {
+    "thinking_tokens": 233
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30550,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1103,
+     "cache_read_input_tokens": 64104,
+     "cache_creation_input_tokens": 1028,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1028
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1677,
+    "cacheReadInputTokens": 289232,
+    "cacheCreationInputTokens": 30550,
+    "webSearchRequests": 0,
+    "costUSD": 0.49209099999999995,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 233,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

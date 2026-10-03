@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-2",
+ "started": "2026-10-03T12:03:59.764534+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"harborview-registrar\",\n    \"name\": \"Harborview Registrar's Office\",\n    \"attrs\": {\n      \"email\": \"registrar@harborview.example\",\n      \"role\": \"registrar\",\n      \"org\": \"harborview\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"harborview\",\n    \"key\": \"enrollment-verification-letter-visa-renewal\",\n    \"name\": \"Obtain enrollment verification letter from Harborview registrar (for visa renewal)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"registrar@harborview.example\",\n      \"evidence\": [\"em-001\"],\n      \"requested_on\": \"2026-09-12\",\n      \"followed_up_on\": \"2026-09-26\",\n      \"purpose\": \"visa renewal\",\n      \"refs\": [\"th-bl2\"],\n      \"notes\": \"Alex requested the letter ~two weeks before 2026-09-26 and followed up asking when it will be issued; no reply from the registrar in any source. Next move is the registrar's. No deadline stated.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"harborview-registrar\",\n        \"to_workspace\": \"harborview\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"sender\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-29\",\n      \"evidence\": [\"em-002\"],\n      \"actionable\": false,\n      \"notes\": \"Promotional newsletter digest (articles, podcast, jobs board). No obligation on the user.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.54853,
+  "duration_ms": 24875,
+  "duration_api_ms": 23864,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30307,
+   "cache_read_input_tokens": 416130,
+   "output_tokens": 1493,
+   "output_tokens_details": {
+    "thinking_tokens": 207
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30307,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 733,
+     "cache_read_input_tokens": 64366,
+     "cache_creation_input_tokens": 523,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 523
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 1493,
+    "cacheReadInputTokens": 416130,
+    "cacheCreationInputTokens": 30307,
+    "webSearchRequests": 0,
+    "costUSD": 0.54853,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 207,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

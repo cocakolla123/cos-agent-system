@@ -1,0 +1,10 @@
+{
+ "assignee": "alex.rivera@mailbox.example",
+ "comments": [],
+ "connector": "ticketing",
+ "date": "2026-09-25T10:05:00Z",
+ "id": "tk-003",
+ "key": "NB-214",
+ "status": "open",
+ "summary": "Update API rate-limit docs"
+}

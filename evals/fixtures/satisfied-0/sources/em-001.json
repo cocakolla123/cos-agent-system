@@ -1,0 +1,13 @@
+{
+ "body": "Complete the security refresher by Oct 2.",
+ "connector": "email",
+ "date": "2026-09-15T09:00:00Z",
+ "folder": "inbox",
+ "from": "Priya Nair <priya.nair@novabio.example>",
+ "id": "em-001",
+ "subject": "Security refresher assigned",
+ "thread_id": "th-sa0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

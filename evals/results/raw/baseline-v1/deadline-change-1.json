@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1",
+ "started": "2026-10-03T11:51:40.008084+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"crestline.example\",\n      \"role\": \"client contact\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"crestline\",\n    \"key\": \"calibration-write-up\",\n    \"name\": \"Calibration write-up\",\n    \"attrs\": {\n      \"status\": \"requested\",\n      \"requested_by\": \"dana-whitfield\",\n      \"thread_id\": \"th-dc1\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"deliver-calibration-write-up\",\n    \"name\": \"Deliver the calibration write-up to Dana Whitfield\",\n    \"attrs\": {\n      \"due\": \"2026-09-30\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"dana-whitfield\",\n      \"deadline_history\": [\n        {\"due\": \"2026-10-02\", \"stated\": \"2026-09-20\", \"evidence\": \"em-001\"},\n        {\"due\": \"2026-09-30\", \"stated\": \"2026-09-26\", \"evidence\": \"em-002\"}\n      ],\n      \"notes\": \"Deadline moved earlier from Oct 2 to Sep 30 because the review board meets early. The Sep 30 date is the current one and has already passed as of today.\",\n      \"refs\": [\"th-dc1\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"calibration-write-up\", \"type\": \"about\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5063150000000001,
+  "duration_ms": 24526,
+  "duration_api_ms": 23443,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29609,
+   "cache_read_input_tokens": 350980,
+   "output_tokens": 1387,
+   "output_tokens_details": {
+    "thinking_tokens": 114
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29609,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 913,
+     "cache_read_input_tokens": 63849,
+     "cache_creation_input_tokens": 342,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 342
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1387,
+    "cacheReadInputTokens": 350980,
+    "cacheCreationInputTokens": 29609,
+    "webSearchRequests": 0,
+    "costUSD": 0.5063150000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 114,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

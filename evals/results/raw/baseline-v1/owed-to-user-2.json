@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2",
+ "started": "2026-10-03T11:55:27.749977+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n {\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"meridian-interview-reschedule-reply\", \"name\": \"Meridian recruiting owes a reply to the Oct 2 systems interview reschedule request\", \"attrs\": {\"priority\": \"high\", \"blocked_on\": \"recruiting@meridian.example\", \"evidence\": [\"em-001\"], \"requested_on\": \"2026-09-25\", \"original_slot\": \"2026-10-02\", \"detail\": \"Alex asked Meridian recruiting on 2026-09-25 to move the Oct 2 systems interview to later that week and offered to share availability. No reply in the thread as of 2026-10-01, and the original slot has now passed \u2014 follow up to confirm the new time.\", \"refs\": [\"th-ot2\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.93, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"type\": \"blocked_on\"}, {\"to_kind\": \"Meeting\", \"to_key\": \"meridian-systems-interview-2026-10-02\", \"type\": \"about\"}]},\n {\"kind\": \"Person\", \"workspace\": \"job-search\", \"key\": \"meridian-recruiting\", \"name\": \"Meridian Recruiting\", \"attrs\": {\"email\": \"recruiting@meridian.example\", \"org\": \"Meridian\", \"role\": \"recruiting contact\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Meeting\", \"workspace\": \"job-search\", \"key\": \"meridian-systems-interview-2026-10-02\", \"name\": \"Meridian systems interview (originally Oct 2)\", \"attrs\": {\"scheduled_for\": \"2026-10-02\", \"status\": \"reschedule_requested\", \"requested_window\": \"later that week\", \"evidence\": [\"em-001\"], \"refs\": [\"th-ot2\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"type\": \"organized_by\"}]},\n {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weekly-byte-issue-214\", \"name\": \"The Weekly Byte \u2014 issue 214\", \"attrs\": {\"type\": \"newsletter\", \"sender\": \"digest@weeklybyte.example\", \"received\": \"2026-09-29\", \"actionable\": false, \"evidence\": [\"em-002\"], \"refs\": [\"th-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}\n]",
+  "total_cost_usd": 0.5302635,
+  "duration_ms": 31470,
+  "duration_api_ms": 30202,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30545,
+   "cache_read_input_tokens": 351407,
+   "output_tokens": 1962,
+   "output_tokens_details": {
+    "thinking_tokens": 547
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30545,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 855,
+     "cache_read_input_tokens": 64251,
+     "cache_creation_input_tokens": 876,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 876
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1962,
+    "cacheReadInputTokens": 351407,
+    "cacheCreationInputTokens": 30545,
+    "webSearchRequests": 0,
+    "costUSD": 0.5302635,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 547,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

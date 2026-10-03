@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-0",
+ "started": "2026-10-03T12:01:41.259321+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n {\"kind\": \"Ticket\", \"workspace\": \"novabio\", \"key\": \"nb-188\", \"name\": \"Prepare partner demo environment\", \"attrs\": {\"ticket_key\": \"NB-188\", \"status\": \"open\", \"assignee\": \"alex.rivera@mailbox.example\", \"reporter\": \"priya.nair@novabio.example\", \"opened\": \"2026-09-18\", \"stated_due_in_ticket\": \"2026-10-14\", \"stale\": true, \"stale_reason\": \"Ticket still carries the original Oct 14 date; Slack on 2026-09-28 moved the demo-environment deadline to Oct 6.\", \"refs\": [\"NB-188\"], \"evidence\": [\"tk-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"type\": \"reported_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\"}, {\"to_kind\": \"Channel\", \"to_key\": \"partner-demo\", \"type\": \"discussed_in\"}]},\n\n {\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"nb-188-demo-env-ready\", \"name\": \"Have partner demo environment ready (NB-188)\", \"attrs\": {\"due\": \"2026-10-06\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"description\": \"Partner moved the demo up: the demo environment must be ready by Oct 6 instead of Oct 14. The newer Slack statement (2026-09-28) supersedes the Oct 14 date stated in ticket NB-188 (2026-09-18).\", \"superseded_due\": \"2026-10-14\", \"due_source\": \"sl-002\", \"conflict\": \"tk-001 states 2026-10-14; sl-002 (newer) states 2026-10-06\", \"refs\": [\"NB-188\"], \"evidence\": [\"sl-002\", \"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-188\", \"type\": \"tracked_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"type\": \"requested_by\"}, {\"to_kind\": \"Channel\", \"to_key\": \"partner-demo\", \"type\": \"raised_in\"}]},\n\n {\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"nb-188-update-due-date\", \"name\": \"Update NB-188 due date to Oct 6 (ticket still shows Oct 14)\", \"attrs\": {\"priority\": \"medium\", \"owner\": \"alex.rivera@mailbox.example\", \"description\": \"Priya flagged that NB-188 still shows the old Oct 14 date after the demo was moved up to Oct 6; as assignee, Alex needs to correct the ticket.\", \"refs\": [\"NB-188\"], \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.7, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-188\", \"type\": \"updates\"}, {\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"type\": \"requested_by\"}]},\n\n {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"priya-nair\", \"name\": \"Priya Nair\", \"attrs\": {\"email\": \"priya.nair@novabio.example\", \"org\": \"novabio\", \"role_hint\": \"Raised the partner demo date change and filed NB-188\", \"evidence\": [\"sl-002\", \"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Channel\", \"to_key\": \"partner-demo\", \"type\": \"member_of\"}]},\n\n {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"tk-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-188\", \"type\": \"owns\"}]},\n\n {\"kind\": \"Channel\", \"workspace\": \"novabio\", \"key\": \"partner-demo\", \"name\": \"#partner-demo\", \"attrs\": {\"platform\": \"slack\", \"last_activity\": \"2026-09-28T16:20:00Z\", \"refs\": [\"NB-188\"], \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-188\", \"type\": \"discusses\"}]},\n\n {\"kind\": \"Project\", \"workspace\": \"novabio\", \"key\": \"partner-demo\", \"name\": \"Partner demo\", \"attrs\": {\"description\": \"Partner-facing demo whose environment Alex is preparing; date moved up to 2026-10-06.\", \"refs\": [\"NB-188\"], \"evidence\": [\"sl-002\", \"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.75, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-188\", \"type\": \"includes\"}]},\n\n {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"email-dealstream-points-2026-09-27\", \"name\": \"Your DealStream points are waiting\", \"attrs\": {\"type\": \"email\", \"from\": \"offers@dealstream.example\", \"date\": \"2026-09-27\", \"thread_id\": \"th-004\", \"category\": \"vendor marketing/promotion\", \"actionable\": false, \"actionable_reason\": \"Vendor solicitation (loyalty-points redemption offer); the user owes nothing and is owed nothing, so no obligation is emitted.\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}\n]",
+  "total_cost_usd": 0.6289895,
+  "duration_ms": 47889,
+  "duration_api_ms": 46272,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 30874,
+   "cache_read_input_tokens": 479839,
+   "output_tokens": 3210,
+   "output_tokens_details": {
+    "thinking_tokens": 641
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30874,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1982,
+     "cache_read_input_tokens": 64554,
+     "cache_creation_input_tokens": 902,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 902
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 3210,
+    "cacheReadInputTokens": 479839,
+    "cacheCreationInputTokens": 30874,
+    "webSearchRequests": 0,
+    "costUSD": 0.6289895,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 641,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

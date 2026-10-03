@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1",
+ "started": "2026-10-03T11:52:09.642589+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"cl-77-sensor-calibration-report\",\n    \"name\": \"Deliver the CL-77 sensor calibration report to Dana Whitfield\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"dana@crestline.example\",\n      \"refs\": [\"CL-77\"],\n      \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"],\n      \"surfaces\": [\"email\", \"slack\", \"ticketing\"],\n      \"notes\": \"One deliverable restated across three surfaces: email em-001 (Sep 24), ticket CL-77 (open, assigned to Alex), and Slack #crestline-eng sl-003 (Sep 28). Deadline Oct 10 is consistent in all statements. Template is attached to ticket CL-77.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"CL-77\", \"type\": \"tracked_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"crestline\",\n    \"key\": \"CL-77\",\n    \"name\": \"Sensor calibration report\",\n    \"attrs\": {\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"opened\": \"2026-09-24\",\n      \"refs\": [\"CL-77\"],\n      \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"],\n      \"notes\": \"Holds the report template.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\"},\n      {\"to_kind\": \"Action\", \"to_key\": \"cl-77-sensor-calibration-report\", \"type\": \"tracks\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"role\": \"client contact / requester\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"member_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-eng\",\n    \"name\": \"#crestline-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"CL-77\"],\n      \"evidence\": [\"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.6009135000000001,
+  "duration_ms": 32670,
+  "duration_api_ms": 31274,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 30472,
+   "cache_read_input_tokens": 479827,
+   "output_tokens": 2248,
+   "output_tokens_details": {
+    "thinking_tokens": 279
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30472,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1314,
+     "cache_read_input_tokens": 64459,
+     "cache_creation_input_tokens": 595,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 595
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 2248,
+    "cacheReadInputTokens": 479827,
+    "cacheCreationInputTokens": 30472,
+    "webSearchRequests": 0,
+    "costUSD": 0.6009135000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 279,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

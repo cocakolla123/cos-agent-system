@@ -1,0 +1,13 @@
+{
+ "body": "Please send the field test notes by Oct 6 so I can fold them into the report.",
+ "connector": "email",
+ "date": "2026-09-29T08:30:00Z",
+ "folder": "inbox",
+ "from": "Dana Whitfield <dana@crestline.example>",
+ "id": "em-001",
+ "subject": "Field test notes",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

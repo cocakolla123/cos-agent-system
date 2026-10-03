@@ -1,0 +1,64 @@
+{
+ "scenario": "mixed-noise-1",
+ "started": "2026-10-03T12:06:20.675588+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Read all three sources. Two are promotional/informational noise (`em-003` newsletter digest, `em-005` release notes, both explicitly \"no action needed\"/\"unsubscribe anytime\"); only `em-001` is a real obligation the user owes.\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"pay-brightsmile-dental-balance-aug-visit\",\n    \"name\": \"Pay BrightSmile Dental $120 outstanding balance for August visit\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"amount\": \"$120\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```\n\nNotes on what I deliberately did **not** emit:\n\n- **em-003** (*The Weekly Byte \u2014 issue 214*): a newsletter digest with articles, a podcast, and a jobs board plus an unsubscribe line. Vendor content, no standing obligation on Alex.\n- **em-005** (*Release notes: Platform 8.3*): informational FYI that states \"No action needed.\"\n\nThe one Action is personal-workspace (a dental bill to the user's own address), with the deadline taken verbatim from the source rather than inferred, and `status` omitted since nothing shows it paid.",
+  "total_cost_usd": 0.5475475,
+  "duration_ms": 27924,
+  "duration_api_ms": 26137,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30222,
+   "cache_read_input_tokens": 416665,
+   "output_tokens": 1477,
+   "output_tokens_details": {
+    "thinking_tokens": 505
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30222,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 965,
+     "cache_read_input_tokens": 64469,
+     "cache_creation_input_tokens": 335,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 335
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 1477,
+    "cacheReadInputTokens": 416665,
+    "cacheCreationInputTokens": 30222,
+    "webSearchRequests": 0,
+    "costUSD": 0.5475475,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 505,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

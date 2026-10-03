@@ -1,0 +1,13 @@
+{
+ "body": "The vendor integration checklist (CL-90) needs your two sections finished by Oct 8.",
+ "connector": "email",
+ "date": "2026-09-29T09:00:00Z",
+ "folder": "inbox",
+ "from": "Dana Whitfield <dana@crestline.example>",
+ "id": "em-002",
+ "subject": "CL-90 checklist",
+ "thread_id": "th-003",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

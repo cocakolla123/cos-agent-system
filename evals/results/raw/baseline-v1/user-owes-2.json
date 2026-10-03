@@ -1,0 +1,64 @@
+{
+ "scenario": "user-owes-2",
+ "started": "2026-10-03T11:56:36.100832+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"harborview\",\n    \"key\": \"submit-cs-540-project-proposal\",\n    \"name\": \"Submit CS 540 project proposal (2 pages: problem statement + evaluation plan) via course portal\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"marcus.bell@harborview.example\",\n      \"refs\": [\"CS 540\"],\n      \"details\": \"2 pages, problem statement plus evaluation plan; due Oct 9 at 5pm; submit through the course portal\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs-540\", \"type\": \"belongs_to\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"harborview\",\n    \"key\": \"cs-540\",\n    \"name\": \"CS 540\",\n    \"attrs\": {\n      \"type\": \"course\",\n      \"instructor\": \"marcus.bell@harborview.example\",\n      \"evidence\": [\"em-001\", \"cal-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"led_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"marcus-bell\",\n    \"name\": \"Prof. Marcus Bell\",\n    \"attrs\": {\n      \"email\": \"marcus.bell@harborview.example\",\n      \"role\": \"Professor / course instructor\",\n      \"refs\": [\"CS 540\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs-540\", \"type\": \"works_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"harborview\",\n    \"key\": \"cs-540-seminar-2026-10-02\",\n    \"name\": \"CS 540 seminar\",\n    \"attrs\": {\n      \"start\": \"2026-10-02T18:00:00Z\",\n      \"attendees\": [\"alex.rivera@mailbox.example\"],\n      \"refs\": [\"CS 540\"],\n      \"evidence\": [\"cal-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs-540\", \"type\": \"relates_to\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5174139999999999,
+  "duration_ms": 24983,
+  "duration_api_ms": 23649,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29505,
+   "cache_read_input_tokens": 350908,
+   "output_tokens": 1874,
+   "output_tokens_details": {
+    "thinking_tokens": 439
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29505,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1388,
+     "cache_read_input_tokens": 63836,
+     "cache_creation_input_tokens": 251,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 251
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1874,
+    "cacheReadInputTokens": 350908,
+    "cacheCreationInputTokens": 29505,
+    "webSearchRequests": 0,
+    "costUSD": 0.5174139999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 439,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

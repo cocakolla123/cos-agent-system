@@ -1,0 +1,14 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "security",
+   "refresher"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

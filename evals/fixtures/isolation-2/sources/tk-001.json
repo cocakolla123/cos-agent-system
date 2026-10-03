@@ -1,0 +1,16 @@
+{
+ "assignee": "alex.rivera@mailbox.example",
+ "comments": [
+  {
+   "author": "Jordan Kim <jordan.kim@novabio.example>",
+   "date": "2026-09-27T12:00:00Z",
+   "text": "Keys must rotate before Oct 11."
+  }
+ ],
+ "connector": "ticketing",
+ "date": "2026-09-27T12:00:00Z",
+ "id": "tk-001",
+ "key": "NB-301",
+ "status": "open",
+ "summary": "Atlas service: rotate signing keys"
+}

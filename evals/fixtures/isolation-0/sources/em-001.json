@@ -1,0 +1,13 @@
+{
+ "body": "Alex \u2014 need your section of the Q4 capacity plan by Oct 7.",
+ "connector": "email",
+ "date": "2026-09-29T10:00:00Z",
+ "folder": "inbox",
+ "from": "Jordan Kim <jordan.kim@novabio.example>",
+ "id": "em-001",
+ "subject": "Capacity plan draft",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

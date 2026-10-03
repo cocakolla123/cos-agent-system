@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1",
+ "started": "2026-10-03T12:04:53.699924+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"calibration-write-up\",\n    \"name\": \"Deliver calibration write-up to Dana Whitfield\",\n    \"attrs\": {\n      \"due\": \"2026-09-30\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-dc1\"],\n      \"notes\": \"Deadline moved up from Oct 2 to Sep 30 because the review board meets early; newest statement (em-002) wins.\",\n      \"requested_by\": \"Dana Whitfield <dana@crestline.example>\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\", \"to_workspace\": \"crestline\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"role\": \"freelance client contact\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.49802500000000005,
+  "duration_ms": 19396,
+  "duration_api_ms": 16302,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29751,
+   "cache_read_input_tokens": 351760,
+   "output_tokens": 983,
+   "output_tokens_details": {
+    "thinking_tokens": 120
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29751,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 563,
+     "cache_read_input_tokens": 63991,
+     "cache_creation_input_tokens": 342,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 342
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 983,
+    "cacheReadInputTokens": 351760,
+    "cacheCreationInputTokens": 29751,
+    "webSearchRequests": 0,
+    "costUSD": 0.49802500000000005,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 120,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

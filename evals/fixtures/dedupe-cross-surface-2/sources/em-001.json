@@ -1,0 +1,13 @@
+{
+ "body": "Teams: milestone 2 (data pipeline demo) is due Oct 13 in section.",
+ "connector": "email",
+ "date": "2026-09-26T13:00:00Z",
+ "folder": "inbox",
+ "from": "Prof. Marcus Bell <marcus.bell@harborview.example>",
+ "id": "em-001",
+ "subject": "Group milestone 2",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

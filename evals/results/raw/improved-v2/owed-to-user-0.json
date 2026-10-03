@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-0",
+ "started": "2026-10-03T12:06:48.541966+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"staging-db-credentials-from-sam-okafor\",\n    \"name\": \"Sam Okafor owes Alex the staging DB credentials for the migration dry-run\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Sam Okafor <sam.okafor@novabio.example>\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot0\"],\n      \"detail\": \"Alex asked Sam by email on 2026-09-24 (and previously in standup on Tuesday) for the staging DB credentials needed to finish the migration dry-run. No reply in any source, so the next move is Sam's; a follow-up nudge would be the outbound draft.\",\n      \"requested_on\": \"2026-09-24\",\n      \"no_due_stated\": true\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"sam-okafor\",\n        \"to_workspace\": \"novabio\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"sam-okafor\",\n    \"name\": \"Sam Okafor\",\n    \"attrs\": {\n      \"email\": \"sam.okafor@novabio.example\",\n      \"relationship\": \"colleague\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"novabio\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"publisher\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"received\": \"2026-09-25\",\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly no action needed \u2014 informational only, not an obligation.\",\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5189075,
+  "duration_ms": 25335,
+  "duration_api_ms": 24089,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30010,
+   "cache_read_input_tokens": 352845,
+   "output_tokens": 1693,
+   "output_tokens_details": {
+    "thinking_tokens": 420
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30010,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1199,
+     "cache_read_input_tokens": 64257,
+     "cache_creation_input_tokens": 335,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 335
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1693,
+    "cacheReadInputTokens": 352845,
+    "cacheCreationInputTokens": 30010,
+    "webSearchRequests": 0,
+    "costUSD": 0.5189075,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 420,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-2",
+ "started": "2026-10-03T11:51:09.352275+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"harborview\",\n    \"key\": \"harborview-enrollment-verification-letter\",\n    \"name\": \"Enrollment verification letter for visa renewal \u2014 awaiting registrar's issuance\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"registrar@harborview.example\",\n      \"evidence\": [\"em-001\"],\n      \"description\": \"Alex requested an enrollment verification letter from the Harborview registrar two weeks before 2026-09-26 for a visa renewal, and followed up on 2026-09-26 asking when it will be issued. No reply in any source \u2014 the next move is the registrar's.\",\n      \"requested_on\": \"2026-09-26\",\n      \"refs\": [\"th-bl2\"],\n      \"purpose\": \"visa renewal\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"harborview-registrar\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"harborview-registrar\",\n    \"name\": \"Harborview Registrar\",\n    \"attrs\": {\n      \"email\": \"registrar@harborview.example\",\n      \"role\": \"registrar office \u2014 issues enrollment verification letters\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"user\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"sender\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-29\",\n      \"actionable\": false,\n      \"note\": \"Infrastructure newsletter digest; no obligation on or owed to the user.\",\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.43888649999999996,
+  "duration_ms": 23103,
+  "duration_api_ms": 21224,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29221,
+   "cache_read_input_tokens": 223423,
+   "output_tokens": 1397,
+   "output_tokens_details": {
+    "thinking_tokens": 142
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29221,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1045,
+     "cache_read_input_tokens": 63115,
+     "cache_creation_input_tokens": 688,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 688
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 1397,
+    "cacheReadInputTokens": 223423,
+    "cacheCreationInputTokens": 29221,
+    "webSearchRequests": 0,
+    "costUSD": 0.43888649999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 142,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

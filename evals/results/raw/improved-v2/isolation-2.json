@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2",
+ "started": "2026-10-03T12:06:07.957839+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Ticket\", \"workspace\": \"novabio\", \"key\": \"nb-301\", \"name\": \"Atlas service: rotate signing keys\", \"attrs\": {\"ticket_key\": \"NB-301\", \"status\": \"open\", \"assignee\": \"alex.rivera@mailbox.example\", \"reporter\": \"jordan.kim@novabio.example\", \"opened\": \"2026-09-27\", \"refs\": [\"NB-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"novabio\", \"type\": \"reported_by\"}, {\"to_kind\": \"Project\", \"to_key\": \"atlas-service\", \"to_workspace\": \"novabio\", \"type\": \"part_of\"}]},\n{\"kind\": \"Project\", \"workspace\": \"novabio\", \"key\": \"atlas-service\", \"name\": \"Atlas service\", \"attrs\": {\"note\": \"NovaBio production service referenced by NB-301; unrelated to the personal Atlas workbench woodworking project\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"jordan-kim\", \"name\": \"Jordan Kim\", \"attrs\": {\"email\": \"jordan.kim@novabio.example\", \"role\": \"colleague\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"rotate-atlas-signing-keys\", \"name\": \"Rotate Atlas service signing keys\", \"attrs\": {\"due\": \"2026-10-11\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"counterparty\": \"jordan.kim@novabio.example\", \"refs\": [\"NB-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"nb-301\", \"to_workspace\": \"novabio\", \"type\": \"tracked_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"novabio\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"atlas-workbench-bench-plan\", \"name\": \"Atlas (woodworking) \u2014 bench plan\", \"attrs\": {\"author\": \"alex.rivera@mailbox.example\", \"created\": \"2026-09-21\", \"note\": \"Personal woodworking project; unrelated to the NovaBio Atlas service\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"atlas-workbench\", \"to_workspace\": \"personal\", \"type\": \"documents\"}]},\n{\"kind\": \"Project\", \"workspace\": \"personal\", \"key\": \"atlas-workbench\", \"name\": \"Atlas workbench build\", \"attrs\": {\"note\": \"Personal woodworking build with a winter completion window\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []},\n{\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"order-maple-top-atlas-workbench\", \"name\": \"Order the maple top for the Atlas workbench\", \"attrs\": {\"due\": \"2026-10-20\", \"priority\": \"medium\", \"owner\": \"alex.rivera@mailbox.example\", \"rationale\": \"needed to make the winter window\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"atlas-workbench\", \"to_workspace\": \"personal\", \"type\": \"part_of\"}, {\"to_kind\": \"Document\", \"to_key\": \"atlas-workbench-bench-plan\", \"to_workspace\": \"personal\", \"type\": \"stated_in\"}]}]",
+  "total_cost_usd": 0.547083,
+  "duration_ms": 36620,
+  "duration_api_ms": 35457,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 31119,
+   "cache_read_input_tokens": 352616,
+   "output_tokens": 2381,
+   "output_tokens_details": {
+    "thinking_tokens": 308
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31119,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1366,
+     "cache_read_input_tokens": 64715,
+     "cache_creation_input_tokens": 986,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 986
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 2381,
+    "cacheReadInputTokens": 352616,
+    "cacheCreationInputTokens": 31119,
+    "webSearchRequests": 0,
+    "costUSD": 0.547083,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 308,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

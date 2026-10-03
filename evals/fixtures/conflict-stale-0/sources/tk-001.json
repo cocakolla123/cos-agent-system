@@ -1,0 +1,16 @@
+{
+ "assignee": "alex.rivera@mailbox.example",
+ "comments": [
+  {
+   "author": "Priya Nair <priya.nair@novabio.example>",
+   "date": "2026-09-18T12:00:00Z",
+   "text": "Demo env needs to be ready by Oct 14."
+  }
+ ],
+ "connector": "ticketing",
+ "date": "2026-09-18T12:00:00Z",
+ "id": "tk-001",
+ "key": "NB-188",
+ "status": "open",
+ "summary": "Prepare partner demo environment"
+}

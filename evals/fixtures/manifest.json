@@ -1,0 +1,254 @@
+[
+ {
+  "id": "user-owes-0",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-1",
+  "category": "user_owes",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-2",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-0",
+  "category": "owed_to_user",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-1",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-2",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-0",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-1",
+  "category": "deadline_change",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-2",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-0",
+  "category": "conflict_stale",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-1",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "conflict-stale-2",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-0",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 4,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-1",
+  "category": "dedupe_cross_surface",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-2",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "no-invention-0",
+  "category": "no_invention",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-1",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-2",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "blocked-0",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-1",
+  "category": "blocked",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-2",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "isolation-0",
+  "category": "isolation",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-1",
+  "category": "isolation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-2",
+  "category": "isolation",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "injection-0",
+  "category": "injection",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-1",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-2",
+  "category": "injection",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-0",
+  "category": "approval_action",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-1",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-2",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-0",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 5,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-1",
+  "category": "mixed_noise",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-2",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "satisfied-0",
+  "category": "satisfied",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-1",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-2",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 0
+ }
+]

@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-2",
+ "started": "2026-10-03T11:52:35.681766+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"harborview\",\n    \"key\": \"milestone-2-data-pipeline-demo\",\n    \"name\": \"Deliver CS540 milestone 2 data pipeline demo (Alex owns the transform stage)\",\n    \"attrs\": {\n      \"due\": \"2026-10-13\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"course\": \"CS540\",\n      \"team\": \"Eagle\",\n      \"refs\": [\"cs540-team-eagle\", \"cs540-milestone-2\"],\n      \"detail\": \"Group milestone 2 \u2014 data pipeline demo presented in section. Plan stages: ingest, transform, evaluate; Alex owns transform.\",\n      \"evidence\": [\"em-001\", \"sl-003\", \"doc-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs540-milestone-2\", \"type\": \"part_of\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"cs540-team-eagle-milestone-2-plan\", \"type\": \"documented_in\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"cs540-team-eagle\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"harborview\",\n    \"key\": \"cs540-milestone-2\",\n    \"name\": \"CS540 team Eagle \u2014 milestone 2 (data pipeline demo)\",\n    \"attrs\": {\n      \"due\": \"2026-10-13\",\n      \"stages\": [\"ingest\", \"transform\", \"evaluate\"],\n      \"user_role\": \"owns the transform stage\",\n      \"instructor\": \"marcus-bell\",\n      \"refs\": [\"cs540-team-eagle\"],\n      \"evidence\": [\"em-001\", \"sl-003\", \"doc-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"marcus-bell\", \"type\": \"owned_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"cs540-team-eagle\", \"type\": \"discussed_in\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"cs540-team-eagle-milestone-2-plan\", \"type\": \"documented_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"marcus-bell\",\n    \"name\": \"Prof. Marcus Bell\",\n    \"attrs\": {\n      \"email\": \"marcus.bell@harborview.example\",\n      \"role\": \"professor / course instructor\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs540-milestone-2\", \"type\": \"involved_in\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"cs540-team-eagle\", \"type\": \"member_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"harborview\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"student, team Eagle \u2014 owns transform stage\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"doc-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs540-milestone-2\", \"type\": \"involved_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"harborview\",\n    \"key\": \"cs540-team-eagle\",\n    \"name\": \"#cs540-team-eagle\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"purpose\": \"CS540 team Eagle coordination\",\n      \"evidence\": [\"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs540-milestone-2\", \"type\": \"relates_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"harborview\",\n    \"key\": \"cs540-team-eagle-milestone-2-plan\",\n    \"name\": \"CS540 team Eagle \u2014 milestone 2 plan\",\n    \"attrs\": {\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"created\": \"2026-09-27\",\n      \"summary\": \"Plan for the data pipeline demo due Oct 13: ingest, transform, evaluate. Alex owns the transform stage.\",\n      \"refs\": [\"cs540-milestone-2\"],\n      \"evidence\": [\"doc-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"cs540-milestone-2\", \"type\": \"documents\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"authored_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5071295,
+  "duration_ms": 28627,
+  "duration_api_ms": 27154,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29923,
+   "cache_read_input_tokens": 287249,
+   "output_tokens": 2569,
+   "output_tokens_details": {
+    "thinking_tokens": 219
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29923,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2021,
+     "cache_read_input_tokens": 63609,
+     "cache_creation_input_tokens": 896,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 896
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2569,
+    "cacheReadInputTokens": 287249,
+    "cacheCreationInputTokens": 29923,
+    "webSearchRequests": 0,
+    "costUSD": 0.5071295,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 219,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "category": "deadline_change",
+ "id": "deadline-change-0",
+ "note": "deadline moved later in the same thread; newest wins",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "crestline": "freelance",
+  "harborview": "school",
+  "job-search": "job-search",
+  "novabio": "employer",
+  "personal": "personal"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "category": "approval_action",
+ "id": "approval-action-2",
+ "note": "reply needed; the system may only draft and queue",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "crestline": "freelance",
+  "harborview": "school",
+  "job-search": "job-search",
+  "novabio": "employer",
+  "personal": "personal"
+ }
+}

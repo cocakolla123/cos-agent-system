@@ -1,0 +1,10 @@
+{
+ "attendees": [
+  "alex.rivera@mailbox.example"
+ ],
+ "connector": "calendar",
+ "date": "2026-08-20T10:00:00Z",
+ "id": "cal-002",
+ "start": "2026-10-02T18:00:00Z",
+ "title": "CS 540 seminar"
+}

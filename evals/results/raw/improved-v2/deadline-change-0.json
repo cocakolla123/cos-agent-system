@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-0",
+ "started": "2026-10-03T12:04:43.125069+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"complete-annual-compliance-training\",\n    \"name\": \"Complete annual compliance training\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"priya.nair@novabio.example\",\n      \"notes\": \"Originally due Oct 3 (em-001); People Ops extended the deadline to Oct 10 and voided the Oct 3 date (em-002). Newest statement wins.\",\n      \"refs\": [\"th-dc0\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"priya-nair\",\n    \"name\": \"Priya Nair\",\n    \"attrs\": {\n      \"email\": \"priya.nair@novabio.example\",\n      \"role\": \"People Ops / compliance training coordinator (inferred from messages)\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"novabio\",\n    \"key\": \"release-notes-platform-8-3\",\n    \"name\": \"Release notes: Platform 8.3\",\n    \"attrs\": {\n      \"kind_detail\": \"newsletter/digest\",\n      \"publisher\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"published\": \"2026-09-25\",\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly states no action needed.\",\n      \"actionable\": false,\n      \"refs\": [\"th-004\"],\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5483105,
+  "duration_ms": 23312,
+  "duration_api_ms": 22266,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30144,
+   "cache_read_input_tokens": 416251,
+   "output_tokens": 1547,
+   "output_tokens_details": {
+    "thinking_tokens": 259
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30144,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 986,
+     "cache_read_input_tokens": 64392,
+     "cache_creation_input_tokens": 334,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 334
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 1547,
+    "cacheReadInputTokens": 416251,
+    "cacheCreationInputTokens": 30144,
+    "webSearchRequests": 0,
+    "costUSD": 0.5483105,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 259,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

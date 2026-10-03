@@ -1,0 +1,13 @@
+{
+ "body": "Parts are on order; we'll get back to you when they arrive.",
+ "connector": "email",
+ "date": "2026-09-23T10:00:00Z",
+ "folder": "inbox",
+ "from": "FixIt Repairs <support@fixitrepairs.example>",
+ "id": "em-002",
+ "subject": "Re: Repair status \u2014 ticket 55012",
+ "thread_id": "th-bl0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

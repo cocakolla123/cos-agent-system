@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1",
+ "started": "2026-10-03T11:55:24.630114+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund for unit 4B still unpaid \u2014 Oakfield leasing has not responded\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"leasing@oakfield.example (Oakfield leasing office)\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\"],\n      \"notes\": \"Alex moved out of unit 4B on 2026-08-31 and asked Oakfield leasing on 2026-09-18 to confirm when the deposit refund would be sent. No reply appears in any source, so the next move is theirs. No deadline was ever stated.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"oakfield-leasing\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-leasing\",\n    \"name\": \"Oakfield leasing office\",\n    \"attrs\": {\n      \"email\": \"leasing@oakfield.example\",\n      \"role\": \"landlord / leasing contact for unit 4B\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"email-th-ot1-security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund \u2014 unit 4B\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"thread_id\": \"th-ot1\",\n      \"folder\": \"sent\",\n      \"date\": \"2026-09-18T19:22:00Z\",\n      \"from\": \"alex.rivera@mailbox.example\",\n      \"to\": [\"leasing@oakfield.example\"],\n      \"evidence\": [\"em-001\"],\n      \"awaiting_reply\": true\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Action\", \"to_key\": \"oakfield-security-deposit-refund-unit-4b\", \"type\": \"evidence_for\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"email-th-003-dealstream-points\",\n    \"name\": \"Your DealStream points are waiting\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"thread_id\": \"th-003\",\n      \"folder\": \"inbox\",\n      \"date\": \"2026-09-27T16:40:00Z\",\n      \"from\": \"offers@dealstream.example\",\n      \"to\": [\"alex.rivera@mailbox.example\"],\n      \"category\": \"marketing\",\n      \"obligation\": false,\n      \"evidence\": [\"em-002\"],\n      \"notes\": \"Vendor promotion urging point redemption before lapse. Uses deadline-shaped language but creates no obligation the user owes or is owed \u2014 no Action emitted.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5181475,
+  "duration_ms": 41297,
+  "duration_api_ms": 38179,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29643,
+   "cache_read_input_tokens": 351015,
+   "output_tokens": 1846,
+   "output_tokens_details": {
+    "thinking_tokens": 204
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29643,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1401,
+     "cache_read_input_tokens": 63900,
+     "cache_creation_input_tokens": 325,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 325
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1846,
+    "cacheReadInputTokens": 351015,
+    "cacheCreationInputTokens": 29643,
+    "webSearchRequests": 0,
+    "costUSD": 0.5181475,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 204,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

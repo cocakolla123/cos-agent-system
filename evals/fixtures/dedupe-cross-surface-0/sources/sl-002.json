@@ -1,0 +1,8 @@
+{
+ "channel": "#api-platform",
+ "connector": "slack",
+ "date": "2026-09-29T11:30:00Z",
+ "id": "sl-002",
+ "text": "@alex reminder on NB-214 \u2014 rate-limit docs update, due Oct 8.",
+ "user": "Priya Nair <priya.nair@novabio.example>"
+}

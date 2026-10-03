@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-0",
+ "started": "2026-10-03T11:53:15.640773+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"employer\",\n    \"key\": \"jordan-kim\",\n    \"name\": \"Jordan Kim\",\n    \"attrs\": {\n      \"email\": \"jordan.kim@novabio.example\",\n      \"org\": \"novabio\",\n      \"role_hint\": \"colleague requesting capacity plan section\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"jordan-kim\",\n    \"name\": \"Jordan Kim\",\n    \"attrs\": {\n      \"email\": \"jordan.kim@novabio.example\",\n      \"role_hint\": \"friend organizing Tahoe cabin weekend\",\n      \"note\": \"same individual as the employer-workspace contact; kept separate per workspace isolation\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"employer\",\n    \"key\": \"q4-capacity-plan\",\n    \"name\": \"Q4 capacity plan\",\n    \"attrs\": {\n      \"status\": \"draft\",\n      \"user_owns_section\": true,\n      \"requested_by\": \"Jordan Kim\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"employer\",\n    \"key\": \"send-q4-capacity-plan-section-to-jordan-kim\",\n    \"name\": \"Send Alex's section of the Q4 capacity plan to Jordan Kim\",\n    \"attrs\": {\n      \"due\": \"2026-10-07\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"Jordan Kim <jordan.kim@novabio.example>\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"q4-capacity-plan\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"book-tahoe-cabin-weekend-spot\",\n    \"name\": \"Book spot for the Tahoe cabin weekend\",\n    \"attrs\": {\n      \"due\": \"2026-10-04\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"Jordan Kim <jordan.kim@novabio.example>\",\n      \"detail\": \"Reservation is lost after Oct 4; Jordan asks to be paid back via Venmo, no payment deadline stated\",\n      \"refs\": [\"th-004\"],\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"type\": \"owed_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"reimburse-jordan-kim-cabin-share\",\n    \"name\": \"Venmo Jordan Kim for the cabin weekend share\",\n    \"attrs\": {\n      \"priority\": \"low\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"detail\": \"Jordan said \\\"Venmo me whenever\\\" \u2014 no deadline stated; amount not given\",\n      \"refs\": [\"th-004\"],\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Action\", \"to_key\": \"book-tahoe-cabin-weekend-spot\", \"type\": \"related_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"employer\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"date\": \"2026-09-25\",\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters\",\n      \"actionable\": false,\n      \"refs\": [\"th-006\"],\n      \"evidence\": [\"em-005\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5065044999999999,
+  "duration_ms": 158370,
+  "duration_api_ms": 157095,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29995,
+   "cache_read_input_tokens": 287159,
+   "output_tokens": 2517,
+   "output_tokens_details": {
+    "thinking_tokens": 281
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29995,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1986,
+     "cache_read_input_tokens": 63584,
+     "cache_creation_input_tokens": 993,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 993
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2517,
+    "cacheReadInputTokens": 287159,
+    "cacheCreationInputTokens": 29995,
+    "webSearchRequests": 0,
+    "costUSD": 0.5065044999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 281,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

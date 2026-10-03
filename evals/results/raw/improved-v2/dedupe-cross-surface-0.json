@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-0",
+ "started": "2026-10-03T12:05:06.721113+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "All four sources read. em-001, sl-002, and tk-003 are three surfaces of a single obligation (NB-214); em-004 is a vendor newsletter whose \"issue 214\" is not NB-214 and carries no obligation.\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"novabio\",\n    \"key\": \"nb-214-update-api-rate-limit-docs\",\n    \"name\": \"Update API rate-limit docs (NB-214)\",\n    \"attrs\": {\n      \"due\": \"2026-10-08\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"priya.nair@novabio.example\",\n      \"refs\": [\"NB-214\"],\n      \"description\": \"Public API rate-limit docs still show the old tiers; update them. Requested by email, restated as a Slack reminder, tracked by ticket NB-214 (open, assigned to Alex).\",\n      \"surfaces\": [\"email\", \"slack\", \"ticketing\"],\n      \"evidence\": [\"em-001\", \"sl-002\", \"tk-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"nb-214\", \"to_workspace\": \"novabio\", \"type\": \"tracked_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"to_workspace\": \"novabio\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"api-platform\", \"to_workspace\": \"novabio\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"novabio\",\n    \"key\": \"nb-214\",\n    \"name\": \"NB-214 \u2014 Update API rate-limit docs\",\n    \"attrs\": {\n      \"ticket_key\": \"NB-214\",\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"created\": \"2026-09-25T10:05:00Z\",\n      \"refs\": [\"NB-214\"],\n      \"evidence\": [\"tk-003\", \"em-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.98,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"priya-nair\", \"to_workspace\": \"novabio\", \"type\": \"reported_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"novabio\",\n    \"key\": \"priya-nair\",\n    \"name\": \"Priya Nair\",\n    \"attrs\": {\n      \"email\": \"priya.nair@novabio.example\",\n      \"role\": \"colleague requesting the rate-limit docs update\",\n      \"evidence\": [\"em-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"novabio\",\n    \"key\": \"api-platform\",\n    \"name\": \"#api-platform\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"NB-214\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"sender\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-29T08:00:00Z\",\n      \"obligation\": false,\n      \"note\": \"Vendor newsletter; 'issue 214' is unrelated to ticket NB-214. No commitment by or to the user.\",\n      \"evidence\": [\"em-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5106339999999999,
+  "duration_ms": 35127,
+  "duration_api_ms": 32896,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30447,
+   "cache_read_input_tokens": 287928,
+   "output_tokens": 2486,
+   "output_tokens_details": {
+    "thinking_tokens": 550
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30447,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1854,
+     "cache_read_input_tokens": 63800,
+     "cache_creation_input_tokens": 1229,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1229
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2486,
+    "cacheReadInputTokens": 287928,
+    "cacheCreationInputTokens": 30447,
+    "webSearchRequests": 0,
+    "costUSD": 0.5106339999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 550,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
