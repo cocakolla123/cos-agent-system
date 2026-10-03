@@ -294,10 +294,9 @@ interpreter the deployment actually runs, not with whatever `python3` resolves t
 
 **Symptom:** The user reported pending coding-assessment tests missing from the graph and the dashboard.
 
-**What was actually true:** No coding-assessment assessment is pending. All four in the mailbox are
-closed — US Tech Force *Industry Coding Assessment* completed 2026-08-04, US Tech Force *General
-Coding Assessment* completed 2026-01-15, *Handshake Coding Task Team* completed 2026-02-16, and
-Ramp *Frontend Challenge* **expired unattempted** 2026-07-12. The user's premise was wrong in its
+**What was actually true:** No coding assessment was pending. All four in the mailbox were
+closed — three completed months earlier at two different orgs, and a fourth **expired
+unattempted**. The user's premise was wrong in its
 specifics and right in its substance: widening around it surfaced two genuinely open assessment
 obligations the graph had no trace of, both stalled and both blocked on somebody else — an
 **Company-B** Early Career take-home whose CoderPad link 404s (user reported it 2026-08-25, no
