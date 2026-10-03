@@ -1,51 +1,67 @@
 {
   "_comment": "Copy this to config.json and fill in real values, or let /setup generate it. Any key you omit falls back to the safe default documented in ../PLAN.md.",
-
   "workspace_dir": null,
   "orchestrator_cwd": null,
-
   "ticket_host": "https://your-org.atlassian.net",
   "ticket_system_name": "Jira",
-
   "action_tools": {
     "message_send": "mcp__example__messaging_send_message_draft"
   },
-
   "_comment_action_types": "V2 (M8): register extra dashboard action types (icon + label) without editing server.py. Built-ins: message_send, ticket_update, calendar_change.",
   "action_types": {
-    "message_send": {"icon": "💬", "label": "Message"}
+    "message_send": {
+      "icon": "\ud83d\udcac",
+      "label": "Message"
+    }
   },
-
   "base_tools": "Read,Edit,Agent",
   "chat_tools": "Read,Agent",
   "revise_tools": "Read,Edit,Agent",
   "poll_tools": "Read,Edit,Agent",
-
-  "_comment_research_tools": "V2.4: the /start-research subprocess grant. Research MUST hold Write+Bash (to persist the graph via graph.py) and Glob/Grep (local FS discovery) on top of the baseline — the narrow poll grant starves it silently (first-run lesson, 2026-09-12). /setup appends the deployment's discovered READ-ONLY MCP tool names (search/get/list/read) here and to poll_tools/chat_tools; never a mutating MCP tool.",
+  "_comment_research_tools": "V2.4: the /start-research subprocess grant. Research MUST hold Write+Bash (to persist the graph via graph.py) and Glob/Grep (local FS discovery) on top of the baseline \u2014 the narrow poll grant starves it silently (first-run lesson, 2026-09-12). /setup appends the deployment's discovered READ-ONLY MCP tool names (search/get/list/read) here and to poll_tools/chat_tools; never a mutating MCP tool.",
   "research_tools": "Read,Edit,Write,Bash,Glob,Grep,Agent,ToolSearch,WebSearch",
-
   "domain_tag": "YourDomain",
-  "domain_keywords": ["example-keyword", "example-system-name"],
-  "domain_url_keywords": ["example.internal.tool"],
-
+  "domain_keywords": [
+    "example-keyword",
+    "example-system-name"
+  ],
+  "domain_url_keywords": [
+    "example.internal.tool"
+  ],
   "_comment_live_refresh": "V2 (M7): when true, the dashboard polls /graph-version and reloads when the approval queue or knowledge graph changes. Off by default (V1 behavior). live_refresh_seconds is the poll interval (min 5).",
   "live_refresh": false,
   "live_refresh_seconds": 20,
-
   "_comment_connector_accounts": "V2.2 (M10): multiple accounts of the same connector type (e.g. two Gmails) on one machine. Each entry is one named MCP connector instance with its own OAuth; tool_prefix is that instance's tool namespace, so agents can be granted exactly one account's tools. workspace binds the account to an M3 workspace (personal/employer/...). /cos-accounts probes each instance (identity + auth status -> account-status.json); the dashboard shows the panel and pops the auth modal when a login is needed.",
   "connector_accounts": [
-    {"id": "gmail-personal", "kind": "email", "label": "Personal Gmail",
-     "account": "you@gmail.com", "workspace": "personal",
-     "tool_prefix": "mcp__gmail_personal__",
-     "probe_tool": "mcp__gmail_personal__search_threads"},
-    {"id": "gmail-work", "kind": "email", "label": "Work Gmail",
-     "account": "you@yourco.com", "workspace": "employer",
-     "tool_prefix": "mcp__gmail_work__",
-     "probe_tool": "mcp__gmail_work__search_threads"}
+    {
+      "id": "gmail-personal",
+      "kind": "email",
+      "label": "Personal Gmail",
+      "account": "you@gmail.com",
+      "workspace": "personal",
+      "tool_prefix": "mcp__gmail_personal__",
+      "probe_tool": "mcp__gmail_personal__search_threads"
+    },
+    {
+      "id": "gmail-work",
+      "kind": "email",
+      "label": "Work Gmail",
+      "account": "you@yourco.com",
+      "workspace": "employer",
+      "tool_prefix": "mcp__gmail_work__",
+      "probe_tool": "mcp__gmail_work__search_threads"
+    }
   ],
-
-  "_comment_self_learning": "V2.1 (M9): auto self-learning mode. When the user reports a miss in chat, the system remediates, diagnoses why it was missed, fixes the cause itself (config/instructions/code, gated by its test suite with auto-rollback + guardrails), and records the lesson. self_modify_code=false drafts code fixes as tasks instead of applying them. learn_tools is the /cos-learn subprocess grant — local file tools + Agent, never an external mutating tool. Toggleable live from the dashboard.",
+  "_comment_self_learning": "V2.1 (M9): auto self-learning mode. When the user reports a miss in chat, the system remediates, diagnoses why it was missed, fixes the cause itself (config/instructions/code, gated by its test suite with auto-rollback + guardrails), and records the lesson. self_modify_code=false drafts code fixes as tasks instead of applying them. learn_tools is the /cos-learn subprocess grant \u2014 local file tools + Agent, never an external mutating tool. Toggleable live from the dashboard.",
   "self_learning": true,
   "self_modify_code": true,
-  "learn_tools": "Read,Edit,Bash,Agent"
+  "learn_tools": "Read,Edit,Bash,Agent",
+  "publish": {
+    "repo_url": "https://github.com/YOUR-USERNAME/YOUR-FORK-OF-THIS-REPO.git",
+    "branch": "main",
+    "author_name": "YOUR-USERNAME",
+    "author_email": "you@yourco.com",
+    "enabled": false,
+    "_doc": "OPT-IN. When enabled, the self-learning loop publishes its kept generic improvements (code/instructions/lessons) to YOUR OWN repo via dashboard/publish.py \u2014 after a privacy scan (dashboard/privacy.py + workspace/privacy-tokens.txt) that refuses to push anything personal. Leave absent or disabled and improvements stay local-only; personal data stays local either way."
+  }
 }
