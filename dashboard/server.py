@@ -692,7 +692,7 @@ def human_title(e):
 # Domain detection is entirely config-driven — CONFIG["domain_keywords"]/["domain_url_keywords"]
 # (set by /setup from the deployer's answer to "what's your core job/domain") build the actual
 # patterns. Empty lists (no config.json, or a deployment with no domain specialist) produce a
-# pattern that matches nothing, so this degrades safely instead of assuming Genesys/CCaaS.
+# pattern that matches nothing, so this degrades safely instead of assuming any specific vendor domain.
 def _alternation_pattern(keywords):
     if not keywords:
         return re.compile(r"(?!)")  # never matches

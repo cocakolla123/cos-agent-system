@@ -27,9 +27,9 @@ tracked as GitHub issues in the standalone public-of-record repo `cos-agent-syst
 
 **Nothing under `template/` reads or writes anything outside `template/` by default.** No
 shared file, no shared config, no default path that happens to be `~/.claude/cos` or anything
-else specific to Hemanth's own already-working setup. Hemanth's live system is a separate,
+else specific to the original deployment owner's already-working setup. That live system is a separate,
 unrelated deployment — this project does not touch it, depend on it, or get pointed at it as
-a side effect of being built. If someone (including Hemanth, later) wants to actually run on
+a side effect of being built. If someone (including the original owner, later) wants to actually run on
 this template, that's a distinct, explicit choice made at that time — never automatic.
 
 Concretely: `dashboard/server.py` defaults `--config` to `template/dashboard/config.json` and
@@ -77,7 +77,7 @@ the deployer's own `~/.claude/agents/global/` at setup time, same as any other p
   "chat_tools": "comma-separated tool grant for the dashboard's chat assistant",
   "revise_tools": "comma-separated tool grant for /cos-revise's subprocess",
   "poll_tools": "comma-separated tool grant for /cos-poll's subprocess",
-  "domain_tag": "display name for the user's core-job specialist tag, e.g. 'Genesys'",
+  "domain_tag": "display name for the user's core-job specialist tag, e.g. 'ContactOps'",
   "domain_keywords": ["keywords that mark an entry as domain-related, for tag + linked-context display"],
   "domain_url_keywords": ["substrings that mark a URL as belonging to the domain tool, e.g. 'mypurecloud'"]
 }
@@ -98,7 +98,7 @@ action types and no domain tag) — this is what lets `/setup` be run incrementa
    `message_send`-equivalent role, the ticket host, etc.) from what's discovered, modeled on
    `/cos-onboard`'s research pass.
 3. **Generate agent files** into `~/.claude/agents/global/` (the deployer's own, not this
-   repo), applying the same judgment used when hand-building Hemanth's 11 agents: which tools
+   repo), applying the same judgment used when hand-building the original 11 agents: which tools
    a role actually needs, opus vs. sonnet, what's explicitly denied (e.g. no agent should hold
    a raw "send"/"mutate" tool unless it's the one designated draft-only action).
 4. **Generate config.json** for the shared dashboard schema above, and copy the 6
@@ -112,22 +112,22 @@ action types and no domain tag) — this is what lets `/setup` be run incrementa
 6. **Register local polling** (`poll-tick.sh` + the deployer's own scheduler), parameterized
    the same way.
 
-## Relationship to Hemanth's live system
+## Relationship to the original live system
 
 None, by design (see Ground rule above). `~/.claude/cos/`, `~/.claude/agents/global/cos-*.md`,
-and `~/.claude/commands/global/cos-*.md` on this machine are Hemanth's own hand-built,
-already-working deployment — untouched by this project. If a fix made to Hemanth's live
-system reflects a general lesson (not Hemanth-specific content), port that lesson into this
+and `~/.claude/commands/global/cos-*.md` on the original machine are the owner's own hand-built,
+already-working deployment — untouched by this project. If a fix made to that live
+system reflects a general lesson (not deployment-specific content), port that lesson into this
 file or into `/setup`'s instructions by hand, deliberately — don't wire the two together so it
 happens automatically. That coupling was considered and rejected: the earlier plan-mode draft
-("one dashboard codebase, not two," pointing Hemanth's `serve.sh` at this template) was
+("one dashboard codebase, not two," pointing the live system's `serve.sh` at this template) was
 rejected because it makes a fresh deployment's defaults depend on a specific other person's
 directory conventions, which is the opposite of "self-contained."
 
 ## Lessons learned
 
 - **2026-07-13** — First draft of `dashboard/server.py`'s config-loading defaulted
-  `DASHBOARD_DIR`/workspace path to `~/.claude/cos/dashboard` (Hemanth's live path) as a
+  `DASHBOARD_DIR`/workspace path to `~/.claude/cos/dashboard` (the live system's path) as a
   fallback when no config.json/`--workspace` was given. Caught before it shipped. Fixed by
   resolving all defaults relative to the file's own location
   (`os.path.dirname(os.path.abspath(__file__))`). **Rule going forward: any default path in
@@ -148,24 +148,24 @@ directory conventions, which is the opposite of "self-contained."
 - **2026-07-13** — A coherence read-through of the ported command files against `server.py`
   found the dashboard was only *partially* config-driven: the header constants were fixed
   (Task 55), but three deeper chunks still had the original hardcoded Airbnb/Jira/Slack/
-  Genesys values and silently ignored `config.json`: (1) a leftover duplicate `CHAT_TOOLS =`
+  the original deployment's domain values and silently ignored `config.json`: (1) a leftover duplicate `CHAT_TOOLS =`
   assignment lower in the file overwrote the config-driven one from the header entirely; (2)
   the `/revise` and `/poll-now` HTTP handlers had their own hardcoded `--allowedTools` lists,
   never wired to the `revise_tools`/`poll_tools` config keys those variables existed for; (3)
-  the entire domain-tag/link-detection system (`GENESYS_URL_PATTERN`, `is_genesys_related`,
-  the `linked_genesys` field name, `TAG_STYLE`) was 100% hardcoded to Genesys terminology,
+  the entire domain-tag/link-detection system (`<DOMAIN>_URL_PATTERN`, `is_<domain>_related`,
+  the `linked_<domain>` field name, `TAG_STYLE`) was 100% hardcoded to one vendor's terminology,
   completely disconnected from the `domain_tag`/`domain_keywords`/`domain_url_keywords` config
-  keys the schema already promised — and it used a *different* field name (`linked_genesys`)
+  keys the schema already promised — and it used a *different* field name (`linked_<domain>`)
   than what the ported orchestration commands were instructed to write (`linked_domain`), so
   even a correctly-configured deployment's domain background info would never have displayed.
   Also found: `CONNECTORS`/`CONNECTOR_LABELS` were a fixed `["slack","email","general"]` list
   in the dashboard's own poll-schedule UI, inconsistent with `poll-tick.sh`'s already-dynamic
   connector handling. **Rule: a config-driven rename at the top of a file proves nothing about
   the rest of the file — grep the whole file for the literal brand/product strings being
-  removed (`grep -n "slack_send\|genesys\|Jira\|Hemanth"` etc.) before declaring a
+  removed (`grep -n` for every vendor/owner-specific token etc.) before declaring a
   generalization pass done, since a file this size will have multiple independent hardcoded
   chunks that don't reference each other.** Fixed: removed the duplicate `CHAT_TOOLS`; wired
-  `REVISE_TOOLS`/`POLL_TOOLS` into their handlers; renamed `linked_genesys` → `linked_domain`
+  `REVISE_TOOLS`/`POLL_TOOLS` into their handlers; renamed `linked_<domain>` → `linked_domain`
   and rebuilt domain-detection patterns from config at module load (`_alternation_pattern`,
   matching nothing when the config lists are empty); renamed the `slack_send` action_type to
   the generic `message_send`; made tag rendering return `(label, css_class)` pairs so labels
@@ -188,7 +188,7 @@ directory conventions, which is the opposite of "self-contained."
   re-run would have incorrectly treated itself as colliding with a foreign deployment. (3)
   Every ported orchestration command referenced "the workspace's architecture doc" for
   approval-required/never-autonomous categories, but nothing in a fresh deployment ever
-  creates such a doc — Hemanth's hand-built system has this in `PLAN.md` Part H, but the
+  creates such a doc — the original hand-built system has this in `PLAN.md` Part H, but the
   template's own `PLAN.md` is a different document (how the template itself was built, not a
   deployment's approval policy), so a fresh deployment had no concrete file to point at.
   Fixed: Step 5 now states the required baseline explicitly; Step 7 writes
@@ -212,7 +212,7 @@ directory conventions, which is the opposite of "self-contained."
 ## Honest limitation
 
 `/setup` can't be end-to-end tested against a genuinely different machine/connector set from
-inside Hemanth's own environment. Verification here is a coherence review of `setup.md`'s
+inside the original owner's own environment. Verification here is a coherence review of `setup.md`'s
 instructions (would it plausibly produce a working agent set + config for, say, Linear instead
 of Jira and Teams instead of Slack?) plus confirming the dashboard runs standalone with zero
 config.json present. Real-world validation happens the first time someone actually runs it
@@ -224,7 +224,7 @@ somewhere else.
       fixed to never default outside `template/`. Verified: imports cleanly with no
       config.json present, all paths resolve inside `template/dashboard/`, touches nothing
       under `~/.claude/cos`. A follow-up coherence pass (2026-07-13, logged above) found and
-      fixed three deeper chunks that were still hardcoded to Genesys/Jira/Slack despite the
+      fixed three deeper chunks that were still hardcoded to specific vendors despite the
       header rename — `REVISE_TOOLS`/`POLL_TOOLS` are now actually wired into their handlers,
       `linked_domain`/`domain_tag`/`domain_keywords` are now genuinely config-driven, and the
       poll-schedule UI's connector list is dynamic. Verified again post-fix: `py_compile`

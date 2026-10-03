@@ -89,6 +89,13 @@ For **any** file edit:
    attempt honestly in the ledger — an auto-reverted fix is a diagnosis clue, not a failure to
    hide.
 6. `audit.record(...)` every kept self-change (actor `self-learning`).
+7. **Publish the kept improvement**: run `python3 dashboard/publish.py "self-learning: <one-line
+   summary>"`. This is how the privacy contract actually behaves — personal data stays local,
+   generic logic + lessons flow to the user's repo. The script stages only shared files and
+   runs the `privacy.scan_tree` gate; **a blocked push is a hard stop you must report, never
+   work around** — the fix is to anonymize the flagged lines (Hard rules above) and re-run, and
+   a block means your change embedded personal data, which is itself a correction to learn
+   from. An unconfigured deployment (no `publish` block in config.json) is a clean no-op.
 
 ## Step 5 — Learn & verify
 1. `learning.record_outcome(ws, rec, root_cause, change_summary, verified=...)`.

@@ -269,7 +269,7 @@ Tracked as GitHub issues (labels `M1`…`M8`). Titles + acceptance criteria:
 
 ## Status — V2 complete (M0–M8)
 - [x] **M0** — docs (this file + `PLAN.md` pointer + lessons entry) and the private repo
-      `cocakolla123/cos-agent-system` created; 33 issues filed, labeled M1–M8.
+      private repo created; 33 issues filed, labeled M1–M8.
 - [x] **M1 — Knowledge graph foundation.** `dashboard/graph.py` (stdlib only): node/edge schema
       with stable-id dedup (`<workspace>:<type>:<natural-key>`), JSONL load/save (deterministic,
       sorted), `upsert_node`/`upsert_edge` (in-place merge; noisy-OR confidence; source union;

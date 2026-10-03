@@ -136,7 +136,7 @@ def _domain_system_agents(g):
     """One investigation agent per distinct external system in the graph.
 
     A 'system' is any node carrying ``attrs['system']`` (e.g. Salesforce,
-    Genesys, Zendesk) — typically tickets, incidents, or deployments. Enough
+    Zendesk, ServiceNow) — typically tickets, incidents, or deployments. Enough
     supporting nodes -> a dedicated specialist for that system.
     """
     by_system = {}

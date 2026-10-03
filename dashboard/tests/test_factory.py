@@ -55,10 +55,10 @@ class TestEvidenceDriven(unittest.TestCase):
         g.upsert_node("Ticket", "employer", "SF-1",
                       attrs={"system": "Salesforce"}, now=_t(1))
         g.upsert_node("Ticket", "employer", "GEN-1",
-                      attrs={"system": "Genesys"}, now=_t(1))
+                      attrs={"system": "Flowmetrics"}, now=_t(1))
         names = _names(factory.propose_agents(g))
         self.assertIn("cos-salesforce", names)
-        self.assertIn("cos-genesys", names)
+        self.assertIn("cos-flowmetrics", names)
 
     def test_job_search_agent(self):
         g = graph.Graph()

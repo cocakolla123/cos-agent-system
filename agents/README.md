@@ -78,7 +78,7 @@ live in `/cos-approve` and `/cos-approve-confirmed`, never in a specialist agent
   orchestration commands (`cos.md`, `cos-poll.md`) never need per-deployment rewriting — the
   agent's own `description`/`tools` frontmatter is what's domain-specific, not its name or any
   command that calls it. Populate `dashboard/config.json`'s `domain_tag` with the human-
-  readable name (e.g. "Genesys," "Salesforce Ops") for display purposes only.
+  readable name (e.g. "Salesforce Ops," "Zendesk") for display purposes only.
 
 ## Model choice, generally
 
@@ -112,7 +112,7 @@ V1 (above) generates a fixed role set gated by **connector presence**. V2 additi
 agents justified by what the **knowledge graph** actually contains, via `dashboard/factory.py`:
 
 - **Evidence-driven, not connector-driven.** A Salesforce node cluster → a Salesforce agent; a
-  distinct external system (Genesys, Zendesk, …) with tickets/incidents/deploys → an Investigation
+  distinct external system (Salesforce, Zendesk, …) with tickets/incidents/deploys → an Investigation
   agent for it; job-search entities → a Job Search agent; personal repos/projects → a Project
   Builder agent. `factory.propose_agents(graph)` returns the list; when the graph is empty it
   falls back to the V1 connector-gated roles, so a brand-new deployment is unchanged.
