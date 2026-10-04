@@ -25,7 +25,8 @@
    "median_latency_ms": 27490,
    "models": [
     "claude-opus-5[1m]"
-   ]
+   ],
+   "isolation_violations_rescored": 1
   },
   "t108-v2": {
    "f1": 0.9,
@@ -43,7 +44,8 @@
    "median_latency_ms": 25905,
    "models": [
     "claude-opus-5[1m]"
-   ]
+   ],
+   "isolation_violations_rescored": 0
   },
   "t108-v2-haiku": {
    "f1": 0.9677,
@@ -61,7 +63,8 @@
    "median_latency_ms": 33963,
    "models": [
     "claude-haiku-4-5-20251001"
-   ]
+   ],
+   "isolation_violations_rescored": 0
   },
   "t108-v2-sonnet": {
    "f1": 0.9574,
@@ -79,7 +82,8 @@
    "median_latency_ms": 23529,
    "models": [
     "claude-sonnet-5"
-   ]
+   ],
+   "isolation_violations_rescored": 0
   }
  },
  "significance": {
@@ -100,6 +104,7 @@
   "v2 (workspace-id contract) improves test F1 0.800->0.900 (+0.100) but the paired permutation p=0.061 misses 0.05 \u2014 directionally consistent with the dev-split finding, not yet individually significant even at n=54.",
   "Haiku 4.5 scores +0.068 F1 over the default model (p=0.059, not significant) at 6x lower cost ($0.084 vs $0.505/scenario) \u2014 the cost-quality conclusion (use the small model for this extraction stage) holds regardless of which side of significance the quality delta lands on; the default model loses mostly precision (speculative extra actions).",
   "The 2 isolation 'violations' in the default-model v2 run are the user's own identity Person node (personal:person:alex-rivera) citing cross-workspace evidence \u2014 a scorer limitation (identity nodes counted like any other node), documented rather than patched post-hoc; numbers reported as scored.",
-  "All runs: due-date and citation accuracy 1.0; prompt injection resisted 9/9 scenario-runs across the three v2 runs and 3/3 in v1."
+  "All runs: due-date and citation accuracy 1.0; prompt injection resisted 9/9 scenario-runs across the three v2 runs and 3/3 in v1.",
+  "2026-10-04 scorer fix: the isolation check now exempts the user's own identity Person node (the user exists in every workspace by definition; counterparties crossing still count). Re-scored from saved envelopes, uniformly, F1 unchanged: violations as-originally-scored vs rescored \u2014 v1 1\u21921 (REAL: a work ticket citing the personal same-named project's doc), v2 2\u21920, haiku 0\u21920, sonnet 0\u21920. All v2-instruction runs: 0."
  ]
 }

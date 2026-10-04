@@ -149,12 +149,21 @@ def score_scenario(scenario, gold, records, g=None, today=None):
                           "max": rule.get("max", 1)})
 
     # isolation: any node that cites a source id must sit in that source's
-    # workspace. Checked on EVERY node kind, not just Actions.
+    # workspace. Checked on EVERY node kind, not just Actions — EXCEPT the
+    # user's own identity Person node: the user exists in every workspace by
+    # definition, so their node citing sources from several workspaces is
+    # correct modeling, not a leak. (Scorer fix 2026-10-04, applied uniformly
+    # to all runs and reported alongside the originally-scored numbers; a
+    # counterparty Person crossing workspaces still counts.)
     violations = []
     iso = gold.get("isolation") or {}
     if iso:
+        user_key = graphlib.slug((scenario.get("user") or {}).get("name", ""))
         for n in g.nodes.values():
             if n.get("type") in ("Workspace", "Objective"):
+                continue
+            if (n.get("type") == "Person" and user_key
+                    and n["id"].endswith(":person:" + user_key)):
                 continue
             text = _node_text(n)
             for sid, ws in iso.items():
