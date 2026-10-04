@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1",
+ "started": "2026-10-04T00:51:08.381148+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund \u2014 unit 4B\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Oakfield leasing office\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"oakfield-leasing-contact\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-leasing-contact\",\n    \"name\": \"Oakfield Leasing Office\",\n    \"attrs\": {\n      \"email\": \"leasing@oakfield.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0684477,
+  "duration_ms": 29927,
+  "duration_api_ms": 29069,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18347,
+   "cache_read_input_tokens": 139927,
+   "output_tokens": 3547,
+   "output_tokens_details": {
+    "thinking_tokens": 3028
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18347,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2999,
+     "cache_read_input_tokens": 52682,
+     "cache_creation_input_tokens": 651,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 651
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 3547,
+    "cacheReadInputTokens": 139927,
+    "cacheCreationInputTokens": 18347,
+    "webSearchRequests": 0,
+    "costUSD": 0.0684477,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3028,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

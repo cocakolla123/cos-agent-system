@@ -1,0 +1,13 @@
+{
+ "body": "Save your seat for Thursday's webinar. Register today.",
+ "connector": "email",
+ "date": "2026-09-25T15:00:00Z",
+ "folder": "inbox",
+ "from": "The Weekly Byte <digest@weeklybyte.example>",
+ "id": "em-003",
+ "subject": "Webinar: scaling vector search",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

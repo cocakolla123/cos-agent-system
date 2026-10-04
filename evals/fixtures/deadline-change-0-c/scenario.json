@@ -1,0 +1,18 @@
+{
+ "category": "deadline_change",
+ "id": "deadline-change-0-c",
+ "note": "deadline moved later in the same thread; newest wins (cast rotation)",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "eastgate": "school",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quantaleaf": "employer",
+  "redcedar": "freelance"
+ }
+}

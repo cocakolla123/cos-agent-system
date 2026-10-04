@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2-b",
+ "started": "2026-10-04T00:40:27.584066+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "All three sources read. Here are the normalized records:\n\n```json\n[\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-quarterly-review\",\n    \"name\": \"Bluefern quarterly review\",\n    \"attrs\": {\n      \"start\": \"2026-10-16T17:00:00Z\",\n      \"stale_start\": \"2026-10-09T17:00:00Z\",\n      \"conflict\": \"Calendar invite (cal-001, created 2026-09-10) still shows 2026-10-09T17:00:00Z; Kai Morimoto stated on 2026-09-29 in #bluefern-eng that the review moved to Oct 16, same time. Newest statement wins \u2014 the invite is stale and not yet updated.\",\n      \"attendees\": [\"alex.rivera@mailbox.example\", \"kai@bluefern.example\"],\n      \"organizer_ref\": \"kai@bluefern.example\",\n      \"refs\": [\"#bluefern-eng\"],\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"bluefern-eng\", \"to_workspace\": \"bluefern\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-quarterly-metrics-deck\",\n    \"name\": \"Finish the metrics deck for the Bluefern quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"kai@bluefern.example\",\n      \"note\": \"Kai asked for the deck 'by then', where 'then' is the rescheduled review date of Oct 16 (sl-002, 2026-09-29) \u2014 not the Oct 9 date still on the stale calendar invite (cal-001).\",\n      \"refs\": [\"bluefern-quarterly-review\"],\n      \"evidence\": [\"sl-002\", \"cal-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"bluefern-quarterly-review\", \"to_workspace\": \"bluefern\", \"type\": \"deliverable_for\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-quarterly-review-invite-stale\",\n    \"name\": \"Calendar invite for the Bluefern quarterly review still shows the old Oct 9 date\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Kai Morimoto (kai@bluefern.example) \u2014 organizer of the calendar invite\",\n      \"note\": \"Reschedule to Oct 16 was announced in Slack only; the invite was never updated. Next move is the organizer's, but worth a confirmation message to Kai so the invite matches the stated date.\",\n      \"refs\": [\"bluefern-quarterly-review\"],\n      \"evidence\": [\"sl-002\", \"cal-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.65,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"bluefern-quarterly-review\", \"to_workspace\": \"bluefern\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"org\": \"Bluefern\",\n      \"role_hint\": \"Bluefern-side counterpart \u2014 attends the quarterly review and requested the metrics deck\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-eng\",\n    \"name\": \"#bluefern-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weeklybyte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte digest)\",\n    \"attrs\": {\n      \"doc_type\": \"newsletter-digest\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"received\": \"2026-09-25\",\n      \"thread_ref\": \"th-004\",\n      \"actionable\": false,\n      \"note\": \"Third-party newsletter, explicitly 'no action needed' \u2014 informational only, no obligation on the user. Workspace is unattributed in the source; filed personal as inbound subscription mail.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.5,\n    \"edges\": []\n  }\n]\n```\n\nTwo notes on judgment calls in there, since they're the parts that could reasonably go another way:\n\n- **The date conflict** resolved to **Oct 16**. `sl-002` (2026-09-29) is newer than `cal-001` (created 2026-09-10) and explicitly supersedes it, so the deck's `due` is `2026-10-16`. I kept the stale Oct 9 value on the Meeting as `stale_start` rather than discarding it, since the unupdated invite is itself a live problem.\n- **em-003 produced no Action** \u2014 a vendor digest that says \"no action needed\" fails the standing test. I still emitted it as a Document so the item isn't silently dropped, at low confidence because no source attributes it to a workspace.",
+  "total_cost_usd": 0.5294685,
+  "duration_ms": 41989,
+  "duration_api_ms": 39585,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30167,
+   "cache_read_input_tokens": 288147,
+   "output_tokens": 3347,
+   "output_tokens_details": {
+    "thinking_tokens": 655
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30167,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2807,
+     "cache_read_input_tokens": 63831,
+     "cache_creation_input_tokens": 918,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 918
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 3347,
+    "cacheReadInputTokens": 288147,
+    "cacheCreationInputTokens": 30167,
+    "webSearchRequests": 0,
+    "costUSD": 0.5294685,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 655,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

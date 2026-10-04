@@ -1,0 +1,8 @@
+{
+ "channel": "#api-platform",
+ "connector": "slack",
+ "date": "2026-09-29T11:30:00Z",
+ "id": "sl-002",
+ "text": "@alex reminder on QL-214 \u2014 rate-limit docs update, due Oct 8.",
+ "user": "Lena Frisk <lena.frisk@quantaleaf.example>"
+}

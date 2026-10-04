@@ -1,0 +1,13 @@
+{
+ "body": "I requested an enrollment verification letter two weeks ago for my visa renewal \u2014 could you confirm when it will be issued?",
+ "connector": "email",
+ "date": "2026-09-26T09:00:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-001",
+ "subject": "Enrollment verification letter",
+ "thread_id": "th-bl2",
+ "to": [
+  "registrar@eastgate.example"
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2",
+ "started": "2026-10-04T00:32:38.116900+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"reply-lease-renewal-intent-unit-2a\",\n    \"name\": \"Reply to Oakfield Property stating whether you intend to renew the lease on unit 2A\",\n    \"attrs\": {\n      \"due\": \"2026-10-12\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"needs_outbound_reply\": true,\n      \"detail\": \"Lease on unit 2A ends 2026-11-30; landlord asked for a reply stating renewal intent by 2026-10-12.\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"oakfield-property-leasing\", \"type\": \"counterparty\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-property-leasing\",\n    \"name\": \"Oakfield Property (leasing)\",\n    \"attrs\": {\n      \"email\": \"leasing@oakfield.example\",\n      \"role\": \"landlord / property management\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-release-notes-platform-8-3\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly no action needed.\",\n      \"actionable\": false,\n      \"refs\": [\"th-004\"],\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.8385395,
+  "duration_ms": 28716,
+  "duration_api_ms": 27533,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 64157,
+   "cache_read_input_tokens": 316269,
+   "output_tokens": 1551,
+   "output_tokens_details": {
+    "thinking_tokens": 424
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 64157,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1133,
+     "cache_read_input_tokens": 63824,
+     "cache_creation_input_tokens": 333,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 333
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1551,
+    "cacheReadInputTokens": 316269,
+    "cacheCreationInputTokens": 64157,
+    "webSearchRequests": 0,
+    "costUSD": 0.8385395,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 424,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

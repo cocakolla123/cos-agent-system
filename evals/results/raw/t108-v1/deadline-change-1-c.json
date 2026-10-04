@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1-c",
+ "started": "2026-10-04T00:34:31.766265+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"calibration-write-up\",\n    \"name\": \"Deliver the calibration write-up to Mara Quint\",\n    \"attrs\": {\n      \"due\": \"2026-09-30\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"notes\": \"Deadline moved up from Oct 2 to Sep 30 (em-002) because the review board meets early; newest statement wins. Past due as of 2026-10-01 with no source showing it satisfied.\",\n      \"refs\": [\n        \"th-dc1\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"mara-quint\",\n        \"type\": \"requested_by\"\n      },\n      {\n        \"to_kind\": \"Document\",\n        \"to_key\": \"calibration-write-up-doc\",\n        \"type\": \"delivers\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Freelance client contact who sets the calibration write-up deadline\",\n      \"refs\": [\n        \"th-dc1\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"calibration-write-up-doc\",\n    \"name\": \"Calibration write-up\",\n    \"attrs\": {\n      \"status\": \"not delivered in any source\",\n      \"due\": \"2026-09-30\",\n      \"audience\": \"review board\",\n      \"refs\": [\n        \"th-dc1\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"mara-quint\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5109535,
+  "duration_ms": 21327,
+  "duration_api_ms": 20220,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29652,
+   "cache_read_input_tokens": 351147,
+   "output_tokens": 1552,
+   "output_tokens_details": {
+    "thinking_tokens": 249
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29652,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1053,
+     "cache_read_input_tokens": 63891,
+     "cache_creation_input_tokens": 343,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 343
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1552,
+    "cacheReadInputTokens": 351147,
+    "cacheCreationInputTokens": 29652,
+    "webSearchRequests": 0,
+    "costUSD": 0.5109535,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 249,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

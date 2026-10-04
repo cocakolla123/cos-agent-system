@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1-c",
+ "started": "2026-10-04T00:41:58.054018+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"send-field-test-notes-mara-quint\",\n    \"name\": \"Send field test notes to Mara Quint\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"description\": \"Mara Quint asked for the field test notes by Oct 6 so she can fold them into the report.\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"send-resume-mara-quint-copperline-ai-intro\",\n    \"name\": \"Send current resume to Mara Quint for Copperline AI intro\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"description\": \"Mara Quint offered an intro to a friend at Copperline AI hiring a controls engineer; she needs Alex's current resume by Friday Oct 3 to pass it along.\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"company\": \"Copperline AI\",\n      \"role\": \"Controls Engineer\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"th-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"job-search\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Freelance client contact (Red Cedar)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Referral contact offering a Copperline AI intro\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.48715349999999996,
+  "duration_ms": 30620,
+  "duration_api_ms": 28537,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29777,
+   "cache_read_input_tokens": 287967,
+   "output_tokens": 1814,
+   "output_tokens_details": {
+    "thinking_tokens": 312
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29777,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1345,
+     "cache_read_input_tokens": 63650,
+     "cache_creation_input_tokens": 709,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 709
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1814,
+    "cacheReadInputTokens": 287967,
+    "cacheCreationInputTokens": 29777,
+    "webSearchRequests": 0,
+    "costUSD": 0.48715349999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 312,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

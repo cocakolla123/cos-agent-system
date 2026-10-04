@@ -1,0 +1,13 @@
+{
+ "body": "FYI \u2014 the platform team shipped 8.3: faster cold starts, new audit log filters. No action needed.",
+ "connector": "email",
+ "date": "2026-09-25T11:05:00Z",
+ "folder": "inbox",
+ "from": "The Weekly Byte <digest@weeklybyte.example>",
+ "id": "em-005",
+ "subject": "Release notes: Platform 8.3",
+ "thread_id": "th-006",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "renewal",
+   "decision"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

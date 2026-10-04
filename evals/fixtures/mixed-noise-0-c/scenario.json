@@ -1,0 +1,18 @@
+{
+ "category": "mixed_noise",
+ "id": "mixed-noise-0-c",
+ "note": "one real commitment under four noise items (cast rotation)",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "eastgate": "school",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quantaleaf": "employer",
+  "redcedar": "freelance"
+ }
+}

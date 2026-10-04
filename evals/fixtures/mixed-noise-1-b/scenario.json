@@ -1,0 +1,18 @@
+{
+ "category": "mixed_noise",
+ "id": "mixed-noise-1-b",
+ "note": "a bill with a date among newsletters (cast rotation)",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "bluefern": "freelance",
+  "helixworks": "employer",
+  "job-search": "job-search",
+  "lakemont": "school",
+  "personal": "personal"
+ }
+}

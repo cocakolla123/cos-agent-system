@@ -1,0 +1,26 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "omar.haddad",
+   "due": "2026-10-06",
+   "gist": [
+    "revised",
+    "onboarding",
+    "doc"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001",
+    "em-002"
+   ],
+   "workspace": "quantaleaf"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

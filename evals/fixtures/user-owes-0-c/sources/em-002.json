@@ -1,0 +1,13 @@
+{
+ "body": "Yep, on it \u2014 you'll have the revised doc before Oct 6.",
+ "connector": "email",
+ "date": "2026-09-26T17:30:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-002",
+ "subject": "Re: Onboarding doc revision",
+ "thread_id": "th-uo0",
+ "to": [
+  "omar.haddad@quantaleaf.example"
+ ]
+}

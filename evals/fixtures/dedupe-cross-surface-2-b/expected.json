@@ -1,0 +1,41 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "adaeze.osei",
+   "due": "2026-10-13",
+   "gist": [
+    "milestone",
+    "pipeline",
+    "demo"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001",
+    "sl-003",
+    "doc-004"
+   ],
+   "workspace": "lakemont"
+  }
+ ],
+ "dedupe": [
+  {
+   "gist": [
+    "milestone",
+    "demo"
+   ],
+   "max": 1
+  }
+ ],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": [
+  [
+   "em-001",
+   "sl-003",
+   "doc-004"
+  ]
+ ]
+}

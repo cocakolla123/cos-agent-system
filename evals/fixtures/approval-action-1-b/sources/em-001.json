@@ -1,0 +1,13 @@
+{
+ "body": "We'd like to add the thermal test bench to the SOW. Please confirm in writing that you accept the scope change by Oct 6 so I can issue the amended PO.",
+ "connector": "email",
+ "date": "2026-09-29T14:00:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-001",
+ "subject": "Scope change \u2014 confirm",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

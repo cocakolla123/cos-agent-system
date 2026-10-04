@@ -1,0 +1,18 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "premium",
+   "upgrade"
+  ],
+  [
+   "offer",
+   "expires"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

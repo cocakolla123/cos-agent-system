@@ -1,0 +1,13 @@
+{
+ "body": "Join 5,000 engineers at DevWorld. Early-bird pricing ends Friday. Register now!",
+ "connector": "email",
+ "date": "2026-09-24T15:00:00Z",
+ "folder": "inbox",
+ "from": "The Weekly Byte <digest@weeklybyte.example>",
+ "id": "em-001",
+ "subject": "DevWorld 2026 \u2014 early bird ends Friday",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

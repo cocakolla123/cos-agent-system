@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1-b",
+ "started": "2026-10-04T00:46:07.572520+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Repository\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"repo/helixworks/ingest\",\n    \"name\": \"helixworks/ingest\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"PR\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"pr/helixworks/ingest/412\",\n    \"name\": \"Add retry budget to ingest workers\",\n    \"attrs\": {\n      \"number\": 412,\n      \"state\": \"open\",\n      \"repo\": \"helixworks/ingest\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Repository\",\n        \"to_key\": \"repo/helixworks/ingest\",\n        \"type\": \"in_repo\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"person/nina-laurent\",\n        \"type\": \"waiting_on_review\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"person/nina-laurent\",\n    \"name\": \"Nina Laurent\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"person/rosa-alvarez\",\n    \"name\": \"Rosa Alvarez\",\n    \"attrs\": {\n      \"email\": \"rosa.alvarez@helixworks.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"action/pr-412-review-follow-up\",\n    \"name\": \"Follow up with Nina Laurent on PR 412 review\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Nina Laurent\",\n      \"evidence\": [\"pr-001\", \"sl-002\"],\n      \"refs\": [\"pr/helixworks/ingest/412\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"person/nina-laurent\",\n        \"type\": \"blocked_on\"\n      },\n      {\n        \"to_kind\": \"PR\",\n        \"to_key\": \"pr/helixworks/ingest/412\",\n        \"type\": \"related_to\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0788768,
+  "duration_ms": 53340,
+  "duration_api_ms": 52302,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18210,
+   "cache_read_input_tokens": 139958,
+   "output_tokens": 5687,
+   "output_tokens_details": {
+    "thinking_tokens": 4736
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18210,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 5226,
+     "cache_read_input_tokens": 52660,
+     "cache_creation_input_tokens": 536,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 536
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 5687,
+    "cacheReadInputTokens": 139958,
+    "cacheCreationInputTokens": 18210,
+    "webSearchRequests": 0,
+    "costUSD": 0.0788768,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 4736,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

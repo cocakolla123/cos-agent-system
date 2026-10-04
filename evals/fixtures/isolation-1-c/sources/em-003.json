@@ -1,0 +1,13 @@
+{
+ "body": "Separately from our project: a friend at Copperline AI is hiring a controls engineer. If you want an intro, send me your current resume by Friday Oct 3 and I'll pass it along.",
+ "connector": "email",
+ "date": "2026-09-30T19:00:00Z",
+ "folder": "inbox",
+ "from": "Mara Quint <mara@redcedar.example>",
+ "id": "em-003",
+ "subject": "Intro \u2014 Copperline AI role",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

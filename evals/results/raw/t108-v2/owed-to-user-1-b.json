@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1-b",
+ "started": "2026-10-04T00:43:41.114827+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"stonegate-security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund for unit 4B \u2014 awaiting confirmation from Stonegate leasing\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"leasing@stonegate.example (Stonegate leasing office)\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\", \"unit 4B\"],\n      \"detail\": \"Alex moved out of unit 4B on 2026-08-31 and emailed Stonegate leasing on 2026-09-18 asking when the security deposit refund would be sent. No reply in the sources as of 2026-10-01 \u2014 the next move is the leasing office's.\",\n      \"asked_on\": \"2026-09-18\",\n      \"moved_out\": \"2026-08-31\",\n      \"owed_to_user\": true\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"stonegate-leasing\", \"to_workspace\": \"personal\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"stonegate-leasing\",\n    \"name\": \"Stonegate Leasing Office\",\n    \"attrs\": {\n      \"email\": \"leasing@stonegate.example\",\n      \"role\": \"landlord/leasing contact for unit 4B\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5082465,
+  "duration_ms": 20942,
+  "duration_api_ms": 19473,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29906,
+   "cache_read_input_tokens": 352303,
+   "output_tokens": 1319,
+   "output_tokens_details": {
+    "thinking_tokens": 262
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29906,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 819,
+     "cache_read_input_tokens": 64161,
+     "cache_creation_input_tokens": 327,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 327
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1319,
+    "cacheReadInputTokens": 352303,
+    "cacheCreationInputTokens": 29906,
+    "webSearchRequests": 0,
+    "costUSD": 0.5082465,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 262,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

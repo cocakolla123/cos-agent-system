@@ -1,0 +1,18 @@
+{
+ "category": "no_invention",
+ "id": "no-invention-1-c",
+ "note": "a dated promo is still not an obligation (cast rotation)",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "eastgate": "school",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quantaleaf": "employer",
+  "redcedar": "freelance"
+ }
+}

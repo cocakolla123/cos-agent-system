@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2",
+ "started": "2026-10-04T00:33:52.223459+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"freelance\",\n    \"key\": \"crestline-quarterly-review\",\n    \"name\": \"Crestline quarterly review\",\n    \"attrs\": {\n      \"start\": \"2026-10-16T17:00:00Z\",\n      \"original_start\": \"2026-10-09T17:00:00Z\",\n      \"rescheduled\": true,\n      \"stale_invite\": \"Calendar invite cal-001 still shows 2026-10-09T17:00:00Z; Dana's 2026-09-29 Slack message supersedes it (moved to Oct 16, same time) and explicitly says to ignore the invite. Calendar has not been updated.\",\n      \"attendees\": [\n        \"alex.rivera@mailbox.example\",\n        \"dana@crestline.example\"\n      ],\n      \"organizer\": \"dana@crestline.example\",\n      \"client\": \"Crestline\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline\", \"type\": \"belongs_to\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"crestline-metrics-deck\",\n    \"name\": \"Finish the Crestline metrics deck for the quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"dana@crestline.example\",\n      \"note\": \"Dana asked for the deck 'by then', i.e. by the rescheduled review date. The newest stated date (Oct 16) wins over the stale Oct 9 calendar invite.\",\n      \"refs\": [\"crestline-quarterly-review\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"crestline-quarterly-review\", \"type\": \"prepares_for\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline\", \"type\": \"belongs_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"crestline-quarterly-review-reschedule-calendar\",\n    \"name\": \"Update the Crestline quarterly review invite from Oct 9 to Oct 16\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"dana@crestline.example\",\n      \"note\": \"Dana is the organizer and announced the move in Slack but has not updated the calendar invite, which still reads 2026-10-09T17:00:00Z. The corrected invite is the organizer's move; confirming the new time back to Dana would be an outbound reply.\",\n      \"refs\": [\"crestline-quarterly-review\"],\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.78,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"crestline-quarterly-review\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"freelance\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"role\": \"client contact / review organizer\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline\", \"type\": \"works_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"freelance\",\n    \"key\": \"crestline\",\n    \"name\": \"Crestline\",\n    \"attrs\": {\n      \"kind\": \"freelance client\",\n      \"cadence\": \"quarterly review\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"freelance\",\n    \"key\": \"crestline-eng\",\n    \"name\": \"#crestline-eng\",\n    \"attrs\": {\n      \"connector\": \"slack\",\n      \"participants\": [\"dana@crestline.example\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline\", \"type\": \"belongs_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"type\": \"newsletter digest\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters.\",\n      \"actionable\": false,\n      \"note\": \"Informational digest, states 'no action needed' \u2014 no obligation on the user.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5852605,
+  "duration_ms": 38899,
+  "duration_api_ms": 37283,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 29911,
+   "cache_read_input_tokens": 415261,
+   "output_tokens": 3138,
+   "output_tokens_details": {
+    "thinking_tokens": 587
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29911,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2599,
+     "cache_read_input_tokens": 64197,
+     "cache_creation_input_tokens": 296,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 296
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 3138,
+    "cacheReadInputTokens": 415261,
+    "cacheCreationInputTokens": 29911,
+    "webSearchRequests": 0,
+    "costUSD": 0.5852605,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 587,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "body": "Our earlier notice listed Oct 15; the correct deadline for registration forms is Oct 8.",
+ "connector": "email",
+ "date": "2026-09-22T09:00:00Z",
+ "folder": "inbox",
+ "from": "Lakemont Registrar <registrar@lakemont.example>",
+ "id": "em-002",
+ "subject": "Corrected: spring registration deadline",
+ "thread_id": "th-dc2",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

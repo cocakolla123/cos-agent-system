@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2-c",
+ "started": "2026-10-04T00:40:33.517260+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\": \"Meeting\", \"workspace\": \"redcedar\", \"key\": \"redcedar-quarterly-review\", \"name\": \"Redcedar quarterly review\", \"attrs\": {\"start\": \"2026-10-16T17:00:00Z\", \"original_start\": \"2026-10-09T17:00:00Z\", \"rescheduled\": true, \"reschedule_note\": \"Calendar invite (cal-001) still shows 2026-10-09T17:00:00Z; Mara Quint stated on 2026-09-29 in #redcedar-eng that the review moved to Oct 16, same time, and to ignore the stale invite. Newest statement wins.\", \"attendees\": [\"alex.rivera@mailbox.example\", \"mara@redcedar.example\"], \"organizer\": \"mara@redcedar.example\", \"channel\": \"#redcedar-eng\", \"evidence\": [\"cal-001\", \"sl-002\"], \"refs\": [\"cal-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"attendee\"}, {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"to_workspace\": \"redcedar\", \"type\": \"discussed_in\"}]},\n\n{\"kind\": \"Action\", \"workspace\": \"redcedar\", \"key\": \"redcedar-metrics-deck\", \"name\": \"Finish the metrics deck for the Redcedar quarterly review\", \"attrs\": {\"due\": \"2026-10-16\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"requested_by\": \"mara@redcedar.example\", \"notes\": \"Mara asked for the metrics deck to be done by the quarterly review. The deadline tracks the rescheduled meeting date (Oct 16), not the stale calendar invite (Oct 9).\", \"evidence\": [\"sl-002\"], \"refs\": [\"cal-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Meeting\", \"to_key\": \"redcedar-quarterly-review\", \"to_workspace\": \"redcedar\", \"type\": \"prepares_for\"}, {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"requested_by\"}]},\n\n{\"kind\": \"Person\", \"workspace\": \"redcedar\", \"key\": \"mara-quint\", \"name\": \"Mara Quint\", \"attrs\": {\"email\": \"mara@redcedar.example\", \"role\": \"Redcedar client contact / quarterly review organizer\", \"channels\": [\"#redcedar-eng\"], \"evidence\": [\"cal-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n\n{\"kind\": \"Channel\", \"workspace\": \"redcedar\", \"key\": \"redcedar-eng\", \"name\": \"#redcedar-eng\", \"attrs\": {\"platform\": \"slack\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []},\n\n{\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weeklybyte-platform-8-3-release-notes\", \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\", \"attrs\": {\"kind_detail\": \"newsletter digest\", \"from\": \"digest@weeklybyte.example\", \"date\": \"2026-09-25\", \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly states no action needed.\", \"actionable\": false, \"thread_id\": \"th-004\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.5, \"edges\": []}\n]",
+  "total_cost_usd": 0.5085605,
+  "duration_ms": 33932,
+  "duration_api_ms": 32219,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30166,
+   "cache_read_input_tokens": 288151,
+   "output_tokens": 2511,
+   "output_tokens_details": {
+    "thinking_tokens": 679
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30166,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1934,
+     "cache_read_input_tokens": 63832,
+     "cache_creation_input_tokens": 916,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 916
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2511,
+    "cacheReadInputTokens": 288151,
+    "cacheCreationInputTokens": 30166,
+    "webSearchRequests": 0,
+    "costUSD": 0.5085605,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 679,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

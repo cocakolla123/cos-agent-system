@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1-c",
+ "started": "2026-10-04T00:33:21.744737+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Repository\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"quantaleaf-ingest\",\n    \"name\": \"quantaleaf/ingest\",\n    \"attrs\": {\n      \"refs\": [\"pr-412\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"PR\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"pr-412-quantaleaf-ingest\",\n    \"name\": \"PR #412 \u2014 Add retry budget to ingest workers\",\n    \"attrs\": {\n      \"number\": 412,\n      \"repo\": \"quantaleaf/ingest\",\n      \"state\": \"open\",\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"opened_or_seen\": \"2026-09-22\",\n      \"ci\": \"green\",\n      \"review_requested_from\": \"Devon Price\",\n      \"review_requested_approx\": \"2026-09-13\",\n      \"review_status\": \"no review yet\",\n      \"evidence\": [\"pr-001\", \"sl-002\"],\n      \"refs\": [\"quantaleaf-ingest\", \"#eng-ingest\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Repository\", \"to_key\": \"quantaleaf-ingest\", \"type\": \"belongs_to\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"authored_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"devon-price\", \"type\": \"review_requested_from\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"user\",\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"devon-price\",\n    \"name\": \"Devon Price\",\n    \"attrs\": {\n      \"role\": \"reviewer on PR 412\",\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"PR\", \"to_key\": \"pr-412-quantaleaf-ingest\", \"type\": \"reviewer_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"omar-haddad\",\n    \"name\": \"Omar Haddad\",\n    \"attrs\": {\n      \"email\": \"omar.haddad@quantaleaf.example\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"member_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"eng-ingest\",\n    \"name\": \"#eng-ingest\",\n    \"attrs\": {\n      \"connector\": \"slack\",\n      \"evidence\": [\"sl-002\"],\n      \"refs\": [\"pr-412-quantaleaf-ingest\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"get-review-on-pr-412\",\n    \"name\": \"Get Devon Price's review on PR 412 (retry budget to ingest workers)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Devon Price\",\n      \"detail\": \"Review was requested from Devon Price ~9 days before 2026-09-22 and still has no review; CI is green, so the PR is waiting only on him. Omar Haddad asked in #eng-ingest on 2026-09-30 whether Devon's review is the blocker and suggested pinging him again \u2014 next move is a follow-up ping to Devon.\",\n      \"refs\": [\"pr-412-quantaleaf-ingest\", \"quantaleaf-ingest\", \"#eng-ingest\"],\n      \"evidence\": [\"pr-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"PR\", \"to_key\": \"pr-412-quantaleaf-ingest\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"devon-price\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quantaleaf\",\n    \"key\": \"reply-omar-pr-412-status\",\n    \"name\": \"Reply to Omar Haddad in #eng-ingest on what's holding PR 412\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"detail\": \"Omar asked directly on 2026-09-30 what is blocking PR 412 and whether it is Devon's review. Owes an answer: yes \u2014 review requested, none yet, CI green; following up with Devon.\",\n      \"refs\": [\"pr-412-quantaleaf-ingest\", \"#eng-ingest\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"omar-haddad\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"PR\", \"to_key\": \"pr-412-quantaleaf-ingest\", \"type\": \"about\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"in_channel\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.508383,
+  "duration_ms": 31958,
+  "duration_api_ms": 30565,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29523,
+   "cache_read_input_tokens": 287056,
+   "output_tokens": 2783,
+   "output_tokens_details": {
+    "thinking_tokens": 294
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29523,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2309,
+     "cache_read_input_tokens": 63526,
+     "cache_creation_input_tokens": 579,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 579
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2783,
+    "cacheReadInputTokens": 287056,
+    "cacheCreationInputTokens": 29523,
+    "webSearchRequests": 0,
+    "costUSD": 0.508383,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 294,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

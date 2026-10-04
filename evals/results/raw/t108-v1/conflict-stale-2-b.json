@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2-b",
+ "started": "2026-10-04T00:33:54.588635+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\": \"Person\", \"workspace\": \"bluefern\", \"key\": \"kai-morimoto\", \"name\": \"Kai Morimoto\", \"attrs\": {\"email\": \"kai@bluefern.example\", \"org\": \"Bluefern\", \"evidence\": [\"cal-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Meeting\", \"to_key\": \"bluefern-quarterly-review\", \"type\": \"attends\"}, {\"to_kind\": \"Channel\", \"to_key\": \"bluefern-eng\", \"type\": \"member_of\"}]},\n{\"kind\": \"Channel\", \"workspace\": \"bluefern\", \"key\": \"bluefern-eng\", \"name\": \"#bluefern-eng\", \"attrs\": {\"connector\": \"slack\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n{\"kind\": \"Meeting\", \"workspace\": \"bluefern\", \"key\": \"bluefern-quarterly-review\", \"name\": \"Bluefern quarterly review\", \"attrs\": {\"start\": \"2026-10-16T17:00:00Z\", \"original_start\": \"2026-10-09T17:00:00Z\", \"rescheduled\": true, \"stale_source\": \"cal-001\", \"note\": \"Calendar invite (cal-001) still shows Oct 9; Kai's Slack message on 2026-09-29 (sl-002) is newer and moves it to Oct 16, same time. Newest statement wins.\", \"attendees\": [\"alex.rivera@mailbox.example\", \"kai@bluefern.example\"], \"evidence\": [\"cal-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"organized_by\"}, {\"to_kind\": \"Channel\", \"to_key\": \"bluefern-eng\", \"type\": \"discussed_in\"}]},\n{\"kind\": \"Action\", \"workspace\": \"bluefern\", \"key\": \"metrics-deck-for-bluefern-quarterly-review\", \"name\": \"Finish the metrics deck for the Bluefern quarterly review\", \"attrs\": {\"due\": \"2026-10-16\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"requested_by\": \"kai@bluefern.example\", \"refs\": [\"bluefern-quarterly-review\"], \"note\": \"Due 'by then' = the rescheduled review date of Oct 16, not the stale calendar date of Oct 9.\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Meeting\", \"to_key\": \"bluefern-quarterly-review\", \"type\": \"due_for\"}, {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"bluefern\", \"key\": \"confirm-quarterly-review-reschedule-oct-16\", \"name\": \"Confirm the quarterly review move to Oct 16 and get the calendar invite corrected\", \"attrs\": {\"priority\": \"medium\", \"blocked_on\": \"kai@bluefern.example\", \"refs\": [\"bluefern-quarterly-review\"], \"note\": \"Calendar invite cal-001 still holds the stale Oct 9 slot; the correction exists only in Slack. Needs an outbound confirmation reply to Kai, who owns the invite.\", \"evidence\": [\"cal-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.65, \"edges\": [{\"to_kind\": \"Meeting\", \"to_key\": \"bluefern-quarterly-review\", \"type\": \"about\"}, {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"blocked_on\"}]},\n{\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weekly-byte-platform-8-3-release-notes\", \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\", \"attrs\": {\"from\": \"digest@weeklybyte.example\", \"date\": \"2026-09-25\", \"thread_id\": \"th-004\", \"type\": \"newsletter\", \"actionable\": false, \"note\": \"Informational digest, explicitly 'no action needed' \u2014 not an obligation.\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.6, \"edges\": []}\n]",
+  "total_cost_usd": 0.5486835,
+  "duration_ms": 33970,
+  "duration_api_ms": 31380,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30769,
+   "cache_read_input_tokens": 351767,
+   "output_tokens": 2602,
+   "output_tokens_details": {
+    "thinking_tokens": 474
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30769,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1493,
+     "cache_read_input_tokens": 64525,
+     "cache_creation_input_tokens": 826,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 826
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 2602,
+    "cacheReadInputTokens": 351767,
+    "cacheCreationInputTokens": 30769,
+    "webSearchRequests": 0,
+    "costUSD": 0.5486835,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 474,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

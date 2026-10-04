@@ -1,0 +1,13 @@
+{
+ "body": "Change of plan \u2014 the review board meets early, so we need the write-up by Sep 30 instead of Oct 2. Sorry for the crunch.",
+ "connector": "email",
+ "date": "2026-09-26T10:15:00Z",
+ "folder": "inbox",
+ "from": "Mara Quint <mara@redcedar.example>",
+ "id": "em-002",
+ "subject": "Re: Calibration write-up",
+ "thread_id": "th-dc1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

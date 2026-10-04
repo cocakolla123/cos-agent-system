@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-1-b",
+ "started": "2026-10-04T00:44:08.025075+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"invoice-2026-08-payment\",\n    \"name\": \"Payment for August 2026 invoice (invoice 2026-08)\",\n    \"attrs\": {\n      \"status\": \"paid\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"invoice-2026-08\"],\n      \"paid_on\": \"2026-09-12\",\n      \"payment_method\": \"ACH\",\n      \"counterparty\": \"Kai Morimoto\",\n      \"notes\": \"Receipt of the August invoice was confirmed on 2026-09-05 (em-001) and payment was sent via ACH on 2026-09-12 (em-002), so the obligation owed to the user is satisfied. No deadline was stated.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"owed_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"invoice-2026-08\", \"to_workspace\": \"bluefern\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"org\": \"Bluefern\",\n      \"role\": \"client contact (invoicing/payments)\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"invoice-2026-08\",\n    \"name\": \"Invoice 2026-08 (August 2026)\",\n    \"attrs\": {\n      \"doc_type\": \"invoice\",\n      \"period\": \"2026-08\",\n      \"received_confirmed_on\": \"2026-09-05\",\n      \"paid_on\": \"2026-09-12\",\n      \"payment_method\": \"ACH\",\n      \"refs\": [\"th-sa1\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"received_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.478329,
+  "duration_ms": 19139,
+  "duration_api_ms": 17811,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29847,
+   "cache_read_input_tokens": 288068,
+   "output_tokens": 1431,
+   "output_tokens_details": {
+    "thinking_tokens": 99
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29847,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 954,
+     "cache_read_input_tokens": 63779,
+     "cache_creation_input_tokens": 650,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 650
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1431,
+    "cacheReadInputTokens": 288068,
+    "cacheCreationInputTokens": 29847,
+    "webSearchRequests": 0,
+    "costUSD": 0.478329,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 99,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

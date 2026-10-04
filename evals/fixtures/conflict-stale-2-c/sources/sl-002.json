@@ -1,0 +1,8 @@
+{
+ "channel": "#redcedar-eng",
+ "connector": "slack",
+ "date": "2026-09-29T18:00:00Z",
+ "id": "sl-002",
+ "text": "FYI the quarterly review on the calendar moved \u2014 it's now Oct 16, same time. Calendar invite still shows Oct 9; ignore that. Please have the metrics deck done by then.",
+ "user": "Mara Quint <mara@redcedar.example>"
+}

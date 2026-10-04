@@ -1,0 +1,13 @@
+{
+ "body": "You're on call starting Monday \u2014 write the handoff notes from this rotation and post them by Oct 5.",
+ "connector": "email",
+ "date": "2026-09-30T17:00:00Z",
+ "folder": "inbox",
+ "from": "Lena Frisk <lena.frisk@quantaleaf.example>",
+ "id": "em-001",
+ "subject": "Oncall handoff notes",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

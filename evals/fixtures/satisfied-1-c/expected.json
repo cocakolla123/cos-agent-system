@@ -1,0 +1,14 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "august",
+   "invoice"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

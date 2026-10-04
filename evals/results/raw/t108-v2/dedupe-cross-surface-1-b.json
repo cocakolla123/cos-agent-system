@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1-b",
+ "started": "2026-10-04T00:41:10.234977+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bf-77-sensor-calibration-report\",\n    \"name\": \"Deliver the BF-77 sensor calibration report\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"refs\": [\"BF-77\"],\n      \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"],\n      \"notes\": \"Requested by Kai Morimoto by email (2026-09-24) and restated in #bluefern-eng (2026-09-28); same deadline both times. Template is attached to ticket BF-77, which is assigned to the user and still open.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"bf-77\", \"to_workspace\": \"bluefern\", \"type\": \"tracked_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"to_workspace\": \"bluefern\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"bluefern-eng\", \"to_workspace\": \"bluefern\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bf-77\",\n    \"name\": \"BF-77 \u2014 Sensor calibration report\",\n    \"attrs\": {\n      \"ticket_key\": \"BF-77\",\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"created\": \"2026-09-24T09:10:00Z\",\n      \"refs\": [\"BF-77\"],\n      \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"bluefern\", \"type\": \"assigned_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"role\": \"client contact / requester\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"user\",\n      \"evidence\": [\"em-001\", \"tk-004\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-eng\",\n    \"name\": \"#bluefern-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"BF-77\"],\n      \"evidence\": [\"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.490865,
+  "duration_ms": 23068,
+  "duration_api_ms": 21282,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30141,
+   "cache_read_input_tokens": 288210,
+   "output_tokens": 1812,
+   "output_tokens_details": {
+    "thinking_tokens": 118
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30141,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1255,
+     "cache_read_input_tokens": 63853,
+     "cache_creation_input_tokens": 870,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 870
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1812,
+    "cacheReadInputTokens": 288210,
+    "cacheCreationInputTokens": 30141,
+    "webSearchRequests": 0,
+    "costUSD": 0.490865,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 118,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

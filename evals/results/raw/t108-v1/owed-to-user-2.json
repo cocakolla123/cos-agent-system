@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2",
+ "started": "2026-10-04T00:37:15.795246+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"meridian-interview-reschedule-response\",\n    \"name\": \"Awaiting Meridian recruiting reply to interview reschedule request\",\n    \"attrs\": {\n      \"description\": \"Alex asked Meridian recruiting to move the Oct 2 systems interview to later that week and offered to share availability. No reply in the sources as of 2026-10-01 \u2014 the next move is theirs, and the original Oct 2 slot has already passed.\",\n      \"priority\": \"high\",\n      \"blocked_on\": \"recruiting@meridian.example (Meridian recruiting team)\",\n      \"asked_on\": \"2026-09-25\",\n      \"refs\": [\"th-ot2\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"meridian-systems-interview-2026-10-02\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"job-search\",\n    \"key\": \"meridian-systems-interview-2026-10-02\",\n    \"name\": \"Meridian systems interview (Oct 2 slot)\",\n    \"attrs\": {\n      \"scheduled_for\": \"2026-10-02\",\n      \"status\": \"reschedule requested, unconfirmed\",\n      \"counterparty\": \"Meridian\",\n      \"note\": \"Referenced only in email; no calendar item in the sources. Alex requested a move to later that week.\",\n      \"refs\": [\"th-ot2\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"type\": \"organizer\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"meridian-recruiting\",\n    \"name\": \"Meridian recruiting\",\n    \"attrs\": {\n      \"email\": \"recruiting@meridian.example\",\n      \"org\": \"Meridian\",\n      \"role\": \"recruiting contact\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"received\": \"2026-09-29\",\n      \"actionable\": false,\n      \"note\": \"Bulk subscription digest. No obligation on or to the user.\",\n      \"refs\": [\"th-003\"],\n      \"evidence\": [\"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"sent_to\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.49183449999999995,
+  "duration_ms": 25729,
+  "duration_api_ms": 23802,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29741,
+   "cache_read_input_tokens": 287449,
+   "output_tokens": 2026,
+   "output_tokens_details": {
+    "thinking_tokens": 252
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29741,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1550,
+     "cache_read_input_tokens": 63624,
+     "cache_creation_input_tokens": 699,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 699
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2026,
+    "cacheReadInputTokens": 287449,
+    "cacheCreationInputTokens": 29741,
+    "webSearchRequests": 0,
+    "costUSD": 0.49183449999999995,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 252,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

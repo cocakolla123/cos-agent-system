@@ -1,0 +1,13 @@
+{
+ "body": "Alex, the public API rate-limit docs still show the old tiers. Please update the rate-limit docs by Oct 8 \u2014 ticket HW-214 tracks it.",
+ "connector": "email",
+ "date": "2026-09-25T10:00:00Z",
+ "folder": "inbox",
+ "from": "Tomas Vega <tomas.vega@helixworks.example>",
+ "id": "em-001",
+ "subject": "Rate-limit docs",
+ "thread_id": "th-dd0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

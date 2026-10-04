@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2-b",
+ "started": "2026-10-04T00:32:57.716769+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"reply-lease-renewal-intent-unit-2a\",\n    \"name\": \"Reply to Stonegate Property stating whether you intend to renew the lease on unit 2A\",\n    \"attrs\": {\n      \"due\": \"2026-10-12\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"unit-2A\", \"th-002\"],\n      \"notes\": \"Lease on unit 2A ends 2026-11-30; landlord requests a reply stating renewal intent by 2026-10-12. Requires an outbound reply \u2014 draft and queue for approval.\",\n      \"requires_outbound\": true\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"stonegate-leasing\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"email-lease-renewal-intent\", \"type\": \"evidenced_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"stonegate-leasing\",\n    \"name\": \"Stonegate Property (Leasing)\",\n    \"attrs\": {\n      \"email\": \"leasing@stonegate.example\",\n      \"org\": \"Stonegate Property\",\n      \"role\": \"landlord / leasing office\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"email-lease-renewal-intent\",\n    \"name\": \"Lease renewal intent\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"date\": \"2026-09-28T10:00:00Z\",\n      \"from\": \"leasing@stonegate.example\",\n      \"thread_id\": \"th-002\",\n      \"lease_end\": \"2026-11-30\",\n      \"reply_by\": \"2026-10-12\",\n      \"unit\": \"2A\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"stonegate-leasing\", \"type\": \"authored_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weeklybyte-release-notes-platform-8-3\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"date\": \"2026-09-25T11:05:00Z\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"thread_id\": \"th-004\",\n      \"type\": \"newsletter/digest\",\n      \"actionable\": false,\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Source states no action needed.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.48223550000000004,
+  "duration_ms": 23349,
+  "duration_api_ms": 22017,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29573,
+   "cache_read_input_tokens": 287011,
+   "output_tokens": 1718,
+   "output_tokens_details": {
+    "thinking_tokens": 189
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29573,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1233,
+     "cache_read_input_tokens": 63474,
+     "cache_creation_input_tokens": 681,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 681
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1718,
+    "cacheReadInputTokens": 287011,
+    "cacheCreationInputTokens": 29573,
+    "webSearchRequests": 0,
+    "costUSD": 0.48223550000000004,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 189,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

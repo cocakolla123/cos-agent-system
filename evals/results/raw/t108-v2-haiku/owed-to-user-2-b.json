@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2-b",
+ "started": "2026-10-04T00:51:38.980314+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"vectorium-interview-reschedule\",\n    \"name\": \"Receive confirmation from Vectorium for rescheduled interview\",\n    \"attrs\": {\n      \"blocked_on\": \"recruiting-vectorium\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"recruiting-vectorium\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"recruiting-vectorium\",\n    \"name\": \"Vectorium Recruiting\",\n    \"attrs\": {\n      \"email\": \"recruiting@vectorium.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0860582,
+  "duration_ms": 46921,
+  "duration_api_ms": 45819,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 19011,
+   "cache_read_input_tokens": 245842,
+   "output_tokens": 4682,
+   "output_tokens_details": {
+    "thinking_tokens": 3969
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 19011,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3952,
+     "cache_read_input_tokens": 53058,
+     "cache_creation_input_tokens": 939,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 939
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 4682,
+    "cacheReadInputTokens": 245842,
+    "cacheCreationInputTokens": 19011,
+    "webSearchRequests": 0,
+    "costUSD": 0.0860582,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3969,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

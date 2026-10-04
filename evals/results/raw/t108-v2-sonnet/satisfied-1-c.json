@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-1-c",
+ "started": "2026-10-04T00:59:13.810024+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"redcedar\",\n  \"key\": \"mara-quint\",\n  \"name\": \"Mara Quint\",\n  \"attrs\": {\n   \"email\": \"mara@redcedar.example\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": []\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"redcedar\",\n  \"key\": \"redcedar-invoice-2026-08-payment\",\n  \"name\": \"August 2026 invoice to Redcedar \u2014 paid\",\n  \"attrs\": {\n   \"status\": \"paid\",\n   \"priority\": \"low\",\n   \"evidence\": [\"em-001\", \"em-002\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"counterparty\"}\n  ]\n }\n]\n```",
+  "total_cost_usd": 0.18053920000000004,
+  "duration_ms": 13363,
+  "duration_api_ms": 12015,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29614,
+   "cache_read_input_tokens": 269836,
+   "output_tokens": 810,
+   "output_tokens_details": {
+    "thinking_tokens": 169
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29614,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 318,
+     "cache_read_input_tokens": 75175,
+     "cache_creation_input_tokens": 243,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 243
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 810,
+    "cacheReadInputTokens": 269836,
+    "cacheCreationInputTokens": 29614,
+    "webSearchRequests": 0,
+    "costUSD": 0.18053920000000004,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 169,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

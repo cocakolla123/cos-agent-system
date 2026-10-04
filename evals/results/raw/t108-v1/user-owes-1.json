@@ -1,0 +1,64 @@
+{
+ "scenario": "user-owes-1",
+ "started": "2026-10-04T00:38:17.582897+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"crestline\", \"key\": \"crestline-september-invoice-timesheet\", \"name\": \"Send September invoice and signed timesheet to Crestline accounting\", \"attrs\": {\"due\": \"2026-10-03\", \"priority\": \"high\", \"evidence\": [\"em-001\"], \"requested_by\": \"Dana Whitfield <dana@crestline.example>\", \"refs\": [\"th-uo1\"], \"detail\": \"Accounting closes the books Friday; Dana Whitfield asked for the September invoice plus a signed timesheet by Oct 3. No source shows it sent.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}]}, {\"kind\": \"Person\", \"workspace\": \"crestline\", \"key\": \"dana-whitfield\", \"name\": \"Dana Whitfield\", \"attrs\": {\"email\": \"dana@crestline.example\", \"org\": \"Crestline\", \"role\": \"accounting / billing contact\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Document\", \"workspace\": \"crestline\", \"key\": \"crestline-september-invoice\", \"name\": \"September invoice (Crestline)\", \"attrs\": {\"status\": \"requested\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"Action\", \"to_key\": \"crestline-september-invoice-timesheet\", \"type\": \"deliverable_of\"}]}, {\"kind\": \"Document\", \"workspace\": \"crestline\", \"key\": \"crestline-september-timesheet\", \"name\": \"Signed September timesheet (Crestline)\", \"attrs\": {\"status\": \"requested\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"Action\", \"to_key\": \"crestline-september-invoice-timesheet\", \"type\": \"deliverable_of\"}]}]",
+  "total_cost_usd": 0.524891,
+  "duration_ms": 25789,
+  "duration_api_ms": 24399,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30500,
+   "cache_read_input_tokens": 351462,
+   "output_tokens": 1764,
+   "output_tokens_details": {
+    "thinking_tokens": 510
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30500,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 693,
+     "cache_read_input_tokens": 64240,
+     "cache_creation_input_tokens": 842,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 842
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1764,
+    "cacheReadInputTokens": 351462,
+    "cacheCreationInputTokens": 30500,
+    "webSearchRequests": 0,
+    "costUSD": 0.524891,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 510,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

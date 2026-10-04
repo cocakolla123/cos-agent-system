@@ -1,0 +1,64 @@
+{
+ "scenario": "user-owes-1-c",
+ "started": "2026-10-04T00:38:41.964374+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"send-september-invoice-and-signed-timesheet\",\n    \"name\": \"Send September invoice and signed timesheet to Red Cedar accounting\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"detail\": \"Accounting closes the books Friday; Mara Quint asked Alex to send the September invoice and signed timesheet by Oct 3.\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-uo1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"org\": \"Red Cedar\",\n      \"role_hint\": \"accounting / billing contact\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"september-invoice-redcedar\",\n    \"name\": \"September invoice (Red Cedar)\",\n    \"attrs\": {\n      \"status\": \"not yet sent\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-uo1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Action\", \"to_key\": \"send-september-invoice-and-signed-timesheet\", \"type\": \"deliverable_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"september-signed-timesheet-redcedar\",\n    \"name\": \"September signed timesheet (Red Cedar)\",\n    \"attrs\": {\n      \"status\": \"not yet sent\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-uo1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Action\", \"to_key\": \"send-september-invoice-and-signed-timesheet\", \"type\": \"deliverable_of\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.48140249999999996,
+  "duration_ms": 27680,
+  "duration_api_ms": 25612,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29672,
+   "cache_read_input_tokens": 287265,
+   "output_tokens": 1640,
+   "output_tokens_details": {
+    "thinking_tokens": 94
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29672,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1164,
+     "cache_read_input_tokens": 63578,
+     "cache_creation_input_tokens": 676,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 676
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1640,
+    "cacheReadInputTokens": 287265,
+    "cacheCreationInputTokens": 29672,
+    "webSearchRequests": 0,
+    "costUSD": 0.48140249999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 94,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

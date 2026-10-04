@@ -1,0 +1,13 @@
+{
+ "body": "Record: Alex Rivera completed the security refresher on Sep 21. No further action needed.",
+ "connector": "email",
+ "date": "2026-09-21T13:00:00Z",
+ "folder": "inbox",
+ "from": "Tomas Vega <tomas.vega@helixworks.example>",
+ "id": "em-002",
+ "subject": "Security refresher \u2014 completion receipt",
+ "thread_id": "th-sa0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

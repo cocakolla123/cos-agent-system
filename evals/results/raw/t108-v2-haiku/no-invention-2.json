@@ -1,0 +1,64 @@
+{
+ "scenario": "no-invention-2",
+ "started": "2026-10-04T00:50:43.782334+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"personal\",\n    \"key\": \"digest.weeklybyte.example\",\n    \"name\": \"The Weekly Byte\",\n    \"attrs\": {\n      \"email\": \"digest@weeklybyte.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-001\",\n    \"name\": \"DevWorld 2026 \u2014 early bird ends Friday\",\n    \"attrs\": {\n      \"date\": \"2026-09-24T15:00:00Z\",\n      \"sender\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"subject\": \"DevWorld 2026 \u2014 early bird ends Friday\",\n      \"body\": \"Join 5,000 engineers at DevWorld. Early-bird pricing ends Friday. Register now!\",\n      \"folder\": \"inbox\",\n      \"type\": \"conference_promo\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\n        \"to_kind\": \"Channel\",\n        \"to_key\": \"digest.weeklybyte.example\",\n        \"type\": \"from\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-003\",\n    \"name\": \"Webinar: scaling vector search\",\n    \"attrs\": {\n      \"date\": \"2026-09-25T15:00:00Z\",\n      \"sender\": \"The Weekly Byte <digest@weeklybyte.example>\",\n      \"subject\": \"Webinar: scaling vector search\",\n      \"body\": \"Save your seat for Thursday's webinar. Register today.\",\n      \"folder\": \"inbox\",\n      \"type\": \"webinar_promo\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\n        \"to_kind\": \"Channel\",\n        \"to_key\": \"digest.weeklybyte.example\",\n        \"type\": \"from\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.08366330000000001,
+  "duration_ms": 31573,
+  "duration_api_ms": 29920,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 50,
+   "cache_creation_input_tokens": 19335,
+   "cache_read_input_tokens": 299283,
+   "output_tokens": 3003,
+   "output_tokens_details": {
+    "thinking_tokens": 1895
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 19335,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2115,
+     "cache_read_input_tokens": 53435,
+     "cache_creation_input_tokens": 886,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 886
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 50,
+    "outputTokens": 3003,
+    "cacheReadInputTokens": 299283,
+    "cacheCreationInputTokens": 19335,
+    "webSearchRequests": 0,
+    "costUSD": 0.08366330000000001,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 1895,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

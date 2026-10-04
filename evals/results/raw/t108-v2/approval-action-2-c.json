@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2-c",
+ "started": "2026-10-04T00:39:31.294808+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"reply-birchrow-lease-renewal-intent-unit-2a\",\n    \"name\": \"Reply to Birchrow Property stating lease renewal intent for unit 2A\",\n    \"attrs\": {\n      \"due\": \"2026-10-12\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"],\n      \"requires_outbound_reply\": true,\n      \"detail\": \"Lease on unit 2A ends 2026-11-30; landlord asked for a reply stating renewal intent by 2026-10-12.\",\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"birchrow-property-leasing\", \"to_workspace\": \"personal\", \"type\": \"owed_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"birchrow-property-leasing\",\n    \"name\": \"Birchrow Property (Leasing)\",\n    \"attrs\": {\n      \"email\": \"leasing@birchrow.example\",\n      \"role\": \"landlord/property management\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-release-notes-platform-8-3\",\n    \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\",\n    \"attrs\": {\n      \"publisher\": \"The Weekly Byte\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"type\": \"newsletter\",\n      \"action_required\": false,\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly no action needed.\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"th-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.47952249999999996,
+  "duration_ms": 22053,
+  "duration_api_ms": 20859,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29884,
+   "cache_read_input_tokens": 288115,
+   "output_tokens": 1463,
+   "output_tokens_details": {
+    "thinking_tokens": 317
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29884,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1046,
+     "cache_read_input_tokens": 63785,
+     "cache_creation_input_tokens": 681,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 681
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1463,
+    "cacheReadInputTokens": 288115,
+    "cacheCreationInputTokens": 29884,
+    "webSearchRequests": 0,
+    "costUSD": 0.47952249999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 317,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

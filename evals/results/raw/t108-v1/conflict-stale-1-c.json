@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1-c",
+ "started": "2026-10-04T00:33:45.091536+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"freelance\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"org\": \"Red Cedar\",\n      \"role\": \"client contact (retainer contract renewal)\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-retainer-contract\",\n    \"name\": \"Red Cedar retainer contract\",\n    \"attrs\": {\n      \"type\": \"contract\",\n      \"status\": \"renewed (automatic renewal approved by the Red Cedar board, reported 2026-09-27)\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"contact\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-retainer-renewal-decision\",\n    \"name\": \"Give Mara Quint a renewal decision on the Red Cedar retainer contract\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"priority\": \"low\",\n      \"requested_by\": \"Mara Quint <mara@redcedar.example>\",\n      \"originally_due\": \"2026-10-18\",\n      \"resolution\": \"No longer required \u2014 on 2026-09-27 Mara Quint retracted the request, stating the Red Cedar board approved an automatic renewal and no decision is needed. Newest statement in thread th-cf1 supersedes the Oct 18 deadline from em-001.\",\n      \"refs\": [\"th-cf1\", \"redcedar-retainer-contract\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"redcedar-retainer-contract\", \"type\": \"about\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5160239999999999,
+  "duration_ms": 25994,
+  "duration_api_ms": 23225,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29655,
+   "cache_read_input_tokens": 351128,
+   "output_tokens": 1754,
+   "output_tokens_details": {
+    "thinking_tokens": 508
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29655,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1291,
+     "cache_read_input_tokens": 63894,
+     "cache_creation_input_tokens": 343,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 343
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1754,
+    "cacheReadInputTokens": 351128,
+    "cacheCreationInputTokens": 29655,
+    "webSearchRequests": 0,
+    "costUSD": 0.5160239999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 508,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

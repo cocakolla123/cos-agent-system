@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1-b",
+ "started": "2026-10-04T00:37:03.808204+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"security-deposit-refund-unit-4b-stonegate\", \"name\": \"Security deposit refund for unit 4B owed by Stonegate leasing\", \"attrs\": {\"priority\": \"medium\", \"blocked_on\": \"leasing@stonegate.example (Stonegate leasing office)\", \"evidence\": [\"em-001\"], \"refs\": [\"th-ot1\"], \"detail\": \"Alex moved out of unit 4B on 2026-08-31 and asked the leasing office on 2026-09-18 to confirm when the deposit refund will be sent. No reply in the sources as of 2026-10-01 \u2014 open obligation on the counterparty.\", \"requested_on\": \"2026-09-18\", \"moved_out\": \"2026-08-31\", \"next_move\": \"follow up with leasing office for a refund date\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"stonegate-leasing\", \"type\": \"blocked_on\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owed_to\"}]},\n {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"stonegate-leasing\", \"name\": \"Stonegate leasing office\", \"attrs\": {\"email\": \"leasing@stonegate.example\", \"role\": \"former landlord / leasing office for unit 4B\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"role\": \"user\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": []}\n]",
+  "total_cost_usd": 0.512899,
+  "duration_ms": 25132,
+  "duration_api_ms": 24033,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29711,
+   "cache_read_input_tokens": 351308,
+   "output_tokens": 1603,
+   "output_tokens_details": {
+    "thinking_tokens": 481
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29711,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1061,
+     "cache_read_input_tokens": 63966,
+     "cache_creation_input_tokens": 327,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 327
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1603,
+    "cacheReadInputTokens": 351308,
+    "cacheCreationInputTokens": 29711,
+    "webSearchRequests": 0,
+    "costUSD": 0.512899,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 481,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

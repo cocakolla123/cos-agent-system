@@ -444,151 +444,52 @@ def append_entry_chat(entry_id, role, text):
     write_json(path, logmap)
 
 
-_COS_ACTION_RE = re.compile(r"^\s*COS-ACTION:\s*(\{.*\})\s*$", re.MULTILINE)
+import directives as _directives
 
-_DIRECTIVE_STATUSES = frozenset({"done", "dismissed", "open"})
-_DIRECTIVE_PRIORITIES = frozenset({"high", "medium", "low"})
+CONNECTOR_SETTINGS_URL = _directives.CONNECTOR_SETTINGS_URL
 
 
 def apply_chat_directives(entry_id, output):
-    """The per-task chat's only write path: the model ends its reply with a
-    `COS-ACTION: {...}` line and the *server* applies it through the same
-    locked, audited update_graph_node the task card's buttons use. The chat
-    subprocess itself keeps zero write tools, and a directive can only touch
-    the task under discussion — any id inside the JSON is ignored."""
-    applied = []
-    for m in _COS_ACTION_RE.finditer(output):
-        try:
-            d = json.loads(m.group(1))
-        except ValueError:
-            continue
-        status = str(d.get("status") or "").strip().lower() or None
-        if status not in _DIRECTIVE_STATUSES:
-            status = None
-        priority = str(d.get("priority") or "").strip().lower() or None
-        if priority not in _DIRECTIVE_PRIORITIES:
-            priority = None
-        note = d.get("note") if isinstance(d.get("note"), str) else None
-        if not (status or priority or note):
-            continue
-        try:
-            ok, msg = update_graph_node(entry_id, note=note,
-                                        priority=priority, status=status)
-        except Exception as exc:
-            ok, msg = False, "directive failed: %r" % (exc,)
-        if ok and msg != "no changes":
-            applied.append(msg)
-    cleaned = _COS_ACTION_RE.sub("", output).strip()
-    if applied:
-        cleaned = (cleaned + "\n\n" if cleaned else "") + "✅ " + "; ".join(applied)
-    return cleaned
-
-
-_COS_AUTH_RE = re.compile(r"^\s*COS-AUTH:\s*(\{.*\})\s*$", re.MULTILINE)
-
-CONNECTOR_SETTINGS_URL = "https://claude.ai/settings/connectors"
+    """Per-task chat's only write path — parsing/policy lives in
+    directives.py; the effect runs through the same locked, audited
+    update_graph_node the task card's buttons use."""
+    return _directives.apply_chat_directives(entry_id, output,
+                                             update_graph_node)
 
 
 def apply_auth_directives(output):
-    """Both chats' hook into the auth-popup flow: a reply ending with
-    `COS-AUTH: {"id": ..., "reason": ...}` enqueues an authorization request,
-    which the dashboard surfaces as the existing popup (Authorize opens the
-    connector-settings page; Refuse stays permanent). The OAuth consent itself
-    always happens in the user's own browser — this only asks the question."""
+    """Either chat raising the auth popup — see directives.py."""
     if _accounts is None:
         return output
-    queued = []
-    for m in _COS_AUTH_RE.finditer(output):
-        try:
-            d = json.loads(m.group(1))
-        except ValueError:
-            continue
-        account_id = str(d.get("id") or "").strip()
-        if not account_id:
-            continue
-        try:
-            req = _accounts.enqueue_auth_request(
-                DASHBOARD_DIR, account_id,
-                reason=str(d.get("reason") or ""),
-                auth_url=str(d.get("auth_url") or "") or CONNECTOR_SETTINGS_URL)
-        except Exception:
-            continue
-        if req is not None:
-            queued.append(account_id)
-    cleaned = _COS_AUTH_RE.sub("", output).strip()
-    if queued:
-        cleaned = ((cleaned + "\n\n" if cleaned else "")
-                   + "🔐 authorization popup raised for: " + ", ".join(queued))
-    return cleaned
+
+    def _enqueue(account_id, reason, auth_url):
+        return _accounts.enqueue_auth_request(
+            DASHBOARD_DIR, account_id, reason=reason, auth_url=auth_url)
+
+    return _directives.apply_auth_directives(output, _enqueue)
 
 
 # ---------------------------------------------------------------------------
-# M14: additional mailboxes — first-party connectors allow one Google account,
-# so every extra mailbox gets its own LOCAL MCP server instance. The dashboard
-# automates everything automatable: registering the server, launching the
-# sign-in, detecting completion, granting read-only tools, kicking the probe.
-# The only irreducibly-manual pieces are Google's own: a one-time OAuth client
-# (keys file) per deployment, and the per-account consent click.
+# M14: additional mailboxes — flow logic lives in mailboxes.py; the server
+# contributes only what is genuinely server-shaped: the tool-grant hot-reload
+# (it mutates this module's grant globals) and the audit/log wiring.
 # ---------------------------------------------------------------------------
 
-GMAIL_MCP_PKG = "@gongrzhe/server-gmail-autoauth-mcp"
-GMAIL_MCP_DIR = os.path.expanduser("~/.gmail-mcp")
-GMAIL_KEYS_PATH = os.path.join(GMAIL_MCP_DIR, "gcp-oauth.keys.json")
-# Read-only subset only — send/modify/delete tools are never granted, same
-# posture as every other connector in this system.
-GMAIL_MCP_READ_TOOLS = ("search_emails", "read_email", "list_email_labels")
+import mailboxes as _mailboxes
+
 _GRANT_KEYS = ("research_tools", "poll_tools", "chat_tools", "learn_tools")
 
 
-def mailbox_server_name(name):
-    slug = re.sub(r"[^a-z0-9-]+", "-", (name or "").strip().lower()).strip("-")
-    return ("gmail-" + slug) if slug else ""
-
-
-def mailbox_token_path(server):
-    return os.path.join(GMAIL_MCP_DIR, "credentials-%s.json" % server)
-
-
-def _mcp_registered(server):
-    try:
-        r = subprocess.run([CLAUDE_BIN, "mcp", "get", server],
-                           capture_output=True, text=True, timeout=30)
-        return r.returncode == 0
-    except Exception:
-        return False
-
-
-def _adopt_default_token(server):
-    """The upstream `auth` flow may ignore GMAIL_CREDENTIALS_PATH and write the
-    default ~/.gmail-mcp/credentials.json — claim it for this instance. Safe:
-    the dashboard runs one auth flow at a time."""
-    default = os.path.join(GMAIL_MCP_DIR, "credentials.json")
-    target = mailbox_token_path(server)
-    if os.path.exists(default) and not os.path.exists(target):
-        try:
-            os.rename(default, target)
-        except OSError:
-            pass
-
-
 def mailbox_status(name):
-    server = mailbox_server_name(name)
-    if server:
-        _adopt_default_token(server)
-    return {
-        "server": server,
-        "keys_present": os.path.exists(GMAIL_KEYS_PATH),
-        "keys_path": GMAIL_KEYS_PATH,
-        "registered": bool(server) and _mcp_registered(server),
-        "authorized": bool(server) and os.path.exists(mailbox_token_path(server)),
-    }
+    return _mailboxes.mailbox_status(name, claude_bin=CLAUDE_BIN)
 
 
 def grant_mailbox_tools(server):
     """Idempotently append the instance's read-only tools to every grant list
     in config.json, then hot-reload the in-process grant globals so research/
     poll/chat subprocesses pick them up without a server restart."""
-    new = ["mcp__%s__%s" % (server, t) for t in GMAIL_MCP_READ_TOOLS]
+    new = ["mcp__%s__%s" % (server, t)
+           for t in _mailboxes.GMAIL_MCP_READ_TOOLS]
     changed = False
     with _file_lock(CONFIG_PATH):
         cfg = read_json(CONFIG_PATH, {})
@@ -612,53 +513,23 @@ def grant_mailbox_tools(server):
 
 
 def add_mailbox(name):
-    """Drive the whole flow as far as it can go right now; returns a status
-    dict whose `step` tells the UI what (if anything) to ask of the user."""
-    server = mailbox_server_name(name)
-    if not server or server == "gmail-":
-        return {"step": "error", "message": "give the account a short name, e.g. 'asu'"}
-    os.makedirs(GMAIL_MCP_DIR, exist_ok=True)
-    st = mailbox_status(name)
-    if not st["keys_present"]:
-        st["step"] = "needs_keys"
-        st["message"] = ("one-time setup: a Google OAuth client key file is needed "
-                         "(every deployment must use its own — Google requires it)")
-        return st
-    if not st["registered"]:
-        r = subprocess.run(
-            [CLAUDE_BIN, "mcp", "add", server, "--scope", "user",
-             "-e", "GMAIL_OAUTH_PATH=" + GMAIL_KEYS_PATH,
-             "-e", "GMAIL_CREDENTIALS_PATH=" + mailbox_token_path(server),
-             "--", "npx", "-y", GMAIL_MCP_PKG],
-            capture_output=True, text=True, timeout=60)
-        if r.returncode != 0:
-            return {"step": "error",
-                    "message": "mcp add failed: " + (r.stderr or r.stdout)[-300:]}
-        st["registered"] = True
-    if not st["authorized"]:
-        env = {**os.environ,
-               "GMAIL_OAUTH_PATH": GMAIL_KEYS_PATH,
-               "GMAIL_CREDENTIALS_PATH": mailbox_token_path(server)}
+    def _spawn(cmd, env):
         log = open(os.path.join(DASHBOARD_DIR, "accounts.log"), "a")
         try:
-            subprocess.Popen(["npx", "-y", GMAIL_MCP_PKG, "auth"],
-                             cwd=GMAIL_MCP_DIR, env=env,
+            subprocess.Popen(cmd, cwd=_mailboxes.GMAIL_MCP_DIR, env=env,
                              stdout=log, stderr=subprocess.STDOUT)
         finally:
             log.close()
-        st["step"] = "auth_started"
-        st["message"] = ("a Google sign-in window is opening — pick the %s account "
-                         "and approve read access" % name)
-        return st
-    granted = grant_mailbox_tools(server)
-    if _audit is not None:
-        _audit.record(COS_DIR, "mailbox:" + server,
-                      "connected" + (",tools-granted" if granted else ""),
-                      actor="dashboard", detail="local Gmail MCP instance")
-    st["step"] = "connected"
-    st["message"] = ("%s connected — read-only tools granted; probing identity "
-                     "and binding a workspace now" % server)
-    return st
+
+    def _connected(server):
+        granted = grant_mailbox_tools(server)
+        if _audit is not None:
+            _audit.record(COS_DIR, "mailbox:" + server,
+                          "connected" + (",tools-granted" if granted else ""),
+                          actor="dashboard", detail="local Gmail MCP instance")
+
+    return _mailboxes.add_mailbox(name, claude_bin=CLAUDE_BIN,
+                                  spawn_auth=_spawn, on_connected=_connected)
 
 
 def append_chat_log(role, text):

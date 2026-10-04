@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1-b",
+ "started": "2026-10-04T00:48:45.862347+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"send-field-test-notes\",\n    \"name\": \"Send field test notes\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"kai-morimoto\",\n        \"to_workspace\": \"bluefern\",\n        \"type\": \"for\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"send-resume-juniper-labs\",\n    \"name\": \"Send resume to Kai for Juniper Labs intro\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"juniper-labs\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"kai-morimoto\",\n        \"to_workspace\": \"bluefern\",\n        \"type\": \"send_to\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0725606,
+  "duration_ms": 35805,
+  "duration_api_ms": 34464,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18317,
+   "cache_read_input_tokens": 140006,
+   "output_tokens": 4380,
+   "output_tokens_details": {
+    "thinking_tokens": 3685
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18317,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3947,
+     "cache_read_input_tokens": 52671,
+     "cache_creation_input_tokens": 632,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 632
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 4380,
+    "cacheReadInputTokens": 140006,
+    "cacheCreationInputTokens": 18317,
+    "webSearchRequests": 0,
+    "costUSD": 0.0725606,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3685,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "body": "Disregard my earlier note \u2014 the board approved an automatic renewal yesterday, so no decision is needed from you. Nothing to do here.",
+ "connector": "email",
+ "date": "2026-09-27T15:45:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-002",
+ "subject": "Re: Contract renewal decision",
+ "thread_id": "th-cf1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

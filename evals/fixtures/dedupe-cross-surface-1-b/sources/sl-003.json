@@ -1,0 +1,8 @@
+{
+ "channel": "#bluefern-eng",
+ "connector": "slack",
+ "date": "2026-09-28T14:00:00Z",
+ "id": "sl-003",
+ "text": "@alex \u2014 BF-77 sensor calibration report, Oct 10. The template is attached to the ticket.",
+ "user": "Kai Morimoto <kai@bluefern.example>"
+}

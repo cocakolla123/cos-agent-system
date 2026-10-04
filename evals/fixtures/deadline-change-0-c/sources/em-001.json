@@ -1,0 +1,13 @@
+{
+ "body": "Everyone: annual compliance training is assigned. Complete it by Oct 3.",
+ "connector": "email",
+ "date": "2026-09-19T09:00:00Z",
+ "folder": "inbox",
+ "from": "Lena Frisk <lena.frisk@quantaleaf.example>",
+ "id": "em-001",
+ "subject": "Compliance training assigned",
+ "thread_id": "th-dc0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1-c",
+ "started": "2026-10-04T00:34:53.750518+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"rc-77-sensor-calibration-report\",\n    \"name\": \"Deliver the RC-77 sensor calibration report\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"refs\": [\"RC-77\"],\n      \"requested_by\": \"Mara Quint\",\n      \"description\": \"Mara Quint asked Alex to deliver the sensor calibration report by Oct 10; the template is attached to ticket RC-77. Restated in #redcedar-eng on 2026-09-28 with the same Oct 10 deadline.\",\n      \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"rc-77\", \"type\": \"tracked_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"rc-77\",\n    \"name\": \"Sensor calibration report\",\n    \"attrs\": {\n      \"ticket_key\": \"RC-77\",\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"opened\": \"2026-09-24\",\n      \"refs\": [\"RC-77\"],\n      \"notes\": \"Holds the calibration report template.\",\n      \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Red Cedar contact requesting the calibration report\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"tk-004\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"redcedar-eng\",\n    \"name\": \"#redcedar-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"RC-77\"],\n      \"evidence\": [\"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.48874149999999994,
+  "duration_ms": 31553,
+  "duration_api_ms": 30295,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29945,
+   "cache_read_input_tokens": 287433,
+   "output_tokens": 1821,
+   "output_tokens_details": {
+    "thinking_tokens": 145
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29945,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1259,
+     "cache_read_input_tokens": 63661,
+     "cache_creation_input_tokens": 866,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 866
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1821,
+    "cacheReadInputTokens": 287433,
+    "cacheCreationInputTokens": 29945,
+    "webSearchRequests": 0,
+    "costUSD": 0.48874149999999994,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 145,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

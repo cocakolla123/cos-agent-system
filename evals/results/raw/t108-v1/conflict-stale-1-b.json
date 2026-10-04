@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1-b",
+ "started": "2026-10-04T00:33:39.774383+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"retainer-contract-renewal-decision\",\n    \"name\": \"Renewal decision on the Bluefern retainer contract\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"priority\": \"low\",\n      \"resolution\": \"No decision needed \u2014 Kai Morimoto confirmed on 2026-09-27 that the board approved an automatic renewal, superseding the Oct 18 request\",\n      \"superseded_by\": \"em-002\",\n      \"requested_by\": \"Kai Morimoto\",\n      \"original_due\": \"2026-10-18\",\n      \"refs\": [\n        \"th-cf1\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"kai-morimoto\",\n        \"type\": \"requested_by\"\n      },\n      {\n        \"to_kind\": \"Document\",\n        \"to_key\": \"bluefern-retainer-contract\",\n        \"type\": \"about\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"org\": \"Bluefern\",\n      \"role\": \"Contract/retainer contact\",\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-retainer-contract\",\n    \"name\": \"Bluefern retainer contract\",\n    \"attrs\": {\n      \"renewal\": \"automatic renewal approved by the Bluefern board on 2026-09-26\",\n      \"refs\": [\n        \"th-cf1\"\n      ],\n      \"evidence\": [\n        \"em-001\",\n        \"em-002\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"kai-morimoto\",\n        \"type\": \"owned_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5306839999999999,
+  "duration_ms": 28034,
+  "duration_api_ms": 26872,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30309,
+   "cache_read_input_tokens": 350968,
+   "output_tokens": 2082,
+   "output_tokens_details": {
+    "thinking_tokens": 582
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30309,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1293,
+     "cache_read_input_tokens": 63871,
+     "cache_creation_input_tokens": 1020,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1020
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 2082,
+    "cacheReadInputTokens": 350968,
+    "cacheCreationInputTokens": 30309,
+    "webSearchRequests": 0,
+    "costUSD": 0.5306839999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 582,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

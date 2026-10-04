@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1",
+ "started": "2026-10-04T00:48:36.995316+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"action-send-field-test-notes\",\n    \"name\": \"Send field test notes\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dana-whitfield\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"action-send-resume-orchard-ai\",\n    \"name\": \"Send resume for Orchard AI role\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dana-whitfield\",\n        \"to_workspace\": \"crestline\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0918822,
+  "duration_ms": 59095,
+  "duration_api_ms": 57095,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 34,
+   "cache_creation_input_tokens": 18593,
+   "cache_read_input_tokens": 192922,
+   "output_tokens": 7074,
+   "output_tokens_details": {
+    "thinking_tokens": 6316
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18593,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 6528,
+     "cache_read_input_tokens": 52933,
+     "cache_creation_input_tokens": 646,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 646
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 34,
+    "outputTokens": 7074,
+    "cacheReadInputTokens": 192922,
+    "cacheCreationInputTokens": 18593,
+    "webSearchRequests": 0,
+    "costUSD": 0.0918822,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6316,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

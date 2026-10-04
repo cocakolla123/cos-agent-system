@@ -1,0 +1,41 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "tomas.vega",
+   "due": "2026-10-08",
+   "gist": [
+    "rate-limit",
+    "docs",
+    "update"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001",
+    "sl-002",
+    "tk-003"
+   ],
+   "workspace": "helixworks"
+  }
+ ],
+ "dedupe": [
+  {
+   "gist": [
+    "rate-limit",
+    "docs"
+   ],
+   "max": 1
+  }
+ ],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": [
+  [
+   "em-001",
+   "sl-002",
+   "tk-003"
+  ]
+ ]
+}

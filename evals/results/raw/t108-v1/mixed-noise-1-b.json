@@ -1,0 +1,64 @@
+{
+ "scenario": "mixed-noise-1-b",
+ "started": "2026-10-04T00:36:14.372636+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"pay-pearlcare-dental-balance-120\",\n    \"name\": \"Pay $120 outstanding PearlCare Dental balance for the Aug visit\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"medium\",\n      \"amount\": \"$120\",\n      \"owed_by\": \"alex.rivera@mailbox.example\",\n      \"counterparty\": \"PearlCare Dental\",\n      \"note\": \"Late fee applies after the stated date; obligation is the user's own payment, not a vendor solicitation.\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"pearlcare-dental-front-desk\", \"type\": \"owed_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"pearlcare-dental-front-desk\",\n    \"name\": \"PearlCare Dental (front desk)\",\n    \"attrs\": {\n      \"email\": \"frontdesk@pearlcare.example\",\n      \"org\": \"PearlCare Dental\",\n      \"role\": \"billing / front desk contact\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-29\",\n      \"actionable\": false,\n      \"note\": \"Promotional digest (articles, podcast, jobs board) \u2014 no obligation on the user.\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"th-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-release-notes-platform-8-3\",\n    \"name\": \"Release notes: Platform 8.3\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"actionable\": false,\n      \"note\": \"Informational FYI from a newsletter sender; body states no action needed.\",\n      \"evidence\": [\"em-005\"],\n      \"refs\": [\"th-006\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.48800699999999997,
+  "duration_ms": 24157,
+  "duration_api_ms": 22486,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30087,
+   "cache_read_input_tokens": 287374,
+   "output_tokens": 1736,
+   "output_tokens_details": {
+    "thinking_tokens": 254
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30087,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1195,
+     "cache_read_input_tokens": 63639,
+     "cache_creation_input_tokens": 1030,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1030
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1736,
+    "cacheReadInputTokens": 287374,
+    "cacheCreationInputTokens": 30087,
+    "webSearchRequests": 0,
+    "costUSD": 0.48800699999999997,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 254,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

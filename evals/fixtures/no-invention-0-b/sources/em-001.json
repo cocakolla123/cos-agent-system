@@ -1,0 +1,13 @@
+{
+ "body": "You may be entitled to savings! Complete your claim today to unlock exclusive partner offers. Expires soon!",
+ "connector": "email",
+ "date": "2026-09-28T12:00:00Z",
+ "folder": "inbox",
+ "from": "DealStream Offers <offers@dealstream.example>",
+ "id": "em-001",
+ "subject": "ACTION REQUIRED: complete your claim",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

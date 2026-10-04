@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2-c",
+ "started": "2026-10-04T00:35:55.307800+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\"kind\": \"Ticket\", \"workspace\": \"quantaleaf\", \"key\": \"ql-301\", \"name\": \"Juno service: rotate signing keys\", \"attrs\": {\"status\": \"open\", \"assignee\": \"alex.rivera@mailbox.example\", \"opened\": \"2026-09-27\", \"refs\": [\"QL-301\"], \"connector\": \"ticketing\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-service\", \"type\": \"belongs_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"omar-haddad\", \"type\": \"commented_by\"}]},\n\n  {\"kind\": \"Action\", \"workspace\": \"quantaleaf\", \"key\": \"rotate-juno-signing-keys-ql-301\", \"name\": \"Rotate Juno service signing keys (QL-301)\", \"attrs\": {\"due\": \"2026-10-11\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"refs\": [\"QL-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.93, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"ql-301\", \"type\": \"derived_from\"}, {\"to_kind\": \"Project\", \"to_key\": \"juno-service\", \"type\": \"part_of\"}]},\n\n  {\"kind\": \"Project\", \"workspace\": \"quantaleaf\", \"key\": \"juno-service\", \"name\": \"Juno service\", \"attrs\": {\"refs\": [\"QL-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.7, \"edges\": []},\n\n  {\"kind\": \"Person\", \"workspace\": \"quantaleaf\", \"key\": \"omar-haddad\", \"name\": \"Omar Haddad\", \"attrs\": {\"email\": \"omar.haddad@quantaleaf.example\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"ql-301\", \"type\": \"commented_on\"}]},\n\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"juno-woodworking-bench-plan\", \"name\": \"Juno (woodworking) \u2014 bench plan\", \"attrs\": {\"author\": \"alex.rivera@mailbox.example\", \"date\": \"2026-09-21\", \"connector\": \"docs\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-workbench\", \"type\": \"documents\"}]},\n\n  {\"kind\": \"Project\", \"workspace\": \"personal\", \"key\": \"juno-workbench\", \"name\": \"Juno workbench build (woodworking)\", \"attrs\": {\"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []},\n\n  {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"order-maple-top-juno-workbench\", \"name\": \"Order the maple top for the Juno workbench\", \"attrs\": {\"due\": \"2026-10-20\", \"priority\": \"medium\", \"owner\": \"alex.rivera@mailbox.example\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-workbench\", \"type\": \"part_of\"}, {\"to_kind\": \"Document\", \"to_key\": \"juno-woodworking-bench-plan\", \"type\": \"stated_in\"}]}\n]\n```",
+  "total_cost_usd": 0.5710095,
+  "duration_ms": 35012,
+  "duration_api_ms": 33835,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 29988,
+   "cache_read_input_tokens": 415419,
+   "output_tokens": 2534,
+   "output_tokens_details": {
+    "thinking_tokens": 774
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29988,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1980,
+     "cache_read_input_tokens": 64220,
+     "cache_creation_input_tokens": 350,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 350
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2534,
+    "cacheReadInputTokens": 415419,
+    "cacheCreationInputTokens": 29988,
+    "webSearchRequests": 0,
+    "costUSD": 0.5710095,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 774,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

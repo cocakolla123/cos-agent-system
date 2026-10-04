@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-1-c",
+ "started": "2026-10-04T00:39:10.477007+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"confirm-sow-scope-change-thermal-test-bench\",\n    \"name\": \"Confirm in writing acceptance of the SOW scope change (thermal test bench) so Mara can issue the amended PO\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"],\n      \"requested_by\": \"Mara Quint <mara@redcedar.example>\",\n      \"requires_outbound_reply\": true,\n      \"refs\": [\"th-002\"],\n      \"detail\": \"Mara Quint asked Alex to confirm acceptance of adding the thermal test bench to the statement of work, in writing, by Oct 6, 2026; the amended PO is issued only after that confirmation.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"org\": \"Red Cedar\",\n      \"role\": \"client contact (issues purchase orders / owns the SOW)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.42939950000000005,
+  "duration_ms": 24176,
+  "duration_api_ms": 23052,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29336,
+   "cache_read_input_tokens": 224399,
+   "output_tokens": 952,
+   "output_tokens_details": {
+    "thinking_tokens": 81
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29336,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 608,
+     "cache_read_input_tokens": 63573,
+     "cache_creation_input_tokens": 345,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 345
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 952,
+    "cacheReadInputTokens": 224399,
+    "cacheCreationInputTokens": 29336,
+    "webSearchRequests": 0,
+    "costUSD": 0.42939950000000005,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 81,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "body": "Spring course registration forms are due Oct 15.",
+ "connector": "email",
+ "date": "2026-09-15T09:00:00Z",
+ "folder": "inbox",
+ "from": "Lakemont Registrar <registrar@lakemont.example>",
+ "id": "em-001",
+ "subject": "Spring registration opens",
+ "thread_id": "th-dc2",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

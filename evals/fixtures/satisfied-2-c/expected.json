@@ -1,0 +1,15 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "take-home",
+   "assessment",
+   "due"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

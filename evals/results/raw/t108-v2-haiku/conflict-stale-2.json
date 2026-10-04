@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2",
+ "started": "2026-10-04T00:47:01.588396+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\"email\": \"dana@crestline.example\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-quarterly-review-2026-10\",\n    \"name\": \"Crestline quarterly review\",\n    \"attrs\": {\n      \"start\": \"2026-10-16T17:00:00Z\",\n      \"attendees\": [\"alex.rivera@mailbox.example\", \"dana@crestline.example\"],\n      \"refs\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"to_workspace\": \"crestline\", \"type\": \"attendee\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"metrics-deck-crestline-q4\",\n    \"name\": \"Prepare metrics deck for quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-002\"],\n      \"refs\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"crestline-quarterly-review-2026-10\", \"to_workspace\": \"crestline\", \"type\": \"related_to\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"to_workspace\": \"crestline\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-eng\",\n    \"name\": \"#crestline-eng\",\n    \"attrs\": {\"platform\": \"slack\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.086928,
+  "duration_ms": 54151,
+  "duration_api_ms": 53179,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18543,
+   "cache_read_input_tokens": 140010,
+   "output_tokens": 7163,
+   "output_tokens_details": {
+    "thinking_tokens": 6263
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18543,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 6586,
+     "cache_read_input_tokens": 52707,
+     "cache_creation_input_tokens": 822,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 822
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 7163,
+    "cacheReadInputTokens": 140010,
+    "cacheCreationInputTokens": 18543,
+    "webSearchRequests": 0,
+    "costUSD": 0.086928,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6263,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

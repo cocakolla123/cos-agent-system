@@ -1,0 +1,13 @@
+{
+ "body": "Please deliver the sensor calibration report by Oct 10. BF-77 has the template.",
+ "connector": "email",
+ "date": "2026-09-24T09:00:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-001",
+ "subject": "Sensor calibration report",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

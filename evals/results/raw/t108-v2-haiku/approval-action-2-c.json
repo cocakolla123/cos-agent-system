@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2-c",
+ "started": "2026-10-04T00:45:50.295680+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"birchrow-property\",\n    \"name\": \"Birchrow Property\",\n    \"attrs\": {\n      \"email\": \"leasing@birchrow.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"lease-renewal-unit-2a\",\n    \"name\": \"Reply to Birchrow about lease renewal intent for unit 2A\",\n    \"attrs\": {\n      \"due\": \"2026-10-12\",\n      \"priority\": \"high\",\n      \"status\": null,\n      \"blocked_on\": \"Birchrow Property\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"lease-unit-2a\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.98,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"birchrow-property\",\n        \"to_workspace\": \"personal\",\n        \"type\": \"addressed_to\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.07111740000000001,
+  "duration_ms": 16618,
+  "duration_api_ms": 15714,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 19084,
+   "cache_read_input_tokens": 246124,
+   "output_tokens": 1659,
+   "output_tokens_details": {
+    "thinking_tokens": 909
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 19084,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 898,
+     "cache_read_input_tokens": 53156,
+     "cache_creation_input_tokens": 914,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 914
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 1659,
+    "cacheReadInputTokens": 246124,
+    "cacheCreationInputTokens": 19084,
+    "webSearchRequests": 0,
+    "costUSD": 0.07111740000000001,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 909,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

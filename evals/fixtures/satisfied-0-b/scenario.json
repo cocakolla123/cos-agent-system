@@ -1,0 +1,18 @@
+{
+ "category": "satisfied",
+ "id": "satisfied-0-b",
+ "note": "completed obligation must not be an open to-do (cast rotation)",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "bluefern": "freelance",
+  "helixworks": "employer",
+  "job-search": "job-search",
+  "lakemont": "school",
+  "personal": "personal"
+ }
+}

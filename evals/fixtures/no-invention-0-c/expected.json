@@ -1,0 +1,18 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "complete",
+   "claim"
+  ],
+  [
+   "unlock",
+   "offers"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

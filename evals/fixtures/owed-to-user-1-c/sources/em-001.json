@@ -1,0 +1,13 @@
+{
+ "body": "Hi \u2014 I moved out of unit 4B on Aug 31 and haven't received the security deposit refund yet. Could you confirm when it will be sent?",
+ "connector": "email",
+ "date": "2026-09-18T19:22:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-001",
+ "subject": "Security deposit refund \u2014 unit 4B",
+ "thread_id": "th-ot1",
+ "to": [
+  "leasing@birchrow.example"
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1-c",
+ "started": "2026-10-04T00:55:26.932643+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"redcedar\",\n  \"key\": \"mara-quint\",\n  \"name\": \"Mara Quint\",\n  \"attrs\": {\n   \"email\": \"mara@redcedar.example\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.95,\n  \"edges\": []\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"redcedar\",\n  \"key\": \"redcedar-contract-renewal-decision\",\n  \"name\": \"Decide on retainer contract renewal\",\n  \"attrs\": {\n   \"status\": \"cancelled\",\n   \"priority\": \"low\",\n   \"evidence\": [\"em-001\", \"em-002\"],\n   \"notes\": \"Originally required a renewal decision by 2026-10-18; superseded by board's automatic renewal approval, so no action is needed.\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"}\n  ]\n },\n {\n  \"kind\": \"Decision\",\n  \"workspace\": \"redcedar\",\n  \"key\": \"redcedar-retainer-automatic-renewal\",\n  \"name\": \"Board approved automatic renewal of retainer contract\",\n  \"attrs\": {\n   \"evidence\": [\"em-002\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"announced_by\"},\n   {\"to_kind\": \"Action\", \"to_key\": \"redcedar-contract-renewal-decision\", \"type\": \"supersedes\"}\n  ]\n }\n]\n```",
+  "total_cost_usd": 0.1958692,
+  "duration_ms": 25335,
+  "duration_api_ms": 24007,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 30533,
+   "cache_read_input_tokens": 269506,
+   "output_tokens": 1982,
+   "output_tokens_details": {
+    "thinking_tokens": 1004
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30533,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 616,
+     "cache_read_input_tokens": 75072,
+     "cache_creation_input_tokens": 1265,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1265
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1982,
+    "cacheReadInputTokens": 269506,
+    "cacheCreationInputTokens": 30533,
+    "webSearchRequests": 0,
+    "costUSD": 0.1958692,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1004,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

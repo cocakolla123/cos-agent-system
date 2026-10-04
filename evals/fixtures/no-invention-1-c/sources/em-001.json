@@ -1,0 +1,13 @@
+{
+ "body": "Upgrade to DealStream Premium before Oct 5 and save 40%. Don't miss out \u2014 this offer won't last.",
+ "connector": "email",
+ "date": "2026-09-26T09:30:00Z",
+ "folder": "inbox",
+ "from": "DealStream Offers <offers@dealstream.example>",
+ "id": "em-001",
+ "subject": "Your premium offer expires Oct 5",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

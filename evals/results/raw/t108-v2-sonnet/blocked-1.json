@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1",
+ "started": "2026-10-04T00:54:45.311454+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Repository\", \"workspace\": \"novabio\", \"key\": \"novabio-ingest\", \"name\": \"novabio/ingest\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"PR\", \"workspace\": \"novabio\", \"key\": \"novabio-ingest-pr-412\", \"name\": \"Add retry budget to ingest workers\", \"attrs\": {\"number\": 412, \"repo\": \"novabio/ingest\", \"state\": \"open\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Repository\", \"to_key\": \"novabio-ingest\", \"type\": \"belongs_to\"}]},\n{\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"sam-okafor\", \"name\": \"Sam Okafor\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.7, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"jordan-kim\", \"name\": \"Jordan Kim\", \"attrs\": {\"email\": \"jordan.kim@novabio.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"Channel\", \"workspace\": \"novabio\", \"key\": \"eng-ingest\", \"name\": \"#eng-ingest\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []},\n{\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"novabio-pr-412-review-request\", \"name\": \"Sam Okafor to review PR 412 (retry budget to ingest workers)\", \"attrs\": {\"priority\": \"medium\", \"blocked_on\": \"Sam Okafor\", \"refs\": \"pr-412\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"type\": \"relates_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"type\": \"blocked_on\"}]},\n{\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"novabio-ping-sam-pr-412\", \"name\": \"Ping Sam Okafor again about PR 412 review status\", \"attrs\": {\"priority\": \"medium\", \"refs\": \"pr-412\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"type\": \"relates_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"type\": \"requested_by\"}, {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"mentioned_in\"}]}]",
+  "total_cost_usd": 0.20893219999999998,
+  "duration_ms": 38337,
+  "duration_api_ms": 36198,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 31058,
+   "cache_read_input_tokens": 269471,
+   "output_tokens": 3079,
+   "output_tokens_details": {
+    "thinking_tokens": 1751
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31058,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 963,
+     "cache_read_input_tokens": 75011,
+     "cache_creation_input_tokens": 1851,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1851
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 3079,
+    "cacheReadInputTokens": 269471,
+    "cacheCreationInputTokens": 31058,
+    "webSearchRequests": 0,
+    "costUSD": 0.20893219999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1751,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

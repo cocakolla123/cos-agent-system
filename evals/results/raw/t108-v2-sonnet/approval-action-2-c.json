@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2-c",
+ "started": "2026-10-04T00:54:43.145904+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"personal\",\n  \"key\": \"birchrow-property-leasing\",\n  \"name\": \"Birchrow Property (Leasing)\",\n  \"attrs\": {\n   \"email\": \"leasing@birchrow.example\",\n   \"role\": \"landlord/property-management\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": []\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"personal\",\n  \"key\": \"reply-lease-renewal-intent-unit-2a\",\n  \"name\": \"Reply with lease renewal intent for unit 2A\",\n  \"attrs\": {\n   \"due\": \"2026-10-12\",\n   \"priority\": \"medium\",\n   \"evidence\": [\"em-001\"],\n   \"refs\": [\"th-002\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.95,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"birchrow-property-leasing\", \"type\": \"owed_to\"}\n  ]\n },\n {\n  \"kind\": \"Document\",\n  \"workspace\": \"personal\",\n  \"key\": \"platform-8-3-release-notes\",\n  \"name\": \"Platform 8.3 Release Notes\",\n  \"attrs\": {\n   \"summary\": \"Faster cold starts, new audit log filters.\",\n   \"action_needed\": false,\n   \"evidence\": [\"em-003\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.6,\n  \"edges\": []\n }\n]\n```",
+  "total_cost_usd": 0.21251520000000002,
+  "duration_ms": 37553,
+  "duration_api_ms": 36449,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 31691,
+   "cache_read_input_tokens": 269626,
+   "output_tokens": 3181,
+   "output_tokens_details": {
+    "thinking_tokens": 2293
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31691,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 547,
+     "cache_read_input_tokens": 75142,
+     "cache_creation_input_tokens": 2353,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2353
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 3181,
+    "cacheReadInputTokens": 269626,
+    "cacheCreationInputTokens": 31691,
+    "webSearchRequests": 0,
+    "costUSD": 0.21251520000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 2293,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

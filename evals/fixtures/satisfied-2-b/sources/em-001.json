@@ -1,0 +1,13 @@
+{
+ "body": "Here is your take-home assessment link. Due Sep 26.",
+ "connector": "email",
+ "date": "2026-09-19T10:00:00Z",
+ "folder": "inbox",
+ "from": "Juniper Labs Talent <talent@juniperlabs.example>",
+ "id": "em-001",
+ "subject": "Take-home assessment",
+ "thread_id": "th-sa2",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

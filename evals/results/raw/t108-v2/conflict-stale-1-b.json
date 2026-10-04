@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1-b",
+ "started": "2026-10-04T00:40:06.797433+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"org\": \"Bluefern\",\n      \"role\": \"client contact\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"bluefern-retainer-contract\",\n    \"name\": \"Bluefern retainer contract renewal\",\n    \"attrs\": {\n      \"status\": \"auto-renewed\",\n      \"renewal_approved_by\": \"Bluefern board\",\n      \"renewal_approved_on\": \"2026-09-26\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"contact\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"decide-bluefern-retainer-renewal\",\n    \"name\": \"Give renewal decision on the Bluefern retainer contract\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"resolution\": \"No longer required \u2014 Kai confirmed on 2026-09-27 that the Bluefern board approved an automatic renewal, superseding the Oct 18 decision request\",\n      \"superseded_due\": \"2026-10-18\",\n      \"priority\": \"low\",\n      \"requested_by\": \"Kai Morimoto\",\n      \"refs\": [\"th-cf1\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"bluefern-retainer-contract\", \"type\": \"about\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.481834,
+  "duration_ms": 26018,
+  "duration_api_ms": 23637,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29888,
+   "cache_read_input_tokens": 288108,
+   "output_tokens": 1554,
+   "output_tokens_details": {
+    "thinking_tokens": 329
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29888,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1067,
+     "cache_read_input_tokens": 63792,
+     "cache_creation_input_tokens": 678,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 678
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1554,
+    "cacheReadInputTokens": 288108,
+    "cacheCreationInputTokens": 29888,
+    "webSearchRequests": 0,
+    "costUSD": 0.481834,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 329,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,8 @@
+{
+ "channel": "#eng-ingest",
+ "connector": "slack",
+ "date": "2026-09-30T09:40:00Z",
+ "id": "sl-002",
+ "text": "@alex what's holding PR 412? \u2014 waiting on Nina's review? ping him again if so.",
+ "user": "Rosa Alvarez <rosa.alvarez@helixworks.example>"
+}

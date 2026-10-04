@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2-b",
+ "started": "2026-10-04T00:49:22.364140+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"HW-301\",\n    \"name\": \"Orion service: rotate signing keys\",\n    \"attrs\": {\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"rosa-alvarez\",\n        \"type\": \"commented\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"rotate-orion-signing-keys\",\n    \"name\": \"Rotate signing keys for Orion service\",\n    \"attrs\": {\n      \"due\": \"2026-10-11\",\n      \"priority\": \"high\",\n      \"evidence\": [\"tk-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Ticket\",\n        \"to_key\": \"HW-301\",\n        \"type\": \"tracked_in\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"orion-woodworking-bench-plan\",\n    \"name\": \"Orion (woodworking) \u2014 bench plan\",\n    \"attrs\": {\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"date\": \"2026-09-21T22:00:00Z\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"order-maple-top\",\n    \"name\": \"Order maple top for Orion workbench\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"doc-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.90,\n    \"edges\": [\n      {\n        \"to_kind\": \"Document\",\n        \"to_key\": \"orion-woodworking-bench-plan\",\n        \"type\": \"described_in\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"rosa-alvarez\",\n    \"name\": \"Rosa Alvarez\",\n    \"attrs\": {\n      \"email\": \"rosa.alvarez@helixworks.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0675357,
+  "duration_ms": 29076,
+  "duration_api_ms": 27214,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18452,
+   "cache_read_input_tokens": 139807,
+   "output_tokens": 3325,
+   "output_tokens_details": {
+    "thinking_tokens": 2310
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18452,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2822,
+     "cache_read_input_tokens": 52572,
+     "cache_creation_input_tokens": 866,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 866
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 3325,
+    "cacheReadInputTokens": 139807,
+    "cacheCreationInputTokens": 18452,
+    "webSearchRequests": 0,
+    "costUSD": 0.0675357,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2310,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "mixed-noise-1-b",
+ "started": "2026-10-04T00:42:34.240362+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"pay-pearlcare-dental-balance-120\",\n    \"name\": \"Pay PearlCare Dental outstanding balance of $120 for the August visit\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"medium\",\n      \"amount\": \"$120\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"],\n      \"notes\": \"Late fee applies after Oct 10; balance is for the Aug visit.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.4375779999999999,
+  "duration_ms": 16771,
+  "duration_api_ms": 15813,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29858,
+   "cache_read_input_tokens": 224216,
+   "output_tokens": 1074,
+   "output_tokens_details": {
+    "thinking_tokens": 380
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29858,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 592,
+     "cache_read_input_tokens": 63394,
+     "cache_creation_input_tokens": 1046,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1046
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 1074,
+    "cacheReadInputTokens": 224216,
+    "cacheCreationInputTokens": 29858,
+    "webSearchRequests": 0,
+    "costUSD": 0.4375779999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 380,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

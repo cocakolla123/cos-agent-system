@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1",
+ "started": "2026-10-04T00:39:35.393684+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\"kind\": \"Repository\", \"workspace\": \"novabio\", \"key\": \"novabio-ingest\", \"name\": \"novabio/ingest\", \"attrs\": {\"refs\": [\"pr-412\"], \"evidence\": [\"pr-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n  {\"kind\": \"PR\", \"workspace\": \"novabio\", \"key\": \"novabio-ingest-pr-412\", \"name\": \"PR 412: Add retry budget to ingest workers\", \"attrs\": {\"number\": 412, \"repo\": \"novabio/ingest\", \"state\": \"open\", \"author\": \"alex.rivera@mailbox.example\", \"ci\": \"green\", \"review_requested_from\": \"Sam Okafor\", \"review_requested_on\": \"2026-09-13\", \"opened\": \"2026-09-22\", \"refs\": [\"novabio/ingest\", \"pr-412\"], \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Repository\", \"to_key\": \"novabio-ingest\", \"to_workspace\": \"novabio\", \"type\": \"belongs_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"awaiting_review_from\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"novabio\", \"type\": \"authored_by\"}]},\n  {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"pr-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n  {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"sam-okafor\", \"name\": \"Sam Okafor\", \"attrs\": {\"role\": \"requested reviewer on PR 412\", \"refs\": [\"pr-412\"], \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"to_workspace\": \"novabio\", \"type\": \"reviewer_of\"}]},\n  {\"kind\": \"Person\", \"workspace\": \"novabio\", \"key\": \"jordan-kim\", \"name\": \"Jordan Kim\", \"attrs\": {\"email\": \"jordan.kim@novabio.example\", \"refs\": [\"pr-412\", \"#eng-ingest\"], \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"novabio\", \"type\": \"member_of\"}]},\n  {\"kind\": \"Channel\", \"workspace\": \"novabio\", \"key\": \"eng-ingest\", \"name\": \"#eng-ingest\", \"attrs\": {\"connector\": \"slack\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"pr-412-awaiting-sam-review\", \"name\": \"PR 412 (retry budget to ingest workers) is awaiting Sam Okafor's review \u2014 9+ days with no response, CI green\", \"attrs\": {\"priority\": \"high\", \"blocked_on\": \"Sam Okafor\", \"refs\": [\"pr-412\", \"novabio/ingest\"], \"evidence\": [\"pr-001\", \"sl-002\"], \"notes\": \"Review requested 9 days before 2026-09-22 and still unanswered as of 2026-09-30; next move is Sam's. Nudging him is the user's only lever.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"}, {\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"blocked_on\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"ping-sam-okafor-pr-412-review\", \"name\": \"Ping Sam Okafor again for the PR 412 review (Jordan Kim suggested it in #eng-ingest)\", \"attrs\": {\"priority\": \"high\", \"refs\": [\"pr-412\"], \"evidence\": [\"sl-002\", \"pr-001\"], \"notes\": \"Outbound nudge \u2014 draft and queue for approval; never send directly.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"sam-okafor\", \"to_workspace\": \"novabio\", \"type\": \"recipient\"}, {\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"novabio\", \"key\": \"reply-jordan-kim-pr-412-status\", \"name\": \"Reply to Jordan Kim in #eng-ingest on what is holding PR 412\", \"attrs\": {\"priority\": \"medium\", \"refs\": [\"pr-412\", \"#eng-ingest\"], \"evidence\": [\"sl-002\"], \"notes\": \"Jordan asked on 2026-09-30 and is unanswered; answer is that it waits on Sam Okafor's review. Outbound \u2014 draft and queue for approval.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"jordan-kim\", \"to_workspace\": \"novabio\", \"type\": \"recipient\"}, {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"novabio\", \"type\": \"in_channel\"}, {\"to_kind\": \"PR\", \"to_key\": \"novabio-ingest-pr-412\", \"to_workspace\": \"novabio\", \"type\": \"about\"}]}\n]\n```",
+  "total_cost_usd": 0.5084215,
+  "duration_ms": 30706,
+  "duration_api_ms": 29465,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29731,
+   "cache_read_input_tokens": 288023,
+   "output_tokens": 2682,
+   "output_tokens_details": {
+    "thinking_tokens": 227
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29731,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2279,
+     "cache_read_input_tokens": 63742,
+     "cache_creation_input_tokens": 571,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 571
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2682,
+    "cacheReadInputTokens": 288023,
+    "cacheCreationInputTokens": 29731,
+    "webSearchRequests": 0,
+    "costUSD": 0.5084215,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 227,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

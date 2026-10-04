@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2-c",
+ "started": "2026-10-04T00:47:03.559512+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"organization\": \"Redcedar\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"redcedar-quarterly-review-2026-10\",\n    \"name\": \"Redcedar quarterly review\",\n    \"attrs\": {\n      \"scheduled_date\": \"2026-10-16T17:00:00Z\",\n      \"original_date\": \"2026-10-09T17:00:00Z\",\n      \"attendees\": [\"alex.rivera@mailbox.example\", \"mara@redcedar.example\"],\n      \"date_conflict\": \"cal-001 shows Oct 9, sl-002 updates to Oct 16\",\n      \"status\": \"scheduled\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"organizer\"},\n      {\"to_kind\": \"Action\", \"to_key\": \"metrics-deck-redcedar-2026-10-16\", \"to_workspace\": \"redcedar\", \"type\": \"has_deliverable\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"metrics-deck-redcedar-2026-10-16\",\n    \"name\": \"Prepare metrics deck for quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-002\"],\n      \"description\": \"Have metrics deck ready for Redcedar quarterly review\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"redcedar-quarterly-review-2026-10\", \"to_workspace\": \"redcedar\", \"type\": \"for_meeting\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"requested_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0715824,
+  "duration_ms": 38727,
+  "duration_api_ms": 36479,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 18514,
+   "cache_read_input_tokens": 139984,
+   "output_tokens": 4106,
+   "output_tokens_details": {
+    "thinking_tokens": 3155
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18514,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3567,
+     "cache_read_input_tokens": 52676,
+     "cache_creation_input_tokens": 824,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 824
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 4106,
+    "cacheReadInputTokens": 139984,
+    "cacheCreationInputTokens": 18514,
+    "webSearchRequests": 0,
+    "costUSD": 0.0715824,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3155,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

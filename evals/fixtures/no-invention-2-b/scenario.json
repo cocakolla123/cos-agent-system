@@ -1,0 +1,18 @@
+{
+ "category": "no_invention",
+ "id": "no-invention-2-b",
+ "note": "conference and webinar promos are noise (cast rotation)",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "bluefern": "freelance",
+  "helixworks": "employer",
+  "job-search": "job-search",
+  "lakemont": "school",
+  "personal": "personal"
+ }
+}

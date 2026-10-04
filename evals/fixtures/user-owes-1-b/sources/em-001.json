@@ -1,0 +1,13 @@
+{
+ "body": "Hi Alex, accounting closes the books Friday \u2014 please send your September invoice and signed timesheet by Oct 3.",
+ "connector": "email",
+ "date": "2026-09-29T09:05:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-001",
+ "subject": "September invoice + timesheet",
+ "thread_id": "th-uo1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

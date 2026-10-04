@@ -1,0 +1,13 @@
+{
+ "body": "Please file the Sep 24 outage postmortem by Oct 6.",
+ "connector": "email",
+ "date": "2026-09-28T12:00:00Z",
+ "folder": "inbox",
+ "from": "Rosa Alvarez <rosa.alvarez@helixworks.example>",
+ "id": "em-003",
+ "subject": "Postmortem doc",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

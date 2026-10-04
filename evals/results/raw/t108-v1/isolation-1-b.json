@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1-b",
+ "started": "2026-10-04T00:35:25.383251+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"role\": \"Bluefern project contact\",\n      \"refs\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"kai-morimoto\",\n    \"name\": \"Kai Morimoto\",\n    \"attrs\": {\n      \"email\": \"kai@bluefern.example\",\n      \"role\": \"referral contact for Juniper Labs intro\",\n      \"note\": \"Same person also appears in the bluefern freelance workspace; this record covers only his job-search role.\",\n      \"refs\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"bluefern\",\n    \"key\": \"send-field-test-notes-to-kai\",\n    \"name\": \"Send field test notes to Kai Morimoto\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"detail\": \"Kai needs the field test notes so he can fold them into the report.\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"send-resume-for-juniper-labs-intro\",\n    \"name\": \"Send current resume to Kai for Juniper Labs controls engineer intro\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"detail\": \"Kai offered an intro to a friend at Juniper Labs hiring a controls engineer, conditional on receiving Alex's current resume by Friday Oct 3. Explicitly framed as separate from the Bluefern project work.\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"th-004\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"owed_to\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5584195,
+  "duration_ms": 29240,
+  "duration_api_ms": 27978,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 29836,
+   "cache_read_input_tokens": 414829,
+   "output_tokens": 2103,
+   "output_tokens_details": {
+    "thinking_tokens": 630
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29836,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1501,
+     "cache_read_input_tokens": 64060,
+     "cache_creation_input_tokens": 358,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 358
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2103,
+    "cacheReadInputTokens": 414829,
+    "cacheCreationInputTokens": 29836,
+    "webSearchRequests": 0,
+    "costUSD": 0.5584195,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 630,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

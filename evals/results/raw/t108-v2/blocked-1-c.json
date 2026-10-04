@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1-c",
+ "started": "2026-10-04T00:39:48.300774+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\": \"Repository\", \"workspace\": \"quantaleaf\", \"key\": \"quantaleaf-ingest\", \"name\": \"quantaleaf/ingest\", \"attrs\": {\"refs\": [\"quantaleaf/ingest\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n{\"kind\": \"PR\", \"workspace\": \"quantaleaf\", \"key\": \"quantaleaf-ingest-pr-412\", \"name\": \"PR 412: Add retry budget to ingest workers\", \"attrs\": {\"number\": 412, \"repo\": \"quantaleaf/ingest\", \"state\": \"open\", \"author\": \"alex.rivera@mailbox.example\", \"opened\": \"2026-09-22\", \"ci\": \"green\", \"reviewer\": \"Devon Price\", \"review_requested\": \"2026-09-13\", \"refs\": [\"PR 412\", \"quantaleaf/ingest\"], \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Repository\", \"to_key\": \"quantaleaf-ingest\", \"type\": \"belongs_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"devon-price\", \"type\": \"review_requested_from\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"authored_by\"}]},\n{\"kind\": \"Person\", \"workspace\": \"quantaleaf\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"quantaleaf\", \"key\": \"devon-price\", \"name\": \"Devon Price\", \"attrs\": {\"role\": \"reviewer on PR 412\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"quantaleaf\", \"key\": \"omar-haddad\", \"name\": \"Omar Haddad\", \"attrs\": {\"email\": \"omar.haddad@quantaleaf.example\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"member_of\"}]},\n{\"kind\": \"Channel\", \"workspace\": \"quantaleaf\", \"key\": \"eng-ingest\", \"name\": \"#eng-ingest\", \"attrs\": {\"refs\": [\"PR 412\"], \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n{\"kind\": \"Action\", \"workspace\": \"quantaleaf\", \"key\": \"pr-412-review-from-devon-price\", \"name\": \"Get Devon Price's review on PR 412 (Add retry budget to ingest workers)\", \"attrs\": {\"priority\": \"high\", \"blocked_on\": \"Devon Price\", \"refs\": [\"PR 412\", \"quantaleaf/ingest\"], \"notes\": \"Review requested 2026-09-13 (9 days before 2026-09-22); still no review as of 2026-09-30. CI green, PR open \u2014 next move is Devon's. Omar Haddad suggested pinging Devon again.\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"quantaleaf-ingest-pr-412\", \"type\": \"about\"}, {\"to_kind\": \"Person\", \"to_key\": \"devon-price\", \"type\": \"blocked_on\"}]},\n{\"kind\": \"Action\", \"workspace\": \"quantaleaf\", \"key\": \"reply-omar-pr-412-status\", \"name\": \"Reply to Omar Haddad in #eng-ingest about what is holding PR 412\", \"attrs\": {\"priority\": \"medium\", \"refs\": [\"PR 412\"], \"notes\": \"Omar asked on 2026-09-30 in #eng-ingest; outbound reply needed (confirm the block is Devon's pending review).\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"omar-haddad\", \"type\": \"owed_to\"}, {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"in_channel\"}, {\"to_kind\": \"PR\", \"to_key\": \"quantaleaf-ingest-pr-412\", \"type\": \"about\"}]}\n]",
+  "total_cost_usd": 0.5505595000000001,
+  "duration_ms": 32574,
+  "duration_api_ms": 30770,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30651,
+   "cache_read_input_tokens": 352479,
+   "output_tokens": 2710,
+   "output_tokens_details": {
+    "thinking_tokens": 535
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30651,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1580,
+     "cache_read_input_tokens": 64374,
+     "cache_creation_input_tokens": 859,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 859
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 2710,
+    "cacheReadInputTokens": 352479,
+    "cacheCreationInputTokens": 30651,
+    "webSearchRequests": 0,
+    "costUSD": 0.5505595000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 535,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

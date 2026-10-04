@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1-c",
+ "started": "2026-10-04T00:35:25.953626+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Red Cedar project counterpart (requests field test notes for a report)\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Referral contact \u2014 offers an intro to a hiring friend at Copperline AI\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"send-field-test-notes-to-mara\",\n    \"name\": \"Send field test notes to Mara Quint for the report\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"Mara Quint <mara@redcedar.example>\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"send-resume-to-mara-for-copperline-intro\",\n    \"name\": \"Send current resume to Mara Quint for the Copperline AI controls engineer intro\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"Mara Quint <mara@redcedar.example>\",\n      \"evidence\": [\"em-003\"],\n      \"refs\": [\"th-004\"],\n      \"notes\": \"Mara states this is separate from the Red Cedar project; she will forward the resume to a hiring friend at Copperline AI.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.47755899999999996,
+  "duration_ms": 21432,
+  "duration_api_ms": 20195,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29648,
+   "cache_read_input_tokens": 287158,
+   "output_tokens": 1498,
+   "output_tokens_details": {
+    "thinking_tokens": 220
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29648,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1080,
+     "cache_read_input_tokens": 63550,
+     "cache_creation_input_tokens": 680,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 680
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1498,
+    "cacheReadInputTokens": 287158,
+    "cacheCreationInputTokens": 29648,
+    "webSearchRequests": 0,
+    "costUSD": 0.47755899999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 220,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2-b",
+ "started": "2026-10-04T00:44:02.772596+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"vectorium-interview-reschedule-reply\",\n    \"name\": \"Vectorium has not replied to interview reschedule request (Oct 2 systems interview)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"recruiting@vectorium.example\",\n      \"evidence\": [\"em-001\"],\n      \"requested_on\": \"2026-09-25\",\n      \"original_slot\": \"2026-10-02\",\n      \"detail\": \"Alex asked Vectorium recruiting on 2026-09-25 to move the Oct 2 systems interview to later that week and offered to share availability. No reply appears in any source, and the original slot is tomorrow \u2014 the next move is theirs, but it needs a nudge.\",\n      \"refs\": [\"th-ot2\", \"mtg-vectorium-systems-interview\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"vectorium-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"vectorium-systems-interview-2026-10-02\", \"to_workspace\": \"job-search\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"job-search\",\n    \"key\": \"vectorium-systems-interview-2026-10-02\",\n    \"name\": \"Vectorium systems interview\",\n    \"attrs\": {\n      \"scheduled\": \"2026-10-02\",\n      \"status\": \"reschedule requested, unconfirmed\",\n      \"evidence\": [\"em-001\"],\n      \"note\": \"Referenced only in Alex's outbound reschedule request; no calendar item or confirmation in sources.\",\n      \"refs\": [\"th-ot2\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"vectorium-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"organizer\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"vectorium-recruiting\",\n    \"name\": \"Vectorium Recruiting\",\n    \"attrs\": {\n      \"email\": \"recruiting@vectorium.example\",\n      \"role\": \"recruiting contact\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"user\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"date\": \"2026-09-29\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"actionable\": false,\n      \"note\": \"Infrastructure newsletter with articles, a podcast and a jobs board. Promotional content, no obligation on the user.\",\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.42068700000000003,
+  "duration_ms": 28679,
+  "duration_api_ms": 26881,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 29304,
+   "cache_read_input_tokens": 160834,
+   "output_tokens": 1888,
+   "output_tokens_details": {
+    "thinking_tokens": 389
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29304,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1637,
+     "cache_read_input_tokens": 63182,
+     "cache_creation_input_tokens": 704,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 704
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 6,
+    "outputTokens": 1888,
+    "cacheReadInputTokens": 160834,
+    "cacheCreationInputTokens": 29304,
+    "webSearchRequests": 0,
+    "costUSD": 0.42068700000000003,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 389,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1-b",
+ "started": "2026-10-04T00:56:12.814290+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Person\", \"workspace\": \"bluefern\", \"key\": \"kai-morimoto\", \"name\": \"Kai Morimoto\", \"attrs\": {\"email\": \"kai@bluefern.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}, {\"kind\": \"Action\", \"workspace\": \"bluefern\", \"key\": \"calibration-write-up\", \"name\": \"Submit calibration write-up to Kai Morimoto\", \"attrs\": {\"due\": \"2026-09-30\", \"priority\": \"high\", \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"kai-morimoto\", \"type\": \"owed_to\"}]}]",
+  "total_cost_usd": 0.24911760000000002,
+  "duration_ms": 28965,
+  "duration_api_ms": 27015,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 32002,
+   "cache_read_input_tokens": 497058,
+   "output_tokens": 2167,
+   "output_tokens_details": {
+    "thinking_tokens": 925
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 32002,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 260,
+     "cache_read_input_tokens": 77065,
+     "cache_creation_input_tokens": 741,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 741
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 14,
+    "outputTokens": 2167,
+    "cacheReadInputTokens": 497058,
+    "cacheCreationInputTokens": 32002,
+    "webSearchRequests": 0,
+    "costUSD": 0.24911760000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 925,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

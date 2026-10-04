@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1-c",
+ "started": "2026-10-04T00:47:43.031425+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"calibration-write-up\",\n    \"name\": \"Calibration write-up\",\n    \"attrs\": {\n      \"due\": \"2026-09-30\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"mara-quint\",\n        \"to_workspace\": \"redcedar\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0784609,
+  "duration_ms": 30697,
+  "duration_api_ms": 29669,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 19062,
+   "cache_read_input_tokens": 246249,
+   "output_tokens": 3134,
+   "output_tokens_details": {
+    "thinking_tokens": 2442
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 19062,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2523,
+     "cache_read_input_tokens": 53132,
+     "cache_creation_input_tokens": 916,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 916
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 3134,
+    "cacheReadInputTokens": 246249,
+    "cacheCreationInputTokens": 19062,
+    "webSearchRequests": 0,
+    "costUSD": 0.0784609,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2442,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

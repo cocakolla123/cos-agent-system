@@ -1,0 +1,64 @@
+{
+ "scenario": "deadline-change-1",
+ "started": "2026-10-04T00:34:11.739611+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Person\", \"workspace\": \"freelance\", \"key\": \"dana-whitfield\", \"name\": \"Dana Whitfield\", \"attrs\": {\"email\": \"dana@crestline.example\", \"org\": \"Crestline\", \"role\": \"client contact\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"Document\", \"workspace\": \"freelance\", \"key\": \"calibration-write-up\", \"name\": \"Calibration write-up\", \"attrs\": {\"status\": \"requested\", \"requested_by\": \"dana-whitfield\", \"refs\": [\"th-dc1\"], \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"freelance\", \"key\": \"deliver-calibration-write-up\", \"name\": \"Deliver the calibration write-up to Dana Whitfield\", \"attrs\": {\"due\": \"2026-09-30\", \"priority\": \"high\", \"evidence\": [\"em-001\", \"em-002\"], \"refs\": [\"th-dc1\"], \"note\": \"Deadline moved up from Oct 2 (em-001) to Sep 30 (em-002) because the review board meets early; newest statement wins. Sep 30 is already past as of today (2026-10-01) \u2014 overdue.\", \"owner\": \"alex.rivera@mailbox.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"owed_to\"}, {\"to_kind\": \"Document\", \"to_key\": \"calibration-write-up\", \"type\": \"produces\"}]}]",
+  "total_cost_usd": 0.46645999999999993,
+  "duration_ms": 21255,
+  "duration_api_ms": 20285,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29631,
+   "cache_read_input_tokens": 287150,
+   "output_tokens": 1061,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29631,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 589,
+     "cache_read_input_tokens": 63548,
+     "cache_creation_input_tokens": 665,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 665
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1061,
+    "cacheReadInputTokens": 287150,
+    "cacheCreationInputTokens": 29631,
+    "webSearchRequests": 0,
+    "costUSD": 0.46645999999999993,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

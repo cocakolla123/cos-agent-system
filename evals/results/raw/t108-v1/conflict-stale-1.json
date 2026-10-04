@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1",
+ "started": "2026-10-04T00:33:29.002925+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-retainer-renewal-decision\",\n    \"name\": \"Renewal decision on Crestline retainer contract\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"priority\": \"low\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-cf1\"],\n      \"requested_by\": \"dana-whitfield\",\n      \"notes\": \"Dana requested a renewal decision by 2026-10-18 (em-001, 2026-09-12). Superseded on 2026-09-27 (em-002): the board approved an automatic renewal, so no decision is needed from Alex. Deadline no longer applies; nothing outstanding.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline-retainer-contract\", \"type\": \"relates_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline-retainer-contract\", \"type\": \"involved_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-retainer-contract\",\n    \"name\": \"Crestline retainer contract renewal\",\n    \"attrs\": {\n      \"status\": \"auto-renewed\",\n      \"decided_by\": \"Crestline board\",\n      \"decided_on\": \"2026-09-26\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-cf1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"contact\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5159395,
+  "duration_ms": 22566,
+  "duration_api_ms": 21348,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30157,
+   "cache_read_input_tokens": 351269,
+   "output_tokens": 1547,
+   "output_tokens_details": {
+    "thinking_tokens": 221
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30157,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 812,
+     "cache_read_input_tokens": 64203,
+     "cache_creation_input_tokens": 536,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 536
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1547,
+    "cacheReadInputTokens": 351269,
+    "cacheCreationInputTokens": 30157,
+    "webSearchRequests": 0,
+    "costUSD": 0.5159395,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 221,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,18 @@
+{
+ "category": "owed_to_user",
+ "id": "owed-to-user-1-c",
+ "note": "landlord owes the user; two weeks of silence (cast rotation)",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "eastgate": "school",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quantaleaf": "employer",
+  "redcedar": "freelance"
+ }
+}

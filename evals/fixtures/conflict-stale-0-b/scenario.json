@@ -1,0 +1,18 @@
+{
+ "category": "conflict_stale",
+ "id": "conflict-stale-0-b",
+ "note": "ticket and slack conflict; newer slack wins (cast rotation)",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "bluefern": "freelance",
+  "helixworks": "employer",
+  "job-search": "job-search",
+  "lakemont": "school",
+  "personal": "personal"
+ }
+}

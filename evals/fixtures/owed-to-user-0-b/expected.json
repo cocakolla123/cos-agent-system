@@ -1,0 +1,25 @@
+{
+ "commitments": [
+  {
+   "blocked_on": "nina.laurent",
+   "counterparty": "nina.laurent",
+   "due": null,
+   "gist": [
+    "staging",
+    "credentials",
+    "nina"
+   ],
+   "owner": "counterparty",
+   "sources": [
+    "em-001"
+   ],
+   "workspace": "helixworks"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2",
+ "started": "2026-10-04T00:43:41.202790+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"meridian-interview-reschedule-answer\", \"name\": \"Awaiting Meridian recruiting's answer on rescheduling the Oct 2 systems interview\", \"attrs\": {\"priority\": \"high\", \"blocked_on\": \"recruiting@meridian.example (Meridian recruiting)\", \"evidence\": [\"em-001\"], \"detail\": \"Alex sent a reschedule request on 2026-09-25 asking to move the Oct 2 systems interview to later that week and offered to share availability; no reply in the thread as of today (2026-10-01), and the original slot has passed.\", \"refs\": [\"th-ot2\"], \"requested_window\": \"later the week of 2026-10-02\", \"next_move\": \"counterparty reply; follow-up nudge can be drafted for approval\"}, \"source\": \"eval-fixture\", \"confidence\": 0.93, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"}, {\"to_kind\": \"Meeting\", \"to_key\": \"meridian-systems-interview-2026-10-02\", \"to_workspace\": \"job-search\", \"type\": \"about\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"job-search\", \"type\": \"owed_to\"}]},\n{\"kind\": \"Meeting\", \"workspace\": \"job-search\", \"key\": \"meridian-systems-interview-2026-10-02\", \"name\": \"Meridian systems interview (originally Oct 2)\", \"attrs\": {\"original_date\": \"2026-10-02\", \"status\": \"reschedule requested, unconfirmed\", \"evidence\": [\"em-001\"], \"refs\": [\"th-ot2\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"meridian-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"organized_by\"}]},\n{\"kind\": \"Person\", \"workspace\": \"job-search\", \"key\": \"meridian-recruiting\", \"name\": \"Meridian recruiting\", \"attrs\": {\"email\": \"recruiting@meridian.example\", \"org\": \"Meridian\", \"role\": \"recruiting contact\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"job-search\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n{\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weekly-byte-issue-214\", \"name\": \"The Weekly Byte \u2014 issue 214\", \"attrs\": {\"type\": \"newsletter\", \"from\": \"digest@weeklybyte.example\", \"date\": \"2026-09-29\", \"actionable\": false, \"evidence\": [\"em-002\"], \"refs\": [\"th-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []}\n]",
+  "total_cost_usd": 0.5279365,
+  "duration_ms": 26160,
+  "duration_api_ms": 24506,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 30480,
+   "cache_read_input_tokens": 352553,
+   "output_tokens": 1872,
+   "output_tokens_details": {
+    "thinking_tokens": 246
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30480,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1061,
+     "cache_read_input_tokens": 64479,
+     "cache_creation_input_tokens": 583,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 583
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1872,
+    "cacheReadInputTokens": 352553,
+    "cacheCreationInputTokens": 30480,
+    "webSearchRequests": 0,
+    "costUSD": 0.5279365,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 246,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

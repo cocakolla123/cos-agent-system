@@ -1,0 +1,13 @@
+{
+ "body": "Confirming receipt of your August invoice.",
+ "connector": "email",
+ "date": "2026-09-05T10:00:00Z",
+ "folder": "inbox",
+ "from": "Mara Quint <mara@redcedar.example>",
+ "id": "em-001",
+ "subject": "Invoice 2026-08 received",
+ "thread_id": "th-sa1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

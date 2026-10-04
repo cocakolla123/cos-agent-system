@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2-b",
+ "started": "2026-10-04T00:35:48.080217+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"hw-301\",\n    \"name\": \"Orion service: rotate signing keys\",\n    \"attrs\": {\n      \"ticket_key\": \"HW-301\",\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"opened\": \"2026-09-27\",\n      \"note\": \"Distinct from the personal 'Orion' woodworking bench project (doc-002, personal workspace) \u2014 same codename, unrelated.\",\n      \"evidence\": [\"tk-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"rosa-alvarez\", \"type\": \"commented_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"rosa-alvarez\",\n    \"name\": \"Rosa Alvarez\",\n    \"attrs\": {\n      \"email\": \"rosa.alvarez@helixworks.example\",\n      \"org\": \"helixworks\",\n      \"evidence\": [\"tk-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"hw-301\", \"type\": \"commented_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"rotate-signing-keys-hw-301\",\n    \"name\": \"Rotate Orion service signing keys (HW-301)\",\n    \"attrs\": {\n      \"due\": \"2026-10-11\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"refs\": [\"HW-301\"],\n      \"evidence\": [\"tk-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"hw-301\", \"type\": \"fulfills\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"personal\",\n    \"key\": \"orion-woodworking-bench\",\n    \"name\": \"Orion (woodworking) \u2014 bench build\",\n    \"attrs\": {\n      \"note\": \"Personal woodworking project. Distinct from the Helixworks 'Orion service' (HW-301) \u2014 same codename, unrelated.\",\n      \"evidence\": [\"doc-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Document\", \"to_key\": \"orion-bench-plan\", \"type\": \"documented_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"orion-bench-plan\",\n    \"name\": \"Orion (woodworking) \u2014 bench plan\",\n    \"attrs\": {\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"date\": \"2026-09-21\",\n      \"evidence\": [\"doc-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"orion-woodworking-bench\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"order-maple-top-orion-bench\",\n    \"name\": \"Order the maple top for the Orion workbench\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"priority\": \"medium\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"rationale\": \"Needed to make the winter window.\",\n      \"evidence\": [\"doc-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"orion-woodworking-bench\", \"type\": \"advances\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.49868999999999997,
+  "duration_ms": 27097,
+  "duration_api_ms": 25446,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29976,
+   "cache_read_input_tokens": 287260,
+   "output_tokens": 2210,
+   "output_tokens_details": {
+    "thinking_tokens": 274
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29976,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1651,
+     "cache_read_input_tokens": 63603,
+     "cache_creation_input_tokens": 955,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 955
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 2210,
+    "cacheReadInputTokens": 287260,
+    "cacheCreationInputTokens": 29976,
+    "webSearchRequests": 0,
+    "costUSD": 0.49868999999999997,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 274,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

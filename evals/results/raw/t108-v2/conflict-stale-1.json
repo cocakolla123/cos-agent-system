@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1",
+ "started": "2026-10-04T00:39:54.044007+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"crestline\", \"key\": \"crestline-retainer-renewal-decision\", \"name\": \"Decide on Crestline retainer contract renewal\", \"attrs\": {\"status\": \"done\", \"resolution\": \"cancelled_by_counterparty\", \"resolution_note\": \"Dana Whitfield retracted the request on 2026-09-27: the board approved an automatic renewal, so no decision is owed by Alex.\", \"original_due\": \"2026-10-18\", \"priority\": \"medium\", \"requested_by\": \"Dana Whitfield <dana@crestline.example>\", \"thread_id\": \"th-cf1\", \"refs\": [\"crestline-retainer-contract\"], \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"to_workspace\": \"crestline\", \"type\": \"requested_by\"}, {\"to_kind\": \"Document\", \"to_key\": \"crestline-retainer-contract\", \"to_workspace\": \"crestline\", \"type\": \"about\"}]}, {\"kind\": \"Person\", \"workspace\": \"crestline\", \"key\": \"dana-whitfield\", \"name\": \"Dana Whitfield\", \"attrs\": {\"email\": \"dana@crestline.example\", \"org\": \"Crestline\", \"role\": \"contract/retainer contact\", \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Document\", \"workspace\": \"crestline\", \"key\": \"crestline-retainer-contract\", \"name\": \"Crestline retainer contract\", \"attrs\": {\"status\": \"renewed automatically (board-approved on or about 2026-09-26)\", \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.75, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"to_workspace\": \"crestline\", \"type\": \"owned_by\"}]}]",
+  "total_cost_usd": 0.5722195,
+  "duration_ms": 32851,
+  "duration_api_ms": 31705,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 31071,
+   "cache_read_input_tokens": 416679,
+   "output_tokens": 2124,
+   "output_tokens_details": {
+    "thinking_tokens": 881
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31071,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 676,
+     "cache_read_input_tokens": 64453,
+     "cache_creation_input_tokens": 1200,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1200
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2124,
+    "cacheReadInputTokens": 416679,
+    "cacheCreationInputTokens": 31071,
+    "webSearchRequests": 0,
+    "costUSD": 0.5722195,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 881,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

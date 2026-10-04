@@ -1,0 +1,105 @@
+{
+ "date": "2026-10-03",
+ "git_sha": "da6abe6",
+ "dataset": {
+  "scenarios": 108,
+  "dev": 54,
+  "test": 54,
+  "categories": 12,
+  "note": "36 hand-authored stories x 3 label-preserving cast rotations; rotations inherit the base story's split, so nothing tuned-on enters test"
+ },
+ "test_split_runs": {
+  "t108-v1": {
+   "f1": 0.8,
+   "ci95": [
+    0.6792,
+    0.9057
+   ],
+   "precision": 0.7273,
+   "recall": 0.8889,
+   "due_accuracy": 1.0,
+   "citation_accuracy": 1.0,
+   "isolation_violations": 1,
+   "injection_resisted": "3/3",
+   "mean_cost_usd": 0.5365,
+   "median_latency_ms": 27490,
+   "models": [
+    "claude-opus-5[1m]"
+   ]
+  },
+  "t108-v2": {
+   "f1": 0.9,
+   "ci95": [
+    0.8269,
+    0.9608
+   ],
+   "precision": 0.8182,
+   "recall": 1.0,
+   "due_accuracy": 1.0,
+   "citation_accuracy": 1.0,
+   "isolation_violations": 2,
+   "injection_resisted": "3/3",
+   "mean_cost_usd": 0.5047,
+   "median_latency_ms": 25905,
+   "models": [
+    "claude-opus-5[1m]"
+   ]
+  },
+  "t108-v2-haiku": {
+   "f1": 0.9677,
+   "ci95": [
+    0.9231,
+    1.0
+   ],
+   "precision": 0.9375,
+   "recall": 1.0,
+   "due_accuracy": 1.0,
+   "citation_accuracy": 1.0,
+   "isolation_violations": 0,
+   "injection_resisted": "3/3",
+   "mean_cost_usd": 0.0841,
+   "median_latency_ms": 33963,
+   "models": [
+    "claude-haiku-4-5-20251001"
+   ]
+  },
+  "t108-v2-sonnet": {
+   "f1": 0.9574,
+   "ci95": [
+    0.913,
+    0.9903
+   ],
+   "precision": 0.9184,
+   "recall": 1.0,
+   "due_accuracy": 1.0,
+   "citation_accuracy": 1.0,
+   "isolation_violations": 0,
+   "injection_resisted": "3/3",
+   "mean_cost_usd": 0.2159,
+   "median_latency_ms": 23529,
+   "models": [
+    "claude-sonnet-5"
+   ]
+  }
+ },
+ "significance": {
+  "v2_vs_v1": {
+   "diff_f1": 0.1,
+   "p_two_sided": 0.0615
+  },
+  "haiku_vs_default": {
+   "diff_f1": 0.0677,
+   "p_two_sided": 0.0587
+  },
+  "sonnet_vs_default": {
+   "diff_f1": 0.0574,
+   "p_two_sided": 0.0293
+  }
+ },
+ "honest_notes": [
+  "v2 (workspace-id contract) improves test F1 0.800->0.900 (+0.100) but the paired permutation p=0.061 misses 0.05 \u2014 directionally consistent with the dev-split finding, not yet individually significant even at n=54.",
+  "Haiku 4.5 scores +0.068 F1 over the default model (p=0.059, not significant) at 6x lower cost ($0.084 vs $0.505/scenario) \u2014 the cost-quality conclusion (use the small model for this extraction stage) holds regardless of which side of significance the quality delta lands on; the default model loses mostly precision (speculative extra actions).",
+  "The 2 isolation 'violations' in the default-model v2 run are the user's own identity Person node (personal:person:alex-rivera) citing cross-workspace evidence \u2014 a scorer limitation (identity nodes counted like any other node), documented rather than patched post-hoc; numbers reported as scored.",
+  "All runs: due-date and citation accuracy 1.0; prompt injection resisted 9/9 scenario-runs across the three v2 runs and 3/3 in v1."
+ ]
+}

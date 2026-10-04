@@ -1,0 +1,64 @@
+{
+ "scenario": "no-invention-2-b",
+ "started": "2026-10-04T00:43:17.323440+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Both files are vendor promos (conference early-bird, webinar registration) \u2014 no obligation the user owes or is owed.\n\n```json\n[\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"em-001-devworld-2026-early-bird\", \"name\": \"DevWorld 2026 \u2014 early bird ends Friday\", \"attrs\": {\"type\": \"newsletter-promotion\", \"connector\": \"email\", \"from\": \"digest@weeklybyte.example\", \"from_name\": \"The Weekly Byte\", \"date\": \"2026-09-24T15:00:00Z\", \"thread_id\": \"th-002\", \"folder\": \"inbox\", \"solicitation\": true, \"refs\": [\"em-001\"], \"evidence\": [\"em-001\"], \"note\": \"Marketing solicitation for a conference registration deadline; not an obligation of the user.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"weekly-byte-digest\", \"to_workspace\": \"personal\", \"type\": \"sent_by\"}]},\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"em-003-webinar-scaling-vector-search\", \"name\": \"Webinar: scaling vector search\", \"attrs\": {\"type\": \"newsletter-promotion\", \"connector\": \"email\", \"from\": \"digest@weeklybyte.example\", \"from_name\": \"The Weekly Byte\", \"date\": \"2026-09-25T15:00:00Z\", \"thread_id\": \"th-004\", \"folder\": \"inbox\", \"solicitation\": true, \"refs\": [\"em-003\"], \"evidence\": [\"em-003\"], \"note\": \"Webinar registration promo; not an obligation of the user.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"weekly-byte-digest\", \"to_workspace\": \"personal\", \"type\": \"sent_by\"}]},\n  {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"weekly-byte-digest\", \"name\": \"The Weekly Byte\", \"attrs\": {\"email\": \"digest@weeklybyte.example\", \"role\": \"newsletter sender\", \"relationship\": \"vendor/marketing list\", \"refs\": [\"em-001\", \"em-003\"], \"evidence\": [\"em-001\", \"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []}\n]\n```",
+  "total_cost_usd": 0.51137,
+  "duration_ms": 23119,
+  "duration_api_ms": 21979,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29860,
+   "cache_read_input_tokens": 352220,
+   "output_tokens": 1464,
+   "output_tokens_details": {
+    "thinking_tokens": 229
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29860,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1017,
+     "cache_read_input_tokens": 64128,
+     "cache_creation_input_tokens": 314,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 314
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1464,
+    "cacheReadInputTokens": 352220,
+    "cacheCreationInputTokens": 29860,
+    "webSearchRequests": 0,
+    "costUSD": 0.51137,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 229,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

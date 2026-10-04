@@ -1,0 +1,13 @@
+{
+ "body": "Reminder: your project proposal (2 pages, problem statement plus evaluation plan) is due Oct 9 at 5pm. Submit through the course portal.",
+ "connector": "email",
+ "date": "2026-09-30T13:00:00Z",
+ "folder": "inbox",
+ "from": "Prof. Elif Demir <elif.demir@eastgate.example>",
+ "id": "em-001",
+ "subject": "CS 540 project proposal",
+ "thread_id": "th-uo2",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

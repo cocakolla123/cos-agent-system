@@ -1,0 +1,13 @@
+{
+ "body": "Your August invoice was paid today via ACH. Remittance attached.",
+ "connector": "email",
+ "date": "2026-09-12T10:00:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-002",
+ "subject": "Payment sent \u2014 invoice 2026-08",
+ "thread_id": "th-sa1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

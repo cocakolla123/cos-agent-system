@@ -1,0 +1,19 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "early",
+   "bird",
+   "register"
+  ],
+  [
+   "webinar",
+   "seat"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

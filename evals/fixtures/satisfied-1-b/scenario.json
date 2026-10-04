@@ -1,0 +1,18 @@
+{
+ "category": "satisfied",
+ "id": "satisfied-1-b",
+ "note": "paid invoice is history, not a task (cast rotation)",
+ "split": "test",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "bluefern": "freelance",
+  "helixworks": "employer",
+  "job-search": "job-search",
+  "lakemont": "school",
+  "personal": "personal"
+ }
+}

@@ -1,0 +1,25 @@
+{
+ "commitments": [
+  {
+   "blocked_on": "registrar",
+   "counterparty": "registrar",
+   "due": null,
+   "gist": [
+    "enrollment",
+    "verification",
+    "letter"
+   ],
+   "owner": "counterparty",
+   "sources": [
+    "em-001"
+   ],
+   "workspace": "eastgate"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

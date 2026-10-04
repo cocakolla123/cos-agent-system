@@ -1,0 +1,32 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "kai",
+   "due": "2026-10-16",
+   "gist": [
+    "metrics",
+    "deck"
+   ],
+   "owner": "user",
+   "sources": [
+    "sl-002"
+   ],
+   "workspace": "bluefern"
+  }
+ ],
+ "dedupe": [
+  {
+   "gist": [
+    "metrics",
+    "deck"
+   ],
+   "max": 1
+  }
+ ],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

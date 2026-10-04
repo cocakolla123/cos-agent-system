@@ -1,0 +1,13 @@
+{
+ "body": "Alex \u2014 the onboarding runbook still shows the old VPN steps. Can you send me the revised onboarding doc by Monday Oct 6? New-hire class starts the week after.",
+ "connector": "email",
+ "date": "2026-09-26T15:12:00Z",
+ "folder": "inbox",
+ "from": "Omar Haddad <omar.haddad@quantaleaf.example>",
+ "id": "em-001",
+ "subject": "Onboarding doc revision",
+ "thread_id": "th-uo0",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

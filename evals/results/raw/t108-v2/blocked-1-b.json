@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1-b",
+ "started": "2026-10-04T00:39:38.234064+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"PR\", \"workspace\": \"helixworks\", \"key\": \"helixworks-ingest-pr-412\", \"name\": \"PR #412: Add retry budget to ingest workers\", \"attrs\": {\"number\": 412, \"repo\": \"helixworks/ingest\", \"state\": \"open\", \"author\": \"alex.rivera@mailbox.example\", \"opened\": \"2026-09-22\", \"ci\": \"green\", \"review_requested_from\": \"Nina Laurent\", \"review_requested_days_ago\": 9, \"review_status\": \"pending\", \"refs\": [\"helixworks/ingest\", \"PR 412\"], \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Repository\", \"to_key\": \"helixworks-ingest\", \"to_workspace\": \"helixworks\", \"type\": \"in_repository\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"helixworks\", \"type\": \"authored_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"nina-laurent\", \"to_workspace\": \"helixworks\", \"type\": \"review_requested_from\"}]}, {\"kind\": \"Repository\", \"workspace\": \"helixworks\", \"key\": \"helixworks-ingest\", \"name\": \"helixworks/ingest\", \"attrs\": {\"full_name\": \"helixworks/ingest\", \"evidence\": [\"pr-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Person\", \"workspace\": \"helixworks\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}, {\"kind\": \"Person\", \"workspace\": \"helixworks\", \"key\": \"nina-laurent\", \"name\": \"Nina Laurent\", \"attrs\": {\"role\": \"requested reviewer on PR 412\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Person\", \"workspace\": \"helixworks\", \"key\": \"rosa-alvarez\", \"name\": \"Rosa Alvarez\", \"attrs\": {\"email\": \"rosa.alvarez@helixworks.example\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"helixworks\", \"type\": \"posted_in\"}]}, {\"kind\": \"Channel\", \"workspace\": \"helixworks\", \"key\": \"eng-ingest\", \"name\": \"#eng-ingest\", \"attrs\": {\"platform\": \"slack\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Action\", \"workspace\": \"helixworks\", \"key\": \"pr-412-awaiting-nina-review\", \"name\": \"PR 412 (retry budget for ingest workers) is awaiting Nina Laurent's review\", \"attrs\": {\"priority\": \"high\", \"blocked_on\": \"Nina Laurent\", \"refs\": [\"PR 412\", \"helixworks/ingest\"], \"detail\": \"Review requested from Nina Laurent on 2026-09-22 (9 days before the PR snapshot); no review yet, CI green. Rosa Alvarez asked in #eng-ingest on 2026-09-30 whether Nina's review is the blocker and suggested following up. The next move is Nina's; a nudge from Alex would be the outbound step.\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"PR\", \"to_key\": \"helixworks-ingest-pr-412\", \"to_workspace\": \"helixworks\", \"type\": \"about\"}, {\"to_kind\": \"Person\", \"to_key\": \"nina-laurent\", \"to_workspace\": \"helixworks\", \"type\": \"blocked_on\"}]}, {\"kind\": \"Action\", \"workspace\": \"helixworks\", \"key\": \"reply-rosa-pr-412-status\", \"name\": \"Reply to Rosa Alvarez in #eng-ingest about what is holding PR 412\", \"attrs\": {\"priority\": \"medium\", \"refs\": [\"PR 412\"], \"detail\": \"Rosa Alvarez asked directly in #eng-ingest on 2026-09-30 what is holding PR 412 and whether it is waiting on Nina's review. Answering requires an outbound Slack message from Alex; draft for approval.\", \"evidence\": [\"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"rosa-alvarez\", \"to_workspace\": \"helixworks\", \"type\": \"owed_to\"}, {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"to_workspace\": \"helixworks\", \"type\": \"in_channel\"}, {\"to_kind\": \"PR\", \"to_key\": \"helixworks-ingest-pr-412\", \"to_workspace\": \"helixworks\", \"type\": \"about\"}]}, {\"kind\": \"Action\", \"workspace\": \"helixworks\", \"key\": \"nudge-nina-pr-412-review\", \"name\": \"Nudge Nina Laurent for the PR 412 review\", \"attrs\": {\"priority\": \"medium\", \"blocked_on\": \"Nina Laurent\", \"refs\": [\"PR 412\", \"helixworks/ingest\"], \"detail\": \"Review request has been outstanding since 2026-09-22 with CI green; Rosa suggested following up with the reviewer again. Outbound nudge to be drafted and queued for approval.\", \"evidence\": [\"pr-001\", \"sl-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"nina-laurent\", \"to_workspace\": \"helixworks\", \"type\": \"blocked_on\"}, {\"to_kind\": \"PR\", \"to_key\": \"helixworks-ingest-pr-412\", \"to_workspace\": \"helixworks\", \"type\": \"about\"}]}]",
+  "total_cost_usd": 0.5860685,
+  "duration_ms": 43811,
+  "duration_api_ms": 42284,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30384,
+   "cache_read_input_tokens": 416517,
+   "output_tokens": 2956,
+   "output_tokens_details": {
+    "thinking_tokens": 282
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30384,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2109,
+     "cache_read_input_tokens": 64350,
+     "cache_creation_input_tokens": 616,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 616
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2956,
+    "cacheReadInputTokens": 416517,
+    "cacheCreationInputTokens": 30384,
+    "webSearchRequests": 0,
+    "costUSD": 0.5860685,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 282,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

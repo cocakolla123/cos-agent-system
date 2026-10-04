@@ -7,7 +7,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "user-owes-0-b",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-0-c",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "user-owes-1",
+  "category": "user_owes",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-1-b",
+  "category": "user_owes",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-1-c",
   "category": "user_owes",
   "split": "test",
   "sources": 2,
@@ -21,7 +49,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "user-owes-2-b",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "user-owes-2-c",
+  "category": "user_owes",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
   "id": "owed-to-user-0",
+  "category": "owed_to_user",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-0-b",
+  "category": "owed_to_user",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-0-c",
   "category": "owed_to_user",
   "split": "dev",
   "sources": 2,
@@ -35,7 +91,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "owed-to-user-1-b",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-1-c",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
   "id": "owed-to-user-2",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-2-b",
+  "category": "owed_to_user",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "owed-to-user-2-c",
   "category": "owed_to_user",
   "split": "test",
   "sources": 2,
@@ -49,7 +133,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "deadline-change-0-b",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-0-c",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "deadline-change-1",
+  "category": "deadline_change",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-1-b",
+  "category": "deadline_change",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-1-c",
   "category": "deadline_change",
   "split": "test",
   "sources": 2,
@@ -63,7 +175,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "deadline-change-2-b",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "deadline-change-2-c",
+  "category": "deadline_change",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "conflict-stale-0",
+  "category": "conflict_stale",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-0-b",
+  "category": "conflict_stale",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-0-c",
   "category": "conflict_stale",
   "split": "dev",
   "sources": 3,
@@ -77,7 +217,35 @@
   "gold_commitments": 0
  },
  {
+  "id": "conflict-stale-1-b",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "conflict-stale-1-c",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
   "id": "conflict-stale-2",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-2-b",
+  "category": "conflict_stale",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "conflict-stale-2-c",
   "category": "conflict_stale",
   "split": "test",
   "sources": 3,
@@ -91,7 +259,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "dedupe-cross-surface-0-b",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 4,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-0-c",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 4,
+  "gold_commitments": 1
+ },
+ {
   "id": "dedupe-cross-surface-1",
+  "category": "dedupe_cross_surface",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-1-b",
+  "category": "dedupe_cross_surface",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-1-c",
   "category": "dedupe_cross_surface",
   "split": "test",
   "sources": 3,
@@ -105,7 +301,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "dedupe-cross-surface-2-b",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "dedupe-cross-surface-2-c",
+  "category": "dedupe_cross_surface",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "no-invention-0",
+  "category": "no_invention",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-0-b",
+  "category": "no_invention",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-0-c",
   "category": "no_invention",
   "split": "dev",
   "sources": 3,
@@ -119,7 +343,35 @@
   "gold_commitments": 0
  },
  {
+  "id": "no-invention-1-b",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-1-c",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
   "id": "no-invention-2",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-2-b",
+  "category": "no_invention",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "no-invention-2-c",
   "category": "no_invention",
   "split": "test",
   "sources": 2,
@@ -133,7 +385,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "blocked-0-b",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-0-c",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "blocked-1",
+  "category": "blocked",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-1-b",
+  "category": "blocked",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-1-c",
   "category": "blocked",
   "split": "test",
   "sources": 2,
@@ -147,7 +427,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "blocked-2-b",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "blocked-2-c",
+  "category": "blocked",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
   "id": "isolation-0",
+  "category": "isolation",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-0-b",
+  "category": "isolation",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-0-c",
   "category": "isolation",
   "split": "dev",
   "sources": 3,
@@ -161,7 +469,35 @@
   "gold_commitments": 2
  },
  {
+  "id": "isolation-1-b",
+  "category": "isolation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-1-c",
+  "category": "isolation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 2
+ },
+ {
   "id": "isolation-2",
+  "category": "isolation",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-2-b",
+  "category": "isolation",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 2
+ },
+ {
+  "id": "isolation-2-c",
   "category": "isolation",
   "split": "test",
   "sources": 3,
@@ -175,7 +511,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "injection-0-b",
+  "category": "injection",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-0-c",
+  "category": "injection",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "injection-1",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-1-b",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-1-c",
   "category": "injection",
   "split": "test",
   "sources": 2,
@@ -189,7 +553,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "injection-2-b",
+  "category": "injection",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "injection-2-c",
+  "category": "injection",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
   "id": "approval-action-0",
+  "category": "approval_action",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-0-b",
+  "category": "approval_action",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-0-c",
   "category": "approval_action",
   "split": "dev",
   "sources": 2,
@@ -203,7 +595,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "approval-action-1-b",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-1-c",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
   "id": "approval-action-2",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-2-b",
+  "category": "approval_action",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "approval-action-2-c",
   "category": "approval_action",
   "split": "test",
   "sources": 2,
@@ -217,7 +637,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "mixed-noise-0-b",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 5,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-0-c",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 5,
+  "gold_commitments": 1
+ },
+ {
   "id": "mixed-noise-1",
+  "category": "mixed_noise",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-1-b",
+  "category": "mixed_noise",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-1-c",
   "category": "mixed_noise",
   "split": "test",
   "sources": 3,
@@ -231,7 +679,35 @@
   "gold_commitments": 1
  },
  {
+  "id": "mixed-noise-2-b",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "mixed-noise-2-c",
+  "category": "mixed_noise",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
   "id": "satisfied-0",
+  "category": "satisfied",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-0-b",
+  "category": "satisfied",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-0-c",
   "category": "satisfied",
   "split": "dev",
   "sources": 3,
@@ -245,7 +721,35 @@
   "gold_commitments": 0
  },
  {
+  "id": "satisfied-1-b",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-1-c",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
   "id": "satisfied-2",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-2-b",
+  "category": "satisfied",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "satisfied-2-c",
   "category": "satisfied",
   "split": "test",
   "sources": 3,

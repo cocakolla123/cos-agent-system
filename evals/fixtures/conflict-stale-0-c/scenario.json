@@ -1,0 +1,18 @@
+{
+ "category": "conflict_stale",
+ "id": "conflict-stale-0-c",
+ "note": "ticket and slack conflict; newer slack wins (cast rotation)",
+ "split": "dev",
+ "today": "2026-10-01",
+ "user": {
+  "email": "alex.rivera@mailbox.example",
+  "name": "Alex Rivera"
+ },
+ "workspaces": {
+  "eastgate": "school",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quantaleaf": "employer",
+  "redcedar": "freelance"
+ }
+}

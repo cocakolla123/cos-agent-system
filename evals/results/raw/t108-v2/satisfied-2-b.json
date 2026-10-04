@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-2-b",
+ "started": "2026-10-04T00:44:31.242096+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"juniper-labs-take-home-assessment\",\n    \"name\": \"Complete Juniper Labs take-home assessment\",\n    \"attrs\": {\n      \"due\": \"2026-09-26\",\n      \"status\": \"submitted\",\n      \"priority\": \"high\",\n      \"completed_on\": \"2026-09-25\",\n      \"refs\": [\"th-sa2\"],\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"notes\": \"Assessment link received Sep 19 with a Sep 26 deadline; Juniper Labs confirmed receipt of the submission on Sep 25, so the obligation is satisfied.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"juniper-labs-talent\", \"to_workspace\": \"job-search\", \"type\": \"assigned_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"juniper-labs-application\", \"to_workspace\": \"job-search\", \"type\": \"part_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"juniper-labs-assessment-review-response\",\n    \"name\": \"Await Juniper Labs review decision on take-home assessment\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Juniper Labs Talent (talent@juniperlabs.example)\",\n      \"refs\": [\"th-sa2\"],\n      \"evidence\": [\"em-002\"],\n      \"notes\": \"Juniper Labs said on Sep 25 that the team would review and get back within two weeks, i.e. by about Oct 9. Next move is theirs; follow up if nothing arrives.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"juniper-labs-talent\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"juniper-labs-application\", \"to_workspace\": \"job-search\", \"type\": \"part_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"job-search\",\n    \"key\": \"juniper-labs-application\",\n    \"name\": \"Juniper Labs application\",\n    \"attrs\": {\n      \"stage\": \"assessment submitted, awaiting review\",\n      \"refs\": [\"th-sa2\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"juniper-labs-talent\", \"to_workspace\": \"job-search\", \"type\": \"involves\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"juniper-labs-talent\",\n    \"name\": \"Juniper Labs Talent\",\n    \"attrs\": {\n      \"email\": \"talent@juniperlabs.example\",\n      \"org\": \"Juniper Labs\",\n      \"role\": \"recruiting contact\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"em-001\", \"em-002\", \"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-platform-8-3-release-notes\",\n    \"name\": \"The Weekly Byte \u2014 Release notes: Platform 8.3\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"actionable\": false,\n      \"summary\": \"Platform 8.3 shipped: faster cold starts, new audit log filters. Explicitly states no action needed.\",\n      \"refs\": [\"th-004\"],\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.575588,
+  "duration_ms": 32889,
+  "duration_api_ms": 31666,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30213,
+   "cache_read_input_tokens": 416726,
+   "output_tokens": 2601,
+   "output_tokens_details": {
+    "thinking_tokens": 539
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30213,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2067,
+     "cache_read_input_tokens": 64460,
+     "cache_creation_input_tokens": 335,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 335
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2601,
+    "cacheReadInputTokens": 416726,
+    "cacheCreationInputTokens": 30213,
+    "webSearchRequests": 0,
+    "costUSD": 0.575588,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 539,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

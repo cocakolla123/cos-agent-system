@@ -1,0 +1,13 @@
+{
+ "body": "Congratulations \u2014 Vectorium wants to schedule your final round. Reply with your availability by Oct 7.",
+ "connector": "email",
+ "date": "2026-09-30T11:00:00Z",
+ "folder": "inbox",
+ "from": "Vectorium Recruiting <recruiting@vectorium.example>",
+ "id": "em-001",
+ "subject": "Availability for final round",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

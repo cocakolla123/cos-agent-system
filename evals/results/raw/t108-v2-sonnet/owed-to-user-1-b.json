@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1-b",
+ "started": "2026-10-04T00:58:33.684413+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Now producing the output.\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund \u2014 unit 4B\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Stonegate leasing office (leasing@stonegate.example)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"stonegate-leasing\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"stonegate-leasing\",\n    \"name\": \"Stonegate Leasing\",\n    \"attrs\": {\n      \"email\": \"leasing@stonegate.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.20624860000000003,
+  "duration_ms": 26551,
+  "duration_api_ms": 24133,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30722,
+   "cache_read_input_tokens": 346603,
+   "output_tokens": 1402,
+   "output_tokens_details": {
+    "thinking_tokens": 549
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30722,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 346,
+     "cache_read_input_tokens": 76125,
+     "cache_creation_input_tokens": 401,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 401
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 10,
+    "outputTokens": 1402,
+    "cacheReadInputTokens": 346603,
+    "cacheCreationInputTokens": 30722,
+    "webSearchRequests": 0,
+    "costUSD": 0.20624860000000003,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 549,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

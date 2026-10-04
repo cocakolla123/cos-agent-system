@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-1",
+ "started": "2026-10-04T00:37:37.940955+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-invoice-2026-08-payment\",\n    \"name\": \"Collect payment for August 2026 invoice (invoice 2026-08) from Crestline\",\n    \"attrs\": {\n      \"status\": \"paid\",\n      \"priority\": \"low\",\n      \"satisfied_on\": \"2026-09-12\",\n      \"counterparty\": \"Dana Whitfield\",\n      \"refs\": [\"invoice-2026-08\"],\n      \"notes\": \"Dana confirmed receipt of the August invoice on 2026-09-05 and sent payment via ACH on 2026-09-12 with remittance attached. No deadline was ever stated in the thread. The payment confirmation is a completion receipt, so this obligation is satisfied and requires no further action.\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"counterparty\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"invoice-2026-08\", \"type\": \"concerns\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"role_guess\": \"client contact / accounts payable\",\n      \"role_basis\": \"confirms invoice receipt and reports that payment was sent\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Document\", \"to_key\": \"invoice-2026-08\", \"type\": \"sender_of_receipt_for\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"crestline\",\n    \"key\": \"invoice-2026-08\",\n    \"name\": \"Invoice 2026-08 (August 2026, Crestline)\",\n    \"attrs\": {\n      \"doc_type\": \"invoice\",\n      \"period\": \"2026-08\",\n      \"received_confirmed\": \"2026-09-05\",\n      \"paid\": \"2026-09-12\",\n      \"payment_method\": \"ACH\",\n      \"payment_status\": \"paid\",\n      \"refs\": [\"th-sa1\"],\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.88,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"billed_to_contact\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.5558964999999999,
+  "duration_ms": 27895,
+  "duration_api_ms": 26059,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30300,
+   "cache_read_input_tokens": 415753,
+   "output_tokens": 1798,
+   "output_tokens_details": {
+    "thinking_tokens": 312
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30300,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 947,
+     "cache_read_input_tokens": 64274,
+     "cache_creation_input_tokens": 608,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 608
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 1798,
+    "cacheReadInputTokens": 415753,
+    "cacheCreationInputTokens": 30300,
+    "webSearchRequests": 0,
+    "costUSD": 0.5558964999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 312,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-1-c",
+ "started": "2026-10-04T00:57:09.918155+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"send-field-test-notes\",\n    \"name\": \"Send field test notes to Mara Quint\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"requested_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"job-search\",\n    \"key\": \"copperline-ai-controls-engineer\",\n    \"name\": \"Copperline AI \\u2014 controls engineer role\",\n    \"attrs\": {\n      \"refs\": []\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"send-resume-to-mara-for-copperline-intro\",\n    \"name\": \"Send resume to Mara Quint for Copperline AI intro\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"job-search\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"copperline-ai-controls-engineer\", \"to_workspace\": \"job-search\", \"type\": \"about\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.2141048,
+  "duration_ms": 36997,
+  "duration_api_ms": 35886,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 31767,
+   "cache_read_input_tokens": 270054,
+   "output_tokens": 3301,
+   "output_tokens_details": {
+    "thinking_tokens": 2166
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31767,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 846,
+     "cache_read_input_tokens": 75352,
+     "cache_creation_input_tokens": 2219,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2219
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 3301,
+    "cacheReadInputTokens": 270054,
+    "cacheCreationInputTokens": 31767,
+    "webSearchRequests": 0,
+    "costUSD": 0.2141048,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 2166,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

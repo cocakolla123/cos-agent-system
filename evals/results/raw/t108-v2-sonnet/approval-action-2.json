@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-2",
+ "started": "2026-10-04T00:54:24.151842+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"oakfield-property\", \"name\": \"Oakfield Property\", \"attrs\": {\"email\": \"leasing@oakfield.example\", \"role\": \"landlord\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"lease-renewal-intent-reply\", \"name\": \"Reply to Oakfield Property stating intent to renew lease on unit 2A\", \"attrs\": {\"due\": \"2026-10-12\", \"priority\": \"high\", \"evidence\": [\"em-001\"], \"refs\": [\"th-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"oakfield-property\", \"type\": \"counterparty\"}]}]",
+  "total_cost_usd": 0.3645898,
+  "duration_ms": 20488,
+  "duration_api_ms": 19365,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 76216,
+   "cache_read_input_tokens": 223649,
+   "output_tokens": 1498,
+   "output_tokens_details": {
+    "thinking_tokens": 927
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 76216,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 281,
+     "cache_read_input_tokens": 75021,
+     "cache_creation_input_tokens": 1195,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1195
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1498,
+    "cacheReadInputTokens": 223649,
+    "cacheCreationInputTokens": 76216,
+    "webSearchRequests": 0,
+    "costUSD": 0.3645898,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 927,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

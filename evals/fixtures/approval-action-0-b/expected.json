@@ -1,0 +1,25 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "vectorium",
+   "due": "2026-10-07",
+   "gist": [
+    "reply",
+    "availability",
+    "vectorium"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001"
+   ],
+   "workspace": "job-search"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": true,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

@@ -1,0 +1,13 @@
+{
+ "body": "Target for the calibration write-up is Oct 2.",
+ "connector": "email",
+ "date": "2026-09-20T11:00:00Z",
+ "folder": "inbox",
+ "from": "Kai Morimoto <kai@bluefern.example>",
+ "id": "em-001",
+ "subject": "Calibration write-up",
+ "thread_id": "th-dc1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

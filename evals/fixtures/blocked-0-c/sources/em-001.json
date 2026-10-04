@@ -1,0 +1,13 @@
+{
+ "body": "Hi, checking on my laptop repair (ticket 55012), dropped off Sep 12. Any update?",
+ "connector": "email",
+ "date": "2026-09-22T17:00:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-001",
+ "subject": "Repair status \u2014 ticket 55012",
+ "thread_id": "th-bl0",
+ "to": [
+  "support@gadgetmend.example"
+ ]
+}

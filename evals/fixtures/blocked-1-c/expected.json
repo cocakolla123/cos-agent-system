@@ -1,0 +1,31 @@
+{
+ "commitments": [
+  {
+   "blocked_on": "devon.price",
+   "counterparty": "devon.price",
+   "due": null,
+   "gist": [
+    "pr",
+    "412",
+    "review"
+   ],
+   "owner": "counterparty",
+   "sources": [
+    "pr-001",
+    "sl-002"
+   ],
+   "workspace": "quantaleaf"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": [
+  [
+   "pr-001",
+   "sl-002"
+  ]
+ ]
+}

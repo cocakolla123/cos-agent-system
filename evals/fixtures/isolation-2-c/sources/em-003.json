@@ -1,0 +1,13 @@
+{
+ "body": "You have 1,240 points. Redeem them for gift cards before they lapse. This is a marketing message.",
+ "connector": "email",
+ "date": "2026-09-27T16:40:00Z",
+ "folder": "inbox",
+ "from": "DealStream Offers <offers@dealstream.example>",
+ "id": "em-003",
+ "subject": "Your DealStream points are waiting",
+ "thread_id": "th-004",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

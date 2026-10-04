@@ -1,0 +1,64 @@
+{
+ "scenario": "blocked-1-b",
+ "started": "2026-10-04T00:54:54.022532+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Repository\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"helixworks-ingest\",\n    \"name\": \"helixworks/ingest\",\n    \"attrs\": {\n      \"full_name\": \"helixworks/ingest\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"PR\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"helixworks-ingest-412\",\n    \"name\": \"Add retry budget to ingest workers\",\n    \"attrs\": {\n      \"number\": 412,\n      \"repo\": \"helixworks/ingest\",\n      \"state\": \"open\",\n      \"author\": \"alex.rivera@mailbox.example\",\n      \"refs\": [\"pr-412\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Repository\", \"to_key\": \"helixworks-ingest\", \"type\": \"belongs_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"nina-laurent\",\n    \"name\": \"Nina Laurent\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"rosa-alvarez\",\n    \"name\": \"Rosa Alvarez\",\n    \"attrs\": {\n      \"email\": \"rosa.alvarez@helixworks.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"eng-ingest\",\n    \"name\": \"#eng-ingest\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"action-pr-412-nina-review\",\n    \"name\": \"Get Nina Laurent's review on PR 412 (Add retry budget to ingest workers)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Nina Laurent\",\n      \"evidence\": [\"pr-001\"],\n      \"refs\": [\"pr-412\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"PR\", \"to_key\": \"helixworks-ingest-412\", \"type\": \"regarding\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"nina-laurent\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"helixworks\",\n    \"key\": \"action-reply-rosa-pr-412-status\",\n    \"name\": \"Reply to Rosa Alvarez in #eng-ingest on PR 412 status and ping Nina again\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"sl-002\"],\n      \"refs\": [\"pr-412\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"rosa-alvarez\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"PR\", \"to_key\": \"helixworks-ingest-412\", \"type\": \"regarding\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"eng-ingest\", \"type\": \"in_channel\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.21036639999999998,
+  "duration_ms": 32240,
+  "duration_api_ms": 30647,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 31175,
+   "cache_read_input_tokens": 269502,
+   "output_tokens": 3175,
+   "output_tokens_details": {
+    "thinking_tokens": 1486
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31175,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1237,
+     "cache_read_input_tokens": 75028,
+     "cache_creation_input_tokens": 1951,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1951
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 3175,
+    "cacheReadInputTokens": 269502,
+    "cacheCreationInputTokens": 31175,
+    "webSearchRequests": 0,
+    "costUSD": 0.21036639999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1486,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2-c",
+ "started": "2026-10-04T00:57:32.442755+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\"kind\": \"Project\", \"workspace\": \"personal\", \"key\": \"juno-woodworking\", \"name\": \"Juno (woodworking project)\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"doc-juno-bench-plan\", \"name\": \"Juno \u2014 bench plan\", \"attrs\": {\"date\": \"2026-09-21T22:00:00Z\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-woodworking\", \"type\": \"about\"}]},\n {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"order-maple-top-juno\", \"name\": \"Order maple top for Juno workbench\", \"attrs\": {\"due\": \"2026-10-20\", \"priority\": \"medium\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-woodworking\", \"type\": \"part_of\"}]},\n {\"kind\": \"Project\", \"workspace\": \"quantaleaf\", \"key\": \"juno-service\", \"name\": \"Juno (service)\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []},\n {\"kind\": \"Person\", \"workspace\": \"quantaleaf\", \"key\": \"omar-haddad\", \"name\": \"Omar Haddad\", \"attrs\": {\"email\": \"omar.haddad@quantaleaf.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Ticket\", \"workspace\": \"quantaleaf\", \"key\": \"QL-301\", \"name\": \"Juno service: rotate signing keys\", \"attrs\": {\"status\": \"open\", \"refs\": [\"QL-301\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"juno-service\", \"type\": \"part_of\"}, {\"to_kind\": \"Person\", \"to_key\": \"omar-haddad\", \"type\": \"commented_by\"}]},\n {\"kind\": \"Action\", \"workspace\": \"quantaleaf\", \"key\": \"rotate-signing-keys-ql-301\", \"name\": \"Rotate Juno service signing keys\", \"attrs\": {\"due\": \"2026-10-11\", \"priority\": \"high\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"QL-301\", \"type\": \"derived_from\"}]}\n]\n```",
+  "total_cost_usd": 0.20426439999999998,
+  "duration_ms": 29260,
+  "duration_api_ms": 27511,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 30940,
+   "cache_read_input_tokens": 269892,
+   "output_tokens": 2651,
+   "output_tokens_details": {
+    "thinking_tokens": 1303
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30940,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 969,
+     "cache_read_input_tokens": 75407,
+     "cache_creation_input_tokens": 1337,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1337
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 2651,
+    "cacheReadInputTokens": 269892,
+    "cacheCreationInputTokens": 30940,
+    "webSearchRequests": 0,
+    "costUSD": 0.20426439999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1303,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

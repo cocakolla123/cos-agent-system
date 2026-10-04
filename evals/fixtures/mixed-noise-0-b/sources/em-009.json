@@ -1,0 +1,13 @@
+{
+ "body": "40% off everything. Tonight only!",
+ "connector": "email",
+ "date": "2026-09-30T20:00:00Z",
+ "folder": "inbox",
+ "from": "DealStream Offers <offers@dealstream.example>",
+ "id": "em-009",
+ "subject": "Flash sale ends tonight",
+ "thread_id": "th-010",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

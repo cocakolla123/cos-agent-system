@@ -1,0 +1,25 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "straterra",
+   "due": "2026-10-07",
+   "gist": [
+    "reply",
+    "availability",
+    "straterra"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001"
+   ],
+   "workspace": "job-search"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": true,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

@@ -1,0 +1,13 @@
+{
+ "body": "Devon \u2014 still need the staging DB credentials to finish the migration dry-run. Can you send them over? Asked in standup Tuesday too.",
+ "connector": "email",
+ "date": "2026-09-24T10:10:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-001",
+ "subject": "Staging credentials?",
+ "thread_id": "th-ot0",
+ "to": [
+  "devon.price@quantaleaf.example"
+ ]
+}

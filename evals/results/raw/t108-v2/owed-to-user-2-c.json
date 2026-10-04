@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-2-c",
+ "started": "2026-10-04T00:44:04.257503+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"straterra-interview-reschedule-reply\",\n    \"name\": \"Straterra recruiting owes a reply to the Oct 2 systems interview reschedule request\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"recruiting@straterra.example (Straterra recruiting)\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot2\"],\n      \"detail\": \"Alex sent a reschedule request on 2026-09-25 asking to move the Oct 2 systems interview slot to later that week and offered to share availability. No response appears in any source, and the originally proposed slot (2026-10-02) is now past today's date, so the thread needs a follow-up nudge.\",\n      \"direction\": \"owed_to_user\",\n      \"requested_on\": \"2026-09-25\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"straterra-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"straterra-systems-interview-2026-10-02\", \"to_workspace\": \"job-search\", \"type\": \"about\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"job-search\",\n    \"key\": \"straterra-systems-interview-2026-10-02\",\n    \"name\": \"Straterra systems interview (originally Oct 2 slot)\",\n    \"attrs\": {\n      \"proposed_date\": \"2026-10-02\",\n      \"status\": \"reschedule requested, unconfirmed\",\n      \"counterparty\": \"Straterra\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot2\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"straterra-recruiting\", \"to_workspace\": \"job-search\", \"type\": \"scheduled_with\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"straterra-recruiting\",\n    \"name\": \"Straterra Recruiting\",\n    \"attrs\": {\n      \"email\": \"recruiting@straterra.example\",\n      \"org\": \"Straterra\",\n      \"role\": \"recruiting contact\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"weekly-byte-issue-214\",\n    \"name\": \"The Weekly Byte \u2014 issue 214\",\n    \"attrs\": {\n      \"type\": \"newsletter\",\n      \"date\": \"2026-09-29\",\n      \"sender\": \"digest@weeklybyte.example\",\n      \"actionable\": false,\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.489436,
+  "duration_ms": 26300,
+  "duration_api_ms": 24194,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29867,
+   "cache_read_input_tokens": 288082,
+   "output_tokens": 1867,
+   "output_tokens_details": {
+    "thinking_tokens": 322
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29867,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1379,
+     "cache_read_input_tokens": 63746,
+     "cache_creation_input_tokens": 703,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 703
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1867,
+    "cacheReadInputTokens": 288082,
+    "cacheCreationInputTokens": 29867,
+    "webSearchRequests": 0,
+    "costUSD": 0.489436,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 322,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

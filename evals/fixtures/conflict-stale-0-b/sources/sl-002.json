@@ -1,0 +1,8 @@
+{
+ "channel": "#partner-demo",
+ "connector": "slack",
+ "date": "2026-09-28T16:20:00Z",
+ "id": "sl-002",
+ "text": "Heads up @alex \u2014 partner moved the demo up. The demo environment now has to be ready by Oct 6, not Oct 14. Ticket HW-188 still shows the old date.",
+ "user": "Tomas Vega <tomas.vega@helixworks.example>"
+}

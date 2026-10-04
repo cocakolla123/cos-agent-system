@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-2-c",
+ "started": "2026-10-04T00:34:08.466897+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-quarterly-review\",\n    \"name\": \"Redcedar quarterly review\",\n    \"attrs\": {\n      \"start\": \"2026-10-16T17:00:00Z\",\n      \"calendar_start\": \"2026-10-09T17:00:00Z\",\n      \"stale_invite\": true,\n      \"note\": \"Calendar invite (cal-001) still shows 2026-10-09; Mara's 2026-09-29 Slack message supersedes it with 2026-10-16, same time. Invite not yet updated.\",\n      \"attendees\": [\"alex.rivera@mailbox.example\", \"mara@redcedar.example\"],\n      \"organizer\": \"mara@redcedar.example\",\n      \"refs\": [\"cal-001\", \"sl-002\"],\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-metrics-deck\",\n    \"name\": \"Finish the metrics deck for the Redcedar quarterly review\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"note\": \"Due \\\"by then\\\" = the rescheduled review date of 2026-10-16 (Mara's 2026-09-29 message), not the stale 2026-10-09 calendar date.\",\n      \"refs\": [\"redcedar-quarterly-review\"],\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"redcedar-quarterly-review\", \"type\": \"for_meeting\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"type\": \"source_channel\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-quarterly-review-invite-correction\",\n    \"name\": \"Calendar invite for the Redcedar quarterly review still shows the old Oct 9 date\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"mara@redcedar.example\",\n      \"note\": \"Mara owns the invite and announced the move to Oct 16 in Slack but has not updated the calendar entry. Next move is hers; a reply confirming the new date could be drafted for approval.\",\n      \"refs\": [\"cal-001\", \"sl-002\", \"redcedar-quarterly-review\"],\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.65,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"redcedar-quarterly-review\", \"type\": \"about\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"blocked_on\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"freelance\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"org\": \"Redcedar\",\n      \"role_hint\": \"Redcedar-side contact; organizes the quarterly review and requests deliverables\",\n      \"evidence\": [\"cal-001\", \"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"type\": \"member_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"freelance\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"is_user\": true,\n      \"evidence\": [\"cal-001\", \"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"freelance\",\n    \"key\": \"redcedar-eng\",\n    \"name\": \"#redcedar-eng\",\n    \"attrs\": {\n      \"connector\": \"slack\",\n      \"evidence\": [\"sl-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"employer\",\n    \"key\": \"weeklybyte-platform-8-3-release-notes\",\n    \"name\": \"Release notes: Platform 8.3\",\n    \"attrs\": {\n      \"kind_hint\": \"newsletter/digest\",\n      \"from\": \"digest@weeklybyte.example\",\n      \"date\": \"2026-09-25\",\n      \"actionable\": false,\n      \"note\": \"Informational digest (faster cold starts, new audit log filters); states no action needed. No obligation on the user.\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.5184395,
+  "duration_ms": 33740,
+  "duration_api_ms": 32518,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29937,
+   "cache_read_input_tokens": 287239,
+   "output_tokens": 3016,
+   "output_tokens_details": {
+    "thinking_tokens": 500
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29937,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2440,
+     "cache_read_input_tokens": 63603,
+     "cache_creation_input_tokens": 916,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 916
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 3016,
+    "cacheReadInputTokens": 287239,
+    "cacheCreationInputTokens": 29937,
+    "webSearchRequests": 0,
+    "costUSD": 0.5184395,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 500,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

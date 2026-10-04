@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-2-c",
+ "started": "2026-10-04T00:59:27.883005+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"job-search\",\n    \"key\": \"copperline-ai-talent\",\n    \"name\": \"Copperline AI Talent\",\n    \"attrs\": {\n      \"email\": \"talent@copperline.example\",\n      \"role\": \"recruiter\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"job-search\",\n    \"key\": \"copperline-application\",\n    \"name\": \"Copperline AI Talent \u2014 Application\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"type\": \"counterparty\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"copperline-take-home-assessment\",\n    \"name\": \"Complete Copperline take-home assessment\",\n    \"attrs\": {\n      \"due\": \"2026-09-26\",\n      \"status\": \"submitted\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"copperline-application\", \"type\": \"part_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"copperline-review-response\",\n    \"name\": \"Await Copperline's review decision on take-home assessment\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Copperline AI Talent\",\n      \"evidence\": [\"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.75,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Action\", \"to_key\": \"copperline-take-home-assessment\", \"type\": \"follows\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"copperline-application\", \"type\": \"part_of\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.31374739999999995,
+  "duration_ms": 36423,
+  "duration_api_ms": 35301,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 63690,
+   "cache_read_input_tokens": 125177,
+   "output_tokens": 3394,
+   "output_tokens_details": {
+    "thinking_tokens": 2210
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 63690,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2963,
+     "cache_read_input_tokens": 62700,
+     "cache_creation_input_tokens": 990,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 990
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 3394,
+    "cacheReadInputTokens": 125177,
+    "cacheCreationInputTokens": 63690,
+    "webSearchRequests": 0,
+    "costUSD": 0.31374739999999995,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 2210,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

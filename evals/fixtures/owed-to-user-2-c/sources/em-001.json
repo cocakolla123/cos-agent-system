@@ -1,0 +1,13 @@
+{
+ "body": "Hello \u2014 I have a conflict with the Oct 2 systems interview slot. Could we move it to later that week? Happy to share availability.",
+ "connector": "email",
+ "date": "2026-09-25T08:45:00Z",
+ "folder": "sent",
+ "from": "Alex Rivera <alex.rivera@mailbox.example>",
+ "id": "em-001",
+ "subject": "Interview reschedule request",
+ "thread_id": "th-ot2",
+ "to": [
+  "recruiting@straterra.example"
+ ]
+}

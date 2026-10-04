@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1",
+ "started": "2026-10-04T00:56:19.307282+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Person\", \"workspace\": \"crestline\", \"key\": \"dana-whitfield\", \"name\": \"Dana Whitfield\", \"attrs\": {\"email\": \"dana@crestline.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}, {\"kind\": \"Ticket\", \"workspace\": \"crestline\", \"key\": \"cl-77\", \"name\": \"CL-77: Sensor calibration report\", \"attrs\": {\"status\": \"open\", \"summary\": \"Sensor calibration report\", \"refs\": \"CL-77\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"reported_by\"}]}, {\"kind\": \"Action\", \"workspace\": \"crestline\", \"key\": \"cl-77-sensor-calibration-report\", \"name\": \"Deliver sensor calibration report (CL-77)\", \"attrs\": {\"due\": \"2026-10-10\", \"priority\": \"high\", \"blocked_on\": null, \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"], \"refs\": \"CL-77\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"cl-77\", \"type\": \"relates_to\"}, {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}]}]",
+  "total_cost_usd": 0.1864224,
+  "duration_ms": 15530,
+  "duration_api_ms": 14544,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29946,
+   "cache_read_input_tokens": 269712,
+   "output_tokens": 1268,
+   "output_tokens_details": {
+    "thinking_tokens": 404
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29946,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 474,
+     "cache_read_input_tokens": 75270,
+     "cache_creation_input_tokens": 480,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 480
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1268,
+    "cacheReadInputTokens": 269712,
+    "cacheCreationInputTokens": 29946,
+    "webSearchRequests": 0,
+    "costUSD": 0.1864224,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 404,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

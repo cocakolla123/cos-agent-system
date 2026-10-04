@@ -1,0 +1,10 @@
+{
+ "assignee": "alex.rivera@mailbox.example",
+ "comments": [],
+ "connector": "ticketing",
+ "date": "2026-09-24T09:10:00Z",
+ "id": "tk-004",
+ "key": "BF-77",
+ "status": "open",
+ "summary": "Sensor calibration report"
+}

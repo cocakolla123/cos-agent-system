@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1-c",
+ "started": "2026-10-04T00:41:17.006443+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"rc-77-sensor-calibration-report\",\n    \"name\": \"Deliver the RC-77 sensor calibration report\",\n    \"attrs\": {\n      \"due\": \"2026-10-10\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"refs\": [\"RC-77\"],\n      \"evidence\": [\"em-001\", \"tk-004\", \"sl-003\"],\n      \"notes\": \"Requested by Mara Quint via email (2026-09-24) and restated in #redcedar-eng (2026-09-28); tracked as ticket RC-77, which holds the report template. Ticket still open and assigned to the user.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Ticket\", \"to_key\": \"rc-77\", \"type\": \"tracked_by\", \"to_workspace\": \"redcedar\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"type\": \"requested_by\", \"to_workspace\": \"redcedar\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"redcedar-eng\", \"type\": \"discussed_in\", \"to_workspace\": \"redcedar\"}\n    ]\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"rc-77\",\n    \"name\": \"RC-77: Sensor calibration report\",\n    \"attrs\": {\n      \"ticket_key\": \"RC-77\",\n      \"status\": \"open\",\n      \"assignee\": \"alex.rivera@mailbox.example\",\n      \"created\": \"2026-09-24\",\n      \"refs\": [\"RC-77\"],\n      \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"],\n      \"notes\": \"Holds the calibration report template.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\", \"to_workspace\": \"redcedar\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"role\": \"Red Cedar contact requesting the sensor calibration report\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"self; assignee of RC-77\",\n      \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"redcedar-eng\",\n    \"name\": \"#redcedar-eng\",\n    \"attrs\": {\n      \"platform\": \"slack\",\n      \"refs\": [\"RC-77\"],\n      \"evidence\": [\"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.49434999999999996,
+  "duration_ms": 28594,
+  "duration_api_ms": 26785,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 30139,
+   "cache_read_input_tokens": 288220,
+   "output_tokens": 1952,
+   "output_tokens_details": {
+    "thinking_tokens": 153
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30139,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1352,
+     "cache_read_input_tokens": 63855,
+     "cache_creation_input_tokens": 866,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 866
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1952,
+    "cacheReadInputTokens": 288220,
+    "cacheCreationInputTokens": 30139,
+    "webSearchRequests": 0,
+    "costUSD": 0.49434999999999996,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 153,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

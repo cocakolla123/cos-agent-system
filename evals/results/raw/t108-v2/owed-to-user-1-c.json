@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1-c",
+ "started": "2026-10-04T00:43:41.132882+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"birchrow-security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund for unit 4B \u2014 awaiting confirmation from Birchrow leasing\",\n    \"attrs\": {\n      \"description\": \"Alex moved out of unit 4B on 2026-08-31 and has not received the security deposit refund. Alex emailed Birchrow leasing on 2026-09-18 asking when it will be sent; no reply in the sources as of 2026-10-01.\",\n      \"priority\": \"high\",\n      \"blocked_on\": \"leasing@birchrow.example (Birchrow leasing office)\",\n      \"owed_to\": \"alex.rivera@mailbox.example\",\n      \"moved_out\": \"2026-08-31\",\n      \"requested_on\": \"2026-09-18\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\", \"unit 4B\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"birchrow-leasing\", \"to_workspace\": \"personal\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"to_workspace\": \"personal\", \"type\": \"owed_to\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"alex-rivera\",\n    \"name\": \"Alex Rivera\",\n    \"attrs\": {\n      \"email\": \"alex.rivera@mailbox.example\",\n      \"role\": \"user\",\n      \"evidence\": [\"em-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.98,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"birchrow-leasing\",\n    \"name\": \"Birchrow Leasing Office\",\n    \"attrs\": {\n      \"email\": \"leasing@birchrow.example\",\n      \"role\": \"landlord / leasing office for unit 4B\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-001-security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund \u2014 unit 4B (sent email)\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"folder\": \"sent\",\n      \"date\": \"2026-09-18T19:22:00Z\",\n      \"from\": \"alex.rivera@mailbox.example\",\n      \"to\": [\"leasing@birchrow.example\"],\n      \"thread_id\": \"th-ot1\",\n      \"unanswered\": true,\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Action\", \"to_key\": \"birchrow-security-deposit-refund-unit-4b\", \"to_workspace\": \"personal\", \"type\": \"evidence_for\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-002-dealstream-points-promo\",\n    \"name\": \"DealStream points promotion (marketing, no obligation)\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"folder\": \"inbox\",\n      \"date\": \"2026-09-27T16:40:00Z\",\n      \"from\": \"offers@dealstream.example\",\n      \"thread_id\": \"th-003\",\n      \"classification\": \"vendor marketing solicitation \u2014 not a to-do; the user owes nothing and is owed nothing\",\n      \"evidence\": [\"em-002\"],\n      \"refs\": [\"th-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.49158599999999997,
+  "duration_ms": 25407,
+  "duration_api_ms": 22877,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29908,
+   "cache_read_input_tokens": 288112,
+   "output_tokens": 1936,
+   "output_tokens_details": {
+    "thinking_tokens": 119
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29908,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1453,
+     "cache_read_input_tokens": 63791,
+     "cache_creation_input_tokens": 699,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 699
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1936,
+    "cacheReadInputTokens": 288112,
+    "cacheCreationInputTokens": 29908,
+    "webSearchRequests": 0,
+    "costUSD": 0.49158599999999997,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 119,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

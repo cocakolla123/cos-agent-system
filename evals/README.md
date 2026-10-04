@@ -21,8 +21,8 @@ results/raw/<run_id>/                raw model envelopes (reproducible scoring)
 
 ## Dataset
 
-36 scenarios, 12 categories × 3 variants, split **18 dev / 18 test**
-(balanced within every category; see `fixtures/manifest.json`). All people,
+108 scenarios — 36 hand-authored stories (12 categories × 3) × 3 label-preserving cast rotations — split **54 dev / 54 test**
+(rotations inherit their base story's split, so nothing tuned-on can drift into test; see `fixtures/manifest.json`). All people,
 orgs, and addresses are invented; every address is under `.example` and a
 unit test (`test_schema.test_no_real_domains`) enforces that no fixture ever
 carries a real-looking address.
@@ -124,9 +124,17 @@ The eval runner is **not** part of the normal unit run (`dashboard/tests/`
 discovery never sees `evals/`); the scorer/schema tests are model-free and
 safe anywhere.
 
-Observed cost/latency per scenario on the default CLI model: see the baseline
-report in `results/` (roughly $0.3–0.9 and 20–60 s per scenario; a full
-36-scenario run is a real model spend — use `--split dev` while iterating).
+Observed per scenario: ~$0.50 and ~26 s (default model), ~$0.08 (Haiku 4.5),
+~$0.22 (Sonnet 5) — a full test-split run is a real model spend; use
+`--split dev` (or `--model claude-haiku-4-5-20251001`) while iterating.
+
+Compare two runs with confidence intervals and a paired permutation test:
+
+```
+python3 evals/stats.py results/A.json results/B.json --split test
+```
+
+Latest full report: `results/2026-10-03-*-t108.md` (v1 vs v2 vs per-model).
 
 ## Rules
 

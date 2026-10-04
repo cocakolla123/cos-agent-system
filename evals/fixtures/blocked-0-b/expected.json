@@ -1,0 +1,26 @@
+{
+ "commitments": [
+  {
+   "blocked_on": "mendco",
+   "counterparty": "mendco",
+   "due": null,
+   "gist": [
+    "laptop",
+    "repair",
+    "55012"
+   ],
+   "owner": "counterparty",
+   "sources": [
+    "em-001",
+    "em-002"
+   ],
+   "workspace": "personal"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

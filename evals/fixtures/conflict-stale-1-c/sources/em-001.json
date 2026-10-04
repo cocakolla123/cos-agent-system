@@ -1,0 +1,13 @@
+{
+ "body": "We need your renewal decision on the retainer contract by Oct 18.",
+ "connector": "email",
+ "date": "2026-09-12T10:00:00Z",
+ "folder": "inbox",
+ "from": "Mara Quint <mara@redcedar.example>",
+ "id": "em-001",
+ "subject": "Contract renewal decision",
+ "thread_id": "th-cf1",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

@@ -1,0 +1,64 @@
+{
+ "scenario": "dedupe-cross-surface-1",
+ "started": "2026-10-04T00:34:33.762629+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"crestline\", \"key\": \"cl-77-sensor-calibration-report\", \"name\": \"Deliver the CL-77 sensor calibration report\", \"attrs\": {\"due\": \"2026-10-10\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"requested_by\": \"dana@crestline.example\", \"refs\": [\"CL-77\"], \"evidence\": [\"em-001\", \"sl-003\", \"tk-004\"], \"notes\": \"Same deliverable stated on three surfaces (email th-002, #crestline-eng, ticket CL-77); the report template is attached to ticket CL-77. Ticket still open as of 2026-09-24, no completion receipt in any source.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"CL-77\", \"type\": \"tracked_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"requested_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"owned_by\"}, {\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"discussed_in\"}]}, {\"kind\": \"Ticket\", \"workspace\": \"crestline\", \"key\": \"CL-77\", \"name\": \"Sensor calibration report\", \"attrs\": {\"status\": \"open\", \"assignee\": \"alex.rivera@mailbox.example\", \"opened\": \"2026-09-24T09:10:00Z\", \"comments\": 0, \"refs\": [\"CL-77\"], \"evidence\": [\"tk-004\", \"em-001\", \"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"assigned_to\"}]}, {\"kind\": \"Person\", \"workspace\": \"crestline\", \"key\": \"dana-whitfield\", \"name\": \"Dana Whitfield\", \"attrs\": {\"email\": \"dana@crestline.example\", \"role\": \"client contact / requester\", \"evidence\": [\"em-001\", \"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Channel\", \"to_key\": \"crestline-eng\", \"type\": \"member_of\"}]}, {\"kind\": \"Person\", \"workspace\": \"crestline\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true, \"evidence\": [\"em-001\", \"tk-004\", \"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []}, {\"kind\": \"Channel\", \"workspace\": \"crestline\", \"key\": \"crestline-eng\", \"name\": \"#crestline-eng\", \"attrs\": {\"platform\": \"slack\", \"refs\": [\"CL-77\"], \"evidence\": [\"sl-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}]",
+  "total_cost_usd": 0.5969660000000001,
+  "duration_ms": 30040,
+  "duration_api_ms": 28917,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 30581,
+   "cache_read_input_tokens": 480002,
+   "output_tokens": 2043,
+   "output_tokens_details": {
+    "thinking_tokens": 341
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30581,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1014,
+     "cache_read_input_tokens": 64490,
+     "cache_creation_input_tokens": 673,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 673
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 2043,
+    "cacheReadInputTokens": 480002,
+    "cacheCreationInputTokens": 30581,
+    "webSearchRequests": 0,
+    "costUSD": 0.5969660000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 341,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

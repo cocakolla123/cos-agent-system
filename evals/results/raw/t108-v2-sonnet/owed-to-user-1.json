@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1",
+ "started": "2026-10-04T00:58:31.494671+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"leasing-oakfield-example\",\n    \"name\": \"Oakfield Leasing\",\n    \"attrs\": {\n      \"email\": \"leasing@oakfield.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-security-deposit-refund-4b\",\n    \"name\": \"Follow up on security deposit refund for unit 4B\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"leasing@oakfield.example\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"leasing-oakfield-example\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.18623460000000003,
+  "duration_ms": 17623,
+  "duration_api_ms": 16663,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 30123,
+   "cache_read_input_tokens": 270383,
+   "output_tokens": 1165,
+   "output_tokens_details": {
+    "thinking_tokens": 492
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30123,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 408,
+     "cache_read_input_tokens": 75379,
+     "cache_creation_input_tokens": 548,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 548
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1165,
+    "cacheReadInputTokens": 270383,
+    "cacheCreationInputTokens": 30123,
+    "webSearchRequests": 0,
+    "costUSD": 0.18623460000000003,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 492,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

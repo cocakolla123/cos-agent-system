@@ -1,0 +1,64 @@
+{
+ "scenario": "mixed-noise-1-b",
+ "started": "2026-10-04T00:57:48.260240+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"pearlcare-dental-overdue-balance-oct2026\", \"name\": \"Pay PearlCare Dental overdue balance ($120)\", \"attrs\": {\"due\": \"2026-10-10\", \"priority\": \"medium\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}]",
+  "total_cost_usd": 0.1879514,
+  "duration_ms": 21323,
+  "duration_api_ms": 18775,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 30412,
+   "cache_read_input_tokens": 269937,
+   "output_tokens": 1230,
+   "output_tokens_details": {
+    "thinking_tokens": 674
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30412,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 138,
+     "cache_read_input_tokens": 75466,
+     "cache_creation_input_tokens": 750,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 750
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1230,
+    "cacheReadInputTokens": 269937,
+    "cacheCreationInputTokens": 30412,
+    "webSearchRequests": 0,
+    "costUSD": 0.1879514,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 674,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

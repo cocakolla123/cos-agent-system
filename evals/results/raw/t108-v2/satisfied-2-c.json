@@ -1,0 +1,64 @@
+{
+ "scenario": "satisfied-2-c",
+ "started": "2026-10-04T00:44:32.082962+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"copperline-take-home-assessment\", \"name\": \"Complete Copperline AI take-home assessment\", \"attrs\": {\"due\": \"2026-09-26\", \"status\": \"submitted\", \"priority\": \"medium\", \"evidence\": [\"em-001\", \"em-002\"], \"refs\": [\"th-sa2\"], \"notes\": \"Assessment link sent Sep 19 with a Sep 26 deadline; Copperline confirmed receipt of the submission on Sep 25, which closes this obligation.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"to_workspace\": \"job-search\", \"type\": \"requested_by\"}, {\"kind\": \"Action\", \"to_kind\": \"Project\", \"to_key\": \"copperline-ai-application\", \"to_workspace\": \"job-search\", \"type\": \"part_of\"}]}, {\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"copperline-assessment-review-decision\", \"name\": \"Awaiting Copperline AI assessment review outcome\", \"attrs\": {\"due\": \"2026-10-09\", \"priority\": \"medium\", \"blocked_on\": \"Copperline AI Talent (talent@copperline.example)\", \"evidence\": [\"em-002\"], \"refs\": [\"th-sa2\"], \"notes\": \"Copperline said on 2026-09-25 that the team would review and respond within two weeks; next move is theirs.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"to_workspace\": \"job-search\", \"type\": \"blocked_on\"}, {\"to_kind\": \"Project\", \"to_key\": \"copperline-ai-application\", \"to_workspace\": \"job-search\", \"type\": \"part_of\"}]}, {\"kind\": \"Project\", \"workspace\": \"job-search\", \"key\": \"copperline-ai-application\", \"name\": \"Copperline AI application\", \"attrs\": {\"stage\": \"assessment submitted, awaiting review\", \"counterparty\": \"Copperline AI\", \"evidence\": [\"em-001\", \"em-002\"], \"refs\": [\"th-sa2\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.75, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"copperline-ai-talent\", \"to_workspace\": \"job-search\", \"type\": \"contact\"}]}, {\"kind\": \"Person\", \"workspace\": \"job-search\", \"key\": \"copperline-ai-talent\", \"name\": \"Copperline AI Talent\", \"attrs\": {\"email\": \"talent@copperline.example\", \"org\": \"Copperline AI\", \"role\": \"recruiting / talent team\", \"evidence\": [\"em-001\", \"em-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []}, {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"weekly-byte-platform-8-3-release-notes\", \"name\": \"Release notes: Platform 8.3 (The Weekly Byte)\", \"attrs\": {\"publisher\": \"The Weekly Byte\", \"from\": \"digest@weeklybyte.example\", \"date\": \"2026-09-25\", \"actionable\": false, \"summary\": \"Newsletter digest noting Platform 8.3 shipped with faster cold starts and new audit log filters; explicitly states no action needed.\", \"evidence\": [\"em-003\"], \"refs\": [\"th-004\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []}]",
+  "total_cost_usd": 0.618915,
+  "duration_ms": 37753,
+  "duration_api_ms": 36389,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 31314,
+   "cache_read_input_tokens": 481490,
+   "output_tokens": 2598,
+   "output_tokens_details": {
+    "thinking_tokens": 764
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 31314,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1178,
+     "cache_read_input_tokens": 64784,
+     "cache_creation_input_tokens": 1112,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1112
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 16,
+    "outputTokens": 2598,
+    "cacheReadInputTokens": 481490,
+    "cacheCreationInputTokens": 31314,
+    "webSearchRequests": 0,
+    "costUSD": 0.618915,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 764,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

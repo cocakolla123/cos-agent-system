@@ -1,0 +1,64 @@
+{
+ "scenario": "isolation-2-b",
+ "started": "2026-10-04T00:42:11.933658+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Three source files, read in full. The isolation trap here is \"Orion\" \u2014 a Helixworks service (ticket HW-301) and a personal woodworking bench project (doc-002) share the name and must not merge or cross workspaces. `em-003` is a DealStream points/marketing solicitation \u2014 obligation vocabulary, no standing, so no Action.\n\n```json\n[\n  {\"kind\": \"Ticket\", \"workspace\": \"helixworks\", \"key\": \"hw-301\", \"name\": \"Orion service: rotate signing keys\", \"attrs\": {\"status\": \"open\", \"assignee\": \"alex.rivera@mailbox.example\", \"ticket_key\": \"HW-301\", \"opened\": \"2026-09-27\", \"refs\": [\"HW-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"orion-service\", \"type\": \"belongs_to\", \"to_workspace\": \"helixworks\"}, {\"to_kind\": \"Person\", \"to_key\": \"rosa-alvarez\", \"type\": \"commented_by\", \"to_workspace\": \"helixworks\"}]},\n\n  {\"kind\": \"Project\", \"workspace\": \"helixworks\", \"key\": \"orion-service\", \"name\": \"Orion service\", \"attrs\": {\"note\": \"Helixworks production service that owns the signing keys in HW-301; distinct from the user's personal Orion woodworking bench project\", \"refs\": [\"HW-301\"], \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []},\n\n  {\"kind\": \"Person\", \"workspace\": \"helixworks\", \"key\": \"rosa-alvarez\", \"name\": \"Rosa Alvarez\", \"attrs\": {\"email\": \"rosa.alvarez@helixworks.example\", \"org\": \"helixworks\", \"evidence\": [\"tk-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n\n  {\"kind\": \"Action\", \"workspace\": \"helixworks\", \"key\": \"rotate-signing-keys-hw-301\", \"name\": \"Rotate Orion service signing keys (HW-301)\", \"attrs\": {\"due\": \"2026-10-11\", \"priority\": \"high\", \"owner\": \"alex.rivera@mailbox.example\", \"refs\": [\"HW-301\"], \"evidence\": [\"tk-001\"], \"detail\": \"Rosa Alvarez stated on 2026-09-27 that keys must rotate before Oct 11; ticket still open and assigned to the user\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"hw-301\", \"type\": \"resolves\", \"to_workspace\": \"helixworks\"}, {\"to_kind\": \"Person\", \"to_key\": \"rosa-alvarez\", \"type\": \"requested_by\", \"to_workspace\": \"helixworks\"}]},\n\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"orion-woodworking-bench-plan\", \"name\": \"Orion (woodworking) \u2014 bench plan\", \"attrs\": {\"author\": \"alex.rivera@mailbox.example\", \"created\": \"2026-09-21\", \"connector\": \"docs\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"orion-workbench\", \"type\": \"documents\", \"to_workspace\": \"personal\"}]},\n\n  {\"kind\": \"Project\", \"workspace\": \"personal\", \"key\": \"orion-workbench\", \"name\": \"Orion workbench (woodworking)\", \"attrs\": {\"note\": \"Personal woodworking build; unrelated to the Helixworks Orion service despite the shared name\", \"evidence\": [\"doc-002\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []},\n\n  {\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"order-maple-top-orion-workbench\", \"name\": \"Order maple top for the Orion workbench\", \"attrs\": {\"due\": \"2026-10-20\", \"priority\": \"low\", \"owner\": \"alex.rivera@mailbox.example\", \"evidence\": [\"doc-002\"], \"detail\": \"Own note in the bench plan: order the maple top by Oct 20 to make the winter window\"}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"Project\", \"to_key\": \"orion-workbench\", \"type\": \"part_of\", \"to_workspace\": \"personal\"}, {\"to_kind\": \"Document\", \"to_key\": \"orion-woodworking-bench-plan\", \"type\": \"stated_in\", \"to_workspace\": \"personal\"}]}\n]\n```",
+  "total_cost_usd": 0.581831,
+  "duration_ms": 37031,
+  "duration_api_ms": 35426,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 30185,
+   "cache_read_input_tokens": 416622,
+   "output_tokens": 2864,
+   "output_tokens_details": {
+    "thinking_tokens": 777
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30185,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2328,
+     "cache_read_input_tokens": 64415,
+     "cache_creation_input_tokens": 352,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 352
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 14,
+    "outputTokens": 2864,
+    "cacheReadInputTokens": 416622,
+    "cacheCreationInputTokens": 30185,
+    "webSearchRequests": 0,
+    "costUSD": 0.581831,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 777,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

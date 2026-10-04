@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-1-c",
+ "started": "2026-10-04T00:54:24.149500+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"confirm-sow-scope-change-thermal-test-bench\",\n    \"name\": \"Confirm acceptance of SOW scope change (thermal test bench)\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"mara-quint\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.357306,
+  "duration_ms": 16829,
+  "duration_api_ms": 15845,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 75363,
+   "cache_read_input_tokens": 223340,
+   "output_tokens": 1117,
+   "output_tokens_details": {
+    "thinking_tokens": 544
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 75363,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 365,
+     "cache_read_input_tokens": 74729,
+     "cache_creation_input_tokens": 634,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 634
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1117,
+    "cacheReadInputTokens": 223340,
+    "cacheCreationInputTokens": 75363,
+    "webSearchRequests": 0,
+    "costUSD": 0.357306,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 544,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

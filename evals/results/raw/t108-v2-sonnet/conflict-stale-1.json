@@ -1,0 +1,64 @@
+{
+ "scenario": "conflict-stale-1",
+ "started": "2026-10-04T00:55:21.364461+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"crestline\",\n  \"key\": \"dana-whitfield\",\n  \"name\": \"Dana Whitfield\",\n  \"attrs\": {\n   \"email\": \"dana@crestline.example\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": []\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"crestline\",\n  \"key\": \"crestline-retainer-contract-renewal-decision\",\n  \"name\": \"Decide on Crestline retainer contract renewal\",\n  \"attrs\": {\n   \"status\": \"cancelled\",\n   \"priority\": \"low\",\n   \"evidence\": [\"em-001\", \"em-002\"],\n   \"refs\": [\"th-cf1\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\n    \"to_kind\": \"Person\",\n    \"to_key\": \"dana-whitfield\",\n    \"type\": \"counterparty\"\n   }\n  ]\n }\n]\n```",
+  "total_cost_usd": 0.19012800000000002,
+  "duration_ms": 20776,
+  "duration_api_ms": 19812,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 30234,
+   "cache_read_input_tokens": 269530,
+   "output_tokens": 1527,
+   "output_tokens_details": {
+    "thinking_tokens": 872
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 30234,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 346,
+     "cache_read_input_tokens": 75087,
+     "cache_creation_input_tokens": 951,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 951
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1527,
+    "cacheReadInputTokens": 269530,
+    "cacheCreationInputTokens": 30234,
+    "webSearchRequests": 0,
+    "costUSD": 0.19012800000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 872,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

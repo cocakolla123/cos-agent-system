@@ -1,0 +1,64 @@
+{
+ "scenario": "owed-to-user-1",
+ "started": "2026-10-04T00:43:36.082164+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"personal\",\n    \"key\": \"security-deposit-refund-unit-4b\",\n    \"name\": \"Security deposit refund for unit 4B still not received from Oakfield leasing\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"blocked_on\": \"Oakfield leasing office (leasing@oakfield.example)\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-ot1\", \"unit-4B\"],\n      \"detail\": \"Alex moved out of unit 4B on 2026-08-31 and emailed leasing@oakfield.example on 2026-09-18 asking when the security deposit refund would be sent. No reply in any source as of 2026-10-01 \u2014 the next move is the leasing office's; a follow-up may need to be drafted.\",\n      \"requested_on\": \"2026-09-18\",\n      \"move_out_date\": \"2026-08-31\",\n      \"owed_to_user\": true\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.93,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"oakfield-leasing\",\n        \"to_workspace\": \"personal\",\n        \"type\": \"blocked_on\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"personal\",\n    \"key\": \"oakfield-leasing\",\n    \"name\": \"Oakfield Leasing Office\",\n    \"attrs\": {\n      \"email\": \"leasing@oakfield.example\",\n      \"role\": \"Landlord / leasing office for former residence (unit 4B)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-001-deposit-refund-request\",\n    \"name\": \"Email: Security deposit refund \u2014 unit 4B\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"folder\": \"sent\",\n      \"date\": \"2026-09-18T19:22:00Z\",\n      \"from\": \"alex.rivera@mailbox.example\",\n      \"to\": [\"leasing@oakfield.example\"],\n      \"thread_id\": \"th-ot1\",\n      \"refs\": [\"unit-4B\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Action\",\n        \"to_key\": \"security-deposit-refund-unit-4b\",\n        \"to_workspace\": \"personal\",\n        \"type\": \"evidence_for\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"oakfield-leasing\",\n        \"to_workspace\": \"personal\",\n        \"type\": \"sent_to\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-002-dealstream-points-promo\",\n    \"name\": \"Email: Your DealStream points are waiting (marketing)\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"folder\": \"inbox\",\n      \"date\": \"2026-09-27T16:40:00Z\",\n      \"from\": \"offers@dealstream.example\",\n      \"to\": [\"alex.rivera@mailbox.example\"],\n      \"thread_id\": \"th-003\",\n      \"classification\": \"vendor marketing / promotional solicitation\",\n      \"obligation\": false,\n      \"obligation_rationale\": \"Uses obligation vocabulary ('redeem before they lapse') but the user owes nothing and is owed nothing \u2014 no Action emitted.\",\n      \"evidence\": [\"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.49240000000000006,
+  "duration_ms": 27475,
+  "duration_api_ms": 25513,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29896,
+   "cache_read_input_tokens": 288080,
+   "output_tokens": 1974,
+   "output_tokens_details": {
+    "thinking_tokens": 235
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29896,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1497,
+     "cache_read_input_tokens": 63783,
+     "cache_creation_input_tokens": 695,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 695
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1974,
+    "cacheReadInputTokens": 288080,
+    "cacheCreationInputTokens": 29896,
+    "webSearchRequests": 0,
+    "costUSD": 0.49240000000000006,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 235,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

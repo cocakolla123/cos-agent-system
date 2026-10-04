@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -687,13 +688,104 @@ CATEGORIES = [
 
 
 def _split_for(cat_index, variant):
-    # 36 scenarios -> 18 dev / 18 test, balanced within every category:
-    # v0 -> dev, v1 -> test, v2 alternates by category parity.
+    # base stories: v0 -> dev, v1 -> test, v2 alternates by category parity.
     if variant == 0:
         return "dev"
     if variant == 1:
         return "test"
     return "dev" if cat_index % 2 == 0 else "test"
+
+
+# ---------------------------------------------------------------------------
+# Skins — cast rotations. Every base story is re-instantiated under two more
+# fully-renamed casts (people, orgs, domains, workspace ids, ticket prefixes),
+# tripling the dataset without diluting authorship: the gold labels transform
+# through the SAME map, and a skinned scenario inherits its base story's
+# dev/test split, so nothing derived from a tuning story can drift into the
+# held-out set.
+# ---------------------------------------------------------------------------
+
+_SKIN_B = [
+    ("Jordan Kim", "Rosa Alvarez"), ("jordan.kim", "rosa.alvarez"),
+    ("Jordan", "Rosa"), ("jordan", "rosa"),
+    ("Priya Nair", "Tomas Vega"), ("priya.nair", "tomas.vega"),
+    ("Priya", "Tomas"), ("priya", "tomas"),
+    ("Sam Okafor", "Nina Laurent"), ("sam.okafor", "nina.laurent"),
+    ("Sam", "Nina"), ("sam", "nina"),
+    ("Dana Whitfield", "Kai Morimoto"), ("Dana", "Kai"), ("dana", "kai"),
+    ("Prof. Marcus Bell", "Prof. Adaeze Osei"),
+    ("marcus.bell", "adaeze.osei"), ("Bell", "Osei"), ("bell", "osei"),
+    ("NovaBio", "Helixworks"), ("novabio", "helixworks"),
+    ("Crestline Labs", "Bluefern Systems"),
+    ("Crestline", "Bluefern"), ("crestline", "bluefern"),
+    ("Harborview", "Lakemont"), ("harborview", "lakemont"),
+    ("Meridian Robotics", "Vectorium Dynamics"),
+    ("Meridian", "Vectorium"), ("meridian", "vectorium"),
+    ("Orchard AI", "Juniper Labs"), ("orchardai", "juniperlabs"),
+    ("Orchard", "Juniper"), ("orchard", "juniper"),
+    ("Oakfield", "Stonegate"), ("oakfield", "stonegate"),
+    ("BrightSmile", "PearlCare"), ("brightsmile", "pearlcare"),
+    ("bright", "pearlcare"),
+    ("FixIt Repairs", "MendCo Repairs"), ("fixitrepairs", "mendco"),
+    ("FixIt", "MendCo"), ("fixit", "mendco"),
+    ("NB-", "HW-"), ("nb-", "hw-"), ("CL-", "BF-"), ("cl-", "bf-"),
+    ("Atlas", "Orion"), ("atlas", "orion"), ("Tahoe", "Big Bear"),
+]
+
+_SKIN_C = [
+    ("Jordan Kim", "Omar Haddad"), ("jordan.kim", "omar.haddad"),
+    ("Jordan", "Omar"), ("jordan", "omar"),
+    ("Priya Nair", "Lena Frisk"), ("priya.nair", "lena.frisk"),
+    ("Priya", "Lena"), ("priya", "lena"),
+    ("Sam Okafor", "Devon Price"), ("sam.okafor", "devon.price"),
+    ("Sam", "Devon"), ("sam", "devon"),
+    ("Dana Whitfield", "Mara Quint"), ("Dana", "Mara"), ("dana", "mara"),
+    ("Prof. Marcus Bell", "Prof. Elif Demir"),
+    ("marcus.bell", "elif.demir"), ("Bell", "Demir"), ("bell", "demir"),
+    ("NovaBio", "Quantaleaf"), ("novabio", "quantaleaf"),
+    ("Crestline Labs", "Redcedar Works"),
+    ("Crestline", "Redcedar"), ("crestline", "redcedar"),
+    ("Harborview", "Eastgate"), ("harborview", "eastgate"),
+    ("Meridian Robotics", "Straterra Automation"),
+    ("Meridian", "Straterra"), ("meridian", "straterra"),
+    ("Orchard AI", "Copperline AI"), ("orchardai", "copperline"),
+    ("Orchard", "Copperline"), ("orchard", "copperline"),
+    ("Oakfield", "Birchrow"), ("oakfield", "birchrow"),
+    ("BrightSmile", "LumiDent"), ("brightsmile", "lumident"),
+    ("bright", "lumident"),
+    ("FixIt Repairs", "GadgetMend Repairs"), ("fixitrepairs", "gadgetmend"),
+    ("FixIt", "GadgetMend"), ("fixit", "gadgetmend"),
+    ("NB-", "QL-"), ("nb-", "ql-"), ("CL-", "RC-"), ("cl-", "rc-"),
+    ("Atlas", "Juno"), ("atlas", "juno"), ("Tahoe", "Shasta"),
+]
+
+
+def _compile_skin(pairs):
+    # longest-first, token-boundary-aware so 'sam' never rewrites 'same'.
+    out = []
+    for old, new in sorted(pairs, key=lambda p: -len(p[0])):
+        lead = r"(?<![A-Za-z0-9])" if old[0].isalnum() else ""
+        # a token ending in '-' is a prefix (ticket keys): no trailing guard
+        trail = r"(?![A-Za-z0-9])" if old[-1].isalnum() else ""
+        out.append((re.compile(lead + re.escape(old) + trail), new))
+    return out
+
+
+def _skin_value(v, skin):
+    if isinstance(v, str):
+        for pat, new in skin:
+            v = pat.sub(new, v)
+        return v
+    if isinstance(v, list):
+        return [_skin_value(x, skin) for x in v]
+    if isinstance(v, dict):
+        return {_skin_value(k, skin): _skin_value(x, skin)
+                for k, x in v.items()}
+    return v
+
+
+SKINS = [("", None), ("-b", _compile_skin(_SKIN_B)),
+         ("-c", _compile_skin(_SKIN_C))]
 
 
 def main():
@@ -702,16 +794,23 @@ def main():
     os.makedirs(FIXTURES)
     manifest = []
     for ci, (cat, builder) in enumerate(CATEGORIES):
-        for v in range(3):
+      for v in range(3):
+        for suffix, skin in SKINS:
             _seq["n"] = 0  # source ids restart per scenario (scoped by dir)
             srcs, exp, note = builder(v)
-            sid = "%s-%d" % (cat.replace("_", "-"), v)
-            split = _split_for(ci, v)
+            workspaces = dict(WORKSPACES)
+            if skin is not None:
+                srcs = _skin_value(srcs, skin)
+                exp = _skin_value(exp, skin)
+                workspaces = _skin_value(workspaces, skin)
+                note += " (cast rotation)"
+            sid = "%s-%d%s" % (cat.replace("_", "-"), v, suffix)
+            split = _split_for(ci, v)  # skins inherit the base story's split
             sdir = os.path.join(FIXTURES, sid)
             os.makedirs(os.path.join(sdir, "sources"))
             scenario = {
                 "id": sid, "category": cat, "split": split, "note": note,
-                "today": TODAY, "user": USER, "workspaces": WORKSPACES,
+                "today": TODAY, "user": USER, "workspaces": workspaces,
             }
             exp.setdefault("commitments", [])
             exp.setdefault("forbidden", [])

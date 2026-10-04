@@ -1,0 +1,64 @@
+{
+ "scenario": "user-owes-1-c",
+ "started": "2026-10-04T00:45:04.798256+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"redcedar-september-invoice-and-timesheet\",\n    \"name\": \"Send September invoice and signed timesheet to Mara Quint (Red Cedar)\",\n    \"attrs\": {\n      \"due\": \"2026-10-03\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requested_by\": \"mara@redcedar.example\",\n      \"deliverables\": [\"September invoice\", \"signed timesheet\"],\n      \"reason\": \"Accounting closes the books Friday\",\n      \"evidence\": [\"em-001\"],\n      \"refs\": [\"th-uo1\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"em-001-september-invoice-timesheet\", \"to_workspace\": \"redcedar\", \"type\": \"evidenced_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"mara-quint\",\n    \"name\": \"Mara Quint\",\n    \"attrs\": {\n      \"email\": \"mara@redcedar.example\",\n      \"org\": \"Red Cedar\",\n      \"role_guess\": \"client contact / accounting liaison\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"redcedar\",\n    \"key\": \"em-001-september-invoice-timesheet\",\n    \"name\": \"Email: September invoice + timesheet\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"date\": \"2026-09-29T09:05:00Z\",\n      \"from\": \"mara@redcedar.example\",\n      \"to\": [\"alex.rivera@mailbox.example\"],\n      \"thread_id\": \"th-uo1\",\n      \"folder\": \"inbox\",\n      \"refs\": [\"th-uo1\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"mara-quint\", \"to_workspace\": \"redcedar\", \"type\": \"sent_by\"}\n    ]\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"personal\",\n    \"key\": \"em-002-dealstream-points-promo\",\n    \"name\": \"Email: Your DealStream points are waiting (marketing)\",\n    \"attrs\": {\n      \"connector\": \"email\",\n      \"date\": \"2026-09-27T16:40:00Z\",\n      \"from\": \"offers@dealstream.example\",\n      \"to\": [\"alex.rivera@mailbox.example\"],\n      \"thread_id\": \"th-003\",\n      \"folder\": \"inbox\",\n      \"category\": \"marketing\",\n      \"obligation\": false,\n      \"obligation_reason\": \"Vendor promotion soliciting redemption; the user owes nothing and is owed nothing\",\n      \"refs\": [\"th-003\"],\n      \"evidence\": [\"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.48720849999999993,
+  "duration_ms": 26375,
+  "duration_api_ms": 24621,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 29705,
+   "cache_read_input_tokens": 287917,
+   "output_tokens": 1846,
+   "output_tokens_details": {
+    "thinking_tokens": 312
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29705,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1440,
+     "cache_read_input_tokens": 63611,
+     "cache_creation_input_tokens": 676,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 676
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 10,
+    "outputTokens": 1846,
+    "cacheReadInputTokens": 287917,
+    "cacheCreationInputTokens": 29705,
+    "webSearchRequests": 0,
+    "costUSD": 0.48720849999999993,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 312,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

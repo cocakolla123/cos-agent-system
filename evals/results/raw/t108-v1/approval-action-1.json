@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-1",
+ "started": "2026-10-04T00:32:38.114100+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"role\": \"client contact (issues purchase orders / owns SOW)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-sow-thermal-test-bench\",\n    \"name\": \"Crestline SOW \u2014 thermal test bench scope change\",\n    \"attrs\": {\n      \"status\": \"scope change proposed, awaiting written confirmation from Alex\",\n      \"detail\": \"Dana Whitfield wants the thermal test bench added to the statement of work; the amended PO is issued only after Alex confirms the scope change in writing.\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"stakeholder\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"confirm-sow-scope-change-thermal-test-bench\",\n    \"name\": \"Confirm in writing acceptance of the SOW scope change (thermal test bench) to Dana Whitfield\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"owner\": \"alex.rivera@mailbox.example\",\n      \"requires_outbound_message\": true,\n      \"detail\": \"Dana asked for written confirmation that Alex accepts adding the thermal test bench to the SOW, by Oct 6, so she can issue the amended PO. Reply must be drafted and queued for approval \u2014 never sent directly.\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline-sow-thermal-test-bench\", \"type\": \"part_of\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"crestline-amended-po-thermal-test-bench\",\n    \"name\": \"Amended PO for the added thermal test bench scope \u2014 Dana to issue\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Dana Whitfield (dana@crestline.example)\",\n      \"detail\": \"Dana issues the amended PO once Alex's written confirmation is sent; tracked as owed to Alex by the counterparty.\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dana-whitfield\", \"type\": \"blocked_on\"},\n      {\"to_kind\": \"Action\", \"to_key\": \"confirm-sow-scope-change-thermal-test-bench\", \"type\": \"depends_on\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"crestline-sow-thermal-test-bench\", \"type\": \"part_of\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.8472929999999999,
+  "duration_ms": 27617,
+  "duration_api_ms": 26453,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 64292,
+   "cache_read_input_tokens": 316176,
+   "output_tokens": 1849,
+   "output_tokens_details": {
+    "thinking_tokens": 192
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 64292,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1211,
+     "cache_read_input_tokens": 63794,
+     "cache_creation_input_tokens": 498,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 498
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1849,
+    "cacheReadInputTokens": 316176,
+    "cacheCreationInputTokens": 64292,
+    "webSearchRequests": 0,
+    "costUSD": 0.8472929999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 192,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

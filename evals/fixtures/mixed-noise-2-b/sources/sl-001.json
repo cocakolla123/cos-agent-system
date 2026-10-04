@@ -1,0 +1,8 @@
+{
+ "channel": "#eng-ingest",
+ "connector": "slack",
+ "date": "2026-09-30T15:00:00Z",
+ "id": "sl-001",
+ "text": "@alex before you leave Friday \u2014 rotate your on-call pager token, it expires Oct 4 and the old one stops working.",
+ "user": "Rosa Alvarez <rosa.alvarez@helixworks.example>"
+}

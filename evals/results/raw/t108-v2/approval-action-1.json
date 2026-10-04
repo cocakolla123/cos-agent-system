@@ -1,0 +1,64 @@
+{
+ "scenario": "approval-action-1",
+ "started": "2026-10-04T00:39:10.475607+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"crestline\",\n    \"key\": \"dana-whitfield\",\n    \"name\": \"Dana Whitfield\",\n    \"attrs\": {\n      \"email\": \"dana@crestline.example\",\n      \"org\": \"Crestline\",\n      \"role\": \"client contact (issues purchase orders / SOW amendments)\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"crestline\",\n    \"key\": \"confirm-thermal-test-bench-scope-change\",\n    \"name\": \"Confirm in writing acceptance of the thermal test bench scope change to the SOW\",\n    \"attrs\": {\n      \"due\": \"2026-10-06\",\n      \"priority\": \"high\",\n      \"requested_by\": \"Dana Whitfield <dana@crestline.example>\",\n      \"needs_outbound_reply\": true,\n      \"detail\": \"Dana needs written acceptance of the scope change by Oct 6 so she can issue the amended PO.\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dana-whitfield\",\n        \"to_workspace\": \"crestline\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.429999,
+  "duration_ms": 15629,
+  "duration_api_ms": 14499,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 29239,
+   "cache_read_input_tokens": 224238,
+   "output_tokens": 1018,
+   "output_tokens_details": {
+    "thinking_tokens": 235
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29239,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 696,
+     "cache_read_input_tokens": 63436,
+     "cache_creation_input_tokens": 385,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 385
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 8,
+    "outputTokens": 1018,
+    "cacheReadInputTokens": 224238,
+    "cacheCreationInputTokens": 29239,
+    "webSearchRequests": 0,
+    "costUSD": 0.429999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 235,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

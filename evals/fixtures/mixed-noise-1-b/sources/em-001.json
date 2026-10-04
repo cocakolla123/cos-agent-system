@@ -1,0 +1,13 @@
+{
+ "body": "Your account shows an outstanding balance of $120 for the Aug visit. Please pay by Oct 10 to avoid a late fee.",
+ "connector": "email",
+ "date": "2026-09-29T10:00:00Z",
+ "folder": "inbox",
+ "from": "PearlCare Dental <frontdesk@pearlcare.example>",
+ "id": "em-001",
+ "subject": "Overdue balance",
+ "thread_id": "th-002",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}

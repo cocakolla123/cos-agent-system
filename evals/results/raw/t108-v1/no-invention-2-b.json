@@ -1,0 +1,64 @@
+{
+ "scenario": "no-invention-2-b",
+ "started": "2026-10-04T00:36:49.798891+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"digest-weeklybyte-example\", \"name\": \"The Weekly Byte\", \"attrs\": {\"email\": \"digest@weeklybyte.example\", \"role\": \"newsletter sender\", \"kind_of_sender\": \"vendor/marketing\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n  {\"kind\": \"Person\", \"workspace\": \"personal\", \"key\": \"alex-rivera\", \"name\": \"Alex Rivera\", \"attrs\": {\"email\": \"alex.rivera@mailbox.example\", \"is_user\": true}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": []},\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"em-001-devworld-2026-early-bird\", \"name\": \"DevWorld 2026 \u2014 early bird ends Friday\", \"attrs\": {\"doc_type\": \"marketing_email\", \"from\": \"digest@weeklybyte.example\", \"to\": [\"alex.rivera@mailbox.example\"], \"date\": \"2026-09-24T15:00:00Z\", \"thread_id\": \"th-002\", \"folder\": \"inbox\", \"promotional\": true, \"not_an_obligation\": \"conference promo soliciting registration; user owes nothing and is owed nothing\", \"evidence\": [\"em-001\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"digest-weeklybyte-example\", \"type\": \"sent_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"sent_to\"}]},\n  {\"kind\": \"Document\", \"workspace\": \"personal\", \"key\": \"em-003-webinar-scaling-vector-search\", \"name\": \"Webinar: scaling vector search\", \"attrs\": {\"doc_type\": \"marketing_email\", \"from\": \"digest@weeklybyte.example\", \"to\": [\"alex.rivera@mailbox.example\"], \"date\": \"2026-09-25T15:00:00Z\", \"thread_id\": \"th-004\", \"folder\": \"inbox\", \"promotional\": true, \"not_an_obligation\": \"webinar promo soliciting registration; user owes nothing and is owed nothing\", \"evidence\": [\"em-003\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"digest-weeklybyte-example\", \"type\": \"sent_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"alex-rivera\", \"type\": \"sent_to\"}]}\n]\n```",
+  "total_cost_usd": 0.5097835,
+  "duration_ms": 22444,
+  "duration_api_ms": 21262,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 29667,
+   "cache_read_input_tokens": 351257,
+   "output_tokens": 1497,
+   "output_tokens_details": {
+    "thinking_tokens": 145
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 29667,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1011,
+     "cache_read_input_tokens": 63935,
+     "cache_creation_input_tokens": 314,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 314
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard"
+  },
+  "modelUsage": {
+   "claude-opus-5[1m]": {
+    "inputTokens": 12,
+    "outputTokens": 1497,
+    "cacheReadInputTokens": 351257,
+    "cacheCreationInputTokens": 29667,
+    "webSearchRequests": 0,
+    "costUSD": 0.5097835,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 145,
+    "canonicalModel": "claude-opus-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

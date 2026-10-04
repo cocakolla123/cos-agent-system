@@ -20,6 +20,8 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Unit tests (stdlib only — no deps to install)
         run: python -m unittest discover -s dashboard/tests -p 'test_*.py' -v
+      - name: Eval scorer/schema/stats tests (model-free; the runner itself never runs in CI)
+        run: python -m unittest discover -s evals/tests -p 'test_*.py' -v
       - name: Compile dashboard server (3.12+ only)
         if: matrix.python-version == '3.12'
         run: python -m py_compile dashboard/server.py
@@ -29,7 +31,11 @@ jobs:
           dashboard/workspaces.py dashboard/factory.py dashboard/correlate.py
           dashboard/sections.py dashboard/audit.py dashboard/validate_config.py
           dashboard/preflight.py dashboard/learning.py dashboard/accounts.py
-          dashboard/context_intake.py
+          dashboard/context_intake.py dashboard/privacy.py dashboard/publish.py
+          evals/schema.py evals/score.py evals/stats.py evals/gen_fixtures.py
+          evals/run.py
+      - name: Installer syntax
+        run: bash -n install.sh
       - name: Config example is valid JSON and validates clean
         run: |
           python -c "import json; json.load(open('dashboard/config.example.json'))"

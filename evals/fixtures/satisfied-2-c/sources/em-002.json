@@ -1,0 +1,13 @@
+{
+ "body": "We received your submission on Sep 25 \u2014 the team will review and get back within two weeks.",
+ "connector": "email",
+ "date": "2026-09-25T18:00:00Z",
+ "folder": "inbox",
+ "from": "Copperline AI Talent <talent@copperline.example>",
+ "id": "em-002",
+ "subject": "Assessment received",
+ "thread_id": "th-sa2",
+ "to": [
+  "alex.rivera@mailbox.example"
+ ]
+}
