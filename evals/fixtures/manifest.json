@@ -739,20 +739,20 @@
   "category": "satisfied",
   "split": "test",
   "sources": 3,
-  "gold_commitments": 0
+  "gold_commitments": 1
  },
  {
   "id": "satisfied-2-b",
   "category": "satisfied",
   "split": "test",
   "sources": 3,
-  "gold_commitments": 0
+  "gold_commitments": 1
  },
  {
   "id": "satisfied-2-c",
   "category": "satisfied",
   "split": "test",
   "sources": 3,
-  "gold_commitments": 0
+  "gold_commitments": 1
  }
 ]

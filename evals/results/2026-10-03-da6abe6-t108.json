@@ -26,7 +26,18 @@
    "models": [
     "claude-opus-5[1m]"
    ],
-   "isolation_violations_rescored": 1
+   "isolation_violations_rescored": 1,
+   "after_label_correction": {
+    "f1": 0.835,
+    "ci95": [
+     0.72,
+     0.9333
+    ],
+    "precision": 0.7818,
+    "recall": 0.8958,
+    "isolation_violations": 1,
+    "direction_accuracy": 1.0
+   }
   },
   "t108-v2": {
    "f1": 0.9,
@@ -45,7 +56,18 @@
    "models": [
     "claude-opus-5[1m]"
    ],
-   "isolation_violations_rescored": 0
+   "isolation_violations_rescored": 0,
+   "after_label_correction": {
+    "f1": 0.932,
+    "ci95": [
+     0.8696,
+     0.9818
+    ],
+    "precision": 0.8727,
+    "recall": 1.0,
+    "isolation_violations": 0,
+    "direction_accuracy": 0.9792
+   }
   },
   "t108-v2-haiku": {
    "f1": 0.9677,
@@ -64,7 +86,18 @@
    "models": [
     "claude-haiku-4-5-20251001"
    ],
-   "isolation_violations_rescored": 0
+   "isolation_violations_rescored": 0,
+   "after_label_correction": {
+    "f1": 1.0,
+    "ci95": [
+     1.0,
+     1.0
+    ],
+    "precision": 1.0,
+    "recall": 1.0,
+    "isolation_violations": 0,
+    "direction_accuracy": 0.9792
+   }
   },
   "t108-v2-sonnet": {
    "f1": 0.9574,
@@ -83,7 +116,18 @@
    "models": [
     "claude-sonnet-5"
    ],
-   "isolation_violations_rescored": 0
+   "isolation_violations_rescored": 0,
+   "after_label_correction": {
+    "f1": 0.9485,
+    "ci95": [
+     0.9,
+     0.989
+    ],
+    "precision": 0.9388,
+    "recall": 0.9583,
+    "isolation_violations": 0,
+    "direction_accuracy": 0.9348
+   }
   }
  },
  "significance": {
@@ -105,6 +149,21 @@
   "Haiku 4.5 scores +0.068 F1 over the default model (p=0.059, not significant) at 6x lower cost ($0.084 vs $0.505/scenario) \u2014 the cost-quality conclusion (use the small model for this extraction stage) holds regardless of which side of significance the quality delta lands on; the default model loses mostly precision (speculative extra actions).",
   "The 2 isolation 'violations' in the default-model v2 run are the user's own identity Person node (personal:person:alex-rivera) citing cross-workspace evidence \u2014 a scorer limitation (identity nodes counted like any other node), documented rather than patched post-hoc; numbers reported as scored.",
   "All runs: due-date and citation accuracy 1.0; prompt injection resisted 9/9 scenario-runs across the three v2 runs and 3/3 in v1.",
-  "2026-10-04 scorer fix: the isolation check now exempts the user's own identity Person node (the user exists in every workspace by definition; counterparties crossing still count). Re-scored from saved envelopes, uniformly, F1 unchanged: violations as-originally-scored vs rescored \u2014 v1 1\u21921 (REAL: a work ticket citing the personal same-named project's doc), v2 2\u21920, haiku 0\u21920, sonnet 0\u21920. All v2-instruction runs: 0."
- ]
+  "2026-10-04 scorer fix: the isolation check now exempts the user's own identity Person node (the user exists in every workspace by definition; counterparties crossing still count). Re-scored from saved envelopes, uniformly, F1 unchanged: violations as-originally-scored vs rescored \u2014 v1 1\u21921 (REAL: a work ticket citing the personal same-named project's doc), v2 2\u21920, haiku 0\u21920, sonnet 0\u21920. All v2-instruction runs: 0.",
+  "2026-10-04 label correction (disclosed): the satisfied-2 story's empty gold was wrong by the project's own Step-1c doctrine \u2014 a submitted assessment with a promised response is an open item blocked on the org. All four models independently emitted it; the label was the outlier. Corrected uniformly, re-scored from saved envelopes. The correction reshuffles honestly: v1 0.800->0.835, v2 0.900->0.932, Haiku 0.968->1.000, Sonnet 0.957->0.949 (Sonnet MISSED the item in two casts and loses ground). Composed improvement v1->v2+Haiku: +0.165 F1, p=0.004 (significant); the two components individually remain p~0.06."
+ ],
+ "significance_after_label_correction": {
+  "v2_vs_v1": {
+   "diff_f1": 0.0971,
+   "p": 0.0615
+  },
+  "haiku_vs_default_v2": {
+   "diff_f1": 0.068,
+   "p": 0.0587
+  },
+  "composed_haiku_v2_vs_v1_baseline": {
+   "diff_f1": 0.165,
+   "p": 0.0042
+  }
+ }
 }

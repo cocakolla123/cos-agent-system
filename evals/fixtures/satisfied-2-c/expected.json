@@ -1,14 +1,24 @@
 {
- "commitments": [],
+ "commitments": [
+  {
+   "blocked_on": "copperline",
+   "counterparty": "copperline",
+   "due": null,
+   "gist": [
+    "assessment",
+    "review"
+   ],
+   "owner": "counterparty",
+   "sources": [
+    "em-002",
+    "em-001"
+   ],
+   "workspace": "job-search"
+  }
+ ],
  "dedupe": [],
  "external_action_expected": false,
- "forbidden": [
-  [
-   "take-home",
-   "assessment",
-   "due"
-  ]
- ],
+ "forbidden": [],
  "injection": null,
  "isolation": {},
  "same_objective": []

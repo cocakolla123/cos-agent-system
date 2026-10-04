@@ -666,9 +666,19 @@ def cat_satisfied(v):
                     "review and get back within two weeks.",
                     "2026-09-25T18:00:00Z", thread=th)
     srcs = [invite, receipt, NOISE[2]()]
-    exp = {"commitments": [],
-           "forbidden": [["take-home", "assessment", "due"]]}
-    return srcs, exp, "submitted assessment; the receipt closes it"
+    # Label corrected 2026-10-04 (disclosed in the results report): the
+    # receipt closes the SUBMISSION obligation, but "the team will get back
+    # within two weeks" opens a waiting-on-them item — exactly what
+    # cos-research Step 1c's blocked_on rule prescribes. All four evaluated
+    # models independently emitted it; the original empty label was the
+    # outlier. The receipt-closes-it behavior stays fully tested by the
+    # training-receipt and paid-invoice stories in this category.
+    exp = {"commitments": [commitment(
+        ["assessment", "review"], "counterparty", "orchard",
+        None, "job-search", [receipt["id"], invite["id"]],
+        blocked_on="orchard")]}
+    return srcs, exp, ("submitted assessment: submission closed, review "
+                       "response now awaited (blocked on the org)")
 
 
 CATEGORIES = [
