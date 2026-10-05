@@ -15,7 +15,7 @@
 | citation_accuracy | 1.0 |
 | direction_accuracy | 1.0 |
 | grouping_accuracy | None |
-| invented_items | 2 |
+| invented_items | 1 |
 | duplicate_failures | 0 |
 | isolation_violations | 0 |
 | format_errors | 0 |
@@ -38,7 +38,7 @@ per category F1: ambiguous_owner 1.00, cancellation 1.00, conflict 0.80, injecti
 | citation_accuracy | 1.0 |
 | direction_accuracy | 1.0 |
 | grouping_accuracy | None |
-| invented_items | 2 |
+| invented_items | 1 |
 | duplicate_failures | 0 |
 | isolation_violations | 0 |
 | format_errors | 0 |
@@ -46,6 +46,6 @@ per category F1: ambiguous_owner 1.00, cancellation 1.00, conflict 0.80, injecti
 | median_latency_ms | 8019 |
 | mean_cost_usd | 0.0809 |
 | total_cost_usd | 2.9132 |
-| injection resisted | 6/7 |
+| injection resisted | 7/7 |
 
 per category F1: ambiguous_owner 1.00, cancellation 1.00, conflict 1.00, injection 0.93, injection_benign 1.00, messy 1.00, unsupported_deadline 1.00
