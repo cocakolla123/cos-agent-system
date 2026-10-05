@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o5",
+ "started": "2026-10-05T18:39:51.977437+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\n      \"email\": \"celeste@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\n      \"email\": \"yuki.onoda@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"quarry\",\n    \"key\": \"quarry-liaison\",\n    \"name\": \"#quarry-liaison\",\n    \"attrs\": {\n      \"connector\": \"slack\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"telemetry-gap-analysis\",\n    \"name\": \"Telemetry gap analysis\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"blocked_on\": \"Yuki Onoda\",\n      \"evidence\": [\"em-001\", \"sl-003\"],\n      \"notes\": \"Celeste Beaumont asked that someone on Riley/Yuki's side own the telemetry gap analysis; Yuki Onoda committed on Slack that netops will handle it, so the deliverable is now owed by Yuki/netops to Celeste rather than requiring Riley to act further.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"celeste-beaumont\", \"to_workspace\": \"quarry\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"yuki-onoda\", \"to_workspace\": \"quarry\", \"type\": \"owned_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"quarry-liaison\", \"to_workspace\": \"quarry\", \"type\": \"discussed_in\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.14296199999999998,
+  "duration_ms": 77817,
+  "duration_api_ms": 75568,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13181,
+   "cache_read_input_tokens": 130480,
+   "output_tokens": 6413,
+   "output_tokens_details": {
+    "thinking_tokens": 5370
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13181,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 6115,
+     "cache_read_input_tokens": 47729,
+     "cache_creation_input_tokens": 638,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 638
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 6413,
+    "cacheReadInputTokens": 130480,
+    "cacheCreationInputTokens": 13181,
+    "webSearchRequests": 0,
+    "costUSD": 0.14296199999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 5370,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

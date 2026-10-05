@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o7",
+ "started": "2026-10-05T18:40:42.219589+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Confirmed only two source files exist. Output:\n\n```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"beacon\",\n    \"key\": \"petra-lindgren\",\n    \"name\": \"Petra Lindgren\",\n    \"attrs\": {\n      \"email\": \"petra@beaconfb.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"beacon\",\n    \"key\": \"cold-storage-grant-form\",\n    \"name\": \"Cold storage grant form\",\n    \"attrs\": {\n      \"refs\": []\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"beacon\",\n    \"key\": \"submit-cold-storage-grant-form\",\n    \"name\": \"Submit cold storage grant form for Beacon\",\n    \"attrs\": {\n      \"due\": \"2026-10-24\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"petra-lindgren\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"cold-storage-grant-form\", \"type\": \"relates_to\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.1082668,
+  "duration_ms": 23317,
+  "duration_api_ms": 21706,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 14202,
+   "cache_read_input_tokens": 179164,
+   "output_tokens": 1561,
+   "output_tokens_details": {
+    "thinking_tokens": 707
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14202,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 488,
+     "cache_read_input_tokens": 48568,
+     "cache_creation_input_tokens": 820,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 820
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1561,
+    "cacheReadInputTokens": 179164,
+    "cacheCreationInputTokens": 14202,
+    "webSearchRequests": 0,
+    "costUSD": 0.1082668,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 707,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

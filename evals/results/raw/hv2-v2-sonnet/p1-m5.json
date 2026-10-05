@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m5",
+ "started": "2026-10-05T18:37:20.863534+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"gus-okonkwo\",\n    \"name\": \"Gus Okonkwo\",\n    \"attrs\": {\n      \"email\": \"gus.okonkwo@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"pallet-scanner-rollout\",\n    \"name\": \"Pallet scanner rollout\",\n    \"attrs\": {\n      \"refs\": [\"th-vendor\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"bay-prep-checklist\",\n    \"name\": \"Complete bay prep checklist for pallet scanner rollout\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-vendor\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"gus-okonkwo\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Project\", \"to_key\": \"pallet-scanner-rollout\", \"type\": \"part_of\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.091757,
+  "duration_ms": 14903,
+  "duration_api_ms": 13702,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13411,
+   "cache_read_input_tokens": 130605,
+   "output_tokens": 1198,
+   "output_tokens_details": {
+    "thinking_tokens": 431
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13411,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 913,
+     "cache_read_input_tokens": 47852,
+     "cache_creation_input_tokens": 745,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 745
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 1198,
+    "cacheReadInputTokens": 130605,
+    "cacheCreationInputTokens": 13411,
+    "webSearchRequests": 0,
+    "costUSD": 0.091757,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 431,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

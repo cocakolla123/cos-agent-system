@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m1",
+ "started": "2026-10-05T18:36:58.666511+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\n      \"title\": \"NetOps, Tern Logistics\",\n      \"email\": \"yuki.onoda@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"title\": \"Dir. Network Operations, Tern Logistics\",\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"carrier-sla-matrix\",\n    \"name\": \"Carrier SLA Matrix\",\n    \"attrs\": {\n      \"description\": \"Carrier SLA matrix listing lanes; still showed 2025 lanes as of Oct 2.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"refresh-carrier-sla-matrix\",\n    \"name\": \"Refresh carrier SLA matrix (update lanes)\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-002\", \"em-003\"],\n      \"refs\": \"th-sla\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Document\", \"to_key\": \"carrier-sla-matrix\", \"type\": \"refs\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"yuki-onoda\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"escalated_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.2781852,
+  "duration_ms": 46995,
+  "duration_api_ms": 45085,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 52104,
+   "cache_read_input_tokens": 144516,
+   "output_tokens": 4085,
+   "output_tokens_details": {
+    "thinking_tokens": 2767
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 52104,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 738,
+     "cache_read_input_tokens": 49144,
+     "cache_creation_input_tokens": 2960,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2960
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 4085,
+    "cacheReadInputTokens": 144516,
+    "cacheCreationInputTokens": 52104,
+    "webSearchRequests": 0,
+    "costUSD": 0.2781852,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 2767,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

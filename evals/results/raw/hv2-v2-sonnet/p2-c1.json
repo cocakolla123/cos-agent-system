@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c1",
+ "started": "2026-10-05T18:37:47.499237+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Confirmed only two source files exist. Both describe the same deliverable (QBR deck lanes section), with the email's Oct 8 deadline (Oct 14) superseding Slack's Oct 6 deadline (Oct 15).\n\n```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\"email\": \"yuki.onoda@ternlog.example\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\"email\": \"dritan.pasha@ternlog.example\", \"title\": \"Dir. Network Operations\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"qbr-deck\",\n    \"name\": \"QBR deck\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.7,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"qbr-deck-lanes-section\",\n    \"name\": \"Finish lanes section of QBR deck\",\n    \"attrs\": {\n      \"due\": \"2026-10-14\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"sl-001\", \"em-002\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Project\", \"to_key\": \"qbr-deck\", \"type\": \"part_of\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"yuki-onoda\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"requested_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.10874079999999998,
+  "duration_ms": 19035,
+  "duration_api_ms": 16683,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 14078,
+   "cache_read_input_tokens": 179164,
+   "output_tokens": 1658,
+   "output_tokens_details": {
+    "thinking_tokens": 596
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14078,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 699,
+     "cache_read_input_tokens": 48559,
+     "cache_creation_input_tokens": 705,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 705
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1658,
+    "cacheReadInputTokens": 179164,
+    "cacheCreationInputTokens": 14078,
+    "webSearchRequests": 0,
+    "costUSD": 0.10874079999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 596,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c4",
+ "started": "2026-10-05T18:38:05.925495+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\",\n      \"title\": \"Dir. Network Operations, Tern Logistics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\n      \"email\": \"yuki.onoda@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"netops\",\n    \"name\": \"#netops\",\n    \"attrs\": {\n      \"connector\": \"slack\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"collect-carrier-insurance-certificates\",\n    \"name\": \"Collect updated insurance certificates from top five carriers\",\n    \"attrs\": {\n      \"due\": \"2026-10-18\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\", \"sl-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"owed_to\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"yuki-onoda\", \"type\": \"mentioned_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.09467040000000002,
+  "duration_ms": 15939,
+  "duration_api_ms": 14601,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13347,
+   "cache_read_input_tokens": 130602,
+   "output_tokens": 1515,
+   "output_tokens_details": {
+    "thinking_tokens": 625
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13347,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1229,
+     "cache_read_input_tokens": 47851,
+     "cache_creation_input_tokens": 682,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 682
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 1515,
+    "cacheReadInputTokens": 130602,
+    "cacheCreationInputTokens": 13347,
+    "webSearchRequests": 0,
+    "costUSD": 0.09467040000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 625,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

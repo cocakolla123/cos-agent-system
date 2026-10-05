@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d5",
+ "started": "2026-10-05T18:41:30.444612+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\n      \"email\": \"celeste@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"draft-renewal-one-pager\",\n    \"name\": \"Draft renewal one-pager\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"refs\": [\"th-002\"],\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"celeste-beaumont\",\n        \"to_workspace\": \"quarry\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```\n\nNo `attrs.due` was set: the email only says \"before the offsite,\" and no source states when the offsite occurs, so per instructions the deadline is not invented.",
+  "total_cost_usd": 0.1341306,
+  "duration_ms": 30269,
+  "duration_api_ms": 28573,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 12,
+   "cache_creation_input_tokens": 14827,
+   "cache_read_input_tokens": 277893,
+   "output_tokens": 1922,
+   "output_tokens_details": {
+    "thinking_tokens": 1084
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14827,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 389,
+     "cache_read_input_tokens": 49874,
+     "cache_creation_input_tokens": 139,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 139
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 12,
+    "outputTokens": 1922,
+    "cacheReadInputTokens": 277893,
+    "cacheCreationInputTokens": 14827,
+    "webSearchRequests": 0,
+    "costUSD": 0.1341306,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1084,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x7",
+ "started": "2026-10-05T18:39:19.165217+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "All three sources read. The request to staff the volunteer-fair table (em-001) was explicitly cancelled in em-002, and sl-003 is just Petra asking the channel about a possible reschedule with no resolution \u2014 so the obligation is moot, not outstanding or reopened.\n\n```json\n[\n {\"kind\": \"Person\", \"workspace\": \"beacon\", \"key\": \"petra-lindgren\", \"name\": \"Petra Lindgren\", \"attrs\": {\"email\": \"petra@beaconfb.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Channel\", \"workspace\": \"beacon\", \"key\": \"beacon-volunteers\", \"name\": \"#beacon-volunteers\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n {\"kind\": \"Action\", \"workspace\": \"beacon\", \"key\": \"beacon-fair-table-oct17\", \"name\": \"Staff Beacon table at volunteer fair\", \"attrs\": {\"due\": \"2026-10-17\", \"status\": \"cancelled\", \"priority\": \"medium\", \"evidence\": [\"em-001\", \"em-002\", \"sl-003\"], \"notes\": \"Fair cancelled by organizers due to venue flooding (em-002); as of sl-003 (2026-10-10) no word yet on a reschedule.\"}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"petra-lindgren\", \"type\": \"requested_by\"}, {\"to_kind\": \"Channel\", \"to_key\": \"beacon-volunteers\", \"type\": \"discussed_in\"}]}\n]\n```",
+  "total_cost_usd": 0.1149946,
+  "duration_ms": 81025,
+  "duration_api_ms": 79160,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 14803,
+   "cache_read_input_tokens": 179183,
+   "output_tokens": 1993,
+   "output_tokens_details": {
+    "thinking_tokens": 943
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14803,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 552,
+     "cache_read_input_tokens": 48703,
+     "cache_creation_input_tokens": 1286,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1286
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 1993,
+    "cacheReadInputTokens": 179183,
+    "cacheCreationInputTokens": 14803,
+    "webSearchRequests": 0,
+    "costUSD": 0.1149946,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 943,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

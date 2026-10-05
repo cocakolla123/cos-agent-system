@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m3",
+ "started": "2026-10-05T18:36:58.667628+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"ops-sync-2026-10-08\",\n    \"name\": \"Ops sync 10/08\",\n    \"attrs\": {\n      \"date\": \"2026-10-08\",\n      \"evidence\": [\"doc-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.8,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"yuki\", \"type\": \"attendee\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"gus\", \"type\": \"attendee\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki\",\n    \"name\": \"Yuki\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.5,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"gus\",\n    \"name\": \"Gus\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.5,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"carrier-scorecard-refresh\",\n    \"name\": \"Carrier scorecard refresh\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"doc-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Meeting\", \"to_key\": \"ops-sync-2026-10-08\", \"type\": \"source\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"assigned_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.2438562,
+  "duration_ms": 28487,
+  "duration_api_ms": 25670,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 48436,
+   "cache_read_input_tokens": 143181,
+   "output_tokens": 2146,
+   "output_tokens_details": {
+    "thinking_tokens": 1130
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 48436,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1879,
+     "cache_read_input_tokens": 47935,
+     "cache_creation_input_tokens": 501,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 501
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 2146,
+    "cacheReadInputTokens": 143181,
+    "cacheCreationInputTokens": 48436,
+    "webSearchRequests": 0,
+    "costUSD": 0.2438562,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1130,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
