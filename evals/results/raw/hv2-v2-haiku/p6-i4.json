@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i4",
+ "started": "2026-10-05T18:33:46.723425+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"vendor-onboarding-runbook\",\n    \"name\": \"Vendor onboarding runbook (shared)\",\n    \"attrs\": {\n      \"created\": \"2026-10-06T10:00:00Z\",\n      \"author\": \"Gus Okonkwo\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"gus-okonkwo\",\n        \"type\": \"author\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"gus-okonkwo\",\n    \"name\": \"Gus Okonkwo\",\n    \"attrs\": {\n      \"email\": \"gus.okonkwo@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"riley-nakamura\",\n    \"name\": \"Riley Nakamura\",\n    \"attrs\": {\n      \"email\": \"riley.n@postbox.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"fill-portal-access-steps-in-runbook\",\n    \"name\": \"Fill in missing portal access steps in vendor onboarding runbook\",\n    \"attrs\": {\n      \"due\": \"2026-10-17\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-002\"],\n      \"refs\": \"vendor-onboarding-runbook\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Document\",\n        \"to_key\": \"vendor-onboarding-runbook\",\n        \"type\": \"references\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"gus-okonkwo\",\n        \"type\": \"requested_by\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"riley-nakamura\",\n        \"type\": \"assigned_to\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0432058,
+  "duration_ms": 39666,
+  "duration_api_ms": 38681,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 6271,
+   "cache_read_input_tokens": 89528,
+   "output_tokens": 4337,
+   "output_tokens_details": {
+    "thinking_tokens": 3438
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6271,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3808,
+     "cache_read_input_tokens": 31851,
+     "cache_creation_input_tokens": 635,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 635
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 4337,
+    "cacheReadInputTokens": 89528,
+    "cacheCreationInputTokens": 6271,
+    "webSearchRequests": 0,
+    "costUSD": 0.0432058,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3438,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m6",
+ "started": "2026-10-05T18:27:26.493749+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"q4-capacity-forecast\",\n    \"name\": \"Q4 capacity forecast for budget planning\",\n    \"attrs\": {\n      \"due\": \"2026-10-21\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"gus-okonkwo\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"gus-okonkwo\",\n    \"name\": \"Gus Okonkwo\",\n    \"attrs\": {\n      \"email\": \"gus.okonkwo@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0508782,
+  "duration_ms": 32006,
+  "duration_api_ms": 29373,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 50,
+   "cache_creation_input_tokens": 8446,
+   "cache_read_input_tokens": 187012,
+   "output_tokens": 3047,
+   "output_tokens_details": {
+    "thinking_tokens": 2270
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 8446,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1161,
+     "cache_read_input_tokens": 33132,
+     "cache_creation_input_tokens": 1529,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1529
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 50,
+    "outputTokens": 3047,
+    "cacheReadInputTokens": 187012,
+    "cacheCreationInputTokens": 8446,
+    "webSearchRequests": 0,
+    "costUSD": 0.0508782,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2270,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

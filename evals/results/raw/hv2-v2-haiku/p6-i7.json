@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i7",
+ "started": "2026-10-05T18:34:27.881322+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"action-yard-lighting-quotes\",\n    \"name\": \"Get two quotes for yard lighting retrofit\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"person-dritan-pasha\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"person-dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\",\n      \"role\": \"Dir. Network Operations, Tern Logistics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0381579,
+  "duration_ms": 34971,
+  "duration_api_ms": 33487,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 6175,
+   "cache_read_input_tokens": 89369,
+   "output_tokens": 3369,
+   "output_tokens_details": {
+    "thinking_tokens": 2843
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6175,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3016,
+     "cache_read_input_tokens": 31694,
+     "cache_creation_input_tokens": 696,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 696
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 3369,
+    "cacheReadInputTokens": 89369,
+    "cacheCreationInputTokens": 6175,
+    "webSearchRequests": 0,
+    "costUSD": 0.0381579,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2843,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

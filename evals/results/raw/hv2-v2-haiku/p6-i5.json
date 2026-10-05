@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i5",
+ "started": "2026-10-05T18:33:50.892720+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\n      \"email\": \"yuki.onoda@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"check-badge-audit-log\",\n    \"name\": \"Check badge audit log\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"yuki-onoda\",\n        \"to_workspace\": \"ternlog\",\n        \"type\": \"from\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.053912,
+  "duration_ms": 37956,
+  "duration_api_ms": 36684,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 50,
+   "cache_creation_input_tokens": 8289,
+   "cache_read_input_tokens": 186890,
+   "output_tokens": 3719,
+   "output_tokens_details": {
+    "thinking_tokens": 3078
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 8289,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1738,
+     "cache_read_input_tokens": 32774,
+     "cache_creation_input_tokens": 1730,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1730
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 50,
+    "outputTokens": 3719,
+    "cacheReadInputTokens": 186890,
+    "cacheCreationInputTokens": 8289,
+    "webSearchRequests": 0,
+    "costUSD": 0.053912,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3078,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d2",
+ "started": "2026-10-05T18:32:24.591872+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"postmortem-outage\",\n    \"name\": \"Outage postmortem\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-001\"],\n      \"description\": \"Provide outage postmortem as requested\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dritan-pasha\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0284631,
+  "duration_ms": 14302,
+  "duration_api_ms": 13468,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 5836,
+   "cache_read_input_tokens": 89451,
+   "output_tokens": 1564,
+   "output_tokens_details": {
+    "thinking_tokens": 1146
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 5836,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1188,
+     "cache_read_input_tokens": 31774,
+     "cache_creation_input_tokens": 277,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 277
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 1564,
+    "cacheReadInputTokens": 89451,
+    "cacheCreationInputTokens": 5836,
+    "webSearchRequests": 0,
+    "costUSD": 0.0284631,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 1146,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

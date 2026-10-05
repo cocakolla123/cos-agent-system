@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m2",
+ "started": "2026-10-05T18:26:49.604113+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"person-celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\n      \"email\": \"celeste@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"person-ibrahim-khoury\",\n    \"name\": \"Ibrahim Khoury\",\n    \"attrs\": {\n      \"email\": \"ibrahim@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"quarry\",\n    \"key\": \"project-quarry-analytics\",\n    \"name\": \"Quarry Analytics\",\n    \"attrs\": {\n      \"company_name\": \"Quarry Analytics LLC\",\n      \"email_domain\": \"quarryanalytics.example\",\n      \"registered_office\": \"1 Harbourline Way\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"action-anomaly-report-draft\",\n    \"name\": \"Sensor anomaly report - first draft\",\n    \"attrs\": {\n      \"due\": \"2026-10-17\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"person-celeste-beaumont\",\n        \"type\": \"counterparty\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"person-ibrahim-khoury\",\n        \"type\": \"requested_by\"\n      },\n      {\n        \"to_kind\": \"Project\",\n        \"to_key\": \"project-quarry-analytics\",\n        \"type\": \"for_project\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0696957,
+  "duration_ms": 55593,
+  "duration_api_ms": 54302,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 9600,
+   "cache_read_input_tokens": 154537,
+   "output_tokens": 7000,
+   "output_tokens_details": {
+    "thinking_tokens": 5935
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 9600,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3895,
+     "cache_read_input_tokens": 32833,
+     "cache_creation_input_tokens": 2982,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2982
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 7000,
+    "cacheReadInputTokens": 154537,
+    "cacheCreationInputTokens": 9600,
+    "webSearchRequests": 0,
+    "costUSD": 0.0696957,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 5935,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

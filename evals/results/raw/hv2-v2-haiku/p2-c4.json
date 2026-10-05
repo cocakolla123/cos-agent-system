@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c4",
+ "started": "2026-10-05T18:28:43.624718+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"title\": \"Dir. Network Operations\",\n      \"organization\": \"Tern Logistics\",\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"yuki-onoda\",\n    \"name\": \"Yuki Onoda\",\n    \"attrs\": {\n      \"email\": \"yuki.onoda@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"collect-insurance-certs\",\n    \"name\": \"Collect updated insurance certificates from top five carriers\",\n    \"attrs\": {\n      \"due\": \"2026-10-31\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dritan-pasha\",\n        \"to_workspace\": \"ternlog\",\n        \"type\": \"assigned_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.039855,
+  "duration_ms": 23590,
+  "duration_api_ms": 21918,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 34,
+   "cache_creation_input_tokens": 6761,
+   "cache_read_input_tokens": 121590,
+   "output_tokens": 2828,
+   "output_tokens_details": {
+    "thinking_tokens": 2034
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6761,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2101,
+     "cache_read_input_tokens": 32042,
+     "cache_creation_input_tokens": 934,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 934
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 34,
+    "outputTokens": 2828,
+    "cacheReadInputTokens": 121590,
+    "cacheCreationInputTokens": 6761,
+    "webSearchRequests": 0,
+    "costUSD": 0.039855,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2034,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

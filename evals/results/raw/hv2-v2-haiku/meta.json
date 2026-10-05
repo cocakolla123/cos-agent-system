@@ -1,0 +1,12 @@
+{
+ "run_id": "hv2-v2-haiku",
+ "date": "2026-10-05",
+ "split": "all",
+ "fixtures": "/home/user/cos-agent-system/evals/heldout_v2/fixtures",
+ "instructions": "instructions/extract_v2.md",
+ "instructions_sha256": "8e5d6be5a4843f05c9f550e1f6cc61e0a94ebf1c99a74ad76db996142b0d587f",
+ "model": "claude-haiku-4-5-20251001",
+ "cli_version": "2.1.289 (Claude Code)",
+ "allowed_tools": "Read,Glob",
+ "scenarios": 46
+}

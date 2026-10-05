@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m3",
+ "started": "2026-10-05T18:26:49.604573+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"action-scorecard-refresh\",\n    \"name\": \"Carrier scorecard refresh\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"evidence\": [\"doc-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"person-riley-nakamura\", \"type\": \"owner\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"mtg-ops-sync-20261008\", \"type\": \"discussed_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Meeting\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"mtg-ops-sync-20261008\",\n    \"name\": \"Ops sync 10/08\",\n    \"attrs\": {\n      \"date\": \"2026-10-08\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"person-dritan-pasha\", \"type\": \"participant\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"person-yuki\", \"type\": \"participant\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"person-riley-nakamura\", \"type\": \"participant\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"person-gus\", \"type\": \"participant\"}\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"person-dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"person-yuki\",\n    \"name\": \"Yuki\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.65,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"person-riley-nakamura\",\n    \"name\": \"Riley Nakamura\",\n    \"attrs\": {\n      \"email\": \"riley.n@postbox.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"person-gus\",\n    \"name\": \"Gus\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.65,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Decision\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"decision-dock-cameras\",\n    \"name\": \"Dock cameras parking lot item\",\n    \"attrs\": {\n      \"evidence\": [\"doc-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"person-gus\", \"type\": \"assigned_to\"},\n      {\"to_kind\": \"Meeting\", \"to_key\": \"mtg-ops-sync-20261008\", \"type\": \"decided_in\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0700381,
+  "duration_ms": 68006,
+  "duration_api_ms": 66484,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 6450,
+   "cache_read_input_tokens": 153761,
+   "output_tokens": 8344,
+   "output_tokens_details": {
+    "thinking_tokens": 7114
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6450,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 7752,
+     "cache_read_input_tokens": 32213,
+     "cache_creation_input_tokens": 452,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 452
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 8344,
+    "cacheReadInputTokens": 153761,
+    "cacheCreationInputTokens": 6450,
+    "webSearchRequests": 0,
+    "costUSD": 0.0700381,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 7114,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
