@@ -1,0 +1,20 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "walkthrough",
+   "prepare",
+   "interview"
+  ],
+  [
+   "novara",
+   "interview",
+   "oct"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

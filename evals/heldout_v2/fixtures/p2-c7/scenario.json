@@ -1,0 +1,19 @@
+{
+ "base_id": "p2-c7",
+ "category": "conflict",
+ "id": "p2-c7",
+ "note": "stale calendar date loses to the organizer's email",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

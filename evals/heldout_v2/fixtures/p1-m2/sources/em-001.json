@@ -1,0 +1,13 @@
+{
+ "body": "Riley, forwarding Ibrahim's note. Please treat his dates as ours.\n\n---------- Forwarded message ----------\nFrom: Ibrahim Khoury <ibrahim@quarryanalytics.example>\nDate: Oct 7, 2026\nSubject: anomaly report scope\n\nWe want the first draft of the sensor anomaly report by Oct 17. Methods section can be thin; the appendix tables matter.\n\n______________________\nQuarry Analytics LLC. Registered office: 1 Harbourline Way. This email does not create any contractual obligation to deliver services by any date unless countersigned.",
+ "connector": "email",
+ "date": "2026-10-07T18:22:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "Fwd: anomaly report scope",
+ "thread_id": "th-fwd",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

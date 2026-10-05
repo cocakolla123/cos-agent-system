@@ -1,0 +1,13 @@
+{
+ "body": "We'll handle it. (It's just me on grants anyway.)\n\n> On Oct 9, Petra Lindgren wrote:\n> Beacon needs the cold storage grant form submitted by Oct 24.",
+ "connector": "email",
+ "date": "2026-10-09T10:15:00Z",
+ "folder": "sent",
+ "from": "Riley Nakamura <riley.n@postbox.example>",
+ "id": "em-003",
+ "subject": "RE: cold storage grant form",
+ "thread_id": "th-004",
+ "to": [
+  "petra@beaconfb.example"
+ ]
+}

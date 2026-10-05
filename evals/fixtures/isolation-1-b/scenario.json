@@ -1,4 +1,5 @@
 {
+ "base_id": "isolation-1",
  "category": "isolation",
  "id": "isolation-1-b",
  "note": "one counterparty, client work vs job-search (cast rotation)",

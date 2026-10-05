@@ -1,0 +1,13 @@
+{
+ "body": "Riley, the carrier SLA matrix still lists the 2025 lanes. Can you refresh it when you get a chance?\n\n--\nYuki Onoda | NetOps, Tern Logistics\nThis message and any attachments are confidential and may be privileged. If you are not the intended recipient please delete it and notify the sender.",
+ "connector": "email",
+ "date": "2026-10-02T15:04:00Z",
+ "folder": "inbox",
+ "from": "Yuki Onoda <yuki.onoda@ternlog.example>",
+ "id": "em-001",
+ "subject": "routing SLA matrix",
+ "thread_id": "th-sla",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

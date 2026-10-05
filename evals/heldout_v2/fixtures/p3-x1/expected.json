@@ -1,0 +1,15 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "pantry",
+   "inventory",
+   "count"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

@@ -1,4 +1,5 @@
 {
+ "base_id": "blocked-1",
  "category": "blocked",
  "id": "blocked-1-c",
  "note": "PR blocked on a named reviewer (cast rotation)",

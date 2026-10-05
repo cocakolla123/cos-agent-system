@@ -1,0 +1,13 @@
+{
+ "body": "Beacon needs the cold storage grant form submitted by Oct 24. Can your crew cover it?",
+ "connector": "email",
+ "date": "2026-10-09T09:00:00Z",
+ "folder": "inbox",
+ "from": "Petra Lindgren <petra@beaconfb.example>",
+ "id": "em-001",
+ "subject": "cold storage grant form",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

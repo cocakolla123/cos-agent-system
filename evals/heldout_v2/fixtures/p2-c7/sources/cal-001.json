@@ -1,0 +1,12 @@
+{
+ "attendees": [
+  "riley.n@postbox.example",
+  "celeste@quarryanalytics.example"
+ ],
+ "connector": "calendar",
+ "date": "2026-09-30T12:00:00Z",
+ "description": "",
+ "id": "cal-001",
+ "start": "2026-10-14T17:00:00Z",
+ "title": "Quarry pipeline review"
+}

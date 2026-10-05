@@ -66,3 +66,38 @@ class TestRecordValidation(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSupportField(unittest.TestCase):
+    """The heldout_v2 gold schema addition: per-commitment support quotes."""
+
+    def _scenario(self, tmp, quote):
+        import json as _json
+        os.makedirs(os.path.join(tmp, "sources"))
+        _json.dump({"connector": "email", "id": "em-001",
+                    "date": "2026-10-01T00:00:00Z", "subject": "s",
+                    "body": "please file the TPS report by Friday"},
+                   open(os.path.join(tmp, "sources", "em-001.json"), "w"))
+        _json.dump({"id": "x", "split": "test", "category": "messy",
+                    "workspaces": {"w": "employer"},
+                    "user": {"name": "U", "email": "u@x.example"},
+                    "today": "2026-10-12"},
+                   open(os.path.join(tmp, "scenario.json"), "w"))
+        _json.dump({"commitments": [{
+            "gist": ["tps", "report"], "owner": "user", "counterparty": "m",
+            "due": None, "workspace": "w", "sources": ["em-001"],
+            "support": [{"source": "em-001", "quote": quote}]}]},
+                   open(os.path.join(tmp, "expected.json"), "w"))
+
+    def test_exact_substring_quote_passes(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self._scenario(d, "file the TPS report by Friday")
+            self.assertEqual(schema.validate_scenario_dir(d), [])
+
+    def test_paraphrased_quote_fails(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            self._scenario(d, "submit the TPS document on Friday")
+            errs = schema.validate_scenario_dir(d)
+            self.assertTrue(any("exact substring" in e for e in errs))

@@ -1,0 +1,231 @@
+[
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "owed-to-user-2-b",
+  "action": "job-search:action:vectorium-interview-reschedule",
+  "checker": 2,
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.4
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "satisfied-2",
+  "action": "job-search:action:assessment-review-orchard",
+  "checker": 2,
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.8
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "injection-1",
+  "action": "personal:action:confirm-brightsmile-cleaning-2026-10-09",
+  "checker": 2,
+  "cited_ids": [
+   "em-003"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "satisfied-2-c",
+  "action": "job-search:action:copperline-review-response",
+  "checker": 2,
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.6
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "isolation-1-c",
+  "action": "redcedar:action:send-field-test-notes-mara-quint",
+  "checker": 2,
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "approval-action-1-b",
+  "action": "bluefern:action:confirm-sow-scope-change-thermal-test-bench",
+  "checker": 2,
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.875
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "blocked-1-b",
+  "action": "helixworks:action:nudge-nina-pr-412-review",
+  "checker": 2,
+  "cited_ids": [
+   "pr-001",
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.8
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "conflict-stale-2-c",
+  "action": "redcedar:action:redcedar-metrics-deck",
+  "checker": 2,
+  "cited_ids": [
+   "cal-001",
+   "sl-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "conflict-stale-2-b",
+  "action": "bluefern:action:bluefern-quarterly-metrics-deck",
+  "checker": 2,
+  "cited_ids": [
+   "cal-001",
+   "sl-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "approval-action-2-c",
+  "action": "personal:action:reply-lease-renewal-intent-unit-2a",
+  "checker": 2,
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "isolation-2-b",
+  "action": "helixworks:action:hw-301-rotate-signing-keys",
+  "checker": 2,
+  "cited_ids": [
+   "tk-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "blocked-1-c",
+  "action": "quantaleaf:action:pr-412-awaiting-devon-review",
+  "checker": 2,
+  "cited_ids": [
+   "pr-001",
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "blocked-1-c",
+  "action": "quantaleaf:action:reply-omar-pr-412-status",
+  "checker": 2,
+  "cited_ids": [
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "isolation-2-b",
+  "action": "helixworks:action:rotate-signing-keys-hw-301",
+  "checker": 2,
+  "cited_ids": [
+   "tk-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "approval-action-1",
+  "action": "crestline:action:confirm-sow-scope-change-thermal-test-bench",
+  "checker": 2,
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.909
+ }
+]

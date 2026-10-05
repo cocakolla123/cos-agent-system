@@ -1,0 +1,14 @@
+{
+ "body": "Someone on your side should own the telemetry gap analysis.",
+ "connector": "email",
+ "date": "2026-10-07T11:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "telemetry gap follow-up",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example",
+  "yuki.onoda@ternlog.example"
+ ]
+}

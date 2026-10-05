@@ -1,4 +1,5 @@
 {
+ "base_id": "dedupe-cross-surface-0",
  "category": "dedupe_cross_surface",
  "id": "dedupe-cross-surface-0-c",
  "note": "same commitment on three surfaces must collapse to one (cast rotation)",

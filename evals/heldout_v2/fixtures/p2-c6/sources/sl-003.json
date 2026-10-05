@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-08T14:05:00Z",
+ "id": "sl-003",
+ "text": "@riley change of plan - do the vendor comparison INSTEAD of the integration memo this week. Need it by Oct 17. Memo moves to next sprint, no date.",
+ "user": "Dritan Pasha <dritan.pasha@ternlog.example>"
+}

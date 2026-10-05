@@ -1,0 +1,159 @@
+{
+ "note": "story-level re-analysis of the existing t108 runs; 18 base stories on test; exact permutation (2^18)",
+ "original_labels": {
+  "runs": {
+   "v1": {
+    "f1": 0.8,
+    "story_ci95": [
+     0.6237,
+     0.9434
+    ],
+    "fixture_ci95_anticonservative": [
+     0.6792,
+     0.9057
+    ]
+   },
+   "v2": {
+    "f1": 0.9,
+    "story_ci95": [
+     0.78,
+     0.9897
+    ],
+    "fixture_ci95_anticonservative": [
+     0.8269,
+     0.9608
+    ]
+   },
+   "v2-haiku": {
+    "f1": 0.9677,
+    "story_ci95": [
+     0.8824,
+     1.0
+    ],
+    "fixture_ci95_anticonservative": [
+     0.9231,
+     1.0
+    ]
+   },
+   "v2-sonnet": {
+    "f1": 0.9574,
+    "story_ci95": [
+     0.8852,
+     1.0
+    ],
+    "fixture_ci95_anticonservative": [
+     0.913,
+     0.9903
+    ]
+   }
+  },
+  "comparisons": {
+   "v2_vs_v1": {
+    "diff_f1": 0.1,
+    "story_p": 0.1875,
+    "fixture_p_anticonservative": 0.0615,
+    "clusters": 18,
+    "exact": true
+   },
+   "haiku_vs_default": {
+    "diff_f1": 0.0677,
+    "story_p": 0.25,
+    "fixture_p_anticonservative": 0.0587,
+    "clusters": 18,
+    "exact": true
+   },
+   "sonnet_vs_default": {
+    "diff_f1": 0.0574,
+    "story_p": 0.125,
+    "fixture_p_anticonservative": 0.0293,
+    "clusters": 18,
+    "exact": true
+   },
+   "composed_haiku_vs_v1": {
+    "diff_f1": 0.1677,
+    "story_p": 0.125,
+    "fixture_p_anticonservative": 0.0042,
+    "clusters": 18,
+    "exact": true
+   }
+  }
+ },
+ "corrected_labels": {
+  "runs": {
+   "v1": {
+    "f1": 0.835,
+    "story_ci95": [
+     0.6731,
+     0.9709
+    ],
+    "fixture_ci95_anticonservative": [
+     0.72,
+     0.9333
+    ]
+   },
+   "v2": {
+    "f1": 0.932,
+    "story_ci95": [
+     0.8333,
+     1.0
+    ],
+    "fixture_ci95_anticonservative": [
+     0.8696,
+     0.9818
+    ]
+   },
+   "v2-haiku": {
+    "f1": 1.0,
+    "story_ci95": [
+     1.0,
+     1.0
+    ],
+    "fixture_ci95_anticonservative": [
+     1.0,
+     1.0
+    ]
+   },
+   "v2-sonnet": {
+    "f1": 0.9485,
+    "story_ci95": [
+     0.8706,
+     1.0
+    ],
+    "fixture_ci95_anticonservative": [
+     0.9,
+     0.989
+    ]
+   }
+  },
+  "comparisons": {
+   "v2_vs_v1": {
+    "diff_f1": 0.0971,
+    "story_p": 0.1875,
+    "fixture_p_anticonservative": 0.0615,
+    "clusters": 18,
+    "exact": true
+   },
+   "haiku_vs_default": {
+    "diff_f1": 0.068,
+    "story_p": 0.25,
+    "fixture_p_anticonservative": 0.0587,
+    "clusters": 18,
+    "exact": true
+   },
+   "sonnet_vs_default": {
+    "diff_f1": 0.0164,
+    "story_p": 0.75,
+    "fixture_p_anticonservative": 0.6811,
+    "clusters": 18,
+    "exact": true
+   },
+   "composed_haiku_vs_v1": {
+    "diff_f1": 0.165,
+    "story_p": 0.125,
+    "fixture_p_anticonservative": 0.0042,
+    "clusters": 18,
+    "exact": true
+   }
+  }
+ }
+}

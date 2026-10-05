@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-08T15:05:00Z",
+ "id": "sl-002",
+ "text": "lunch train leaving in 10",
+ "user": "Yuki Onoda <yuki.onoda@ternlog.example>"
+}

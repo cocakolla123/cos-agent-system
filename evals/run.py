@@ -34,10 +34,11 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-import schema  # noqa: E402
-import score   # noqa: E402
+import schema   # noqa: E402
+import score    # noqa: E402
+import support  # noqa: E402
 
-FIXTURES = os.path.join(HERE, "fixtures")
+DEFAULT_FIXTURES = os.path.join(HERE, "fixtures")
 RESULTS = os.path.join(HERE, "results")
 CLAUDE = os.environ.get("CLAUDE_BIN", "claude")
 
@@ -63,9 +64,36 @@ def sha256_file(path):
     return h.hexdigest()
 
 
-def load_scenarios(split, only=None):
+def verify_label_lock(fixtures_dir):
+    """A fixtures set with a labels.lock.json (heldout_v2) is frozen: refuse
+    to run or score when any expected.json differs from the committed lock."""
+    import hashlib
+    lock_path = os.path.join(os.path.dirname(fixtures_dir.rstrip("/")),
+                             "labels.lock.json")
+    if not os.path.exists(lock_path):
+        return None
+    lock = json.load(open(lock_path))["labels"]
+    bad = []
+    for sid_, digest in lock.items():
+        p = os.path.join(fixtures_dir, sid_, "expected.json")
+        if not os.path.exists(p):
+            bad.append(sid_ + ": missing")
+            continue
+        h = hashlib.sha256(open(p, "rb").read()).hexdigest()
+        if h != digest:
+            bad.append(sid_ + ": label differs from the committed lock")
+    for name, _ in schema.iter_scenarios(fixtures_dir):
+        if name not in lock:
+            bad.append(name + ": not in the lock at all")
+    if bad:
+        raise SystemExit("label lock violation - refusing to run/score:\n  "
+                         + "\n  ".join(bad))
+    return lock_path
+
+
+def load_scenarios(split, only=None, fixtures_dir=None):
     out = []
-    for name, path in schema.iter_scenarios(FIXTURES):
+    for name, path in schema.iter_scenarios(fixtures_dir or DEFAULT_FIXTURES):
         scn = json.load(open(os.path.join(path, "scenario.json")))
         if split != "all" and scn["split"] != split:
             continue
@@ -137,13 +165,15 @@ def run_scenario(scn, sdir, prompt, model, timeout):
 
 def score_raw(raw_dir, meta):
     """Score every saved envelope in raw_dir against the fixtures."""
+    fixtures_dir = meta.get("fixtures") or DEFAULT_FIXTURES
+    verify_label_lock(fixtures_dir)
     rows = []
     for f in sorted(os.listdir(raw_dir)):
         if not f.endswith(".json") or f == "meta.json":
             continue
         raw = json.load(open(os.path.join(raw_dir, f)))
         sid = raw["scenario"]
-        sdir = os.path.join(FIXTURES, sid)
+        sdir = os.path.join(fixtures_dir, sid)
         scn = json.load(open(os.path.join(sdir, "scenario.json")))
         gold = json.load(open(os.path.join(sdir, "expected.json")))
         env = raw.get("envelope") or {}
@@ -157,7 +187,16 @@ def score_raw(raw_dir, meta):
                 format_errors.append({"record": r, "errors": errs})
             else:
                 valid.append(r)
-        row = score.score_scenario(scn, gold, valid, today=scn.get("today"))
+        g = score.build_graph(valid, today=scn.get("today"))
+        row = score.score_scenario(scn, gold, valid, g=g,
+                                   today=scn.get("today"))
+        sources = {}
+        srcdir = os.path.join(sdir, "sources")
+        for sf in os.listdir(srcdir):
+            if sf.endswith(".json"):
+                sources[sf[:-5]] = json.load(open(os.path.join(srcdir, sf)))
+        row["support"] = support.check_scenario(
+            score.open_actions(g), sources)
         row["parse_error"] = parse_err if records is None else None
         row["format_errors"] = len(format_errors)
         row["records_total"] = len(records or [])
@@ -238,6 +277,8 @@ def main():
                     help="restrict to these scenario ids")
     ap.add_argument("--score-only", default=None,
                     help="path to an existing results/raw/<run_id> dir")
+    ap.add_argument("--fixtures", default=DEFAULT_FIXTURES,
+                    help="fixtures root (e.g. evals/heldout_v2/fixtures)")
     args = ap.parse_args()
 
     assert_isolated()
@@ -265,10 +306,13 @@ def main():
     raw_dir = os.path.join(RESULTS, "raw", run_id)
     os.makedirs(raw_dir, exist_ok=True)
 
-    scenarios = load_scenarios(args.split, only=args.scenarios)
+    verify_label_lock(args.fixtures)
+    scenarios = load_scenarios(args.split, only=args.scenarios,
+                               fixtures_dir=args.fixtures)
     if not scenarios:
         raise SystemExit("no scenarios for split %r" % args.split)
     meta = {"run_id": run_id, "date": date, "split": args.split,
+            "fixtures": os.path.abspath(args.fixtures),
             "instructions": os.path.relpath(args.instructions, HERE),
             "instructions_sha256": instr_sha, "model": args.model,
             "cli_version": cli_version, "allowed_tools": ALLOWED_TOOLS,

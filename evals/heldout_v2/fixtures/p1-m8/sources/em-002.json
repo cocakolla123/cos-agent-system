@@ -1,0 +1,13 @@
+{
+ "body": "I have them on the work phone. I'll get you the dock audit photos before Friday.\n\n> On Oct 7, Dritan Pasha wrote:\n> Insurance wants photo evidence from the Westgate dock audit. Do you have them?",
+ "connector": "email",
+ "date": "2026-10-07T12:40:00Z",
+ "folder": "sent",
+ "from": "Riley Nakamura <riley.n@postbox.example>",
+ "id": "em-002",
+ "subject": "RE: dock audit photos",
+ "thread_id": "th-dock",
+ "to": [
+  "dritan.pasha@ternlog.example"
+ ]
+}

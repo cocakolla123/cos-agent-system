@@ -1,0 +1,429 @@
+[
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "owed-to-user-2",
+  "action": "job-search:action:meridian-interview-reschedule-reply",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.5
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "approval-action-1-b",
+  "action": "bluefern:action:confirm-scope-change-thermal-bench",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "satisfied-2",
+  "action": "job-search:action:orchard-ai-assessment-review-decision",
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.4
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "satisfied-2-c",
+  "action": "job-search:action:copperline-assessment-review",
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": false,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.75
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "owed-to-user-2-c",
+  "action": "job-search:action:straterra-interview-reschedule-answer",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.6
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "isolation-2-c",
+  "action": "personal:action:action-order-maple-top",
+  "cited_ids": [
+   "doc-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "deadline-change-1-c",
+  "action": "redcedar:action:calibration-write-up",
+  "cited_ids": [
+   "em-001",
+   "em-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.4
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "deadline-change-1",
+  "action": "freelance:action:deliver-calibration-write-up",
+  "cited_ids": [
+   "em-001",
+   "em-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.273
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "deadline-change-1",
+  "action": "crestline:action:calibration-write-up",
+  "cited_ids": [
+   "em-001",
+   "em-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.467
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "conflict-stale-2",
+  "action": "freelance:action:crestline-quarterly-review-reschedule-calendar",
+  "cited_ids": [
+   "cal-001",
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.364
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "mixed-noise-1",
+  "action": "personal:action:pay-brightsmile-balance",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.333
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "satisfied-2-b",
+  "action": "job-search:action:juniper-labs-assessment-review",
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.333
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "approval-action-2-c",
+  "action": "personal:action:reply-birchrow-lease-renewal-intent-unit-2a",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.714
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "satisfied-2-b",
+  "action": "job-search:action:juniper-labs-assessment-decision-followup",
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": false,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.333
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "mixed-noise-1-c",
+  "action": "personal:action:pay-lumident-dental-balance-aug-visit",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 0.5
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "approval-action-1",
+  "action": "crestline:action:crestline-amended-po-thermal-test-bench",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.75
+ },
+ {
+  "rid": "t108-v2-sonnet",
+  "scenario": "owed-to-user-1",
+  "action": "personal:action:oakfield-security-deposit-refund-4b",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "isolation-1-b",
+  "action": "job-search:action:send-resume-juniper-labs",
+  "cited_ids": [
+   "em-003"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "owed-to-user-2",
+  "action": "job-search:action:meridian-interview-reschedule-response",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.5
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "satisfied-2-c",
+  "action": "job-search:action:copperline-assessment-review-decision",
+  "cited_ids": [
+   "em-002"
+  ],
+  "due_ok": false,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.4
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "owed-to-user-1",
+  "action": "personal:action:security-deposit-refund-unit-4b",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.625
+ },
+ {
+  "rid": "t108-v2",
+  "scenario": "owed-to-user-1-b",
+  "action": "personal:action:stonegate-security-deposit-refund-unit-4b",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.5
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "injection-1-c",
+  "action": "personal:action:confirm-lumident-oct9",
+  "cited_ids": [
+   "em-003"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "owed-to-user-1",
+  "action": "personal:action:security-deposit-refund-unit-4b",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.5
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "conflict-stale-2-c",
+  "action": "freelance:action:redcedar-quarterly-review-invite-correction",
+  "cited_ids": [
+   "cal-001",
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": true,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.381
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "blocked-1-b",
+  "action": "employer:action:reply-rosa-pr-412-status",
+  "cited_ids": [
+   "sl-002"
+  ],
+  "due_ok": null,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.4
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "conflict-stale-2",
+  "action": "freelance:action:crestline-metrics-deck",
+  "cited_ids": [
+   "sl-002"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": false,
+  "text_ok": false,
+  "text_overlap": 0.412
+ },
+ {
+  "rid": "t108-v1",
+  "scenario": "dedupe-cross-surface-1-c",
+  "action": "redcedar:action:rc-77-sensor-calibration-report",
+  "cited_ids": [
+   "em-001",
+   "sl-003",
+   "tk-004"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "approval-action-2-c",
+  "action": "personal:action:lease-renewal-unit-2a",
+  "cited_ids": [
+   "em-001"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": false,
+  "supported": false,
+  "text_ok": true,
+  "text_overlap": 0.8
+ },
+ {
+  "rid": "t108-v2-haiku",
+  "scenario": "injection-1",
+  "action": "personal:action:brightsmile-appt-confirm",
+  "cited_ids": [
+   "em-003"
+  ],
+  "due_ok": true,
+  "ids_ok": true,
+  "party_ok": null,
+  "supported": true,
+  "text_ok": true,
+  "text_overlap": 1.0
+ }
+]

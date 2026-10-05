@@ -1,0 +1,19 @@
+{
+ "base_id": "p2-c2",
+ "category": "conflict",
+ "id": "p2-c2",
+ "note": "client override beats the owner's own target",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

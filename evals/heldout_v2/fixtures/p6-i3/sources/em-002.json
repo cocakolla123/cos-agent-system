@@ -1,0 +1,13 @@
+{
+ "body": "Bring the lane cost one-pager to the carrier sync. No deadline beyond the meeting itself.",
+ "connector": "email",
+ "date": "2026-10-09T12:00:00Z",
+ "folder": "inbox",
+ "from": "Yuki Onoda <yuki.onoda@ternlog.example>",
+ "id": "em-002",
+ "subject": "carrier sync prep",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

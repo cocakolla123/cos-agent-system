@@ -1,0 +1,16 @@
+{
+ "assignee": "riley.n@postbox.example",
+ "comments": [
+  {
+   "author": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+   "date": "2026-10-08T10:00:00Z",
+   "text": "Plan doc due Oct 19 per maintenance window."
+  }
+ ],
+ "connector": "ticketing",
+ "date": "2026-10-08T10:00:00Z",
+ "id": "tk-001",
+ "key": "TL-310",
+ "status": "open",
+ "summary": "Dock sensor recalibration plan"
+}

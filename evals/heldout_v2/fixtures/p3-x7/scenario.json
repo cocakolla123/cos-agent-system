@@ -1,0 +1,19 @@
+{
+ "base_id": "p3-x7",
+ "category": "cancellation",
+ "id": "p3-x7",
+ "note": "a later open question does not revive a cancellation",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

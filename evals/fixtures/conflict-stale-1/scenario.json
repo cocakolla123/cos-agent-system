@@ -1,4 +1,5 @@
 {
+ "base_id": "conflict-stale-1",
  "category": "conflict_stale",
  "id": "conflict-stale-1",
  "note": "newer message cancels the obligation entirely",

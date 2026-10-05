@@ -6,11 +6,17 @@ answer nothing, and it feels like hiring a chief of staff on day one:
 1. **Give it context (optional).** On first launch the dashboard asks — paste text or attach
    files (md/txt/pdf/docx: resume, project docs, notes). Skip if you'd rather it figure things
    out itself.
-2. **It researches you.** `/cos-research` crawls your connected accounts **read-only** — email,
-   messages, tickets, calendar, docs, repos, local projects — and builds a **knowledge graph**
-   (every fact with source, confidence, freshness; deduped by construction).
+2. **It researches you.** `/cos-research` crawls your connected accounts (email, messages,
+   tickets, calendar, docs, repos, local projects) and builds a **knowledge graph**: every fact
+   with source, confidence, freshness, deduped by construction. Connector access is read-only
+   because the research grant contains no mutating connector tool (see Security below for what
+   the grant does contain). Connector content is sent to the model provider for extraction, so
+   "local-first" describes where state is stored, not where text is processed.
 3. **It discovers your workspaces.** Employer, freelance clients, personal projects, job
-   search, school — each isolated; confidential info never crosses a boundary.
+   search, school. Workspace assignment at research time is model judgment, not an enforced
+   wall; grant-level isolation applies to the per-workspace comms agents the factory generates
+   (`dashboard/factory.py`). Measured on the eval set: the baseline instructions leaked across
+   workspaces in 1 of 18 held-out stories; the revised instructions leaked in 0 (see evals/).
 4. **It creates only the agents your work justifies.** A ticketing cluster earns an
    investigator; job-search entities earn a Job Search agent; personal repos earn a Project
    Builder — each with a full spec and read/draft-only tools.
@@ -19,8 +25,9 @@ answer nothing, and it feels like hiring a chief of staff on day one:
 6. **It keeps learning forever.** Polling re-researches changed sources; tell the chat
    "you're missing the email from X" and the **self-learning loop** fetches it, reasons about
    *why* it was missed, fixes the cause (config, instructions, or its own code — test-gated
-   with automatic rollback), records the lesson, and **publishes the generic fix to your own
-   fork through a privacy gate** that refuses to push anything personal.
+   with automatic rollback), records the lesson, and can publish the generic fix to your own
+   fork through a privacy gate (`dashboard/privacy.py`, opt-in; see Security below for exactly
+   what it checks and what it cannot see).
 
 **The line it never crosses:** agents read, research, analyze, and draft autonomously — but
 every external action (send, post, ticket change, calendar change, merge, deploy) goes to an
@@ -71,34 +78,69 @@ Everything is file-based and stdlib-only (no database, no dependencies): auditab
 | + Docs/Drive | Project discovery, document trails in workstreams |
 | + Tickets (Jira/Asana/Linear) | Investigations, ticket-aware workstreams, per-system agents |
 | + Chat (Slack) | Channel activity, people graph, cross-surface dedupe |
-| + A second account of anything | Separate instance, own login, own workspace — agents scoped so work can't read personal |
+| + A second account of anything | Separate instance, own login, own workspace; comms agents hold only their own account's read tools |
 
 Connector outages degrade gracefully: the preflight reports what's unreachable and research
 continues with what works.
 
 ## Measured, not vibes
 
-`evals/` holds an agent evaluation harness (108 synthetic scenarios, 54 dev / 54 test,
-12 behavior categories including prompt-injection and workspace-isolation): the real
-extraction step runs headless against fixtures with **zero MCP servers mounted**, outputs
-flow through the real ingest→graph→correlate path, and runs are compared with bootstrap
-confidence intervals and a paired permutation test. Baseline numbers, matching rules, and an
-honestly-reported improvement (including the held-out regression it didn't fix) are in
-[`evals/README.md`](./evals/README.md) and `evals/results/`. Unit suite: 213 stdlib tests
-plus eval-scorer tests, CI on Python 3.9 + 3.12.
+`evals/` holds an agent evaluation harness for the one LLM step in the pipeline. The dataset
+is 36 hand-authored base stories, each in three cast rotations (108 fixtures), with 18 base
+stories held out as test; 12 behavior categories including prompt injection and workspace
+isolation. The extraction step runs headless against fixtures with zero MCP servers mounted,
+outputs flow through the real ingest, graph, and correlate path, and runs are compared at the
+story level (cluster bootstrap and an exact paired permutation test; cast rotations of one
+story count as one piece of evidence). On the held-out stories the revised extraction
+contract improved F1 from 0.835 to 0.932 and a small-model configuration scored 1.000 at
+about one sixth of the default model's cost, but no pairwise comparison reaches p < 0.05 at
+the story level with 18 stories, and the eval's injection evidence is one held-out injection
+story with one technique. A source-support checker verifies that cited sources actually
+state the obligation, the due date, and the counterparty, with its own hand-audited
+agreement rate. Full numbers, matching rules, label-correction log, and the story-level
+re-analysis that replaced earlier overconfident fixture-level p values are in
+[`evals/README.md`](./evals/README.md) and `evals/results/`. Unit suites, from actual runs:
+234 tests in `dashboard/tests/` plus 51 in `evals/tests/`, CI on Python 3.9 and 3.12.
 
 ## Security & privacy posture
 
-- **Read-only by construction**: research/poll/chat subprocesses hold no mutating tools;
-  injection in a source can ask all it wants — the tool to comply doesn't exist.
+Each claim below names what enforces it, what it covers, and what it does not.
+
+- **Subprocess tool grants** (`dashboard/server.py`, `--allowedTools` under
+  `--permission-mode dontAsk`; shipped defaults pinned by `tests/test_grants.py`):
+  chat holds `Read,Agent` plus read-only connector tools; poll holds `Read,Edit,Agent`;
+  research holds `Read,Edit,Write,Bash(python3:*),Glob,Grep,Agent,ToolSearch` plus the
+  read-only connector tools `/setup` discovers. No subprocess holds a mutating connector
+  tool, and since 2026-10-05 none holds unscoped Bash or WebSearch (an outside review found
+  the earlier research default could reach the network; fixed, with a validator rule and a
+  pinned test). Not covered: a deployment owner can widen their own config.json;
+  `validate_config.py` warns when they do.
+- **Prompt injection**: injected text cannot trigger an external action, because the
+  subprocess reading it holds no tool that sends or posts. Injected text CAN still shape
+  what gets written locally: records, to-dos, drafts, and approval-queue proposals. The
+  approval queue is the backstop, and the human clicking approve is part of the security
+  model. Eval coverage so far: one held-out injection story (one technique), resisted at
+  the record level in all four runs; the eval runner itself uses `Read,Glob` only, so eval
+  results do not exercise the production grant.
 - **One execution path**: only `/cos-approve` holds mutating grants, only against the exact
-  stored `proposed_tool_call`, only after you click approve.
-- **Guardrailed self-modification**: the approval surface and the learning module itself are
-  immutable to the learn loop; SHA-256 baselines + a dashboard drift banner back that up.
-- **Privacy gate on publishing**: `dashboard/privacy.py` scans everything leaving the machine
-  (your own token denylist + email/amount heuristics) and blocks the push on any hit.
-- **Local-first**: all state is files under this folder; the dashboard binds 127.0.0.1 and
-  rejects non-local Host/Origin.
+  stored `proposed_tool_call`, only after you approve.
+- **Self-modification guardrails** (`dashboard/learning.py`, `is_change_allowed`): the
+  approval surface and the learning module itself refuse self-edits; SHA-256 baselines and a
+  dashboard drift banner back that up.
+- **Privacy gate on publishing** (`dashboard/privacy.py`, invoked only by
+  `dashboard/publish.py` on the tree staged for your own fork, opt-in): checks a
+  deployment-local token denylist, addresses at common consumer mail providers, and large
+  dollar amounts in markdown, over md/py/json/sh/yml/txt files. It does not see model API
+  traffic, approved outbound actions, names missing from your token list, phone numbers,
+  street addresses, company email domains, or binary files such as PDFs and images. It is a
+  backstop for one path (publishing), not a seal around the machine.
+- **Workspace isolation**: enforced by tool grants only for the per-workspace comms agents
+  (`dashboard/factory.py`); everywhere else it is model judgment at research time, measured
+  by the eval's isolation category (baseline: 1 of 18 held-out stories leaked; revised
+  contract: 0).
+- **Local state, loopback only**: all state is files under this folder; the dashboard binds
+  127.0.0.1 and rejects non-local Host/Origin (`_origin_ok`). Research text itself is
+  processed by the model provider's API.
 
 ## Where things live
 

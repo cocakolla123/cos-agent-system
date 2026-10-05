@@ -111,7 +111,7 @@ DEFAULT_CONFIG = {
     # tool, so dontAsk is safe (external actions still go via the queue).
     "self_learning": True,
     "self_modify_code": True,
-    "learn_tools": "Read,Edit,Bash,Agent",
+    "learn_tools": "Read,Edit,Write,Bash(python3:*),Bash(git:*),Agent",
 }
 CONFIG_PATH_DEFAULT = os.path.join(TEMPLATE_DASHBOARD_DIR, "config.json")
 
@@ -150,12 +150,16 @@ CHAT_TOOLS = CONFIG["chat_tools"]
 REVISE_TOOLS = CONFIG["revise_tools"]
 POLL_TOOLS = CONFIG["poll_tools"]
 LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
-# V2.4: research needs a wider grant than polling — it must persist the graph
-# (Write/Bash for graph.py) and scan the local FS (Glob/Grep). MCP read tools
-# get appended by /setup (or by hand) once discovered; connectors stay
-# read-only by instruction + by omitting every mutating MCP tool from this list.
+# V2.4/V2.6: research needs a wider grant than polling. It must persist the
+# graph and scan the local FS, so it holds Write and a Bash grant SCOPED to
+# python3 (graph.py/correlate.py invocations). An unscoped Bash can reach the
+# network (curl etc.), which contradicted the README's read-only claim; an
+# outside review caught it and the default narrowed 2026-10-05. WebSearch was
+# dropped for the same reason. MCP read tools get appended by /setup once
+# discovered; mutating MCP tools are never in this list.
 RESEARCH_TOOLS = CONFIG.get(
-    "research_tools", "Read,Edit,Write,Bash,Glob,Grep,Agent,ToolSearch,WebSearch")
+    "research_tools",
+    "Read,Edit,Write,Bash(python3:*),Glob,Grep,Agent,ToolSearch")
 # M12: the scheduler lesson, applied to the server too — schedulers and app
 # launchers often run with a minimal PATH that doesn't include `claude`.
 # Resolution order: env CLAUDE_BIN > config claude_bin > bare "claude".

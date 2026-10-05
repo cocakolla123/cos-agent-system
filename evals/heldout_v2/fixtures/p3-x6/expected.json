@@ -1,0 +1,15 @@
+{
+ "commitments": [],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [
+  [
+   "milestone",
+   "alerting",
+   "rules"
+  ]
+ ],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

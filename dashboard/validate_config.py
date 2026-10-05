@@ -28,9 +28,10 @@ _BASELINE = {
     "revise_tools": {"Read", "Edit", "Agent"},
     "poll_tools": {"Read", "Edit", "Agent"},
     "base_tools": {"Read", "Edit", "Agent"},
-    # research must be able to persist the graph (Write/Bash) and scan the
-    # local FS (Glob/Grep) — under dontAsk a missing grant is a silent no-op.
-    "research_tools": {"Read", "Edit", "Write", "Bash", "Glob", "Grep", "Agent"},
+    # research must be able to persist the graph (Write + a Bash grant, the
+    # shipped default scopes it to python3) and scan the local FS (Glob/Grep)
+    # — under dontAsk a missing grant is a silent no-op.
+    "research_tools": {"Read", "Edit", "Write", "Glob", "Grep", "Agent"},
 }
 
 
@@ -58,6 +59,33 @@ def validate(config, available_tools=None):
                 "error", field,
                 "missing baseline tool(s) %s — this subprocess can't dispatch "
                 "agents and will silently do nothing" % ", ".join(sorted(missing))))
+
+    # 1b. research needs SOME Bash grant; flag network-capable or unscoped
+    # grants as broader than the shipped default (review finding, 2026-10-05).
+    rt = config.get("research_tools")
+    if rt is not None:
+        grant = {t.strip() for t in str(rt).split(",") if t.strip()}
+        if not any(g == "Bash" or g.startswith("Bash(") for g in grant):
+            findings.append(_finding(
+                "error", "research_tools",
+                "no Bash grant at all — the crawl can't run graph.py and will "
+                "silently persist nothing"))
+    for field in ("research_tools", "poll_tools", "chat_tools", "learn_tools",
+                  "revise_tools", "base_tools"):
+        val = config.get(field)
+        if val is None:
+            continue
+        grant = {t.strip() for t in str(val).split(",") if t.strip()}
+        if "Bash" in grant:
+            findings.append(_finding(
+                "warn", field,
+                "unscoped Bash grant — this subprocess can reach the network "
+                "(curl etc.); the shipped default scopes it to Bash(python3:*)"))
+        for net in ("WebSearch", "WebFetch"):
+            if net in grant:
+                findings.append(_finding(
+                    "warn", field,
+                    net + " grants network access; not in the shipped default"))
 
     # 2. action_tools sanity
     at = config.get("action_tools")

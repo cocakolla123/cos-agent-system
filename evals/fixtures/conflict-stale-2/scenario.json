@@ -1,4 +1,5 @@
 {
+ "base_id": "conflict-stale-2",
  "category": "conflict_stale",
  "id": "conflict-stale-2",
  "note": "stale calendar date loses to newer slack message",

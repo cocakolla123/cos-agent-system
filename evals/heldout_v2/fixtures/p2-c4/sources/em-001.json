@@ -1,0 +1,13 @@
+{
+ "body": "Collect the updated insurance certificates from the top five carriers by end of month.\n\n--\nDritan Pasha | Dir. Network Operations, Tern Logistics\nThis message and any attachments are confidential and may be privileged. If you are not the intended recipient please delete it and notify the sender.",
+ "connector": "email",
+ "date": "2026-10-06T09:00:00Z",
+ "folder": "inbox",
+ "from": "Dritan Pasha <dritan.pasha@ternlog.example>",
+ "id": "em-001",
+ "subject": "carrier insurance certificates",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

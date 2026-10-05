@@ -100,6 +100,25 @@ def validate_scenario_dir(path):
         due = c.get("due")
         _require(due is None or (isinstance(due, str) and len(due) >= 10), errs,
                  tag + ": due must be null or ISO date")
+        for j, sup in enumerate(c.get("support") or []):
+            stag = "%s.support[%d]" % (tag, j)
+            _require(isinstance(sup, dict) and sup.get("source")
+                     and sup.get("quote"), errs,
+                     stag + ": needs source + quote")
+            if isinstance(sup, dict) and sup.get("source") in ids:
+                item = json.load(open(os.path.join(
+                    srcdir, sup["source"] + ".json")))
+                hay = " ".join(str(item.get(k, "")) for k in
+                               ("subject", "body", "text", "summary",
+                                "title")) + " ".join(
+                    str(cm.get("text", "")) for cm in
+                    item.get("comments") or [])
+                _require(sup.get("quote", "") in hay, errs,
+                         stag + ": quote is not an exact substring of %s"
+                         % sup["source"])
+            else:
+                _require(False, errs, stag + ": unknown source %s"
+                         % (sup or {}).get("source"))
     for i, d in enumerate(gold.get("forbidden", [])):
         _require(isinstance(d, list) and len(d) >= 2, errs,
                  "forbidden[%d] must be >=2 keywords" % i)

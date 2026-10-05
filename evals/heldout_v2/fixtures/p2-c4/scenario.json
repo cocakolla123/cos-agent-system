@@ -1,0 +1,19 @@
+{
+ "base_id": "p2-c4",
+ "category": "conflict",
+ "id": "p2-c4",
+ "note": "a peer's secondhand date does not override the manager's",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

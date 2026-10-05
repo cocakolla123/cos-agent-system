@@ -1,0 +1,19 @@
+{
+ "base_id": "p4-o5",
+ "category": "ambiguous_owner",
+ "id": "p4-o5",
+ "note": "'we'll handle it' with another teammate present",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

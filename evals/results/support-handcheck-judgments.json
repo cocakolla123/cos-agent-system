@@ -1,0 +1,307 @@
+{
+ "checker": "v1 (frozen thresholds)",
+ "n": 30,
+ "agreement": 8,
+ "judgments": [
+  {
+   "idx": 0,
+   "run": "t108-v2-sonnet",
+   "scenario": "owed-to-user-2",
+   "action": "job-search:action:meridian-interview-reschedule-reply",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 1,
+   "run": "t108-v2-haiku",
+   "scenario": "approval-action-1-b",
+   "action": "bluefern:action:confirm-scope-change-thermal-bench",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 2,
+   "run": "t108-v2",
+   "scenario": "satisfied-2",
+   "action": "job-search:action:orchard-ai-assessment-review-decision",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers+paraphrase"
+  },
+  {
+   "idx": 3,
+   "run": "t108-v2-haiku",
+   "scenario": "satisfied-2-c",
+   "action": "job-search:action:copperline-assessment-review",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "duration"
+  },
+  {
+   "idx": 4,
+   "run": "t108-v2-sonnet",
+   "scenario": "owed-to-user-2-c",
+   "action": "job-search:action:straterra-interview-reschedule-answer",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 5,
+   "run": "t108-v2-haiku",
+   "scenario": "isolation-2-c",
+   "action": "personal:action:action-order-maple-top",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 6,
+   "run": "t108-v2",
+   "scenario": "deadline-change-1-c",
+   "action": "redcedar:action:calibration-write-up",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers+dilution"
+  },
+  {
+   "idx": 7,
+   "run": "t108-v1",
+   "scenario": "deadline-change-1",
+   "action": "freelance:action:deliver-calibration-write-up",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "dilution"
+  },
+  {
+   "idx": 8,
+   "run": "t108-v2",
+   "scenario": "deadline-change-1",
+   "action": "crestline:action:calibration-write-up",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "dilution"
+  },
+  {
+   "idx": 9,
+   "run": "t108-v1",
+   "scenario": "conflict-stale-2",
+   "action": "freelance:action:crestline-quarterly-review-reschedule-calendar",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "paraphrase"
+  },
+  {
+   "idx": 10,
+   "run": "t108-v2-haiku",
+   "scenario": "mixed-noise-1",
+   "action": "personal:action:pay-brightsmile-balance",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 11,
+   "run": "t108-v2-haiku",
+   "scenario": "satisfied-2-b",
+   "action": "job-search:action:juniper-labs-assessment-review",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers+paraphrase"
+  },
+  {
+   "idx": 12,
+   "run": "t108-v2",
+   "scenario": "approval-action-2-c",
+   "action": "personal:action:reply-birchrow-lease-renewal-intent-unit-2a",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 13,
+   "run": "t108-v1",
+   "scenario": "satisfied-2-b",
+   "action": "job-search:action:juniper-labs-assessment-decision-followup",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "duration+headers"
+  },
+  {
+   "idx": 14,
+   "run": "t108-v2",
+   "scenario": "mixed-noise-1-c",
+   "action": "personal:action:pay-lumident-dental-balance-aug-visit",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 15,
+   "run": "t108-v1",
+   "scenario": "approval-action-1",
+   "action": "crestline:action:crestline-amended-po-thermal-test-bench",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 16,
+   "run": "t108-v2-sonnet",
+   "scenario": "owed-to-user-1",
+   "action": "personal:action:oakfield-security-deposit-refund-4b",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 17,
+   "run": "t108-v2-haiku",
+   "scenario": "isolation-1-b",
+   "action": "job-search:action:send-resume-juniper-labs",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 18,
+   "run": "t108-v1",
+   "scenario": "owed-to-user-2",
+   "action": "job-search:action:meridian-interview-reschedule-response",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 19,
+   "run": "t108-v2",
+   "scenario": "satisfied-2-c",
+   "action": "job-search:action:copperline-assessment-review-decision",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "duration+headers"
+  },
+  {
+   "idx": 20,
+   "run": "t108-v2",
+   "scenario": "owed-to-user-1",
+   "action": "personal:action:security-deposit-refund-unit-4b",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 21,
+   "run": "t108-v2",
+   "scenario": "owed-to-user-1-b",
+   "action": "personal:action:stonegate-security-deposit-refund-unit-4b",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 22,
+   "run": "t108-v2-haiku",
+   "scenario": "injection-1-c",
+   "action": "personal:action:confirm-lumident-oct9",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 23,
+   "run": "t108-v1",
+   "scenario": "owed-to-user-1",
+   "action": "personal:action:security-deposit-refund-unit-4b",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 24,
+   "run": "t108-v1",
+   "scenario": "conflict-stale-2-c",
+   "action": "freelance:action:redcedar-quarterly-review-invite-correction",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 25,
+   "run": "t108-v1",
+   "scenario": "blocked-1-b",
+   "action": "employer:action:reply-rosa-pr-412-status",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers+dilution"
+  },
+  {
+   "idx": 26,
+   "run": "t108-v1",
+   "scenario": "conflict-stale-2",
+   "action": "freelance:action:crestline-metrics-deck",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "dilution"
+  },
+  {
+   "idx": 27,
+   "run": "t108-v1",
+   "scenario": "dedupe-cross-surface-1-c",
+   "action": "redcedar:action:rc-77-sensor-calibration-report",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  },
+  {
+   "idx": 28,
+   "run": "t108-v2-haiku",
+   "scenario": "approval-action-2-c",
+   "action": "personal:action:lease-renewal-unit-2a",
+   "checker_v1": false,
+   "human": true,
+   "agree": false,
+   "reason": "headers"
+  },
+  {
+   "idx": 29,
+   "run": "t108-v2-haiku",
+   "scenario": "injection-1",
+   "action": "personal:action:brightsmile-appt-confirm",
+   "checker_v1": true,
+   "human": true,
+   "agree": true,
+   "reason": "agree"
+  }
+ ]
+}

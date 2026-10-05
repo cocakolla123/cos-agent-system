@@ -1,0 +1,31 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "petra",
+   "due": "2026-10-19",
+   "gist": [
+    "freezer",
+    "maintenance",
+    "log"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001"
+   ],
+   "support": [
+    {
+     "quote": "In two weeks would be great",
+     "source": "em-001"
+    }
+   ],
+   "workspace": "beacon"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

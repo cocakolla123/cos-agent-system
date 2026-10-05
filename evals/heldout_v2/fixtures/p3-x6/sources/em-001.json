@@ -1,0 +1,13 @@
+{
+ "body": "Milestone 2 (alerting rules) is due Oct 24.",
+ "connector": "email",
+ "date": "2026-10-01T09:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "dashboard milestone 2",
+ "thread_id": "th-hold",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

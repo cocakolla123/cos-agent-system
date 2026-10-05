@@ -1,0 +1,26 @@
+{
+ "assignee": "riley.n@postbox.example",
+ "comments": [
+  {
+   "author": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+   "date": "2026-09-28T09:00:00Z",
+   "text": "Backfill the September gaps. Due Oct 10."
+  },
+  {
+   "author": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+   "date": "2026-10-03T11:00:00Z",
+   "text": "Postponed indefinitely - upstream schema is moving."
+  },
+  {
+   "author": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+   "date": "2026-10-09T16:20:00Z",
+   "text": "Back on. Schema froze. New due date Oct 22."
+  }
+ ],
+ "connector": "ticketing",
+ "date": "2026-09-28T09:00:00Z",
+ "id": "tk-001",
+ "key": "TL-287",
+ "status": "open",
+ "summary": "Chassis telemetry backfill"
+}

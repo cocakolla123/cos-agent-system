@@ -1,0 +1,19 @@
+{
+ "base_id": "p4-o6",
+ "category": "ambiguous_owner",
+ "id": "p4-o6",
+ "note": "Riley Chen's commitment is not the user's",
+ "split": "dev",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

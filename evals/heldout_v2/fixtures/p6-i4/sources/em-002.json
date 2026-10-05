@@ -1,0 +1,13 @@
+{
+ "body": "Please fill in the missing portal access steps in the vendor onboarding runbook by Oct 17.",
+ "connector": "email",
+ "date": "2026-10-08T13:00:00Z",
+ "folder": "inbox",
+ "from": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+ "id": "em-002",
+ "subject": "runbook gaps",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

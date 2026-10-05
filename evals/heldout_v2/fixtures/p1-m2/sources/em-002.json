@@ -1,0 +1,13 @@
+{
+ "body": "Five links on cold-chain telemetry. Unsubscribe any time.",
+ "connector": "email",
+ "date": "2026-10-08T07:00:00Z",
+ "folder": "inbox",
+ "from": "Ops Digest <newsletter@opsdigest.example>",
+ "id": "em-002",
+ "subject": "Ops Digest #88",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

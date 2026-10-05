@@ -1,0 +1,13 @@
+{
+ "body": "Pushing our review out a week to Oct 21, same time; the calendar invite is stale. Please have the prep deck ready before the review.",
+ "connector": "email",
+ "date": "2026-10-08T12:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-002",
+ "subject": "pipeline review",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

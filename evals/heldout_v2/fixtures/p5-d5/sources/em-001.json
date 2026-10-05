@@ -1,0 +1,13 @@
+{
+ "body": "Please draft the renewal one-pager before the offsite.",
+ "connector": "email",
+ "date": "2026-10-08T14:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "renewal one-pager",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

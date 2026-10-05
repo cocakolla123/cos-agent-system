@@ -1,0 +1,13 @@
+{
+ "body": "Could you digitize the freezer maintenance log? In two weeks would be great.",
+ "connector": "email",
+ "date": "2026-10-05T11:30:00Z",
+ "folder": "inbox",
+ "from": "Petra Lindgren <petra@beaconfb.example>",
+ "id": "em-001",
+ "subject": "freezer maintenance log",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

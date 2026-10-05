@@ -1,0 +1,13 @@
+{
+ "body": "Ibrahim needs the usage heatmap draft. Friday would be ideal.",
+ "connector": "email",
+ "date": "2026-10-07T10:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "heatmap draft",
+ "thread_id": "th-heat",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

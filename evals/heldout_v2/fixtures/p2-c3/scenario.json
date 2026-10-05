@@ -1,0 +1,19 @@
+{
+ "base_id": "p2-c3",
+ "category": "conflict",
+ "id": "p2-c3",
+ "note": "ticket and email disagree within 24h: deadline disputed, gold due null",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

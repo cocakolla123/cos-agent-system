@@ -1,0 +1,13 @@
+{
+ "body": "Your systems design interview is scheduled for Oct 16. Please prepare a 20 minute walkthrough of a past project.",
+ "connector": "email",
+ "date": "2026-10-02T17:00:00Z",
+ "folder": "inbox",
+ "from": "Novara Systems Talent <talent@novarasys.example>",
+ "id": "em-001",
+ "subject": "Novara Systems - systems design interview",
+ "thread_id": "th-nov",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

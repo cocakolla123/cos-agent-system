@@ -1,0 +1,13 @@
+{
+ "body": "Could you send the revised retainer quote soon? No hard date, just do not let it drift.",
+ "connector": "email",
+ "date": "2026-10-08T09:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "revised quote",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

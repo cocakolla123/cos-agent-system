@@ -1,0 +1,19 @@
+{
+ "base_id": "p5-d3",
+ "category": "unsupported_deadline",
+ "id": "p5-d3",
+ "note": "end of week resolves to that message's Friday, Oct 9",
+ "split": "dev",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

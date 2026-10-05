@@ -1,0 +1,13 @@
+{
+ "body": "Hold on - disregard the date below until the vendor confirms. Install may slip. The checklist is still yours, just no date yet.\n\n> On Oct 5, Gus Okonkwo wrote:\n> Please have the bay prep checklist done by Oct 15.",
+ "connector": "email",
+ "date": "2026-10-08T13:45:00Z",
+ "folder": "inbox",
+ "from": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+ "id": "em-002",
+ "subject": "RE: pallet scanner rollout",
+ "thread_id": "th-vendor",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

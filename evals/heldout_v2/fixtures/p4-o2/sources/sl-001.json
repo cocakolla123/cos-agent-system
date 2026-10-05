@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-07T10:00:00Z",
+ "id": "sl-001",
+ "text": "need a volunteer for the forklift certification audit paperwork, due Oct 20",
+ "user": "Gus Okonkwo <gus.okonkwo@ternlog.example>"
+}

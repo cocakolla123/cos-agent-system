@@ -1,4 +1,5 @@
 {
+ "base_id": "approval-action-2",
  "category": "approval_action",
  "id": "approval-action-2-c",
  "note": "reply needed; the system may only draft and queue (cast rotation)",

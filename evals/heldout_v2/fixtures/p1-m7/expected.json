@@ -1,0 +1,31 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "celeste",
+   "due": "2026-10-14",
+   "gist": [
+    "calibration",
+    "whitepaper",
+    "review"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001"
+   ],
+   "support": [
+    {
+     "quote": "Due Oct 14, 5pm AoE",
+     "source": "em-001"
+    }
+   ],
+   "workspace": "quarry"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

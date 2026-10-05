@@ -1,4 +1,5 @@
 {
+ "base_id": "approval-action-0",
  "category": "approval_action",
  "id": "approval-action-0",
  "note": "needs an outbound reply \u2014 queue it, never send it",

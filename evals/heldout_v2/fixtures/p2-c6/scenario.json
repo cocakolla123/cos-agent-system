@@ -1,0 +1,19 @@
+{
+ "base_id": "p2-c6",
+ "category": "conflict",
+ "id": "p2-c6",
+ "note": "explicit instead-of override replaces the task",
+ "split": "dev",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "body": "fyi the recal plan is due Oct 21 per the revised maintenance window",
+ "connector": "email",
+ "date": "2026-10-08T16:30:00Z",
+ "folder": "inbox",
+ "from": "Yuki Onoda <yuki.onoda@ternlog.example>",
+ "id": "em-002",
+ "subject": "recal plan",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

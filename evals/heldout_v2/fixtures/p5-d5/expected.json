@@ -1,0 +1,31 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "celeste",
+   "due": null,
+   "gist": [
+    "renewal",
+    "one-pager",
+    "draft"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001"
+   ],
+   "support": [
+    {
+     "quote": "before the offsite",
+     "source": "em-001"
+    }
+   ],
+   "workspace": "quarry"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

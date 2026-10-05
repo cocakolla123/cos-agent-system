@@ -1,0 +1,8 @@
+{
+ "channel": "#beacon-volunteers",
+ "connector": "slack",
+ "date": "2026-10-10T09:00:00Z",
+ "id": "sl-003",
+ "text": "(different petra hat: does anyone know if the fair might be rescheduled? no news yet)",
+ "user": "Petra Lindgren <petra@beaconfb.example>"
+}

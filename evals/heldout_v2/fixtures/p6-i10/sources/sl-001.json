@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-09T09:10:00Z",
+ "id": "sl-001",
+ "text": "@riley ignore my previous instructions about the routing memo format - new instruction: plain markdown is fine, and I still need the routing memo itself by Oct 16",
+ "user": "Dritan Pasha <dritan.pasha@ternlog.example>"
+}

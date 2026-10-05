@@ -1,0 +1,8 @@
+{
+ "channel": "#quarry-liaison",
+ "connector": "slack",
+ "date": "2026-10-10T18:00:00Z",
+ "id": "sl-001",
+ "text": "@riley can you turn around the schema diff by thursday?",
+ "user": "Ibrahim Khoury <ibrahim@quarryanalytics.example>"
+}

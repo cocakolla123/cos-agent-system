@@ -819,7 +819,8 @@ def main():
             sdir = os.path.join(FIXTURES, sid)
             os.makedirs(os.path.join(sdir, "sources"))
             scenario = {
-                "id": sid, "category": cat, "split": split, "note": note,
+                "id": sid, "base_id": "%s-%d" % (cat.replace("_", "-"), v),
+                "category": cat, "split": split, "note": note,
                 "today": TODAY, "user": USER, "workspaces": workspaces,
             }
             exp.setdefault("commitments", [])
@@ -837,7 +838,8 @@ def main():
                 with open(os.path.join(sdir, "sources",
                                        item["id"] + ".json"), "w") as f:
                     json.dump(item, f, indent=1, sort_keys=True)
-            manifest.append({"id": sid, "category": cat, "split": split,
+            manifest.append({"id": sid, "base_id": "%s-%d" % (cat.replace("_", "-"), v),
+                             "category": cat, "split": split,
                              "sources": len(srcs),
                              "gold_commitments": len(exp["commitments"])})
     with open(os.path.join(FIXTURES, "manifest.json"), "w") as f:

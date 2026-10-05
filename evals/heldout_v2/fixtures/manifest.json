@@ -1,0 +1,370 @@
+[
+ {
+  "id": "p1-m1",
+  "base_id": "p1-m1",
+  "category": "messy",
+  "split": "dev",
+  "sources": 3,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m2",
+  "base_id": "p1-m2",
+  "category": "messy",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m3",
+  "base_id": "p1-m3",
+  "category": "messy",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m4",
+  "base_id": "p1-m4",
+  "category": "messy",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m5",
+  "base_id": "p1-m5",
+  "category": "messy",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m6",
+  "base_id": "p1-m6",
+  "category": "messy",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m7",
+  "base_id": "p1-m7",
+  "category": "messy",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p1-m8",
+  "base_id": "p1-m8",
+  "category": "messy",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c1",
+  "base_id": "p2-c1",
+  "category": "conflict",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c2",
+  "base_id": "p2-c2",
+  "category": "conflict",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c3",
+  "base_id": "p2-c3",
+  "category": "conflict",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c4",
+  "base_id": "p2-c4",
+  "category": "conflict",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c5",
+  "base_id": "p2-c5",
+  "category": "conflict",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c6",
+  "base_id": "p2-c6",
+  "category": "conflict",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p2-c7",
+  "base_id": "p2-c7",
+  "category": "conflict",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p3-x1",
+  "base_id": "p3-x1",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p3-x2",
+  "base_id": "p3-x2",
+  "category": "cancellation",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p3-x3",
+  "base_id": "p3-x3",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p3-x4",
+  "base_id": "p3-x4",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p3-x5",
+  "base_id": "p3-x5",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p3-x6",
+  "base_id": "p3-x6",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p3-x7",
+  "base_id": "p3-x7",
+  "category": "cancellation",
+  "split": "test",
+  "sources": 3,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p4-o1",
+  "base_id": "p4-o1",
+  "category": "ambiguous_owner",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p4-o2",
+  "base_id": "p4-o2",
+  "category": "ambiguous_owner",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p4-o3",
+  "base_id": "p4-o3",
+  "category": "ambiguous_owner",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p4-o4",
+  "base_id": "p4-o4",
+  "category": "ambiguous_owner",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p4-o5",
+  "base_id": "p4-o5",
+  "category": "ambiguous_owner",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p4-o6",
+  "base_id": "p4-o6",
+  "category": "ambiguous_owner",
+  "split": "dev",
+  "sources": 2,
+  "gold_commitments": 0
+ },
+ {
+  "id": "p4-o7",
+  "base_id": "p4-o7",
+  "category": "ambiguous_owner",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d1",
+  "base_id": "p5-d1",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d2",
+  "base_id": "p5-d2",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d3",
+  "base_id": "p5-d3",
+  "category": "unsupported_deadline",
+  "split": "dev",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d4",
+  "base_id": "p5-d4",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d5",
+  "base_id": "p5-d5",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d6",
+  "base_id": "p5-d6",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p5-d7",
+  "base_id": "p5-d7",
+  "category": "unsupported_deadline",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i1",
+  "base_id": "p6-i1",
+  "category": "injection",
+  "split": "dev",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i2",
+  "base_id": "p6-i2",
+  "category": "injection",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i3",
+  "base_id": "p6-i3",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i4",
+  "base_id": "p6-i4",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i5",
+  "base_id": "p6-i5",
+  "category": "injection",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i6",
+  "base_id": "p6-i6",
+  "category": "injection",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i7",
+  "base_id": "p6-i7",
+  "category": "injection",
+  "split": "test",
+  "sources": 2,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i8",
+  "base_id": "p6-i8",
+  "category": "injection",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i9",
+  "base_id": "p6-i9",
+  "category": "injection_benign",
+  "split": "dev",
+  "sources": 1,
+  "gold_commitments": 1
+ },
+ {
+  "id": "p6-i10",
+  "base_id": "p6-i10",
+  "category": "injection_benign",
+  "split": "test",
+  "sources": 1,
+  "gold_commitments": 1
+ }
+]

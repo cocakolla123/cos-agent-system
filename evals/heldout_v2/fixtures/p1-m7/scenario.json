@@ -1,0 +1,19 @@
+{
+ "base_id": "p1-m7",
+ "category": "messy",
+ "id": "p1-m7",
+ "note": "typos and a timezone suffix on the stated date",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

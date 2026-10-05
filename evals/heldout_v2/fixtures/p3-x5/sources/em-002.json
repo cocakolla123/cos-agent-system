@@ -1,0 +1,13 @@
+{
+ "body": "I am sorry to share that the position has been filled internally and the Oct 16 interview is cancelled. We will keep your profile on file.\n\n> Earlier:\n> Your systems design interview is scheduled for Oct 16.",
+ "connector": "email",
+ "date": "2026-10-09T19:30:00Z",
+ "folder": "inbox",
+ "from": "Novara Systems Talent <talent@novarasys.example>",
+ "id": "em-002",
+ "subject": "RE: Novara Systems - systems design interview",
+ "thread_id": "th-nov",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

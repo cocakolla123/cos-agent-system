@@ -1,0 +1,13 @@
+{
+ "body": "Quarry is pausing the dashboard project - on hold until further notice while legal sorts the data sharing agreement. Please stop work; we will re-scope when it unfreezes.\n\n> On Oct 1, Celeste Beaumont wrote:\n> Milestone 2 (alerting rules) is due Oct 24.",
+ "connector": "email",
+ "date": "2026-10-10T14:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-002",
+ "subject": "RE: dashboard milestone 2",
+ "thread_id": "th-hold",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

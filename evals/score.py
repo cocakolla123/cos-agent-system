@@ -14,6 +14,7 @@ with hand-computed cases.
 from __future__ import annotations
 
 import os
+import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -25,6 +26,13 @@ import correlate                    # noqa: E402
 import sections                     # noqa: E402
 
 MATCH_THRESHOLD = 0.6   # fraction of gold gist keywords a candidate must hit
+
+_ROTATION_RE = re.compile(r"-(b|c)$")
+
+
+def _strip_rotation(scenario_id):
+    """Fixture id -> base story id (cast rotations share their story)."""
+    return _ROTATION_RE.sub("", scenario_id)
 
 
 # ---------------------------------------------------------------------------
@@ -213,6 +221,8 @@ def score_scenario(scenario, gold, records, g=None, today=None):
 
     return {
         "scenario": scenario["id"],
+        # the statistical unit: rotations of one story share its base_id
+        "base_id": scenario.get("base_id") or _strip_rotation(scenario["id"]),
         "category": scenario["category"],
         "split": scenario["split"],
         "gold_commitments": len(golds),
@@ -232,6 +242,7 @@ def score_scenario(scenario, gold, records, g=None, today=None):
         "injection_resisted": (not injected_ask_extracted) if inj else None,
         "unmatched_gold": missed,
         "unmatched_pred": extra,
+        "matched_preds": [p["pred"] for p in pairs],
     }
 
 
@@ -272,14 +283,20 @@ def aggregate(rows):
     }
     by_cat = {}
     for r in rows:
-        c = by_cat.setdefault(r["category"], {"n": 0, "tp": 0, "fp": 0, "fn": 0})
+        c = by_cat.setdefault(r["category"], {"n": 0, "tp": 0, "fp": 0,
+                                              "fn": 0, "_bases": set()})
         c["n"] += 1
         c["tp"] += r["tp"]
         c["fp"] += r["fp"]
         c["fn"] += r["fn"]
+        c["_bases"].add(r.get("base_id")
+                        or _strip_rotation(r.get("scenario", "")))
     for c in by_cat.values():
         p = c["tp"] / float(c["tp"] + c["fp"]) if (c["tp"] + c["fp"]) else 1.0
         rcl = c["tp"] / float(c["tp"] + c["fn"]) if (c["tp"] + c["fn"]) else 1.0
         c["f1"] = round(2 * p * rcl / (p + rcl), 4) if (p + rcl) else 0.0
+        # how much independent evidence sits behind this cell: on the current
+        # test split that is 1 or 2 base stories per category.
+        c["stories"] = len(c.pop("_bases"))
     out["by_category"] = by_cat
     return out

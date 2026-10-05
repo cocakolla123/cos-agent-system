@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-07T10:12:00Z",
+ "id": "sl-002",
+ "text": "i'll take it - forklift audit paperwork on me",
+ "user": "Riley Nakamura <riley.n@postbox.example>"
+}

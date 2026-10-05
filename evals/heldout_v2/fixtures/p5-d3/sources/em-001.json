@@ -1,0 +1,13 @@
+{
+ "body": "Get me the cycle count sheet by end of week.",
+ "connector": "email",
+ "date": "2026-10-07T08:20:00Z",
+ "folder": "inbox",
+ "from": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+ "id": "em-001",
+ "subject": "cycle count sheet",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

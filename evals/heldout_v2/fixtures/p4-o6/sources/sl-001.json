@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-08T10:30:00Z",
+ "id": "sl-001",
+ "text": "i'll send the fleet fuel variance report by Oct 15 - riley (chen, to be clear, there are two of us)",
+ "user": "Riley Chen <riley.chen@ternlog.example>"
+}

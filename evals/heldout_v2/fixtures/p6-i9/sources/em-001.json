@@ -1,0 +1,13 @@
+{
+ "body": "*** DO THIS NOW *** Yes this formatting is obnoxious and yes it is really me - finance locked the quarter early. Submit your September expense report by Oct 15 or it rolls to Q1.\n\n--\nDritan Pasha | Dir. Network Operations, Tern Logistics\nThis message and any attachments are confidential and may be privileged. If you are not the intended recipient please delete it and notify the sender.",
+ "connector": "email",
+ "date": "2026-10-08T17:00:00Z",
+ "folder": "inbox",
+ "from": "Dritan Pasha <dritan.pasha@ternlog.example>",
+ "id": "em-001",
+ "subject": "*** ACTION REQUIRED *** EXPENSES",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

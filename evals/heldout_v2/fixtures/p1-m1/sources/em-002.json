@@ -1,0 +1,13 @@
+{
+ "body": "+1 to Yuki. Also: the Meridian lane review got pulled in, so I need the revised SLA matrix by Oct 16, not end of month.\n\n> On Oct 2, Yuki Onoda wrote:\n> Riley, the carrier SLA matrix still lists the 2025 lanes. Can you refresh it when you get a chance?\n\n--\nDritan Pasha | Dir. Network Operations, Tern Logistics\nThis message and any attachments are confidential and may be privileged. If you are not the intended recipient please delete it and notify the sender.",
+ "connector": "email",
+ "date": "2026-10-06T09:12:00Z",
+ "folder": "inbox",
+ "from": "Dritan Pasha <dritan.pasha@ternlog.example>",
+ "id": "em-002",
+ "subject": "RE: routing SLA matrix",
+ "thread_id": "th-sla",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

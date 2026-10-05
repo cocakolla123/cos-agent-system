@@ -1,0 +1,32 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "dritan.pasha",
+   "due": "2026-10-23",
+   "gist": [
+    "lane",
+    "cost",
+    "model"
+   ],
+   "owner": "user",
+   "sources": [
+    "em-001",
+    "cal-003"
+   ],
+   "support": [
+    {
+     "quote": "before the offsite",
+     "source": "em-001"
+    }
+   ],
+   "workspace": "ternlog"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

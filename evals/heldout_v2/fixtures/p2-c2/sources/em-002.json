@@ -1,0 +1,13 @@
+{
+ "body": "Board review moved up. We need the ingest latency writeup by Oct 16. Sorry to squeeze you.",
+ "connector": "email",
+ "date": "2026-10-09T15:10:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-002",
+ "subject": "latency writeup - board moved",
+ "thread_id": "th-003",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

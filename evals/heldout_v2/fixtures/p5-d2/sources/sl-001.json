@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-09T16:45:00Z",
+ "id": "sl-001",
+ "text": "@riley need the outage postmortem ASAP please",
+ "user": "Dritan Pasha <dritan.pasha@ternlog.example>"
+}

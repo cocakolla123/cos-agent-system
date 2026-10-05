@@ -1,0 +1,19 @@
+{
+ "base_id": "p5-d5",
+ "category": "unsupported_deadline",
+ "id": "p5-d5",
+ "note": "'before the offsite' with no dated offsite anywhere: due null",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

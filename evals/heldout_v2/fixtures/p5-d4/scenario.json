@@ -1,0 +1,19 @@
+{
+ "base_id": "p5-d4",
+ "category": "unsupported_deadline",
+ "id": "p5-d4",
+ "note": "'before the offsite' resolvable: the invite dates it",
+ "split": "test",
+ "today": "2026-10-12",
+ "user": {
+  "email": "riley.n@postbox.example",
+  "name": "Riley Nakamura"
+ },
+ "workspaces": {
+  "beacon": "volunteer",
+  "job-search": "job-search",
+  "personal": "personal",
+  "quarry": "freelance",
+  "ternlog": "employer"
+ }
+}

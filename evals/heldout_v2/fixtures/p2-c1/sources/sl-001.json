@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-06T19:00:00Z",
+ "id": "sl-001",
+ "text": "@riley QBR deck - can you have your lanes section done by Oct 15?",
+ "user": "Yuki Onoda <yuki.onoda@ternlog.example>"
+}

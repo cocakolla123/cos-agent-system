@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-08T15:00:00Z",
+ "id": "sl-001",
+ "text": "can someone take the dock camera firmware updates this week? vendor portal creds are in the vault",
+ "user": "Gus Okonkwo <gus.okonkwo@ternlog.example>"
+}

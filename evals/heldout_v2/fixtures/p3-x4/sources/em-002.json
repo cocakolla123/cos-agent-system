@@ -1,0 +1,13 @@
+{
+ "body": "Scratch the CSV - forget the CSV export entirely. Build the query API endpoint instead, same deadline Oct 19.\n\n> On Oct 5, Ibrahim Khoury wrote:\n> Please build the nightly CSV export for the sensor table. Due Oct 19.",
+ "connector": "email",
+ "date": "2026-10-08T11:15:00Z",
+ "folder": "inbox",
+ "from": "Ibrahim Khoury <ibrahim@quarryanalytics.example>",
+ "id": "em-002",
+ "subject": "RE: data export",
+ "thread_id": "th-exp",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

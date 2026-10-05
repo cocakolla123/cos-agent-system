@@ -1,0 +1,8 @@
+{
+ "channel": "#quarry-liaison",
+ "connector": "slack",
+ "date": "2026-10-07T12:00:00Z",
+ "id": "sl-003",
+ "text": "re celeste's note - we'll handle the telemetry gap analysis on the netops side",
+ "user": "Yuki Onoda <yuki.onoda@ternlog.example>"
+}

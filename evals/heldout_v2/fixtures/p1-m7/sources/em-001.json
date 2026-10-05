@@ -1,0 +1,13 @@
+{
+ "body": "Riley - one more pass on teh calibration whitepaper plz. Due Oct 14, 5pm AoE (anywhere on earth, so dont stress the timezone). Track changes on.",
+ "connector": "email",
+ "date": "2026-10-09T08:30:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "fianl review pass",
+ "thread_id": "th-002",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

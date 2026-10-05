@@ -1,0 +1,13 @@
+{
+ "body": "Can you run the monthly pantry inventory count this weekend?",
+ "connector": "email",
+ "date": "2026-10-06T18:00:00Z",
+ "folder": "inbox",
+ "from": "Petra Lindgren <petra@beaconfb.example>",
+ "id": "em-001",
+ "subject": "pantry inventory count",
+ "thread_id": "th-count",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

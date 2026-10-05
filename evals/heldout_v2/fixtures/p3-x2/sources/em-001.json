@@ -1,0 +1,13 @@
+{
+ "body": "Two things for the board pack: the summary slides and the budget reconciliation sheet, both by Oct 18.",
+ "connector": "email",
+ "date": "2026-10-05T13:00:00Z",
+ "folder": "inbox",
+ "from": "Celeste Beaumont <celeste@quarryanalytics.example>",
+ "id": "em-001",
+ "subject": "board pack pieces",
+ "thread_id": "th-two",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

@@ -1,4 +1,5 @@
 {
+ "base_id": "conflict-stale-0",
  "category": "conflict_stale",
  "id": "conflict-stale-0-b",
  "note": "ticket and slack conflict; newer slack wins (cast rotation)",

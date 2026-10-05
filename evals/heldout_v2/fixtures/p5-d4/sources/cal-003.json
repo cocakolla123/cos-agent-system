@@ -1,0 +1,12 @@
+{
+ "attendees": [
+  "riley.n@postbox.example",
+  "dritan.pasha@ternlog.example"
+ ],
+ "connector": "calendar",
+ "date": "2026-09-20T09:00:00Z",
+ "description": "",
+ "id": "cal-003",
+ "start": "2026-10-23T16:00:00Z",
+ "title": "NetOps offsite"
+}

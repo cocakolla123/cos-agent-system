@@ -1,0 +1,13 @@
+{
+ "body": "Actually skip it this month - the county is doing their own audit so a double count just makes noise. Nothing needed from you.\n\n> On Oct 6, Petra Lindgren wrote:\n> Can you run the monthly pantry inventory count this weekend?",
+ "connector": "email",
+ "date": "2026-10-09T10:00:00Z",
+ "folder": "inbox",
+ "from": "Petra Lindgren <petra@beaconfb.example>",
+ "id": "em-002",
+ "subject": "RE: pantry inventory count",
+ "thread_id": "th-count",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

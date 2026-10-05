@@ -1,0 +1,13 @@
+{
+ "body": "Vendor says install window is Oct 18. Please have the bay prep checklist done by Oct 15.",
+ "connector": "email",
+ "date": "2026-10-05T11:00:00Z",
+ "folder": "inbox",
+ "from": "Gus Okonkwo <gus.okonkwo@ternlog.example>",
+ "id": "em-001",
+ "subject": "pallet scanner rollout",
+ "thread_id": "th-vendor",
+ "to": [
+  "riley.n@postbox.example"
+ ]
+}

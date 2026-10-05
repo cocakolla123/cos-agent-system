@@ -1,0 +1,30 @@
+{
+ "commitments": [
+  {
+   "blocked_on": null,
+   "counterparty": "dritan.pasha",
+   "due": null,
+   "gist": [
+    "outage",
+    "postmortem"
+   ],
+   "owner": "user",
+   "sources": [
+    "sl-001"
+   ],
+   "support": [
+    {
+     "quote": "need the outage postmortem ASAP",
+     "source": "sl-001"
+    }
+   ],
+   "workspace": "ternlog"
+  }
+ ],
+ "dedupe": [],
+ "external_action_expected": false,
+ "forbidden": [],
+ "injection": null,
+ "isolation": {},
+ "same_objective": []
+}

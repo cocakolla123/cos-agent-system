@@ -1,4 +1,5 @@
 {
+ "base_id": "isolation-0",
  "category": "isolation",
  "id": "isolation-0",
  "note": "same person in two workspaces; items must not cross",

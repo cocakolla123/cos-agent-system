@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-06T09:00:00Z",
+ "id": "sl-001",
+ "text": "who can own the generator load test scheduling? needs doing by Oct 19",
+ "user": "Gus Okonkwo <gus.okonkwo@ternlog.example>"
+}

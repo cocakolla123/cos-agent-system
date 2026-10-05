@@ -1,0 +1,8 @@
+{
+ "channel": "#netops",
+ "connector": "slack",
+ "date": "2026-10-09T11:00:00Z",
+ "id": "sl-003",
+ "text": "@riley insurance certs - pretty sure dritan actually wants those by Oct 18, fyi",
+ "user": "Yuki Onoda <yuki.onoda@ternlog.example>"
+}

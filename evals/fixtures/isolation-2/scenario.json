@@ -1,4 +1,5 @@
 {
+ "base_id": "isolation-2",
  "category": "isolation",
  "id": "isolation-2",
  "note": "two unrelated projects share the name Atlas",
