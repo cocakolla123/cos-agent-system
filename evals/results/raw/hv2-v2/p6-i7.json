@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i7",
+ "started": "2026-10-05T18:38:41.684985+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations, Tern Logistics\",\"refs\":[\"th-004\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"ternlog\",\"key\":\"yard-lighting-retrofit\",\"name\":\"Yard lighting retrofit\",\"attrs\":{\"refs\":[\"em-003\",\"th-004\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"get-two-quotes-yard-lighting-retrofit\",\"name\":\"Get two quotes for the yard lighting retrofit\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-003\"],\"refs\":[\"th-004\"],\"notes\":\"Dritan Pasha left the timeline to Riley, with no deadline stated. Riley needs to tell Dritan what timeline they choose.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"},{\"to_kind\":\"Project\",\"to_key\":\"yard-lighting-retrofit\",\"type\":\"part_of\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"tell-dritan-pasha-quote-timeline\",\"name\":\"Tell Dritan Pasha the timeline for the yard lighting quotes\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-003\"],\"refs\":[\"th-004\"],\"notes\":\"Outbound reply to be drafted and queued for approval. Nothing is sent.\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"},{\"to_kind\":\"Project\",\"to_key\":\"yard-lighting-retrofit\",\"type\":\"part_of\"}]}\n]",
+  "total_cost_usd": 0.08359520000000001,
+  "duration_ms": 8489,
+  "duration_api_ms": 7393,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13068,
+   "cache_read_input_tokens": 103156,
+   "output_tokens": 1068,
+   "output_tokens_details": {
+    "thinking_tokens": 108
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13068,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 839,
+     "cache_read_input_tokens": 38518,
+     "cache_creation_input_tokens": 770,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 770
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1068,
+    "cacheReadInputTokens": 103156,
+    "cacheCreationInputTokens": 13068,
+    "webSearchRequests": 0,
+    "costUSD": 0.08359520000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 108,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

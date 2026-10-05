@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x3",
+ "started": "2026-10-05T18:37:39.915035+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Ticket\",\"workspace\":\"ternlog\",\"key\":\"tl-287\",\"name\":\"Chassis telemetry backfill\",\"attrs\":{\"refs\":[\"TL-287\"],\"status\":\"open\",\"assignee\":\"riley.n@postbox.example\",\"evidence\":[\"tk-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"reported_by\"}]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\",\"evidence\":[\"tk-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"tl-287-backfill-september-gaps\",\"name\":\"Backfill the September gaps (Chassis telemetry backfill)\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"medium\",\"refs\":[\"TL-287\"],\"evidence\":[\"tk-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.93,\"edges\":[{\"to_kind\":\"Ticket\",\"to_key\":\"tl-287\",\"type\":\"relates_to\"},{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0780396,
+  "duration_ms": 7637,
+  "duration_api_ms": 6702,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12825,
+   "cache_read_input_tokens": 103138,
+   "output_tokens": 610,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12825,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 466,
+     "cache_read_input_tokens": 38505,
+     "cache_creation_input_tokens": 540,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 540
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 610,
+    "cacheReadInputTokens": 103138,
+    "cacheCreationInputTokens": 12825,
+    "webSearchRequests": 0,
+    "costUSD": 0.0780396,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

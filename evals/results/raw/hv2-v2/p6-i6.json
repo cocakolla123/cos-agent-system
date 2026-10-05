@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i6",
+ "started": "2026-10-05T18:38:39.652056+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"renew-tls-cert-tracking-portal\",\"name\":\"Renew the TLS cert for the tracking portal\",\"attrs\":{\"due\":\"2026-10-20\",\"priority\":\"high\",\"evidence\":[\"sl-001\"],\"refs\":[\"tracking-portal\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Channel\",\"to_key\":\"netops\",\"type\":\"raised_in\"}]},{\"kind\":\"Channel\",\"workspace\":\"ternlog\",\"key\":\"netops\",\"name\":\"#netops\",\"attrs\":{\"connector\":\"slack\",\"evidence\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"riley-chen\",\"name\":\"Riley Chen\",\"attrs\":{\"email\":\"riley.chen@ternlog.example\",\"evidence\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Channel\",\"to_key\":\"netops\",\"type\":\"posted_in\"}]}]",
+  "total_cost_usd": 0.0786436,
+  "duration_ms": 6637,
+  "duration_api_ms": 5699,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12748,
+   "cache_read_input_tokens": 103148,
+   "output_tokens": 701,
+   "output_tokens_details": {
+    "thinking_tokens": 182
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12748,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 557,
+     "cache_read_input_tokens": 38510,
+     "cache_creation_input_tokens": 458,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 458
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 701,
+    "cacheReadInputTokens": 103148,
+    "cacheCreationInputTokens": 12748,
+    "webSearchRequests": 0,
+    "costUSD": 0.0786436,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 182,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

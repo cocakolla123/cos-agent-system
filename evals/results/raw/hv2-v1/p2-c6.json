@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c6",
+ "started": "2026-10-05T18:37:26.450494+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations, Tern Logistics\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Channel\",\"workspace\":\"ternlog\",\"key\":\"netops\",\"name\":\"#netops\",\"attrs\":{\"refs\":[\"sl-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"vendor-comparison\",\"name\":\"Do the vendor comparison\",\"attrs\":{\"due\":\"2026-10-17\",\"priority\":\"high\",\"requested_by\":\"Dritan Pasha\",\"evidence\":[\"sl-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"wms-integration-memo\",\"name\":\"Draft the WMS integration memo (deferred to next sprint, no date)\",\"attrs\":{\"priority\":\"low\",\"requested_by\":\"Dritan Pasha\",\"note\":\"Originally due this week (em-001); superseded by sl-003, which moves it to next sprint with no date.\",\"evidence\":[\"em-001\",\"sl-003\"],\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0803442,
+  "duration_ms": 6836,
+  "duration_api_ms": 5842,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12825,
+   "cache_read_input_tokens": 102861,
+   "output_tokens": 846,
+   "output_tokens_details": {
+    "thinking_tokens": 58
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12825,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 616,
+     "cache_read_input_tokens": 38371,
+     "cache_creation_input_tokens": 674,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 674
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 846,
+    "cacheReadInputTokens": 102861,
+    "cacheCreationInputTokens": 12825,
+    "webSearchRequests": 0,
+    "costUSD": 0.0803442,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 58,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

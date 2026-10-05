@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i1",
+ "started": "2026-10-05T18:38:21.594689+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki-onoda\",\"name\":\"Yuki Onoda\",\"attrs\":{\"email\":\"yuki.onoda@ternlog.example\",\"team\":\"NetOps\",\"refs\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"book-fumigation-vendor-bay-3\",\"name\":\"Book the fumigation vendor for bay 3\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"medium\",\"evidence\":[\"em-001\"],\"requested_by\":\"yuki-onoda\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.078231,
+  "duration_ms": 9634,
+  "duration_api_ms": 8694,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12700,
+   "cache_read_input_tokens": 103145,
+   "output_tokens": 679,
+   "output_tokens_details": {
+    "thinking_tokens": 245
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12700,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 536,
+     "cache_read_input_tokens": 38508,
+     "cache_creation_input_tokens": 412,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 412
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 679,
+    "cacheReadInputTokens": 103145,
+    "cacheCreationInputTokens": 12700,
+    "webSearchRequests": 0,
+    "costUSD": 0.078231,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 245,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

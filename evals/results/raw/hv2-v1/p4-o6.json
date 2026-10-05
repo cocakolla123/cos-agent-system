@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o6",
+ "started": "2026-10-05T18:38:03.066329+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Channel\",\"workspace\":\"ternlog\",\"key\":\"netops\",\"name\":\"#netops\",\"attrs\":{\"connector\":\"slack\",\"refs\":[\"sl-001\",\"sl-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"riley-chen\",\"name\":\"Riley Chen\",\"attrs\":{\"email\":\"riley.chen@ternlog.example\",\"note\":\"Different person from the user, Riley Nakamura. Committed to send the fleet fuel variance report by 2026-10-15.\",\"refs\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Channel\",\"to_key\":\"netops\",\"type\":\"posted_in\"}]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\",\"refs\":[\"sl-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Channel\",\"to_key\":\"netops\",\"type\":\"posted_in\"},{\"to_kind\":\"Person\",\"to_key\":\"riley-chen\",\"type\":\"waiting_on\"}]}]",
+  "total_cost_usd": 0.0888572,
+  "duration_ms": 7445,
+  "duration_api_ms": 6413,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13046,
+   "cache_read_input_tokens": 141886,
+   "output_tokens": 828,
+   "output_tokens_details": {
+    "thinking_tokens": 47
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13046,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 476,
+     "cache_read_input_tokens": 38748,
+     "cache_creation_input_tokens": 518,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 518
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 828,
+    "cacheReadInputTokens": 141886,
+    "cacheCreationInputTokens": 13046,
+    "webSearchRequests": 0,
+    "costUSD": 0.0888572,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 47,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

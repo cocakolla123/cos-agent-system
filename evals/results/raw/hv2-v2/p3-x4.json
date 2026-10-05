@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x4",
+ "started": "2026-10-05T18:37:40.445428+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"ibrahim-khoury\",\"name\":\"Ibrahim Khoury\",\"attrs\":{\"email\":\"ibrahim@quarryanalytics.example\",\"refs\":[\"th-exp\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"build-query-api-endpoint\",\"name\":\"Build the query API endpoint\",\"attrs\":{\"due\":\"2026-10-19\",\"priority\":\"medium\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-exp\"],\"requested_by\":\"Ibrahim Khoury\"},\"source\":\"eval-fixture\",\"confidence\":0.93,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"build-nightly-csv-export-sensor-table\",\"name\":\"Build the nightly CSV export for the sensor table (cancelled)\",\"attrs\":{\"due\":\"2026-10-19\",\"status\":\"cancelled\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-exp\"],\"superseded_by\":\"build-query-api-endpoint\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Action\",\"to_key\":\"build-query-api-endpoint\",\"type\":\"superseded_by\"},{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0802476,
+  "duration_ms": 6577,
+  "duration_api_ms": 5487,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13016,
+   "cache_read_input_tokens": 103158,
+   "output_tokens": 754,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13016,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 525,
+     "cache_read_input_tokens": 38519,
+     "cache_creation_input_tokens": 717,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 717
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 754,
+    "cacheReadInputTokens": 103158,
+    "cacheCreationInputTokens": 13016,
+    "webSearchRequests": 0,
+    "costUSD": 0.0802476,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

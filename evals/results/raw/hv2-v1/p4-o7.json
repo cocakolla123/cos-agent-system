@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o7",
+ "started": "2026-10-05T18:38:04.183056+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"beacon\",\"key\":\"petra-lindgren\",\"name\":\"Petra Lindgren\",\"attrs\":{\"email\":\"petra@beaconfb.example\",\"org\":\"Beacon\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Document\",\"workspace\":\"beacon\",\"key\":\"cold-storage-grant-form\",\"name\":\"Cold storage grant form\",\"attrs\":{\"refs\":[\"th-002\",\"th-004\"],\"due\":\"2026-10-24\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"requested_by\"}]},{\"kind\":\"Action\",\"workspace\":\"beacon\",\"key\":\"submit-cold-storage-grant-form\",\"name\":\"Submit the cold storage grant form to Beacon\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"evidence\":[\"em-001\",\"em-003\"],\"refs\":[\"th-002\",\"th-004\"],\"note\":\"Riley accepted the request in em-003 ('We'll handle it'). Riley is the only person on grants. No completion receipt seen.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Document\",\"to_key\":\"cold-storage-grant-form\",\"type\":\"produces\"},{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.07907,
+  "duration_ms": 5916,
+  "duration_api_ms": 4992,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12846,
+   "cache_read_input_tokens": 102870,
+   "output_tokens": 710,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12846,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 481,
+     "cache_read_input_tokens": 38375,
+     "cache_creation_input_tokens": 691,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 691
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 710,
+    "cacheReadInputTokens": 102870,
+    "cacheCreationInputTokens": 12846,
+    "webSearchRequests": 0,
+    "costUSD": 0.07907,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m6",
+ "started": "2026-10-05T18:37:13.709981+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"q4-capacity-forecast\",\"name\":\"Deliver Q4 capacity forecast for budget planning\",\"attrs\":{\"due\":\"2026-10-21\",\"priority\":\"high\",\"evidence\":[\"em-001\"],\"requested_by\":\"Gus Okonkwo\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\",\"evidence\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.07617460000000001,
+  "duration_ms": 4731,
+  "duration_api_ms": 3836,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12806,
+   "cache_read_input_tokens": 103143,
+   "output_tokens": 431,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12806,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 288,
+     "cache_read_input_tokens": 38507,
+     "cache_creation_input_tokens": 519,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 519
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 431,
+    "cacheReadInputTokens": 103143,
+    "cacheCreationInputTokens": 12806,
+    "webSearchRequests": 0,
+    "costUSD": 0.07617460000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

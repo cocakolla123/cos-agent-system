@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x7",
+ "started": "2026-10-05T18:37:43.520270+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"beacon\",\"key\":\"petra-lindgren\",\"name\":\"Petra Lindgren\",\"attrs\":{\"email\":\"petra@beaconfb.example\",\"org\":\"Beacon\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Channel\",\"workspace\":\"beacon\",\"key\":\"beacon-volunteers\",\"name\":\"#beacon-volunteers\",\"attrs\":{\"connector\":\"slack\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Meeting\",\"workspace\":\"beacon\",\"key\":\"volunteer-fair-2026-10-17\",\"name\":\"Volunteer fair (Oct 17)\",\"attrs\":{\"date\":\"2026-10-17\",\"status\":\"cancelled\",\"reason\":\"venue flooding; organizers cancelled the whole event\",\"note\":\"Slack sl-003 (2026-10-10) says possible reschedule, but no news yet and nothing confirmed\",\"refs\":[\"th-fair\"],\"evidence\":[\"em-001\",\"em-002\",\"sl-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"organized_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"beacon\",\"key\":\"staff-volunteer-fair-table\",\"name\":\"Staff Beacon table at the volunteer fair (setup 8am)\",\"attrs\":{\"due\":\"2026-10-17\",\"status\":\"cancelled\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-fair\"],\"note\":\"Petra's request of Oct 3 was withdrawn on Oct 8: event cancelled, nothing needed. No outstanding obligation.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"requested_by\"},{\"to_kind\":\"Meeting\",\"to_key\":\"volunteer-fair-2026-10-17\",\"type\":\"relates_to\"}]}\n]",
+  "total_cost_usd": 0.0839384,
+  "duration_ms": 13087,
+  "duration_api_ms": 11456,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13118,
+   "cache_read_input_tokens": 102872,
+   "output_tokens": 1088,
+   "output_tokens_details": {
+    "thinking_tokens": 82
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13118,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 772,
+     "cache_read_input_tokens": 38381,
+     "cache_creation_input_tokens": 957,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 957
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1088,
+    "cacheReadInputTokens": 102872,
+    "cacheCreationInputTokens": 13118,
+    "webSearchRequests": 0,
+    "costUSD": 0.0839384,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 82,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

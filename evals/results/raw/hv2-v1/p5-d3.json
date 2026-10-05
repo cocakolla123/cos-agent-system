@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d3",
+ "started": "2026-10-05T18:38:11.597745+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\",\"refs\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"deliver-cycle-count-sheet-to-gus\",\"name\":\"Get Gus Okonkwo the cycle count sheet\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"medium\",\"evidence\":[\"em-001\"],\"requested_by\":\"gus-okonkwo\",\"note\":\"Email of Wed 2026-10-07 asked for it 'by end of week'; resolved to Friday 2026-10-09. No completion shown in sources.\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0774334,
+  "duration_ms": 9481,
+  "duration_api_ms": 8430,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12450,
+   "cache_read_input_tokens": 102857,
+   "output_tokens": 705,
+   "output_tokens_details": {
+    "thinking_tokens": 213
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12450,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 562,
+     "cache_read_input_tokens": 38364,
+     "cache_creation_input_tokens": 306,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 306
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 705,
+    "cacheReadInputTokens": 102857,
+    "cacheCreationInputTokens": 12450,
+    "webSearchRequests": 0,
+    "costUSD": 0.0774334,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 213,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

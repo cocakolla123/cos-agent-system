@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x6",
+ "started": "2026-10-05T18:37:48.439197+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"refs\":[\"dashboard-project\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"quarry-dashboard\",\"type\":\"works_on\"}]},{\"kind\":\"Project\",\"workspace\":\"quarry\",\"key\":\"quarry-dashboard\",\"name\":\"Quarry dashboard project\",\"attrs\":{\"status\":\"on-hold\",\"status_reason\":\"Legal is sorting out the data sharing agreement. Work is paused until further notice and will be re-scoped when it unfreezes.\",\"evidence\":[\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"client_contact\"}]},{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"dashboard-milestone-2-alerting-rules\",\"name\":\"Milestone 2 (alerting rules) for the dashboard project\",\"attrs\":{\"status\":\"on-hold\",\"priority\":\"low\",\"blocked_on\":\"Celeste Beaumont (Quarry legal and data sharing agreement)\",\"note\":\"The Oct 24 deadline from em-001 was superseded by the Oct 10 stop-work notice. No new date has been given, so none is recorded. Work resumes only after Quarry re-scopes.\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-hold\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"quarry-dashboard\",\"type\":\"part_of\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"blocked_on\"}]}]",
+  "total_cost_usd": 0.08209040000000001,
+  "duration_ms": 7981,
+  "duration_api_ms": 7092,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13027,
+   "cache_read_input_tokens": 103152,
+   "output_tokens": 934,
+   "output_tokens_details": {
+    "thinking_tokens": 80
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13027,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 705,
+     "cache_read_input_tokens": 38516,
+     "cache_creation_input_tokens": 731,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 731
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 934,
+    "cacheReadInputTokens": 103152,
+    "cacheCreationInputTokens": 13027,
+    "webSearchRequests": 0,
+    "costUSD": 0.08209040000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 80,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

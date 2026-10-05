@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x4",
+ "started": "2026-10-05T18:37:38.561856+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"ibrahim-khoury\",\"name\":\"Ibrahim Khoury\",\"attrs\":{\"email\":\"ibrahim@quarryanalytics.example\",\"refs\":[\"em-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"build-query-api-endpoint\",\"name\":\"Build the query API endpoint for Ibrahim Khoury (replaces the nightly CSV export)\",\"attrs\":{\"due\":\"2026-10-19\",\"priority\":\"medium\",\"evidence\":[\"em-002\",\"em-001\"],\"requested_by\":\"Ibrahim Khoury\",\"thread_id\":\"th-exp\",\"note\":\"em-002 cancels the nightly CSV export request from em-001 and replaces it with the query API endpoint, with the same Oct 19 deadline.\"},\"source\":\"eval-fixture\",\"confidence\":0.93,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0897214,
+  "duration_ms": 15272,
+  "duration_api_ms": 13758,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13206,
+   "cache_read_input_tokens": 141807,
+   "output_tokens": 852,
+   "output_tokens_details": {
+    "thinking_tokens": 171
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13206,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 536,
+     "cache_read_input_tokens": 38709,
+     "cache_creation_input_tokens": 717,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 717
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 852,
+    "cacheReadInputTokens": 141807,
+    "cacheCreationInputTokens": 13206,
+    "webSearchRequests": 0,
+    "costUSD": 0.0897214,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 171,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
