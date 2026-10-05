@@ -1,0 +1,6 @@
+{
+ "labels": {
+  "p6-i5": "bd86b4d298d0bb533fe519269b0c2ed072874ca4b51b4c4664b33225507aea13"
+ },
+ "note": "sha256 of every corrected expected.json; see CORRECTIONS.md. The original labels.lock.json is never rewritten."
+}
