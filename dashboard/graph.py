@@ -102,10 +102,17 @@ TERMINAL_STATUSES = frozenset(
 # only by is_open_action(), never by is_concluded() — the distinction is the
 # whole point: "done" on a Document or a Ticket is ordinary lifecycle (see
 # TERMINAL_STATUSES above), but "done" on an obligation is the one word that
-# takes it off the to-do list.
+# takes it off the to-do list. "satisfied", "on hold" and "delegated" also
+# close it: the user has nothing left to do on it (heldout_v2 runs showed
+# models writing these for correctly handled items that then stayed open).
+# Matching ignores case and treats "_"/"-" as spaces ("on_hold" == "on hold").
 DONE_STATUSES = frozenset(
     {"done", "completed", "complete", "submitted", "resolved", "paid",
-     "closed", "dismissed"})
+     "closed", "dismissed", "satisfied", "on hold", "delegated"})
+
+
+def _norm_status(status):
+    return " ".join(status.replace("_", " ").replace("-", " ").lower().split())
 
 
 # ---------------------------------------------------------------------------
@@ -592,7 +599,7 @@ def is_open_action(node, now=None):
     if node.get("type") != "Action":
         return False
     status = (node.get("attrs", {}) or {}).get("status")
-    if isinstance(status, str) and status.strip().lower() in DONE_STATUSES:
+    if isinstance(status, str) and _norm_status(status) in DONE_STATUSES:
         return False
     return is_current(node, now=now)
 

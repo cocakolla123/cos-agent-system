@@ -335,6 +335,16 @@ class TestObligations(unittest.TestCase):
             n = self._action(graph.slug(status), status=status)
             self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
 
+    def test_satisfied_on_hold_delegated_close_an_action(self):
+        for status in ("satisfied", "on_hold", "on-hold", "On Hold",
+                       "delegated"):
+            n = self._action(graph.slug(status), status=status)
+            self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
+
+    def test_unknown_status_leaves_an_action_open(self):
+        n = self._action("pending", status="pending")
+        self.assertTrue(graph.is_open_action(n, now=self.NOW))
+
     def test_done_status_does_not_conclude_other_node_types(self):
         """DONE_STATUSES is for Actions only — it must not leak into
         is_concluded, where 'closed'/'done' are ordinary lifecycle."""
