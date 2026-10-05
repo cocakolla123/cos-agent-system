@@ -23,3 +23,5 @@ dashboard/entry-chat-sessions.json
 dashboard/entry-chat-log.json
 dashboard/publish-stage/
 dashboard/publish.log
+evals/__pycache__/
+evals/tests/__pycache__/
