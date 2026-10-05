@@ -196,7 +196,8 @@ Emit each obligation as `kind: "Action"` with:
   undated obligation is still an obligation and `graph.due_days` returns `None` for it.
 - `attrs.status` — omit while outstanding; set it when you observe it satisfied (see
   `graph.DONE_STATUSES`: done/submitted/paid/…). `sections.next_actions` drops it then.
-- `attrs.priority` — high/medium/low; used to rank *undated* obligations against each other.
+- `attrs.priority` — **required on every Action**: high/medium/low; used to rank *undated*
+  obligations against each other. If you omit it, ingest records `medium`.
 - `attrs.blocked_on` — who the user is waiting on, when the next move is somebody else's (a
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state
