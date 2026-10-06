@@ -25,3 +25,4 @@ dashboard/publish-stage/
 dashboard/publish.log
 evals/__pycache__/
 evals/tests/__pycache__/
+evals/heldout_v2/__pycache__/
