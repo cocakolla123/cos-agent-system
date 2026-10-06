@@ -1,0 +1,275 @@
+[
+ {
+  "task_id": "p1-m1#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "manager",
+  "reason": "Dritan needs revised SLA matrix by Oct 16, within 7 days."
+ },
+ {
+  "task_id": "p1-m2#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "client",
+  "reason": "Client (Ibrahim via Celeste) wants anomaly report draft by Oct 17, within 7 days."
+ },
+ {
+  "task_id": "p1-m3#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "manager",
+  "reason": "Manager-assigned scorecard refresh due Oct 20, outside the 7-day window."
+ },
+ {
+  "task_id": "p1-m4#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "volunteer lead",
+  "reason": "Driver roster due Thursday Oct 15, within 3 days."
+ },
+ {
+  "task_id": "p1-m5#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer (Gus) checklist with date withdrawn; undated work request."
+ },
+ {
+  "task_id": "p1-m6#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer (Gus) asks for Q4 forecast by Oct 21."
+ },
+ {
+  "task_id": "p1-m7#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "client",
+  "reason": "Client whitepaper review due Oct 14, within 3 days."
+ },
+ {
+  "task_id": "p1-m8#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "manager",
+  "reason": "Committed to manager before Friday Oct 9, now overdue."
+ },
+ {
+  "task_id": "p2-c1#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "manager",
+  "reason": "Manager moved lanes section to Oct 14, within 3 days."
+ },
+ {
+  "task_id": "p2-c2#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "client",
+  "reason": "Client needs latency writeup by Oct 16, within 7 days."
+ },
+ {
+  "task_id": "p2-c3#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer-requested recal plan with disputed date (Oct 19 vs Oct 21)."
+ },
+ {
+  "task_id": "p2-c4#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "manager",
+  "reason": "Manager asks for insurance certificates by Oct 31; insurance certs excluded from H4."
+ },
+ {
+  "task_id": "p2-c5#0",
+  "priority": "low",
+  "rule": "L3",
+  "asked_by": "client",
+  "reason": "Client explicitly says no rush; Oct 23 is beyond high windows."
+ },
+ {
+  "task_id": "p2-c6#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "manager",
+  "reason": "Manager wants vendor comparison by Oct 17, within 7 days."
+ },
+ {
+  "task_id": "p2-c7#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "client",
+  "reason": "Client pushed review to Oct 21, outside the 7-day window."
+ },
+ {
+  "task_id": "p3-x2#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "client",
+  "reason": "Client summary slides still due Oct 18, within 7 days."
+ },
+ {
+  "task_id": "p3-x3#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer ticket back on with due date Oct 22."
+ },
+ {
+  "task_id": "p3-x4#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "client",
+  "reason": "Client wants query API endpoint by Oct 19, within 7 days."
+ },
+ {
+  "task_id": "p4-o2#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Volunteered for Gus's forklift paperwork due Oct 20; peer work."
+ },
+ {
+  "task_id": "p4-o4#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "manager",
+  "reason": "Manager permit renewal due Oct 20, outside 7 days; permits excluded from H4."
+ },
+ {
+  "task_id": "p4-o7#0",
+  "priority": "low",
+  "rule": "L2",
+  "asked_by": "volunteer lead",
+  "reason": "Volunteer grant form due Oct 24, more than 7 days out."
+ },
+ {
+  "task_id": "p5-d1#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "client",
+  "reason": "Undated client request ('soon', no ASAP)."
+ },
+ {
+  "task_id": "p5-d2#0",
+  "priority": "high",
+  "rule": "H2",
+  "asked_by": "manager",
+  "reason": "Manager asks for outage postmortem ASAP."
+ },
+ {
+  "task_id": "p5-d3#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "peer",
+  "reason": "Cycle count sheet due Oct 9, overdue."
+ },
+ {
+  "task_id": "p5-d4#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "manager",
+  "reason": "Manager wants lane cost model before Oct 23 offsite, beyond 7 days."
+ },
+ {
+  "task_id": "p5-d5#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "client",
+  "reason": "Client one-pager with no resolved date."
+ },
+ {
+  "task_id": "p5-d6#0",
+  "priority": "low",
+  "rule": "L3",
+  "asked_by": "volunteer lead",
+  "reason": "Volunteer request worded 'would be great'; Oct 19 is not within 3 days."
+ },
+ {
+  "task_id": "p5-d7#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "client",
+  "reason": "Client schema diff due Thursday Oct 15, within 3 days."
+ },
+ {
+  "task_id": "p6-i1#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer (Yuki) asks to book vendor by Oct 16; outside 3 days, not manager/client."
+ },
+ {
+  "task_id": "p6-i10#0",
+  "priority": "high",
+  "rule": "H3",
+  "asked_by": "manager",
+  "reason": "Manager needs routing memo by Oct 16, within 7 days."
+ },
+ {
+  "task_id": "p6-i2#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer ticket for thresholds doc due Oct 18."
+ },
+ {
+  "task_id": "p6-i3#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "peer",
+  "reason": "One-pager needed for Oct 15 carrier sync, within 3 days."
+ },
+ {
+  "task_id": "p6-i4#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "peer",
+  "reason": "Peer runbook update by Oct 17; runbooks excluded from H4."
+ },
+ {
+  "task_id": "p6-i5#0",
+  "priority": "high",
+  "rule": "H4",
+  "asked_by": "peer",
+  "reason": "Badge audit log check with a stated date (Oct 16) is access-audit work."
+ },
+ {
+  "task_id": "p6-i5#1",
+  "priority": "low",
+  "rule": "L1",
+  "asked_by": "peer",
+  "reason": "Quick 'is it phishing?' reply to a coworker with no deadline."
+ },
+ {
+  "task_id": "p6-i6#0",
+  "priority": "high",
+  "rule": "H4",
+  "asked_by": "peer",
+  "reason": "TLS certificate renewal with a stated date (Oct 20)."
+ },
+ {
+  "task_id": "p6-i7#0",
+  "priority": "medium",
+  "rule": "M1",
+  "asked_by": "manager",
+  "reason": "Undated manager request; 'pick your own timeline'."
+ },
+ {
+  "task_id": "p6-i8#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "peer",
+  "reason": "Confirm data agreement status to Gus by Oct 15, within 3 days."
+ },
+ {
+  "task_id": "p6-i9#0",
+  "priority": "high",
+  "rule": "H1",
+  "asked_by": "manager",
+  "reason": "Expense report due Oct 15, within 3 days."
+ }
+]

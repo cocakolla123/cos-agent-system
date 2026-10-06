@@ -1,0 +1,198 @@
+{
+ "p1-m1#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "revised SLA matrix"
+ },
+ "p1-m2#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "anomaly report draft"
+ },
+ "p1-m3#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "carrier scorecard refresh"
+ },
+ "p1-m4#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "driver roster"
+ },
+ "p1-m5#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "bay prep checklist"
+ },
+ "p1-m6#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "Q4 capacity forecast"
+ },
+ "p1-m7#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "whitepaper review"
+ },
+ "p1-m8#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "dock audit photos (your own promise)"
+ },
+ "p2-c1#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "lanes section of deck"
+ },
+ "p2-c2#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "ingest latency writeup"
+ },
+ "p2-c3#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "recalibration plan"
+ },
+ "p2-c4#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "insurance certificates"
+ },
+ "p2-c5#0": {
+  "priority": "low",
+  "reconciled": "labeler adopted: client wrote 'No rush'",
+  "rule": "L3",
+  "task": "usage heatmap draft"
+ },
+ "p2-c6#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "vendor comparison"
+ },
+ "p2-c7#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "prep deck review"
+ },
+ "p3-x2#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "summary slides"
+ },
+ "p3-x3#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "telemetry backfill"
+ },
+ "p3-x4#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "query API endpoint"
+ },
+ "p4-o2#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "forklift audit paperwork"
+ },
+ "p4-o4#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "permit renewal"
+ },
+ "p4-o7#0": {
+  "priority": "low",
+  "rule": "L2",
+  "task": "grant form"
+ },
+ "p5-d1#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "revised retainer quote (\"soon\")"
+ },
+ "p5-d2#0": {
+  "priority": "high",
+  "rule": "H2",
+  "task": "outage postmortem (\"ASAP\")"
+ },
+ "p5-d3#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "cycle count sheet"
+ },
+ "p5-d4#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "lane cost model"
+ },
+ "p5-d5#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "renewal one-pager"
+ },
+ "p5-d6#0": {
+  "priority": "low",
+  "rule": "L3",
+  "task": "freezer maintenance log (\"would be great\")"
+ },
+ "p5-d7#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "schema diff"
+ },
+ "p6-i1#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "book fumigation vendor"
+ },
+ "p6-i10#0": {
+  "priority": "high",
+  "rule": "H3",
+  "task": "routing memo"
+ },
+ "p6-i2#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "thresholds doc"
+ },
+ "p6-i3#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "lane cost one-pager"
+ },
+ "p6-i4#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "portal access runbook"
+ },
+ "p6-i5#0": {
+  "priority": "high",
+  "rule": "H4",
+  "task": "badge audit log"
+ },
+ "p6-i5#1": {
+  "priority": "low",
+  "rule": "L1",
+  "task": "reply: is it phishing?"
+ },
+ "p6-i6#0": {
+  "priority": "high",
+  "rule": "H4",
+  "task": "renew TLS cert"
+ },
+ "p6-i7#0": {
+  "priority": "medium",
+  "rule": "M1",
+  "task": "yard lighting quotes"
+ },
+ "p6-i8#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "confirm FreightMetrics agreement"
+ },
+ "p6-i9#0": {
+  "priority": "high",
+  "rule": "H1",
+  "task": "September expense report"
+ }
+}
