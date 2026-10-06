@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m8",
+ "started": "2026-10-06T01:23:40.951762+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations\",\"org\":\"Tern Logistics\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"ternlog\",\"key\":\"westgate-dock-audit\",\"name\":\"Westgate dock audit\",\"attrs\":{\"refs\":[\"th-dock\"],\"note\":\"Insurance wants photo evidence from the audit\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"send-dock-audit-photos-to-dritan\",\"name\":\"Send Westgate dock audit photos to Dritan Pasha\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-dock\"],\"note\":\"Riley committed on 2026-10-07 to send the photos (on work phone) before Friday; no completion receipt found, so outstanding and past the stated date. Needed for insurance.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"owed_to\"},{\"to_kind\":\"Project\",\"to_key\":\"westgate-dock-audit\",\"type\":\"relates_to\"}]}\n]",
+  "total_cost_usd": 0.0957474,
+  "duration_ms": 11175,
+  "duration_api_ms": 10253,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13895,
+   "cache_read_input_tokens": 143657,
+   "output_tokens": 1142,
+   "output_tokens_details": {
+    "thinking_tokens": 259
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13895,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 792,
+     "cache_read_input_tokens": 39337,
+     "cache_creation_input_tokens": 778,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 778
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1142,
+    "cacheReadInputTokens": 143657,
+    "cacheCreationInputTokens": 13895,
+    "webSearchRequests": 0,
+    "costUSD": 0.0957474,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 259,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

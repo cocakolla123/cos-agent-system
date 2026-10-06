@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m2",
+ "started": "2026-10-05T18:36:58.667200+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Confirmed only two source files. em-002 is a vendor newsletter with no obligation \u2014 excluded. em-001 has a clear deadline relayed to Riley (\"treat his dates as ours\"); the boilerplate disclaimer about contractual obligation is routine footer text, not an instruction, and doesn't negate the stated deadline.\n\n```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\"email\": \"celeste@quarryanalytics.example\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"ibrahim-khoury\",\n    \"name\": \"Ibrahim Khoury\",\n    \"attrs\": {\"email\": \"ibrahim@quarryanalytics.example\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Document\",\n    \"workspace\": \"quarry\",\n    \"key\": \"sensor-anomaly-report\",\n    \"name\": \"Sensor anomaly report (first draft)\",\n    \"attrs\": {\n      \"description\": \"First draft of the sensor anomaly report; methods section can be thin, appendix tables matter.\",\n      \"refs\": []\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"anomaly-report-draft-due-1017\",\n    \"name\": \"Deliver first draft of sensor anomaly report\",\n    \"attrs\": {\n      \"due\": \"2026-10-17\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"ibrahim-khoury\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Person\", \"to_key\": \"celeste-beaumont\", \"type\": \"relayed_by\"},\n      {\"to_kind\": \"Document\", \"to_key\": \"sensor-anomaly-report\", \"type\": \"relates_to\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.2588812,
+  "duration_ms": 33113,
+  "duration_api_ms": 30692,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 50863,
+   "cache_read_input_tokens": 144116,
+   "output_tokens": 2659,
+   "output_tokens_details": {
+    "thinking_tokens": 1508
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 50863,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 786,
+     "cache_read_input_tokens": 48701,
+     "cache_creation_input_tokens": 2162,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2162
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 2659,
+    "cacheReadInputTokens": 144116,
+    "cacheCreationInputTokens": 50863,
+    "webSearchRequests": 0,
+    "costUSD": 0.2588812,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1508,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

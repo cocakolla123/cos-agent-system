@@ -49,7 +49,8 @@ def _truthy(n, key):
 
 
 def _pri(n):
-    return _PRIORITY_RANK.get((n.get("attrs", {}) or {}).get("priority", "low"), 2)
+    # same default as research.DEFAULT_PRIORITY and the task board
+    return _PRIORITY_RANK.get((n.get("attrs", {}) or {}).get("priority", "medium"), 1)
 
 
 def _url(n):

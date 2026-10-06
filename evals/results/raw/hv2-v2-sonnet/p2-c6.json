@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c6",
+ "started": "2026-10-05T18:38:23.390701+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n {\n  \"kind\": \"Person\",\n  \"workspace\": \"ternlog\",\n  \"key\": \"dritan-pasha\",\n  \"name\": \"Dritan Pasha\",\n  \"attrs\": {\n   \"title\": \"Dir. Network Operations, Tern Logistics\",\n   \"email\": \"dritan.pasha@ternlog.example\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.95,\n  \"edges\": []\n },\n {\n  \"kind\": \"Channel\",\n  \"workspace\": \"ternlog\",\n  \"key\": \"netops\",\n  \"name\": \"#netops\",\n  \"attrs\": {},\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.85,\n  \"edges\": []\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"ternlog\",\n  \"key\": \"wms-integration-memo\",\n  \"name\": \"Draft WMS integration memo\",\n  \"attrs\": {\n   \"priority\": \"low\",\n   \"evidence\": [\"em-001\", \"sl-003\"],\n   \"refs\": [\"th-002\"],\n   \"notes\": \"Originally requested in em-001 for 'this week' (no explicit date given). Superseded by sl-003 on 2026-10-08: deprioritized in favor of vendor comparison, moved to next sprint with no date set.\"\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.9,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"requested_by\"}\n  ]\n },\n {\n  \"kind\": \"Action\",\n  \"workspace\": \"ternlog\",\n  \"key\": \"wms-vendor-comparison\",\n  \"name\": \"Complete vendor comparison (replacing integration memo this sprint)\",\n  \"attrs\": {\n   \"due\": \"2026-10-17\",\n   \"priority\": \"high\",\n   \"evidence\": [\"sl-003\"]\n  },\n  \"source\": \"eval-fixture\",\n  \"confidence\": 0.92,\n  \"edges\": [\n   {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"requested_by\"}\n  ]\n }\n]\n```",
+  "total_cost_usd": 0.1078526,
+  "duration_ms": 31053,
+  "duration_api_ms": 29634,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13355,
+   "cache_read_input_tokens": 130603,
+   "output_tokens": 2830,
+   "output_tokens_details": {
+    "thinking_tokens": 1853
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13355,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2545,
+     "cache_read_input_tokens": 47851,
+     "cache_creation_input_tokens": 690,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 690
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 2830,
+    "cacheReadInputTokens": 130603,
+    "cacheCreationInputTokens": 13355,
+    "webSearchRequests": 0,
+    "costUSD": 0.1078526,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1853,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

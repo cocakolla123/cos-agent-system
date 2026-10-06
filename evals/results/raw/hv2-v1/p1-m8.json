@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m8",
+ "started": "2026-10-05T18:37:12.960925+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations\",\"org\":\"Tern Logistics\",\"refs\":[\"th-dock\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Document\",\"workspace\":\"ternlog\",\"key\":\"westgate-dock-audit-photos\",\"name\":\"Westgate dock audit photos\",\"attrs\":{\"location\":\"Riley's work phone\",\"purpose\":\"Insurance photo evidence\",\"refs\":[\"th-dock\"],\"evidence\":[\"em-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"send-westgate-dock-audit-photos-to-dritan\",\"name\":\"Send Westgate dock audit photos to Dritan Pasha\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-dock\"],\"notes\":\"Riley committed on Oct 7 to send the photos 'before Friday' (Friday = 2026-10-09). Photos are on the work phone. No sent confirmation in sources, so still outstanding and now past due as of 2026-10-12.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"owed_to\"},{\"to_kind\":\"Document\",\"to_key\":\"westgate-dock-audit-photos\",\"type\":\"delivers\"}]}\n]",
+  "total_cost_usd": 0.0839992,
+  "duration_ms": 9559,
+  "duration_api_ms": 8564,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12931,
+   "cache_read_input_tokens": 102866,
+   "output_tokens": 1169,
+   "output_tokens_details": {
+    "thinking_tokens": 344
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12931,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 940,
+     "cache_read_input_tokens": 38373,
+     "cache_creation_input_tokens": 778,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 778
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1169,
+    "cacheReadInputTokens": 102866,
+    "cacheCreationInputTokens": 12931,
+    "webSearchRequests": 0,
+    "costUSD": 0.0839992,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 344,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

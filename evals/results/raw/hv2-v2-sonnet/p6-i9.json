@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i9",
+ "started": "2026-10-05T18:43:17.200874+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "I've read the single source file. Only one connector item exists (em-001.json), an email from Dritan Pasha (Dir. Network Operations, Tern Logistics) to Riley demanding a September expense report by Oct 15. This is a genuine internal obligation from the user's manager/colleague at their employer \u2014 not a vendor solicitation \u2014 despite the alarming subject-line formatting. Outputting the records now.\n\n```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\",\n      \"title\": \"Dir. Network Operations, Tern Logistics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"submit-september-expense-report\",\n    \"name\": \"Submit September expense report\",\n    \"attrs\": {\n      \"due\": \"2026-10-15\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"requested_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.11578780000000001,
+  "duration_ms": 16069,
+  "duration_api_ms": 14584,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 14067,
+   "cache_read_input_tokens": 226749,
+   "output_tokens": 1415,
+   "output_tokens_details": {
+    "thinking_tokens": 533
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14067,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 466,
+     "cache_read_input_tokens": 48370,
+     "cache_creation_input_tokens": 883,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 883
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 10,
+    "outputTokens": 1415,
+    "cacheReadInputTokens": 226749,
+    "cacheCreationInputTokens": 14067,
+    "webSearchRequests": 0,
+    "costUSD": 0.11578780000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 533,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

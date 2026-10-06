@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d3",
+ "started": "2026-10-05T18:32:40.311350+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"gus-okonkwo\",\n    \"name\": \"Gus Okonkwo\",\n    \"attrs\": {\n      \"email\": \"gus.okonkwo@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"cycle-count-sheet\",\n    \"name\": \"Deliver cycle count sheet\",\n    \"attrs\": {\n      \"due\": \"2026-10-11\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"gus-okonkwo\",\n        \"to_workspace\": \"ternlog\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0355966,
+  "duration_ms": 24978,
+  "duration_api_ms": 23752,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 5959,
+   "cache_read_input_tokens": 89526,
+   "output_tokens": 2940,
+   "output_tokens_details": {
+    "thinking_tokens": 2445
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 5959,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2498,
+     "cache_read_input_tokens": 31847,
+     "cache_creation_input_tokens": 327,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 327
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 2940,
+    "cacheReadInputTokens": 89526,
+    "cacheCreationInputTokens": 5959,
+    "webSearchRequests": 0,
+    "costUSD": 0.0355966,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2445,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

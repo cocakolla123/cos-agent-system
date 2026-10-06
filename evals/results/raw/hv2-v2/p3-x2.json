@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x2",
+ "started": "2026-10-05T18:37:37.667016+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Project\",\"workspace\":\"quarry\",\"key\":\"board-pack\",\"name\":\"Board pack\",\"attrs\":{\"refs\":[\"th-two\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]},{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"board-pack-summary-slides\",\"name\":\"Deliver summary slides for the board pack\",\"attrs\":{\"due\":\"2026-10-18\",\"priority\":\"high\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-two\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"board-pack\",\"type\":\"part_of\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]},{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"board-pack-budget-reconciliation-sheet\",\"name\":\"Budget reconciliation sheet for the board pack (cancelled; finance taking in-house)\",\"attrs\":{\"due\":\"2026-10-18\",\"status\":\"cancelled\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-two\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"board-pack\",\"type\":\"part_of\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0811316,
+  "duration_ms": 6823,
+  "duration_api_ms": 5628,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13027,
+   "cache_read_input_tokens": 103158,
+   "output_tokens": 838,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13027,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 609,
+     "cache_read_input_tokens": 38519,
+     "cache_creation_input_tokens": 728,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 728
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 838,
+    "cacheReadInputTokens": 103158,
+    "cacheCreationInputTokens": 13027,
+    "webSearchRequests": 0,
+    "costUSD": 0.0811316,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

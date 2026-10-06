@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o5",
+ "started": "2026-10-05T18:37:59.488436+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"org\":\"Quarry Analytics\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"yuki-onoda\",\"name\":\"Yuki Onoda\",\"attrs\":{\"email\":\"yuki.onoda@ternlog.example\",\"org\":\"Ternlog\",\"team\":\"netops\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Channel\",\"workspace\":\"quarry\",\"key\":\"quarry-liaison\",\"name\":\"#quarry-liaison\",\"attrs\":{\"connector\":\"slack\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"quarry\",\"key\":\"telemetry-gap-analysis\",\"name\":\"Telemetry gap analysis\",\"attrs\":{\"refs\":[\"th-002\"],\"owner\":\"Ternlog netops (per Yuki Onoda)\"},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"owned_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"telemetry-gap-analysis-ownership\",\"name\":\"Telemetry gap analysis: ownership requested by Celeste, claimed by Ternlog netops\",\"attrs\":{\"status\":\"delegated\",\"priority\":\"medium\",\"blocked_on\":\"Yuki Onoda (netops team to deliver the analysis)\",\"evidence\":[\"em-001\",\"sl-003\"],\"note\":\"Celeste asked that someone on Riley's side own the analysis; Yuki Onoda stated netops will handle it. Riley may want to confirm to Celeste that netops owns it. No deadline stated.\"},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"telemetry-gap-analysis\",\"type\":\"relates_to\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"blocked_on\"}]}\n]",
+  "total_cost_usd": 0.084289,
+  "duration_ms": 10593,
+  "duration_api_ms": 9515,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12761,
+   "cache_read_input_tokens": 102865,
+   "output_tokens": 1266,
+   "output_tokens_details": {
+    "thinking_tokens": 203
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12761,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1036,
+     "cache_read_input_tokens": 38373,
+     "cache_creation_input_tokens": 608,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 608
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1266,
+    "cacheReadInputTokens": 102865,
+    "cacheCreationInputTokens": 12761,
+    "webSearchRequests": 0,
+    "costUSD": 0.084289,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 203,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

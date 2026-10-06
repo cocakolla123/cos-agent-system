@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d4",
+ "started": "2026-10-05T18:38:11.956403+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations, Tern Logistics\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Meeting\",\"workspace\":\"ternlog\",\"key\":\"netops-offsite-2026-10-23\",\"name\":\"NetOps offsite\",\"attrs\":{\"start\":\"2026-10-23T16:00:00Z\",\"attendees\":[\"riley.n@postbox.example\",\"dritan.pasha@ternlog.example\"],\"refs\":[\"cal-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"attended_by\"}]},\n{\"kind\":\"Document\",\"workspace\":\"ternlog\",\"key\":\"lane-cost-model\",\"name\":\"Lane cost model\",\"attrs\":{\"refs\":[\"em-001\",\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Meeting\",\"to_key\":\"netops-offsite-2026-10-23\",\"type\":\"needed_for\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"make-lane-cost-model-presentable\",\"name\":\"Make the lane cost model presentable before the NetOps offsite\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"evidence\":[\"em-001\",\"cal-003\"],\"requested_by\":\"Dritan Pasha\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"},{\"to_kind\":\"Document\",\"to_key\":\"lane-cost-model\",\"type\":\"about\"},{\"to_kind\":\"Meeting\",\"to_key\":\"netops-offsite-2026-10-23\",\"type\":\"due_before\"}]}\n]",
+  "total_cost_usd": 0.08198420000000001,
+  "duration_ms": 8181,
+  "duration_api_ms": 7202,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12820,
+   "cache_read_input_tokens": 102861,
+   "output_tokens": 1012,
+   "output_tokens_details": {
+    "thinking_tokens": 103
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12820,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 782,
+     "cache_read_input_tokens": 38371,
+     "cache_creation_input_tokens": 669,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 669
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1012,
+    "cacheReadInputTokens": 102861,
+    "cacheCreationInputTokens": 12820,
+    "webSearchRequests": 0,
+    "costUSD": 0.08198420000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 103,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

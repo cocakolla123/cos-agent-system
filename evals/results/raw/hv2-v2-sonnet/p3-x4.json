@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x4",
+ "started": "2026-10-05T18:38:56.435622+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"ibrahim-khoury\",\n    \"name\": \"Ibrahim Khoury\",\n    \"attrs\": {\n      \"email\": \"ibrahim@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"build-query-api-endpoint-sensor-table\",\n    \"name\": \"Build query API endpoint for sensor table\",\n    \"attrs\": {\n      \"due\": \"2026-10-19\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"notes\": \"Original request (em-001) asked for a nightly CSV export; superseded on 2026-10-08 (em-002) which scratched the CSV export entirely in favor of a query API endpoint, same deadline.\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"ibrahim-khoury\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0973232,
+  "duration_ms": 22339,
+  "duration_api_ms": 20676,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13415,
+   "cache_read_input_tokens": 130606,
+   "output_tokens": 1753,
+   "output_tokens_details": {
+    "thinking_tokens": 1067
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13415,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1452,
+     "cache_read_input_tokens": 47852,
+     "cache_creation_input_tokens": 749,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 749
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 1753,
+    "cacheReadInputTokens": 130606,
+    "cacheCreationInputTokens": 13415,
+    "webSearchRequests": 0,
+    "costUSD": 0.0973232,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1067,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

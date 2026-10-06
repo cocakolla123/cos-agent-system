@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d2",
+ "started": "2026-10-05T18:41:06.851244+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Channel\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"netops\",\n    \"name\": \"#netops\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Incident\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"netops-outage\",\n    \"name\": \"Outage (netops)\",\n    \"attrs\": {\n      \"refs\": [\"netops-outage\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.6,\n    \"edges\": [\n      {\"to_kind\": \"Channel\", \"to_key\": \"netops\", \"type\": \"reported_in\"}\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"outage-postmortem\",\n    \"name\": \"Write outage postmortem\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-001\"],\n      \"refs\": [\"netops-outage\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"requested_by\"},\n      {\"to_kind\": \"Channel\", \"to_key\": \"netops\", \"type\": \"in_channel\"},\n      {\"to_kind\": \"Incident\", \"to_key\": \"netops-outage\", \"type\": \"about\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0948006,
+  "duration_ms": 22224,
+  "duration_api_ms": 20526,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12896,
+   "cache_read_input_tokens": 130573,
+   "output_tokens": 1709,
+   "output_tokens_details": {
+    "thinking_tokens": 905
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12896,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1507,
+     "cache_read_input_tokens": 47821,
+     "cache_creation_input_tokens": 261,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 261
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 6,
+    "outputTokens": 1709,
+    "cacheReadInputTokens": 130573,
+    "cacheCreationInputTokens": 12896,
+    "webSearchRequests": 0,
+    "costUSD": 0.0948006,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 905,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

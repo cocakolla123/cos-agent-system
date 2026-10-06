@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x6",
+ "started": "2026-10-05T18:30:26.265561+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\"email\": \"celeste@quarryanalytics.example\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"quarry\",\n    \"key\": \"dashboard\",\n    \"name\": \"Dashboard\",\n    \"attrs\": {\"status\": \"paused\", \"pause_reason\": \"legal data sharing agreement under review\"},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"celeste-beaumont\", \"to_workspace\": \"quarry\", \"type\": \"contact\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.0727149,
+  "duration_ms": 65731,
+  "duration_api_ms": 64323,
+  "num_turns": 8,
+  "usage": {
+   "input_tokens": 50,
+   "cache_creation_input_tokens": 9124,
+   "cache_read_input_tokens": 187269,
+   "output_tokens": 7138,
+   "output_tokens_details": {
+    "thinking_tokens": 6311
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 9124,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 4543,
+     "cache_read_input_tokens": 33348,
+     "cache_creation_input_tokens": 1991,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1991
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 50,
+    "outputTokens": 7138,
+    "cacheReadInputTokens": 187269,
+    "cacheCreationInputTokens": 9124,
+    "webSearchRequests": 0,
+    "costUSD": 0.0727149,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6311,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

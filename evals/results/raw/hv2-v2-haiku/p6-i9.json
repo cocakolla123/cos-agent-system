@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i9",
+ "started": "2026-10-05T18:34:44.332894+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"action:expense-report-sep-2026\",\n    \"name\": \"Submit September expense report\",\n    \"attrs\": {\n      \"due\": \"2026-10-15\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"dritan-pasha\",\n        \"to_workspace\": \"ternlog\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\",\n      \"title\": \"Director, Network Operations\",\n      \"organization\": \"Tern Logistics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.037864499999999995,
+  "duration_ms": 17732,
+  "duration_api_ms": 16578,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 6931,
+   "cache_read_input_tokens": 154055,
+   "output_tokens": 1711,
+   "output_tokens_details": {
+    "thinking_tokens": 980
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6931,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 964,
+     "cache_read_input_tokens": 32393,
+     "cache_creation_input_tokens": 753,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 753
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 1711,
+    "cacheReadInputTokens": 154055,
+    "cacheCreationInputTokens": 6931,
+    "webSearchRequests": 0,
+    "costUSD": 0.037864499999999995,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 980,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

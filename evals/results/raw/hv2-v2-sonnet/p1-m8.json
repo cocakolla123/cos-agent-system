@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m8",
+ "started": "2026-10-05T18:37:37.275055+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Only two sources, both in the same thread (`th-dock`), both in the `ternlog` (employer) workspace.\n\n```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"dritan-pasha\",\n    \"name\": \"Dritan Pasha\",\n    \"attrs\": {\n      \"email\": \"dritan.pasha@ternlog.example\",\n      \"title\": \"Dir. Network Operations, Tern Logistics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"ternlog\",\n    \"key\": \"send-dock-audit-photos-dritan\",\n    \"name\": \"Send Westgate dock audit photos to Dritan for insurance\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-001\", \"em-002\"],\n      \"refs\": [\"th-dock\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"dritan-pasha\", \"type\": \"owed_to\"}\n    ]\n  }\n]\n```\n\nReasoning: em-001 (Wed Oct 7, 2026) asks Riley for Westgate dock-audit photos for an insurance claim. em-002 (same day) has Riley commit \"before Friday\" \u2014 the next Friday is Oct 9, 2026, so `due` is set to that date. No completion receipt exists in the sources, so the obligation stays open (no `status`), with no `blocked_on` since the next move is Riley's own (sending the photos). Priority set high given it's insurance-compliance-related with a tight 2-day deadline.",
+  "total_cost_usd": 0.11642220000000002,
+  "duration_ms": 27174,
+  "duration_api_ms": 25215,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 14784,
+   "cache_read_input_tokens": 179001,
+   "output_tokens": 2147,
+   "output_tokens_details": {
+    "thinking_tokens": 1203
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14784,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 590,
+     "cache_read_input_tokens": 48523,
+     "cache_creation_input_tokens": 1447,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1447
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 8,
+    "outputTokens": 2147,
+    "cacheReadInputTokens": 179001,
+    "cacheCreationInputTokens": 14784,
+    "webSearchRequests": 0,
+    "costUSD": 0.11642220000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1203,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

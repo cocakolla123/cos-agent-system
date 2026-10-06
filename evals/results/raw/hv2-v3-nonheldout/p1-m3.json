@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m3",
+ "started": "2026-10-06T01:23:28.417932+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Meeting\",\"workspace\":\"ternlog\",\"key\":\"ops-sync-2026-10-08\",\"name\":\"Ops sync 10/08\",\"attrs\":{\"date\":\"2026-10-08\",\"refs\":[\"doc-001\"],\"topics\":[\"carrier scorecards\",\"dock cameras\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"attended_by\"},{\"to_kind\":\"Person\",\"to_key\":\"riley-nakamura\",\"type\":\"attended_by\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki\",\"type\":\"attended_by\"},{\"to_kind\":\"Person\",\"to_key\":\"gus\",\"type\":\"attended_by\"}]},{\"kind\":\"Document\",\"workspace\":\"ternlog\",\"key\":\"doc-001\",\"name\":\"Ops sync 10/08 - raw transcript\",\"attrs\":{\"connector\":\"docs\",\"date\":\"2026-10-08\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Meeting\",\"to_key\":\"ops-sync-2026-10-08\",\"type\":\"transcript_of\"}]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"riley-nakamura\",\"name\":\"Riley Nakamura\",\"attrs\":{\"email\":\"riley.n@postbox.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki\",\"name\":\"Yuki\",\"attrs\":{},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus\",\"name\":\"Gus\",\"attrs\":{},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"carrier-scorecard-refresh\",\"name\":\"Carrier scorecard refresh\",\"attrs\":{\"due\":\"2026-10-20\",\"priority\":\"medium\",\"evidence\":[\"doc-001\"],\"note\":\"Riley volunteered and Dritan assigned ownership; due Oct 20 so it lands before the QBR\",\"refs\":[\"doc-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Meeting\",\"to_key\":\"ops-sync-2026-10-08\",\"type\":\"from_meeting\"},{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0991872,
+  "duration_ms": 10167,
+  "duration_api_ms": 9093,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 14467,
+   "cache_read_input_tokens": 142666,
+   "output_tokens": 1277,
+   "output_tokens_details": {
+    "thinking_tokens": 111
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14467,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1046,
+     "cache_read_input_tokens": 39293,
+     "cache_creation_input_tokens": 485,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 485
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1277,
+    "cacheReadInputTokens": 142666,
+    "cacheCreationInputTokens": 14467,
+    "webSearchRequests": 0,
+    "costUSD": 0.0991872,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 111,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o7",
+ "started": "2026-10-05T18:32:05.962879+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"beacon\",\n    \"key\": \"beacon-grant-cold-storage\",\n    \"name\": \"Submit cold storage grant form\",\n    \"attrs\": {\n      \"due\": \"2026-10-24\",\n      \"evidence\": [\"em-001\", \"em-003\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"petra-lindgren\",\n        \"to_workspace\": \"beacon\",\n        \"type\": \"requested_by\"\n      },\n      {\n        \"to_kind\": \"Project\",\n        \"to_key\": \"beacon\",\n        \"to_workspace\": \"beacon\",\n        \"type\": \"for\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"beacon\",\n    \"key\": \"petra-lindgren\",\n    \"name\": \"Petra Lindgren\",\n    \"attrs\": {\n      \"email\": \"petra@beaconfb.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [\n      {\n        \"to_kind\": \"Project\",\n        \"to_key\": \"beacon\",\n        \"to_workspace\": \"beacon\",\n        \"type\": \"works_at\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Project\",\n    \"workspace\": \"beacon\",\n    \"key\": \"beacon\",\n    \"name\": \"Beacon\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.03979390000000001,
+  "duration_ms": 37272,
+  "duration_api_ms": 34896,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 6244,
+   "cache_read_input_tokens": 89499,
+   "output_tokens": 3666,
+   "output_tokens_details": {
+    "thinking_tokens": 2988
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6244,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3193,
+     "cache_read_input_tokens": 31819,
+     "cache_creation_input_tokens": 640,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 640
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 3666,
+    "cacheReadInputTokens": 89499,
+    "cacheCreationInputTokens": 6244,
+    "webSearchRequests": 0,
+    "costUSD": 0.03979390000000001,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2988,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

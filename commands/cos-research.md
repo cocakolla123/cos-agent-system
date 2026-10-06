@@ -196,7 +196,20 @@ Emit each obligation as `kind: "Action"` with:
   undated obligation is still an obligation and `graph.due_days` returns `None` for it.
 - `attrs.status` — omit while outstanding; set it when you observe it satisfied (see
   `graph.DONE_STATUSES`: done/submitted/paid/…). `sections.next_actions` drops it then.
-- `attrs.priority` — high/medium/low; used to rank *undated* obligations against each other.
+- `attrs.priority` — **required on every Action**: `high`, `medium` or `low`. Use all three;
+  `low` is the right answer for soft items, never a reason to drop them. Apply in order,
+  first match wins ("today" is the current date):
+  - **high**: overdue or due within 3 days; marked "ASAP"/"urgent" by the person the work is
+    for (the user's manager, or a client); asked by the manager or a client and due within
+    7 days; security or access work with a date (a TLS/SSL certificate, a credential or
+    password, an access log or access audit, a security incident).
+  - **low**: a quick reply to a colleague's question with no deadline; volunteer or personal
+    work due more than 7 days out or undated; explicitly soft wording ("no rush", "when you
+    get a chance", "would be great").
+  - **medium**: everything else (peer requests, dated work beyond those windows, undated
+    work requests).
+  Priority ranks *undated* obligations against each other. If you omit it, ingest records
+  `medium`.
 - `attrs.blocked_on` — who the user is waiting on, when the next move is somebody else's (a
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state

@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c2",
+ "started": "2026-10-05T18:28:00.126389+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"ingest-latency-writeup\",\n    \"name\": \"Ingest latency writeup\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-002\", \"tk-001\"],\n      \"refs\": [\"QA-114\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Ticket\",\n        \"to_key\": \"QA-114\",\n        \"to_workspace\": \"quarry\",\n        \"type\": \"related\"\n      },\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"celeste-beaumont\",\n        \"to_workspace\": \"quarry\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\n      \"email\": \"celeste@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"quarry\",\n    \"key\": \"QA-114\",\n    \"name\": \"Ingest latency writeup\",\n    \"attrs\": {},\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"riley-nakamura\",\n        \"to_workspace\": \"quarry\",\n        \"type\": \"assigned_to\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"riley-nakamura\",\n    \"name\": \"Riley Nakamura\",\n    \"attrs\": {\n      \"email\": \"riley.n@postbox.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.05684240000000001,
+  "duration_ms": 61385,
+  "duration_api_ms": 59650,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 26,
+   "cache_creation_input_tokens": 6184,
+   "cache_read_input_tokens": 89434,
+   "output_tokens": 7101,
+   "output_tokens_details": {
+    "thinking_tokens": 6282
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6184,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 6688,
+     "cache_read_input_tokens": 31756,
+     "cache_creation_input_tokens": 643,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 643
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 26,
+    "outputTokens": 7101,
+    "cacheReadInputTokens": 89434,
+    "cacheCreationInputTokens": 6184,
+    "webSearchRequests": 0,
+    "costUSD": 0.05684240000000001,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6282,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

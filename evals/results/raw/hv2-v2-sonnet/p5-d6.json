@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d6",
+ "started": "2026-10-05T18:41:35.170472+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"beacon\",\n    \"key\": \"petra-lindgren\",\n    \"name\": \"Petra Lindgren\",\n    \"attrs\": {\n      \"email\": \"petra@beaconfb.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"beacon\",\n    \"key\": \"digitize-freezer-maintenance-log\",\n    \"name\": \"Digitize the freezer maintenance log\",\n    \"attrs\": {\n      \"due\": \"2026-10-19\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\"to_kind\": \"Person\", \"to_key\": \"petra-lindgren\", \"type\": \"requested_by\"}\n    ]\n  }\n]\n```",
+  "total_cost_usd": 0.1148556,
+  "duration_ms": 23005,
+  "duration_api_ms": 19871,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 13936,
+   "cache_read_input_tokens": 226658,
+   "output_tokens": 1376,
+   "output_tokens_details": {
+    "thinking_tokens": 645
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13936,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 422,
+     "cache_read_input_tokens": 48250,
+     "cache_creation_input_tokens": 872,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 872
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 10,
+    "outputTokens": 1376,
+    "cacheReadInputTokens": 226658,
+    "cacheCreationInputTokens": 13936,
+    "webSearchRequests": 0,
+    "costUSD": 0.1148556,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 645,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

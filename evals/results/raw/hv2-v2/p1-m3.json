@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m3",
+ "started": "2026-10-05T18:37:03.570354+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Document\",\"workspace\":\"ternlog\",\"key\":\"doc-001\",\"name\":\"Ops sync 10/08 - raw transcript\",\"attrs\":{\"date\":\"2026-10-08\",\"refs\":[\"carrier-scorecard-refresh\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Meeting\",\"workspace\":\"ternlog\",\"key\":\"ops-sync-2026-10-08\",\"name\":\"Ops sync 10/08\",\"attrs\":{\"date\":\"2026-10-08\",\"evidence\":[\"doc-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Document\",\"to_key\":\"doc-001\",\"type\":\"documented_in\"},{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"attendee\"},{\"to_kind\":\"Person\",\"to_key\":\"gus\",\"type\":\"attendee\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki\",\"type\":\"attendee\"}]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus\",\"name\":\"Gus\",\"attrs\":{},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]},{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki\",\"name\":\"Yuki\",\"attrs\":{},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"carrier-scorecard-refresh\",\"name\":\"Carrier scorecard refresh\",\"attrs\":{\"due\":\"2026-10-20\",\"priority\":\"medium\",\"evidence\":[\"doc-001\"],\"refs\":[\"carrier-scorecard-refresh\"],\"notes\":\"Riley volunteered and Dritan assigned ownership; due before the QBR.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Meeting\",\"to_key\":\"ops-sync-2026-10-08\",\"type\":\"from_meeting\"},{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"assigned_by\"}]}]",
+  "total_cost_usd": 0.08109720000000001,
+  "duration_ms": 7391,
+  "duration_api_ms": 6516,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12774,
+   "cache_read_input_tokens": 103146,
+   "output_tokens": 936,
+   "output_tokens_details": {
+    "thinking_tokens": 0
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12774,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 792,
+     "cache_read_input_tokens": 38509,
+     "cache_creation_input_tokens": 485,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 485
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 936,
+    "cacheReadInputTokens": 103146,
+    "cacheCreationInputTokens": 12774,
+    "webSearchRequests": 0,
+    "costUSD": 0.08109720000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 0,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

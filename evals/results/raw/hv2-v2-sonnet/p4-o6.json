@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o6",
+ "started": "2026-10-05T18:40:07.088304+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\"kind\": \"Person\", \"workspace\": \"ternlog\", \"key\": \"riley-chen\", \"name\": \"Riley Chen\", \"attrs\": {\"email\": \"riley.chen@ternlog.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n  {\"kind\": \"Person\", \"workspace\": \"ternlog\", \"key\": \"gus-okonkwo\", \"name\": \"Gus Okonkwo\", \"attrs\": {\"email\": \"gus.okonkwo@ternlog.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n  {\"kind\": \"Channel\", \"workspace\": \"ternlog\", \"key\": \"netops\", \"name\": \"#netops\", \"attrs\": {\"connector\": \"slack\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"riley-chen\", \"type\": \"member\"}, {\"to_kind\": \"Person\", \"to_key\": \"gus-okonkwo\", \"type\": \"member\"}]}\n]\n```\n\nNote: `sl-001` records a commitment (\"i'll send the fleet fuel variance report by Oct 15\") made by **Riley Chen** (riley.chen@ternlog.example), not by the user Riley Nakamura (riley.n@postbox.example) \u2014 the message even explicitly disambiguates (\"chen, to be clear, there are two of us\"). Since this isn't the user's obligation, I did not emit an Action record for it; only the Person/Channel entities from the thread are recorded.",
+  "total_cost_usd": 0.13631880000000002,
+  "duration_ms": 38690,
+  "duration_api_ms": 36607,
+  "num_turns": 6,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 15532,
+   "cache_read_input_tokens": 229404,
+   "output_tokens": 2829,
+   "output_tokens_details": {
+    "thinking_tokens": 1880
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 15532,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 533,
+     "cache_read_input_tokens": 50412,
+     "cache_creation_input_tokens": 306,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 306
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5": {
+    "inputTokens": 10,
+    "outputTokens": 2829,
+    "cacheReadInputTokens": 229404,
+    "cacheCreationInputTokens": 15532,
+    "webSearchRequests": 0,
+    "costUSD": 0.13631880000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 64000,
+    "thinkingTokens": 1880,
+    "canonicalModel": "claude-sonnet-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

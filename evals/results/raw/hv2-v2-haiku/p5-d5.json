@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d5",
+ "started": "2026-10-05T18:32:49.708992+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on the sources, I'll extract the records. I found one email requesting an action:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"draft-renewal-one-pager\",\n    \"name\": \"Draft renewal one-pager\",\n    \"attrs\": {\n      \"evidence\": [\"em-001\"],\n      \"priority\": \"medium\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"celeste-beaumont\",\n        \"to_workspace\": \"quarry\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"celeste-beaumont\",\n    \"name\": \"Celeste Beaumont\",\n    \"attrs\": {\n      \"email\": \"celeste@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.0553706,
+  "duration_ms": 34312,
+  "duration_api_ms": 32976,
+  "num_turns": 7,
+  "usage": {
+   "input_tokens": 58,
+   "cache_creation_input_tokens": 8551,
+   "cache_read_input_tokens": 219806,
+   "output_tokens": 3246,
+   "output_tokens_details": {
+    "thinking_tokens": 2477
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 8551,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1093,
+     "cache_read_input_tokens": 33060,
+     "cache_creation_input_tokens": 1706,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1706
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 58,
+    "outputTokens": 3246,
+    "cacheReadInputTokens": 219806,
+    "cacheCreationInputTokens": 8551,
+    "webSearchRequests": 0,
+    "costUSD": 0.0553706,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2477,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

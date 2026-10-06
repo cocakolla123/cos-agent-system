@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d7",
+ "started": "2026-10-05T18:33:06.611127+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"quarry\",\n    \"key\": \"schema-diff-sl-001\",\n    \"name\": \"Turn around schema diff\",\n    \"attrs\": {\n      \"due\": \"2026-10-15\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"sl-001\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"ibrahim-khoury\",\n        \"type\": \"requested_by\",\n        \"to_workspace\": \"quarry\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"quarry\",\n    \"key\": \"ibrahim-khoury\",\n    \"name\": \"Ibrahim Khoury\",\n    \"attrs\": {\n      \"email\": \"ibrahim@quarryanalytics.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.04797370000000001,
+  "duration_ms": 38801,
+  "duration_api_ms": 37544,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 6472,
+   "cache_read_input_tokens": 154327,
+   "output_tokens": 3911,
+   "output_tokens_details": {
+    "thinking_tokens": 3317
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 6472,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 3226,
+     "cache_read_input_tokens": 32528,
+     "cache_creation_input_tokens": 159,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 159
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 3911,
+    "cacheReadInputTokens": 154327,
+    "cacheCreationInputTokens": 6472,
+    "webSearchRequests": 0,
+    "costUSD": 0.04797370000000001,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3317,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

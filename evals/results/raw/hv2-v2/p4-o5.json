@@ -1,0 +1,65 @@
+{
+ "scenario": "p4-o5",
+ "started": "2026-10-05T18:38:01.299188+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"org\":\"Quarry Analytics\",\"refs\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki-onoda\",\"name\":\"Yuki Onoda\",\"attrs\":{\"email\":\"yuki.onoda@ternlog.example\",\"refs\":[\"em-001\",\"sl-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"telemetry-gap-analysis-ownership\",\"name\":\"Telemetry gap analysis (owner on our side)\",\"attrs\":{\"status\":\"delegated\",\"priority\":\"low\",\"blocked_on\":\"Yuki Onoda\",\"evidence\":[\"em-001\",\"sl-003\"],\"refs\":[\"th-002\"],\"note\":\"Celeste asked for someone on our side to own it; Yuki said the netops side will handle it. Riley may want to confirm to Celeste. No deadline stated.\"},\"source\":\"eval-fixture\",\"confidence\":0.6,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"blocked_on\"}]}\n]",
+  "total_cost_usd": 0.0821682,
+  "duration_ms": 8768,
+  "duration_api_ms": 7804,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12904,
+   "cache_read_input_tokens": 103151,
+   "output_tokens": 991,
+   "output_tokens_details": {
+    "thinking_tokens": 263
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12904,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 761,
+     "cache_read_input_tokens": 38516,
+     "cache_creation_input_tokens": 608,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 608
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 991,
+    "cacheReadInputTokens": 103151,
+    "cacheCreationInputTokens": 12904,
+    "webSearchRequests": 0,
+    "costUSD": 0.0821682,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 263,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

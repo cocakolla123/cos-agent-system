@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i9",
+ "started": "2026-10-05T18:38:45.764303+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations, Tern Logistics\",\"refs\":[\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"submit-september-expense-report\",\"name\":\"Submit September expense report\",\"attrs\":{\"due\":\"2026-10-15\",\"priority\":\"high\",\"evidence\":[\"em-001\"],\"refs\":[\"th-002\"],\"notes\":\"Finance locked the quarter early; if not submitted by Oct 15 it rolls to Q1. Requested by Dritan Pasha.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0761314,
+  "duration_ms": 5676,
+  "duration_api_ms": 4767,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12587,
+   "cache_read_input_tokens": 102857,
+   "output_tokens": 520,
+   "output_tokens_details": {
+    "thinking_tokens": 52
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12587,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 377,
+     "cache_read_input_tokens": 38364,
+     "cache_creation_input_tokens": 443,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 443
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 520,
+    "cacheReadInputTokens": 102857,
+    "cacheCreationInputTokens": 12587,
+    "webSearchRequests": 0,
+    "costUSD": 0.0761314,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 52,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

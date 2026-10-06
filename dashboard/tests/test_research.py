@@ -65,6 +65,38 @@ class TestIngest(unittest.TestCase):
         self.assertEqual(g.nodes["emp:ticket:ccs-1"]["last_verified"],
                          "2026-02-02T12:00:00Z")     # freshness advanced
 
+    def _action_pri(self, g, key):
+        return g.nodes["emp:action:" + key]["attrs"].get("priority")
+
+    def test_action_without_priority_gets_default(self):
+        g = graph.Graph()
+        research.ingest(g, [research.record("Action", "emp", "a1",
+                                            name="send deck")], now=_t(1))
+        self.assertEqual(self._action_pri(g, "a1"), research.DEFAULT_PRIORITY)
+
+    def test_action_priority_is_normalized_and_unknown_defaults(self):
+        g = graph.Graph()
+        research.ingest(g, [
+            research.record("Action", "emp", "a1", attrs={"priority": " High "}),
+            research.record("Action", "emp", "a2", attrs={"priority": "urgent"}),
+        ], now=_t(1))
+        self.assertEqual(self._action_pri(g, "a1"), "high")
+        self.assertEqual(self._action_pri(g, "a2"), research.DEFAULT_PRIORITY)
+
+    def test_existing_priority_survives_a_record_that_omits_it(self):
+        g = graph.Graph()
+        research.ingest(g, [research.record("Action", "emp", "a1",
+                                            attrs={"priority": "low"})],
+                        now=_t(1))
+        research.ingest(g, [research.record("Action", "emp", "a1",
+                                            name="send deck")], now=_t(2))
+        self.assertEqual(self._action_pri(g, "a1"), "low")
+
+    def test_non_action_gets_no_priority(self):
+        g = graph.Graph()
+        research.ingest(g, [research.record("Ticket", "emp", "T-1")], now=_t(1))
+        self.assertNotIn("priority", g.nodes["emp:ticket:t-1"]["attrs"])
+
 
 class TestWorkspaceInference(unittest.TestCase):
     def test_org_signal_clusters(self):

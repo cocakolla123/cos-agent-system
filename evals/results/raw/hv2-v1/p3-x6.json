@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x6",
+ "started": "2026-10-05T18:37:43.007585+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"org\":\"Quarry Analytics\",\"refs\":[\"th-hold\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"quarry-dashboard\",\"type\":\"client_of\"}]},\n{\"kind\":\"Project\",\"workspace\":\"quarry\",\"key\":\"quarry-dashboard\",\"name\":\"Quarry dashboard project\",\"attrs\":{\"status\":\"on_hold\",\"status_reason\":\"Legal is sorting out the data sharing agreement. Quarry will re-scope when work resumes.\",\"refs\":[\"th-hold\"],\"evidence\":[\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Decision\",\"workspace\":\"quarry\",\"key\":\"quarry-dashboard-pause-2026-10-10\",\"name\":\"Quarry paused the dashboard project until further notice\",\"attrs\":{\"date\":\"2026-10-10\",\"decided_by\":\"Celeste Beaumont\",\"supersedes\":\"The Oct 24 deadline for milestone 2\",\"refs\":[\"th-hold\"],\"evidence\":[\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"quarry-dashboard\",\"type\":\"affects\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"decided_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"dashboard-milestone-2-alerting-rules\",\"name\":\"Dashboard milestone 2 (alerting rules): stop work, on hold\",\"attrs\":{\"status\":\"on_hold\",\"priority\":\"low\",\"blocked_on\":\"Celeste Beaumont (Quarry), who will re-scope when the project resumes\",\"note\":\"The Oct 24 due date from em-001 was superseded by the hold in em-002. No active deadline, so none is set.\",\"refs\":[\"th-hold\"],\"evidence\":[\"em-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"quarry-dashboard\",\"type\":\"part_of\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"waiting_on\"}]}\n]",
+  "total_cost_usd": 0.0833324,
+  "duration_ms": 11836,
+  "duration_api_ms": 10133,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12882,
+   "cache_read_input_tokens": 102862,
+   "output_tokens": 1122,
+   "output_tokens_details": {
+    "thinking_tokens": 77
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12882,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 893,
+     "cache_read_input_tokens": 38371,
+     "cache_creation_input_tokens": 731,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 731
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1122,
+    "cacheReadInputTokens": 102862,
+    "cacheCreationInputTokens": 12882,
+    "webSearchRequests": 0,
+    "costUSD": 0.0833324,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 77,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

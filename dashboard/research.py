@@ -57,6 +57,20 @@ def record(kind, workspace, key, name=None, attrs=None, source=None,
     }
 
 
+PRIORITIES = ("high", "medium", "low")
+DEFAULT_PRIORITY = "medium"
+
+
+def _ensure_priority(node):
+    """Every Action carries a priority. Normalizes case ("High" -> "high");
+    a missing or unknown value becomes DEFAULT_PRIORITY. Runs on the merged
+    node, so a priority the user already set is never overwritten by a later
+    record that simply omits it."""
+    attrs = node.setdefault("attrs", {})
+    p = str(attrs.get("priority") or "").strip().lower()
+    attrs["priority"] = p if p in PRIORITIES else DEFAULT_PRIORITY
+
+
 def ingest(g, records, now=None):
     """Upsert a batch of records into graph ``g``. Returns counts.
 
@@ -75,6 +89,8 @@ def ingest(g, records, now=None):
             name=r.get("name"), attrs=r.get("attrs"),
             source=r.get("source"), confidence=r.get("confidence", 1.0),
             now=now)
+        if r["kind"] == "Action":
+            _ensure_priority(node)
         n_nodes += 1
         frm = node["id"]
         for e in r.get("edges", []):
