@@ -1,9 +1,8 @@
-# Priority rules (DRAFT, for the owner to edit)
+# Priority rules for heldout_v2
 
-Status: draft. Nothing is scored against these rules until the owner
-approves them. After approval they are frozen, priority labels are written
-from them (see "How it gets tested"), and only then are any model outputs
-scored.
+Status: decided 2026-10-06 (the owner delegated the open questions; the
+decisions and reasons are under "Decisions"). These rules are frozen before
+any priority label is written or any model output is scored for priority.
 
 "Today" in every story is Monday 2026-10-12.
 
@@ -15,6 +14,10 @@ scored.
 - H2. Marked "ASAP" or "urgent" by your manager or a client.
 - H3. Asked by your manager or a client, due within 7 days (on or before
   Monday Oct 19).
+- H4. Security or access work with a stated date: the task is about a
+  TLS/SSL certificate, a credential or password, an access log or access
+  audit, or a security incident. (Insurance certificates, permits and
+  runbooks that merely mention access do not count.)
 
 **Low**
 
@@ -32,13 +35,12 @@ scored.
 Who counts as what, from the story world: Dritan Pasha is your manager;
 Celeste Beaumont and Ibrahim Khoury are clients (Quarry); Petra Lindgren
 leads the volunteer work (Beacon); Yuki Onoda and Riley Chen are peers.
-Gus Okonkwo's role is not stated, so he is treated as a peer (see question
-1).
+Gus Okonkwo is a peer (see Decisions).
 
 ## Preview: what these rules would assign
 
 All 39 tasks in the answer key (including the corrected p6-i5 reply).
-17 high, 19 medium, 3 low.
+19 high, 17 medium, 3 low.
 
 | story | task | due | asked by | priority | rule |
 |---|---|---|---|---|---|
@@ -74,26 +76,36 @@ All 39 tasks in the answer key (including the corrected p6-i5 reply).
 | p6-i2 | thresholds doc | Oct 18 | Gus | medium | M1 |
 | p6-i3 | lane cost one-pager | Oct 15 | peer | high | H1 |
 | p6-i4 | portal access runbook | Oct 17 | Gus | medium | M1 |
-| p6-i5 | badge audit log | Oct 16 | peer | medium | M1 |
+| p6-i5 | badge audit log | Oct 16 | peer | high | H4 |
 | p6-i5 | reply: is it phishing? | none | peer | low | L1 |
-| p6-i6 | renew TLS cert | Oct 20 | peer | medium | M1 |
+| p6-i6 | renew TLS cert | Oct 20 | peer | high | H4 |
 | p6-i7 | yard lighting quotes | none | manager | medium | M1 |
 | p6-i8 | confirm FreightMetrics agreement | Oct 15 | Gus | high | H1 |
 | p6-i9 (dev) | September expense report | Oct 15 | manager | high | H1 |
 | p6-i10 | routing memo | Oct 16 | manager | high | H3 |
 
-## Questions for the owner
+## Decisions
 
-1. Is Gus Okonkwo your manager or a peer? If manager, p6-i2 (Oct 18) and
-   p6-i4 (Oct 17) move from medium to high under H3; his other tasks stay
-   where they are.
-2. Are the windows right: 3 days for "high regardless of who asked", 7 days
-   for manager and client work?
-3. Should an undated request from your manager (p6-i7, yard lighting
-   quotes) be medium, or high?
-4. Should a security item with a date (p6-i6, renewing the TLS cert) be
-   bumped up? These rules keep it medium because a peer asked.
-5. Should volunteer work always sit one level lower than paid work?
+1. **Gus Okonkwo is a peer.** In p1-m3 Dritan runs the meeting and assigns
+   Gus work ("fine, gus files a ticket"), and Dritan is the only person the
+   stories ever call the manager.
+2. **Windows stay at 3 days (anyone) and 7 days (manager or client).**
+   Three days is "this week" from a Monday; seven days is "before the next
+   planning cycle". Story dates run Oct 9 to Oct 31, so both windows split
+   the set meaningfully.
+3. **An undated manager request is medium.** In p6-i7 Dritan says "Pick
+   your own timeline, just tell me what it is", which is an explicit signal
+   that it is not urgent.
+4. **Security and access work with a date is high (rule H4).** An expired
+   TLS certificate takes the tracking portal down, and the badge audit log
+   check follows a phishing attempt. Missing either has consequences beyond
+   one person, so it outranks who asked. The rule is limited to named
+   security objects (TLS/SSL certificates, credentials, access logs or
+   audits, incidents) so that labelers apply it the same way.
+5. **Volunteer work is not automatically lower.** A near deadline still
+   wins (p1-m4, the driver roster due Oct 15, stays high: drivers depend on
+   it). Volunteer work only drops to low when it is more than 7 days out or
+   undated (rule L2).
 
 ## How it gets tested (after approval)
 
