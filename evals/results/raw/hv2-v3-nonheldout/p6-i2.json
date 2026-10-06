@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i2",
+ "started": "2026-10-06T01:25:05.952263+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Ticket\",\"workspace\":\"ternlog\",\"key\":\"TL-355\",\"name\":\"Cold chain alert thresholds\",\"attrs\":{\"status\":\"open\",\"refs\":[\"TL-355\"],\"evidence\":[\"tk-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"reported_by\"},{\"to_kind\":\"Person\",\"to_key\":\"riley-nakamura\",\"type\":\"assigned_to\"}]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"riley-nakamura\",\"name\":\"Riley Nakamura\",\"attrs\":{\"email\":\"riley.n@postbox.example\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"set-up-cold-chain-thresholds-doc\",\"name\":\"Set up the new cold chain alert thresholds doc\",\"attrs\":{\"due\":\"2026-10-18\",\"priority\":\"medium\",\"refs\":[\"TL-355\"],\"evidence\":[\"tk-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Ticket\",\"to_key\":\"TL-355\",\"type\":\"relates_to\"},{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"requested_by\"}]}\n]",
+  "total_cost_usd": 0.0941884,
+  "duration_ms": 9764,
+  "duration_api_ms": 8631,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13563,
+   "cache_read_input_tokens": 143652,
+   "output_tokens": 1119,
+   "output_tokens_details": {
+    "thinking_tokens": 289
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13563,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 854,
+     "cache_read_input_tokens": 39330,
+     "cache_creation_input_tokens": 453,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 453
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1119,
+    "cacheReadInputTokens": 143652,
+    "cacheCreationInputTokens": 13563,
+    "webSearchRequests": 0,
+    "costUSD": 0.0941884,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 289,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

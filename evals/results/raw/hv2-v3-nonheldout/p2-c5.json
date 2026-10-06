@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c5",
+ "started": "2026-10-06T01:23:55.728605+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"usage-heatmap-draft\",\"name\":\"Deliver usage heatmap draft to Ibrahim\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-heat\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"for\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"ibrahim-khoury\",\"name\":\"Ibrahim Khoury\",\"attrs\":{\"email\":\"ibrahim@quarryanalytics.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Document\",\"workspace\":\"quarry\",\"key\":\"usage-heatmap-draft-doc\",\"name\":\"Usage heatmap draft\",\"attrs\":{\"refs\":[\"th-heat\"]},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"for\"}]}\n]",
+  "total_cost_usd": 0.0936852,
+  "duration_ms": 9211,
+  "duration_api_ms": 8229,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13793,
+   "cache_read_input_tokens": 143586,
+   "output_tokens": 978,
+   "output_tokens_details": {
+    "thinking_tokens": 145
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13793,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 662,
+     "cache_read_input_tokens": 39302,
+     "cache_creation_input_tokens": 711,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 711
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 978,
+    "cacheReadInputTokens": 143586,
+    "cacheCreationInputTokens": 13793,
+    "webSearchRequests": 0,
+    "costUSD": 0.0936852,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 145,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c2",
+ "started": "2026-10-06T01:23:47.953328+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"ingest-latency-writeup\",\"name\":\"Deliver ingest latency writeup\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"refs\":[\"QA-114\"],\"evidence\":[\"em-002\",\"tk-001\"],\"requested_by\":\"Celeste Beaumont\"},\"source\":\"eval-fixture\",\"confidence\":0.92,\"edges\":[{\"to_kind\":\"Ticket\",\"to_key\":\"QA-114\",\"type\":\"tracks\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Ticket\",\"workspace\":\"quarry\",\"key\":\"QA-114\",\"name\":\"Ingest latency writeup\",\"attrs\":{\"status\":\"open\",\"assignee\":\"riley.n@postbox.example\",\"refs\":[\"QA-114\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"role\":\"client\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.0822058,
+  "duration_ms": 8742,
+  "duration_api_ms": 7782,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13414,
+   "cache_read_input_tokens": 104039,
+   "output_tokens": 773,
+   "output_tokens_details": {
+    "thinking_tokens": 127
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13414,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 543,
+     "cache_read_input_tokens": 38960,
+     "cache_creation_input_tokens": 674,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 674
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 773,
+    "cacheReadInputTokens": 104039,
+    "cacheCreationInputTokens": 13414,
+    "webSearchRequests": 0,
+    "costUSD": 0.0822058,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 127,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

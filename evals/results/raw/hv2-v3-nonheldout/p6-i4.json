@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i4",
+ "started": "2026-10-06T01:25:08.808715+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Document\",\"workspace\":\"ternlog\",\"key\":\"vendor-onboarding-runbook\",\"name\":\"Vendor onboarding runbook (shared)\",\"attrs\":{\"refs\":[\"doc-001\",\"th-003\"],\"author\":\"gus-okonkwo\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"authored_by\"}]},{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"fill-portal-access-steps-vendor-onboarding-runbook\",\"name\":\"Fill in the missing portal access steps in the vendor onboarding runbook\",\"attrs\":{\"due\":\"2026-10-17\",\"priority\":\"medium\",\"evidence\":[\"em-002\"],\"refs\":[\"th-003\",\"doc-001\"],\"requested_by\":\"gus-okonkwo\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Document\",\"to_key\":\"vendor-onboarding-runbook\",\"type\":\"relates_to\"},{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0953054,
+  "duration_ms": 10546,
+  "duration_api_ms": 9626,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13743,
+   "cache_read_input_tokens": 143587,
+   "output_tokens": 1160,
+   "output_tokens_details": {
+    "thinking_tokens": 358
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13743,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 843,
+     "cache_read_input_tokens": 39303,
+     "cache_creation_input_tokens": 660,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 660
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1160,
+    "cacheReadInputTokens": 143587,
+    "cacheCreationInputTokens": 13743,
+    "webSearchRequests": 0,
+    "costUSD": 0.0953054,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 358,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

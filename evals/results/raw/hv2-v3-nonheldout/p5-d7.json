@@ -1,0 +1,65 @@
+{
+ "scenario": "p5-d7",
+ "started": "2026-10-06T01:24:58.334124+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"ibrahim-khoury\",\"name\":\"Ibrahim Khoury\",\"attrs\":{\"email\":\"ibrahim@quarryanalytics.example\",\"refs\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Channel\",\"workspace\":\"quarry\",\"key\":\"quarry-liaison\",\"name\":\"#quarry-liaison\",\"attrs\":{\"connector\":\"slack\",\"refs\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"turn-around-schema-diff\",\"name\":\"Turn around the schema diff for Ibrahim Khoury\",\"attrs\":{\"due\":\"2026-10-15\",\"priority\":\"high\",\"evidence\":[\"sl-001\"],\"requested_by\":\"Ibrahim Khoury\",\"refs\":[\"sl-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ibrahim-khoury\",\"type\":\"requested_by\"},{\"to_kind\":\"Channel\",\"to_key\":\"quarry-liaison\",\"type\":\"mentioned_in\"}]}\n]",
+  "total_cost_usd": 0.0797608,
+  "duration_ms": 6229,
+  "duration_api_ms": 5315,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 12988,
+   "cache_read_input_tokens": 104034,
+   "output_tokens": 699,
+   "output_tokens_details": {
+    "thinking_tokens": 133
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12988,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 555,
+     "cache_read_input_tokens": 38953,
+     "cache_creation_input_tokens": 255,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 255
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 699,
+    "cacheReadInputTokens": 104034,
+    "cacheCreationInputTokens": 12988,
+    "webSearchRequests": 0,
+    "costUSD": 0.0797608,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 133,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

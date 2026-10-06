@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x1",
+ "started": "2026-10-06T01:24:05.937210+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"beacon\",\"key\":\"petra-lindgren\",\"name\":\"Petra Lindgren\",\"attrs\":{\"email\":\"petra@beaconfb.example\",\"refs\":[\"em-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"beacon\",\"key\":\"run-monthly-pantry-inventory-count\",\"name\":\"Run the monthly pantry inventory count\",\"attrs\":{\"status\":\"cancelled\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"requested_by\":\"Petra Lindgren\",\"note\":\"Petra asked on Oct 6 for a count this weekend. On Oct 9 she withdrew the request because the county is running its own audit, and said nothing is needed from Riley.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0917298,
+  "duration_ms": 7120,
+  "duration_api_ms": 6249,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 13806,
+   "cache_read_input_tokens": 143649,
+   "output_tokens": 776,
+   "output_tokens_details": {
+    "thinking_tokens": 98
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13806,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 427,
+     "cache_read_input_tokens": 39334,
+     "cache_creation_input_tokens": 692,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 692
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 776,
+    "cacheReadInputTokens": 143649,
+    "cacheCreationInputTokens": 13806,
+    "webSearchRequests": 0,
+    "costUSD": 0.0917298,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 98,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

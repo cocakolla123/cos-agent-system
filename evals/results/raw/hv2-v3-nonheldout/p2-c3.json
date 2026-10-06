@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c3",
+ "started": "2026-10-06T01:23:48.939213+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Ticket\",\"workspace\":\"ternlog\",\"key\":\"tl-310\",\"name\":\"Dock sensor recalibration plan\",\"attrs\":{\"status\":\"open\",\"assignee\":\"riley.n@postbox.example\",\"refs\":[\"TL-310\"],\"evidence\":[\"tk-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"gus-okonkwo\",\"type\":\"commented_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"deliver-dock-sensor-recalibration-plan\",\"name\":\"Deliver dock sensor recalibration plan (TL-310)\",\"attrs\":{\"due\":\"2026-10-21\",\"priority\":\"medium\",\"refs\":[\"TL-310\"],\"evidence\":[\"tk-001\",\"em-002\"],\"notes\":\"Ticket comment (Gus, Oct 19) was superseded by the newer email from Yuki citing the revised maintenance window (Oct 21).\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Ticket\",\"to_key\":\"tl-310\",\"type\":\"relates_to\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki-onoda\",\"name\":\"Yuki Onoda\",\"attrs\":{\"email\":\"yuki.onoda@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"gus-okonkwo\",\"name\":\"Gus Okonkwo\",\"attrs\":{\"email\":\"gus.okonkwo@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.0841158,
+  "duration_ms": 11824,
+  "duration_api_ms": 10628,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13419,
+   "cache_read_input_tokens": 104039,
+   "output_tokens": 962,
+   "output_tokens_details": {
+    "thinking_tokens": 114
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13419,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 732,
+     "cache_read_input_tokens": 38960,
+     "cache_creation_input_tokens": 679,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 679
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 962,
+    "cacheReadInputTokens": 104039,
+    "cacheCreationInputTokens": 13419,
+    "webSearchRequests": 0,
+    "costUSD": 0.0841158,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 114,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

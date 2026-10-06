@@ -1,0 +1,65 @@
+{
+ "scenario": "p3-x5",
+ "started": "2026-10-06T01:24:15.609274+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Meeting\",\"workspace\":\"job-search\",\"key\":\"novara-systems-design-interview-2026-10-16\",\"name\":\"Novara Systems - systems design interview\",\"attrs\":{\"date\":\"2026-10-16\",\"status\":\"cancelled\",\"refs\":[\"th-nov\"],\"evidence\":[\"em-001\",\"em-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"novara-systems-talent\",\"type\":\"organized_by\"}]},{\"kind\":\"Person\",\"workspace\":\"job-search\",\"key\":\"novara-systems-talent\",\"name\":\"Novara Systems Talent\",\"attrs\":{\"email\":\"talent@novarasys.example\",\"org\":\"Novara Systems\",\"refs\":[\"th-nov\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"prepare-novara-systems-design-walkthrough\",\"name\":\"Prepare 20 minute past-project walkthrough for Novara Systems design interview\",\"attrs\":{\"status\":\"cancelled\",\"priority\":\"low\",\"evidence\":[\"em-001\",\"em-002\"],\"refs\":[\"th-nov\"],\"note\":\"Interview on Oct 16 was cancelled on 2026-10-09 because the position was filled internally; no longer owed.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Meeting\",\"to_key\":\"novara-systems-design-interview-2026-10-16\",\"type\":\"prepares_for\"}]}]",
+  "total_cost_usd": 0.084856,
+  "duration_ms": 11201,
+  "duration_api_ms": 10217,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13454,
+   "cache_read_input_tokens": 104040,
+   "output_tokens": 1022,
+   "output_tokens_details": {
+    "thinking_tokens": 282
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13454,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 793,
+     "cache_read_input_tokens": 38960,
+     "cache_creation_input_tokens": 714,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 714
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1022,
+    "cacheReadInputTokens": 104040,
+    "cacheCreationInputTokens": 13454,
+    "webSearchRequests": 0,
+    "costUSD": 0.084856,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 282,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

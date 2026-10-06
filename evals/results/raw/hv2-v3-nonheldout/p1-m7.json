@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m7",
+ "started": "2026-10-06T01:23:40.168096+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"quarry\",\"key\":\"celeste-beaumont\",\"name\":\"Celeste Beaumont\",\"attrs\":{\"email\":\"celeste@quarryanalytics.example\",\"refs\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Document\",\"workspace\":\"quarry\",\"key\":\"calibration-whitepaper\",\"name\":\"Calibration whitepaper\",\"attrs\":{\"refs\":[\"em-001\",\"th-002\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]},{\"kind\":\"Action\",\"workspace\":\"quarry\",\"key\":\"final-review-pass-calibration-whitepaper\",\"name\":\"Do final review pass on the calibration whitepaper (track changes on)\",\"attrs\":{\"due\":\"2026-10-14\",\"priority\":\"high\",\"evidence\":[\"em-001\"],\"refs\":[\"th-002\"],\"notes\":\"Due Oct 14, 5pm AoE\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Document\",\"to_key\":\"calibration-whitepaper\",\"type\":\"about\"},{\"to_kind\":\"Person\",\"to_key\":\"celeste-beaumont\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.0796394,
+  "duration_ms": 6167,
+  "duration_api_ms": 5251,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13078,
+   "cache_read_input_tokens": 104027,
+   "output_tokens": 651,
+   "output_tokens_details": {
+    "thinking_tokens": 58
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13078,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 508,
+     "cache_read_input_tokens": 38949,
+     "cache_creation_input_tokens": 349,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 349
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 651,
+    "cacheReadInputTokens": 104027,
+    "cacheCreationInputTokens": 13078,
+    "webSearchRequests": 0,
+    "costUSD": 0.0796394,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 58,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

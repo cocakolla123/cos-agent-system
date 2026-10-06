@@ -1,0 +1,65 @@
+{
+ "scenario": "p2-c1",
+ "started": "2026-10-06T01:23:46.576836+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"qbr-deck-lanes-section\",\"name\":\"Complete lanes section of QBR deck\",\"attrs\":{\"due\":\"2026-10-14\",\"priority\":\"high\",\"evidence\":[\"sl-001\",\"em-002\"],\"refs\":[\"th-003\"],\"note\":\"Yuki originally said Oct 15; Dritan Pasha (newest statement) needs it Oct 14 to merge the master deck.\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"qbr-deck\",\"type\":\"part_of\"},{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\"},{\"to_kind\":\"Person\",\"to_key\":\"yuki-onoda\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Project\",\"workspace\":\"ternlog\",\"key\":\"qbr-deck\",\"name\":\"QBR master deck\",\"attrs\":{\"refs\":[\"th-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Channel\",\"to_key\":\"netops\",\"type\":\"discussed_in\"}]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations, Tern Logistics\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"yuki-onoda\",\"name\":\"Yuki Onoda\",\"attrs\":{\"email\":\"yuki.onoda@ternlog.example\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Channel\",\"workspace\":\"ternlog\",\"key\":\"netops\",\"name\":\"#netops\",\"attrs\":{},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.08450339999999999,
+  "duration_ms": 7731,
+  "duration_api_ms": 6661,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13416,
+   "cache_read_input_tokens": 104037,
+   "output_tokens": 1002,
+   "output_tokens_details": {
+    "thinking_tokens": 108
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13416,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 772,
+     "cache_read_input_tokens": 38959,
+     "cache_creation_input_tokens": 677,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 677
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 1002,
+    "cacheReadInputTokens": 104037,
+    "cacheCreationInputTokens": 13416,
+    "webSearchRequests": 0,
+    "costUSD": 0.08450339999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 108,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

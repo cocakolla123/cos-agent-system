@@ -1,0 +1,65 @@
+{
+ "scenario": "p1-m4",
+ "started": "2026-10-06T01:23:28.418323+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"beacon\",\"key\":\"petra-lindgren\",\"name\":\"Petra Lindgren\",\"attrs\":{\"email\":\"petra@beaconfb.example\",\"refs\":[\"em-001\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"beacon\",\"key\":\"send-updated-driver-roster-for-saturday-routes\",\"name\":\"Send Petra the updated driver roster (Saturday routes changed)\",\"attrs\":{\"due\":\"2026-10-15\",\"priority\":\"high\",\"evidence\":[\"em-001\"],\"refs\":[\"th-002\"],\"requested_by\":\"petra-lindgren\"},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"petra-lindgren\",\"type\":\"requested_by\"}]}]",
+  "total_cost_usd": 0.08348679999999999,
+  "duration_ms": 6970,
+  "duration_api_ms": 6112,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 14010,
+   "cache_read_input_tokens": 103124,
+   "output_tokens": 681,
+   "output_tokens_details": {
+    "thinking_tokens": 253
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 14010,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 538,
+     "cache_read_input_tokens": 38952,
+     "cache_creation_input_tokens": 369,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 369
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 681,
+    "cacheReadInputTokens": 103124,
+    "cacheCreationInputTokens": 14010,
+    "webSearchRequests": 0,
+    "costUSD": 0.08348679999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 253,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

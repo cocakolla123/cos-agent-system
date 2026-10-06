@@ -1,0 +1,65 @@
+{
+ "scenario": "p6-i7",
+ "started": "2026-10-06T01:25:20.831657+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Person\",\"workspace\":\"ternlog\",\"key\":\"dritan-pasha\",\"name\":\"Dritan Pasha\",\"attrs\":{\"email\":\"dritan.pasha@ternlog.example\",\"title\":\"Dir. Network Operations\",\"org\":\"Tern Logistics\",\"refs\":[\"em-003\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"ternlog\",\"key\":\"get-two-quotes-yard-lighting-retrofit\",\"name\":\"Get two quotes for the yard lighting retrofit and tell Dritan Pasha the timeline\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-003\"],\"refs\":[\"th-004\"],\"notes\":\"No deadline stated; Riley picks the timeline and must report it back to Dritan.\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"dritan-pasha\",\"type\":\"requested_by\",\"to_workspace\":\"ternlog\"}]}]",
+  "total_cost_usd": 0.0817968,
+  "duration_ms": 7948,
+  "duration_api_ms": 7147,
+  "num_turns": 4,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 13507,
+   "cache_read_input_tokens": 104034,
+   "output_tokens": 695,
+   "output_tokens_details": {
+    "thinking_tokens": 121
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 13507,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 466,
+     "cache_read_input_tokens": 38957,
+     "cache_creation_input_tokens": 770,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 770
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 695,
+    "cacheReadInputTokens": 104034,
+    "cacheCreationInputTokens": 13507,
+    "webSearchRequests": 0,
+    "costUSD": 0.0817968,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 121,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

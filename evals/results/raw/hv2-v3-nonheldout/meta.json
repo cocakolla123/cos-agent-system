@@ -1,0 +1,12 @@
+{
+ "run_id": "hv2-v3-nonheldout",
+ "date": "2026-10-06",
+ "split": "all",
+ "fixtures": "/home/user/cos-agent-system/evals/heldout_v2/fixtures",
+ "instructions": "instructions/extract_v3.md",
+ "instructions_sha256": "8e4d3e6423b8c17dc5f57fb6f655859c9d19a0fb4e5612c6e36b330596819459",
+ "model": null,
+ "cli_version": "2.1.290 (Claude Code)",
+ "allowed_tools": "Read,Glob",
+ "scenarios": 46
+}
