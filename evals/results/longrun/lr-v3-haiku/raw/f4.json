@@ -1,0 +1,67 @@
+{
+ "scenario": "f4",
+ "started": "2026-10-14T00:37:02.595696+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my analysis of the incremental poll:\n\nThe new sources (arriving since the last snapshot) contain:\n- **Gmail**: 2 newsletters (em-0041, em-0042) - not actionable\n- **Jira**: 3 tickets (jr-0031, jr-0032, jr-0033) - none assigned to Dana Kowalski\n- **Drive**: 1 document - team lunch signup, not relevant\n- **Slack**: Various messages from other team members, no mentions of Dana Kowalski\n\nNone of the new items provide evidence of:\n- Completion of any open obligations\n- Changes to existing obligations (reassignment, rescheduling, cancellation)\n- New obligations for Dana Kowalski\n\nSince this is an incremental poll and no changes to the open obligations are documented in the new sources, I emit no records:\n\n```json\n[]\n```",
+  "total_cost_usd": 0.07079099999999999,
+  "duration_ms": 43767,
+  "duration_api_ms": 40649,
+  "num_turns": 12,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 17000,
+   "cache_read_input_tokens": 182890,
+   "output_tokens": 3692,
+   "output_tokens_details": {
+    "thinking_tokens": 2738
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 17000,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2532,
+     "cache_read_input_tokens": 40073,
+     "cache_creation_input_tokens": 3459,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 3459
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 3692,
+    "cacheReadInputTokens": 182890,
+    "cacheCreationInputTokens": 17000,
+    "webSearchRequests": 0,
+    "costUSD": 0.07079099999999999,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2738,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 19,
+ "attempt": 1
+}

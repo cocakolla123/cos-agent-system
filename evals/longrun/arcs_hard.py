@@ -325,7 +325,9 @@ def ht12(s):
     return {"sources": [a, b, c],
             "c1": open_(["msa", "redlines"], "kestrel", None, "medium",
                         owner="counterparty", blocked_on="legal"),
-            "c2": absent(["msa", "redlines"])}
+            # corrected after lrr-v3 (CORRECTIONS.md #4): Legal's "approved, you can
+            # send them" turns the waiting item into the user's own task
+            "c2": open_(["msa", "redlines"], "kestrel", None, None)}
 
 
 # ================================================================ realistic

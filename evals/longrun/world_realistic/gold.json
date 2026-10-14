@@ -2402,13 +2402,16 @@
    "workspace": "kestrel"
   },
   "c2": {
-   "gists": [
-    [
-     "msa",
-     "redlines"
-    ]
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "msa",
+    "redlines"
    ],
-   "state": "absent"
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
   },
   "id": "HT12",
   "phenomenon": "auto-reply is not an answer",

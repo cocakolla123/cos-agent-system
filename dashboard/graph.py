@@ -643,9 +643,19 @@ def _write_text(path, text):
 
 
 def _merge_attrs(base, incoming):
-    """Shallow-merge attrs: incoming non-empty values win; keep existing else."""
+    """Shallow-merge attrs: incoming non-empty values win; keep existing else.
+
+    Empty values never erase (a partial record must not wipe what another
+    module knew), so removal is explicit: ``clear_attrs: ["blocked_on",
+    "due"]`` deletes those keys. Without it a waiting-on that ended, or a
+    deadline that was withdrawn, could never leave the node (found by the
+    long-run eval, evals/longrun/CORRECTIONS.md #4)."""
+    incoming = dict(incoming or {})
+    clear = incoming.pop("clear_attrs", None) or []
     out = dict(base or {})
-    for k, v in (incoming or {}).items():
+    for k in clear if isinstance(clear, list) else []:
+        out.pop(str(k), None)
+    for k, v in incoming.items():
         if v is None or v == "":
             out.setdefault(k, v)
         else:

@@ -27,12 +27,14 @@ def oracle_records(cp, prev=None):
         st = arc.get(cp)
         before = (prev or {}).get(arc["id"])
         if st and st["state"] == "open":
+            attrs = {"due": st["due"], "priority": st["priority"] or "medium",
+                     "blocked_on": st["blocked_on"], "evidence": " ".join(arc["sources"])}
+            gone = [k for k in ("blocked_on", "due") if not st[k] and before and before.get(k)]
+            if gone:
+                attrs["clear_attrs"] = gone
             recs.append({"kind": "Action", "workspace": st["workspace"], "key": arc["id"],
                          "name": " ".join(st["gist"]), "confidence": 0.9, "edges": [],
-                         "source": "oracle",
-                         "attrs": {"due": st["due"], "priority": st["priority"] or "medium",
-                                   "blocked_on": st["blocked_on"],
-                                   "evidence": " ".join(arc["sources"])}})
+                         "source": "oracle", "attrs": attrs})
         elif before and before["state"] == "open":
             recs.append({"kind": "Action", "workspace": before["workspace"],
                          "key": arc["id"], "name": " ".join(before["gist"]),

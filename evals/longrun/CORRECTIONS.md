@@ -62,3 +62,15 @@ the laptop item" to "followed the phishing email".)
   arc). Added alias `status`+`update`.
 - lrr-v1 and lrr-v2 rescored: C1 test went from 39/40 to 40/40 for lrr-v2
   (lrr-v1 unchanged at 40/40 after correction #2); C2 unchanged.
+
+## 4. HT12 at C2: approval creates a task (after lrr-v3, read once tuning had ended)
+
+- Gold before: absent at C2 (the user was waiting on Legal; Legal answered).
+- What the default model did: "Send the Legal-approved MSA redlines to
+  Northwind", open, no due date.
+- Why the gold was wrong: Legal wrote "The redlines are approved. You can
+  send them." The waiting item closes, but it hands the user a new
+  obligation. The model was right.
+- Gold after: open at C2, owed by the user, no due date.
+- Rescored all realistic-world runs; lrr-v3 C2 test went from 42/43 to 43/43
+  (lrr-v1 and lrr-v2, which also emitted the send task, gain the same arc).

@@ -863,11 +863,18 @@
    "id": "HT12",
    "split": "test",
    "phenomenon": "auto-reply is not an answer",
-   "expect": "absent",
-   "present": [
-    "Send the legal-approved MSA redlines to Northwind"
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send the legal-approved MSA redlines to Northwind",
+   "due": [
+    null,
+    null
    ],
-   "pass": false
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
   },
   {
    "id": "HD13",
@@ -1080,18 +1087,18 @@
   },
   "test": {
    "arcs": 43,
-   "pass": 41,
+   "pass": 42,
    "open_caught": [
-    21,
-    22
+    22,
+    23
    ],
    "due_ok": [
-    21,
-    21
+    22,
+    22
    ],
    "direction_ok": [
-    21,
-    21
+    22,
+    22
    ],
    "priority_ok": [
     0,
@@ -1101,7 +1108,7 @@
    "wrong_workspace": 0,
    "absent_ok": [
     20,
-    21
+    20
    ],
    "isolation_violations": 0
   },

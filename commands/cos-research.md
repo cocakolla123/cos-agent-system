@@ -226,6 +226,9 @@ Emit each obligation as `kind: "Action"` with:
     work requests).
   Priority ranks *undated* obligations against each other. If you omit it, ingest records
   `medium`.
+- `attrs.clear_attrs` — a list of attribute names to remove when re-emitting an existing Action
+  (for example `["blocked_on"]` when a waiting item becomes the user's own task, or `["due"]` when a
+  deadline is withdrawn). An empty value never erases an attribute; only this does.
 - `attrs.blocked_on` — who the user is waiting on, when the next move is somebody else's (a
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state
