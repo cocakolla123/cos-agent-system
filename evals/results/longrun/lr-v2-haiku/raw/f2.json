@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-14T00:26:57.071308+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"corvid-interview-slot\",\n    \"name\": \"Pick final-round interview slot for Corvid Systems\",\n    \"attrs\": {\n      \"due\": \"2026-10-23\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\"em-0072\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"notifications-rfc-comments\",\n    \"name\": \"Add comments on the notifications RFC\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\"sl-0191\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-301-postmortem\",\n    \"name\": \"Postmortem: INC-212 queue outage\",\n    \"attrs\": {\n      \"due\": \"2026-07-31\",\n      \"priority\": \"high\",\n      \"status\": \"done\",\n      \"refs\": [\"PLAT-301\"],\n      \"evidence\": [\"jr-0036\", \"doc-0008\", \"sl-0184\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-355-runbook\",\n    \"name\": \"Rewrite the on-call runbook\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"refs\": [\"PLAT-355\"],\n      \"evidence\": [\"jr-0044\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-401-idempotency-keys\",\n    \"name\": \"Add idempotency keys to webhook delivery\",\n    \"attrs\": {\n      \"due\": \"2026-11-20\",\n      \"priority\": \"medium\",\n      \"refs\": [\"PLAT-401\"],\n      \"evidence\": [\"jr-0055\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0\n  }\n]\n```",
+  "total_cost_usd": 0.1062955,
+  "duration_ms": 86049,
+  "duration_api_ms": 83698,
+  "num_turns": 14,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 18211,
+   "cache_read_input_tokens": 185965,
+   "output_tokens": 10247,
+   "output_tokens_details": {
+    "thinking_tokens": 8741
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 18211,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 9037,
+     "cache_read_input_tokens": 43332,
+     "cache_creation_input_tokens": 1411,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1411
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 42,
+    "outputTokens": 10247,
+    "cacheReadInputTokens": 185965,
+    "cacheCreationInputTokens": 18211,
+    "webSearchRequests": 0,
+    "costUSD": 0.1062955,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 8741,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 24,
+ "attempt": 1
+}

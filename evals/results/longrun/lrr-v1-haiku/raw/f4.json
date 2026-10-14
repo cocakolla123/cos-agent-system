@@ -1,0 +1,67 @@
+{
+ "scenario": "f4",
+ "started": "2026-10-14T00:29:37.333994+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my analysis of the incremental poll sources:\n\n1. **Email sources**: Only one outbound email from Dana (em-0721, dated 2026-11-06) - a weekly status update mentioning work on cron migration with no blockers. This doesn't represent a completion or change to any tracked action.\n\n2. **Jira sources**: Contain watch notifications about RTA-553, RTA-558, and PLAT-546, but Dana is not the assignee on these tickets - just a watcher. No actions directly assigned to or completed by Dana.\n\n3. **Slack sources**: Mentions of Dana's work/recognition but no new action requests for Dana. \n\n4. **Drive sources**: Only a team lunch signup, not an action.\n\nSince this is an incremental poll, I should only re-emit actions that have changed (status, due date, blocked_on, etc.) and emit new actions. Reviewing the open actions against the sources, I find:\n- No completions or cancellations\n- No deadline changes or reschedules  \n- No blocking status changes\n- No new direct action requests to Dana\n\n```json\n[]\n```",
+  "total_cost_usd": 0.24260120000000002,
+  "duration_ms": 84860,
+  "duration_api_ms": 81398,
+  "num_turns": 21,
+  "usage": {
+   "input_tokens": 170,
+   "cache_creation_input_tokens": 48402,
+   "cache_read_input_tokens": 1104022,
+   "output_tokens": 7045,
+   "output_tokens_details": {
+    "thinking_tokens": 5111
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 48402,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 668,
+     "cache_read_input_tokens": 72317,
+     "cache_creation_input_tokens": 2617,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2617
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 170,
+    "outputTokens": 7045,
+    "cacheReadInputTokens": 1104022,
+    "cacheCreationInputTokens": 48402,
+    "webSearchRequests": 0,
+    "costUSD": 0.24260120000000002,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 5111,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1098,
+ "attempt": 1
+}
