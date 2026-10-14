@@ -151,6 +151,16 @@ Check every surface that can hold one, not just mail: a ticket assigned to the u
 block that is really a task, an unsubmitted form, a review request on a PR, a failing check
 blocking the user's own submission, a dated event referenced in a doc.
 
+**Assigned tracker work is an obligation even when no message mentions it.** A ticket or issue
+whose current state has the user as assignee, or a PR where the user is an individually requested
+reviewer, stays open until it is done/closed/merged or another source says the work is finished;
+take its due-date field. Read the newest state: a ticket reassigned away, or a review request
+withdrawn, is no longer the user's. A review requested from a whole team is not an individual
+obligation. **Hand-offs close items:** when the user asks someone to take a task and they accept
+("on it", "I've got it"), it leaves the user's list rather than lingering as "delegated"; if they
+never answered, it stays open `blocked_on` them. Personal, side-project and job-search obligations
+count like work ones, each in its own workspace.
+
 **Read the user's own sent mail — it is the highest-precision obligation signal there is.** Every
 other surface makes you infer whether the user owes something; their outbox has them saying so.
 "Could I please have a few more days to complete it", "I wasn't able to do the assessment on
@@ -204,7 +214,8 @@ Emit each obligation as `kind: "Action"` with:
     7 days; security or access work with a date (a TLS/SSL certificate, a credential or
     password, an access log or access audit, a security incident).
   - **low**: a quick reply to a colleague's question with no deadline; volunteer or personal
-    work due more than 7 days out or undated; explicitly soft wording ("no rush", "when you
+    work due more than 7 days out or undated ("personal" means personal and side-project work;
+    job-search work is not personal for this rule); explicitly soft wording ("no rush", "when you
     get a chance", "would be great").
   - **medium**: everything else (peer requests, dated work beyond those windows, undated
     work requests).
