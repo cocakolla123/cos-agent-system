@@ -245,5 +245,126 @@ class TestWindowAudit(unittest.TestCase):
         self.assertEqual(research.window_audit(graph.Graph()), [])
 
 
+class TestOrphanObligations(unittest.TestCase):
+    """A verb stored as an adjective on a noun is a dropped obligation.
+
+    The to-do list reads Action nodes and nothing else, so an obligation
+    recorded as attrs on an entity (``blocked_on``, ``stage: awaiting-…``) is
+    in the graph and still absent from the list. These pin the control that
+    catches it, after the prose-only version of the rule let the same miss
+    through twice.
+    """
+
+    NOW = dt.datetime(2026, 3, 1, 12, 0, 0, tzinfo=dt.timezone.utc)
+
+    def _ingest(self, kind, key, attrs, name=None, ws="pipeline"):
+        g = graph.Graph()
+        counts = research.ingest(g, [research.record(
+            kind, ws, key, name=name, attrs=attrs, source="email")],
+            now=self.NOW)
+        return g, counts
+
+    def test_blocked_on_a_noun_mints_the_missing_action(self):
+        g, counts = self._ingest("JobApplication", "vendor-role",
+                                 {"blocked_on": "the recruiter",
+                                  "stage": "awaiting-reply",
+                                  "last_activity": "2026-02-20"},
+                                 name="Vendor — platform role")
+        self.assertEqual(counts["derived_actions"], 1)
+        act = g.nodes["pipeline:action:vendor-role-followup"]
+        self.assertEqual(act["type"], "Action")
+        self.assertTrue(graph.is_open_action(act, now=self.NOW))
+        self.assertEqual(act["attrs"]["blocked_on"], "the recruiter")
+        self.assertEqual(act["attrs"]["derived_from"],
+                         "pipeline:jobapplication:vendor-role")
+        self.assertIn("the recruiter", act["name"])
+
+    def test_a_narrative_blocked_on_stays_out_of_the_title(self):
+        # Modules write a *state* here as well as a party; "Follow up with
+        # the PR is closed and unresolved — X" is not a task title.
+        g, _ = self._ingest("Project", "insight",
+                            {"blocked_on": "PR closed, unresolved"},
+                            name="Insight — task authoring")
+        act = g.nodes["pipeline:action:insight-followup"]
+        self.assertEqual(act["name"], "Follow up — Insight — task authoring")
+        self.assertEqual(act["attrs"]["blocked_on"], "PR closed, unresolved")
+
+    def test_derived_action_links_back_to_its_source(self):
+        g, _ = self._ingest("JobApplication", "vendor-role",
+                            {"blocked_on": "the recruiter"})
+        out = g.neighbors("pipeline:action:vendor-role-followup",
+                          edge_type="relates_to", direction="out")
+        self.assertEqual([n["id"] for n in out],
+                         ["pipeline:jobapplication:vendor-role"])
+
+    def test_awaiting_stage_alone_is_enough(self):
+        g, counts = self._ingest("Ticket", "req-7", {"stage": "Awaiting-Panel"})
+        self.assertEqual(counts["derived_actions"], 1)
+        self.assertIn("pipeline:action:req-7-followup", g.nodes)
+
+    def test_an_action_carrying_blocked_on_mints_nothing(self):
+        # blocked_on on an Action is the rule working, not failing.
+        g, counts = self._ingest("Action", "chase-vendor",
+                                 {"blocked_on": "the recruiter"})
+        self.assertEqual(counts["derived_actions"], 0)
+        self.assertEqual(len(g.query(type_="Action")), 1)
+
+    def test_a_plain_noun_mints_nothing(self):
+        g, counts = self._ingest("Document", "spec", {"status": "open"})
+        self.assertEqual(counts["derived_actions"], 0)
+        self.assertEqual(g.query(type_="Action"), [])
+
+    def test_concluded_work_owes_nothing(self):
+        g, counts = self._ingest("JobApplication", "closed-role",
+                                 {"blocked_on": "the recruiter",
+                                  "concluded": True,
+                                  "concluded_on": "2026-02-25"})
+        self.assertEqual(counts["derived_actions"], 0)
+        self.assertEqual(g.query(type_="Action"), [])
+
+    def test_derivation_invents_no_deadline_and_no_status(self):
+        g, _ = self._ingest("JobApplication", "vendor-role",
+                            {"blocked_on": "the recruiter"})
+        attrs = g.nodes["pipeline:action:vendor-role-followup"]["attrs"]
+        self.assertNotIn("due", attrs)
+        self.assertNotIn("status", attrs)
+        self.assertEqual(attrs["priority"], research.DEFAULT_PRIORITY)
+
+    def test_rederiving_is_idempotent(self):
+        recs = [research.record("JobApplication", "pipeline", "vendor-role",
+                                attrs={"blocked_on": "the recruiter"},
+                                source="email")]
+        g = graph.Graph()
+        first = research.ingest(g, recs, now=self.NOW)
+        second = research.ingest(g, recs, now=self.NOW)
+        self.assertEqual(first["derived_actions"], 1)
+        self.assertEqual(second["derived_actions"], 0)
+        self.assertEqual(len(g.query(type_="Action")), 1)
+
+    def test_a_derived_task_marked_done_is_not_resurrected(self):
+        """The regression that would make the control worse than the bug."""
+        recs = [research.record("JobApplication", "pipeline", "vendor-role",
+                                attrs={"blocked_on": "the recruiter"},
+                                source="email")]
+        g = graph.Graph()
+        research.ingest(g, recs, now=self.NOW)
+        act = g.nodes["pipeline:action:vendor-role-followup"]
+        act["attrs"]["status"] = "done"
+        research.ingest(g, recs, now=self.NOW)
+        self.assertEqual(act["attrs"]["status"], "done")
+        self.assertFalse(graph.is_open_action(act, now=self.NOW))
+
+    def test_orphan_obligations_audits_the_whole_graph(self):
+        g = graph.Graph()
+        g.upsert_node("JobApplication", "pipeline", "a",
+                      attrs={"blocked_on": "them"}, now=self.NOW)
+        g.upsert_node("Document", "pipeline", "b", now=self.NOW)
+        orphans = research.orphan_obligations(g, now=self.NOW)
+        self.assertEqual([n["id"] for n, _ in orphans],
+                         ["pipeline:jobapplication:a"])
+        research.derive_orphan_actions(g, now=self.NOW)
+        self.assertEqual(research.orphan_obligations(g, now=self.NOW), [])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

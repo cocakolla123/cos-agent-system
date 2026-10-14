@@ -147,6 +147,15 @@ obligation vocabulary, not project names:
 > reminder · awaiting your · we need · schedule your · book a time · invitation to · suspended ·
 > past due · unpaid · renew · confirm your · sign · approve · last chance · final notice
 
+**That vocabulary only finds obligations somebody is actively pressing**, and the whole class
+where the user is the one waiting uses none of those words. A stalled multi-step process — an
+application, a claim, an approval chain — stalls in courteous, deadline-free language: *we will
+reschedule · I will keep you updated · we'll be in touch · let me know what works · based on
+availability · apologies for the delay*. Nobody is chasing the user, so nothing matches, and the
+item is invisible exactly while it rots. Sweep for the **stall** too — *will keep you updated ·
+we will reschedule · get back to you · keep you posted · circle back · no reply since* — and
+treat a process whose last move was the user's as open on the user to chase.
+
 Check every surface that can hold one, not just mail: a ticket assigned to the user, a calendar
 block that is really a task, an unsubmitted form, a review request on a PR, a failing check
 blocking the user's own submission, a dated event referenced in a doc.
@@ -252,6 +261,14 @@ Three judgment rules, all of which cost the user trust when broken:
   worked, the entity is right there, and only the user knows the ask went nowhere. Whenever an
   entity's attrs describe something the user must respond to, emit the matching `Action` as
   well — the noun and the verb are both true, and only one of them is actionable.
+
+  This rule is **enforced, not merely stated**: it was prose for a month and the identical miss
+  came back anyway, so `research.ingest` now reads it. Writing `attrs.blocked_on` or
+  `attrs.stage: awaiting-…` on anything other than an `Action` is the fingerprint of a stranded
+  obligation, and `research.derive_orphan_actions` mints the companion `Action` for you
+  (`counts['derived_actions']` says how many). A derived task is a **safety net, not a
+  substitute** — it inherits only what the noun already asserted, so it has no deadline and a
+  generic name. Emit the obligation properly and the net never fires.
 - **Never invent a deadline.** Record only dates that were stated. An inferred "probably due
   soon" is a fabricated obligation, and it is worse than the omission it replaces.
 

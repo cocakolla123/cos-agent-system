@@ -235,3 +235,31 @@ class TestGuardrailIntegrity(unittest.TestCase):
             self.assertTrue(learning.verify_guardrails(ws, root)[0])
             learning.write_guardrail_baseline(ws, root, now=_t(2))
             self.assertEqual(learning.verify_guardrails(ws, root)[0], [])
+
+
+class TestClassifierPhrasings(unittest.TestCase):
+    """Real-world correction phrasings the first live cold-start test found
+    falling through (2026-10-13): 'missing all my X' and 'none of these are
+    on the board as tasks' did not classify, so the learn loop never fired
+    on a genuine correction typed into the chat."""
+
+    def test_cold_start_live_message_classifies(self):
+        msg = ("the to-do list is missing all my job search follow ups - "
+               "UST cancelled my interview and I chased them with no reply, "
+               "none of these are on the board as tasks")
+        self.assertIsNotNone(learning.classify_feedback(msg))
+
+    def test_missing_all_my(self):
+        self.assertIsNotNone(learning.classify_feedback(
+            "it's missing all my follow ups"))
+
+    def test_not_on_my_list(self):
+        self.assertIsNotNone(learning.classify_feedback(
+            "the Dell update is not on my list"))
+
+    def test_plain_questions_still_do_not_classify(self):
+        for benign in ("what's on my calendar today?",
+                       "mark the insurance task done",
+                       "summarize my week",
+                       "can you draft a reply to UST"):
+            self.assertIsNone(learning.classify_feedback(benign), benign)
