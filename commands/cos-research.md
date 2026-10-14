@@ -159,7 +159,12 @@ withdrawn, is no longer the user's. A review requested from a whole team is not 
 obligation. **Hand-offs close items:** when the user asks someone to take a task and they accept
 ("on it", "I've got it"), it leaves the user's list rather than lingering as "delegated"; if they
 never answered, it stays open `blocked_on` them. Personal, side-project and job-search obligations
-count like work ones, each in its own workspace.
+count like work ones, each in its own workspace. **Read the newest state only:** a ticket or PR seen several
+times counts by its latest snapshot. **One piece of work is one Action** however many surfaces
+word it differently (say a ticket "migrate the auth service", a message "move auth over", a calendar
+block "auth cutover"): merge them and cite every source. In messaging, search for the user's handle and
+name across all channels (mentions in muted channels count), read every DM and group DM in
+full, and read the thread around each hit for later replies that close or reassign it.
 
 **Read the user's own sent mail — it is the highest-precision obligation signal there is.** Every
 other surface makes you infer whether the user owes something; their outbox has them saying so.
