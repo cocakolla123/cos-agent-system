@@ -67,7 +67,8 @@ def score_graph(g, gold, cp, today):
             continue
         if st["state"] == "open":
             gist = st["gist"]
-            hits = [a for a in actions if _gs(gist, a) >= THRESH]
+            gists = [gist] + st.get("aliases", [])
+            hits = [a for a in actions if any(_gs(x, a) >= THRESH for x in gists)]
             matched_ids.update(a["id"] for a in hits)
             here = [a for a in hits if a.get("workspace") == st["workspace"]]
             r["expect"] = "open"
@@ -76,7 +77,7 @@ def score_graph(g, gold, cp, today):
                                     if a.get("workspace") != st["workspace"]]
             r["duplicates"] = max(0, len(here) - 1)
             if here:
-                best = max(here, key=lambda a: _gs(gist, a))
+                best = max(here, key=lambda a: max(_gs(x, a) for x in gists))
                 at = best.get("attrs") or {}
                 pdue = str(at.get("due") or "")[:10] or None
                 r["name"] = best.get("name")
@@ -88,7 +89,8 @@ def score_graph(g, gold, cp, today):
                     r["priority_ok"] = _norm(at.get("priority")) == st["priority"]
             r["pass"] = (r["caught"] and r.get("due_ok") and r.get("direction_ok")
                          and not r["duplicates"] and r.get("priority_ok", True))
-            for g2 in arc.get("also_absent", []):
+            for g2 in arc.get("also_absent", []) + (arc.get("also_absent_c2", [])
+                                                    if cp == "c2" else []):
                 bad = [a.get("name") for a in actions if _gs(g2, a) >= THRESH]
                 if bad:
                     r["pass"] = False
@@ -97,7 +99,7 @@ def score_graph(g, gold, cp, today):
         else:
             r["expect"] = "absent"
             bad = []
-            for gist in st["gists"]:
+            for gist in st["gists"] + (arc.get("also_absent_c2", []) if cp == "c2" else []):
                 for a in actions:
                     if _gs(gist, a) >= THRESH:
                         bad.append(a.get("name"))
@@ -168,8 +170,8 @@ def summarize(rows, iso, inj_close, noise, gold):
     return out
 
 
-def write(out_dir, cp, g, today):
-    gold = json.load(open(os.path.join(WORLD, "gold.json")))
+def write(out_dir, cp, g, today, world_dir=WORLD):
+    gold = json.load(open(os.path.join(world_dir, "gold.json")))
     res = score_graph(g, gold, cp, today)
     json.dump(res, open(os.path.join(out_dir, "score_%s.json" % cp), "w"), indent=1)
     s = res["summary"]
@@ -188,7 +190,8 @@ def write(out_dir, cp, g, today):
 if __name__ == "__main__":
     # score a saved graph: score_longrun.py <run dir> <c1|c2>
     d, cp = sys.argv[1], sys.argv[2]
-    meta = json.load(open(os.path.join(WORLD, "meta.json")))
+    wdir = sys.argv[3] if len(sys.argv) > 3 else WORLD
+    meta = json.load(open(os.path.join(wdir, "meta.json")))
     step = "c1" if cp == "c1" else "f%d" % len(meta["future_weeks"])
     g = graphlib.Graph.load(os.path.join(d, "graph", step))
-    write(d, cp, g, meta["today"] if cp == "c1" else meta["c2"])
+    write(d, cp, g, meta["today"] if cp == "c1" else meta["c2"], wdir)

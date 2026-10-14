@@ -16,7 +16,7 @@ import score_longrun     # noqa: E402
 import research          # noqa: E402
 import graph as graphlib  # noqa: E402
 
-ITEMS, GOLD, META = build.build()
+ITEMS, GOLD, META = build.build("easy")
 
 
 def oracle_records(cp, prev=None):
@@ -48,7 +48,7 @@ def ingest(g, recs, today):
 
 class TestWorld(unittest.TestCase):
     def test_deterministic_and_locked(self):
-        a = build.build()
+        a = build.build("easy")
         self.assertEqual(json.dumps(a[0]), json.dumps(ITEMS))
         self.assertEqual(json.dumps(a[1]), json.dumps(GOLD))
 
@@ -139,3 +139,39 @@ class TestScorer(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestRealisticWorld(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.items, cls.gold, cls.meta = build.build("realistic")
+
+    def test_only_example_domains(self):
+        blob = json.dumps([self.items, self.meta])
+        for dom in set(re.findall(r"[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]+)", blob)):
+            self.assertTrue(dom.endswith(".example"), dom)
+
+    def test_oracle_passes_everything(self):
+        global GOLD
+        saved = GOLD
+        GOLD = self.gold
+        try:
+            g = ingest(graphlib.Graph(), oracle_records("c1"), self.meta["today"])
+            r1 = score_longrun.score_graph(g, self.gold, "c1", self.meta["today"])
+            self.assertEqual([a["id"] for a in r1["arcs"] if not a["pass"]], [])
+            prev = {a["id"]: a.get("c1") for a in self.gold}
+            g = ingest(g, oracle_records("c2", prev), self.meta["c2"])
+            r2 = score_longrun.score_graph(g, self.gold, "c2", self.meta["c2"])
+            self.assertEqual([a["id"] for a in r2["arcs"] if not a["pass"]], [])
+            self.assertEqual(r2["noise_fps"], [])
+        finally:
+            GOLD = saved
+
+    def test_volume_is_realistic(self):
+        hist = [i for i in self.items if i["date"] < self.meta["today"]]
+        slack = [i for i in hist if i["connector"] == "slack"]
+        chans = {i["channel"] for i in slack}
+        self.assertGreater(len(slack), 5000)
+        self.assertGreater(len(chans), 100)
+        muted = [c for c in self.meta["slack_channels"] if c["is_muted"]]
+        self.assertGreater(len(muted), 10)

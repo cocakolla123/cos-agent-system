@@ -36,16 +36,34 @@ import correlate              # noqa: E402
 import graph as graphlib      # noqa: E402
 import score_longrun          # noqa: E402
 
-WORLD = os.path.join(HERE, "world")
+import build                  # noqa: E402
+
 RESULTS = os.path.join(EVALS, "results", "longrun")
 
 
-def load_world():
-    subprocess.run([sys.executable, os.path.join(HERE, "build.py"), "--check"],
-                   check=True, capture_output=True)
-    items = json.load(open(os.path.join(WORLD, "items.json")))
-    meta = json.load(open(os.path.join(WORLD, "meta.json")))
+def load_world(kind):
+    if not os.path.exists(os.path.join(build.DIRS[kind], "items.json")):
+        # large worlds are regenerated, not committed; the lock still binds them
+        subprocess.run([sys.executable, os.path.join(HERE, "build.py"), "--world", kind,
+                        "--from-lock"], check=True, capture_output=True)
+    subprocess.run([sys.executable, os.path.join(HERE, "build.py"), "--world", kind,
+                    "--check"], check=True, capture_output=True)
+    d = build.DIRS[kind]
+    items = json.load(open(os.path.join(d, "items.json")))
+    meta = json.load(open(os.path.join(d, "meta.json")))
     return items, meta
+
+
+def write_items(path, rows):
+    """One item per line: valid JSON, and a search hit returns a whole item."""
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w") as f:
+        f.write("[\n" + ",\n".join(json.dumps(r, ensure_ascii=False) for r in rows)
+                + "\n]\n")
+
+
+def fname(channel):
+    return channel.lstrip("#").replace("/", "_") + ".json"
 
 
 def week_start(date_str):
@@ -80,26 +98,24 @@ def open_state(g, now):
 def materialize(d, items, step, meta, g):
     src = os.path.join(d, "sources")
     sel = [i for i in items if step["lo"] <= i["date"] < step["hi"]]
+    by = {}
+    for i in sel:
+        if i["connector"] == "slack":
+            path = os.path.join(src, "slack", "channels", fname(i["channel"]))
+        elif step["incremental"]:
+            path = os.path.join(src, i["connector"] + ".json")
+        else:
+            path = os.path.join(src, i["connector"], week_start(i["date"]) + ".json")
+        by.setdefault(path, []).append(i)
+    for path, rows in by.items():
+        write_items(path, rows)
     if step["incremental"]:
-        by = {}
-        for i in sel:
-            by.setdefault(i["connector"], []).append(i)
-        os.makedirs(src)
-        for c, rows in by.items():
-            json.dump(rows, open(os.path.join(src, c + ".json"), "w"), indent=1)
         os.makedirs(os.path.join(d, "state"))
         json.dump(open_state(g, graphlib._parse_iso(step["today"])),
                   open(os.path.join(d, "state", "open_actions.json"), "w"), indent=1)
-    else:
-        by = {}
-        for i in sel:
-            by.setdefault((i["connector"], week_start(i["date"])), []).append(i)
-        for (c, w), rows in by.items():
-            os.makedirs(os.path.join(src, c), exist_ok=True)
-            json.dump(rows, open(os.path.join(src, c, w + ".json"), "w"), indent=1)
-    os.makedirs(os.path.join(src, "slack"), exist_ok=True)
-    json.dump(meta["slack_users"], open(os.path.join(src, "slack", "users.json"), "w"),
-              indent=1)
+    write_items(os.path.join(src, "slack", "users.json"), meta["slack_users"])
+    if meta.get("slack_channels"):
+        write_items(os.path.join(src, "slack", "channels.json"), meta["slack_channels"])
     return len(sel)
 
 
@@ -134,9 +150,14 @@ def main():
     ap.add_argument("--timeout", type=int, default=3600)
     ap.add_argument("--stop-after", default=None)
     ap.add_argument("--rescore", default=None, help="run id: rebuild graph from raw")
+    ap.add_argument("--world", default="easy", choices=sorted(build.DIRS))
+    ap.add_argument("--tools", default=None,
+                    help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
-    run.assert_isolated()
-    items, meta = load_world()
+    tools = args.tools or ("Read,Glob,Grep" if args.world == "realistic" else "Read,Glob")
+    run.assert_isolated(tools)
+    items, meta = load_world(args.world)
+    wdir = build.DIRS[args.world]
     rid = args.rescore or args.run_id
     out = os.path.join(RESULTS, rid)
     raw_dir = os.path.join(out, "raw")
@@ -148,7 +169,8 @@ def main():
                 "model": args.model, "date": datetime.date.today().isoformat(),
                 "cli_version": subprocess.run([run.CLAUDE, "--version"],
                                               capture_output=True, text=True).stdout.strip(),
-                "world_lock": json.load(open(os.path.join(WORLD, "world.lock.json")))}
+                "world": args.world, "tools": tools,
+                "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
     log = []
@@ -161,7 +183,7 @@ def main():
                     try:
                         raw = run.run_scenario({"id": st["name"]}, d,
                                                prompt(instr, meta, st), args.model,
-                                               args.timeout)
+                                               args.timeout, allowed=tools)
                     except subprocess.TimeoutExpired:
                         raw = {"scenario": st["name"], "envelope_error": "timeout"}
                 raw["items_in_window"] = n
@@ -185,11 +207,11 @@ def main():
             res["cost_usd"], (res["duration_ms"] or 0) // 1000))
         g.save(os.path.join(out, "graph", st["name"]))
         if st["name"] == "c1":
-            score_longrun.write(out, "c1", g, meta["today"])
+            score_longrun.write(out, "c1", g, meta["today"], wdir)
         if args.stop_after == st["name"]:
             break
     else:
-        score_longrun.write(out, "c2", g, meta["c2"])
+        score_longrun.write(out, "c2", g, meta["c2"], wdir)
     json.dump(log, open(os.path.join(out, "steps.json"), "w"), indent=1)
 
 

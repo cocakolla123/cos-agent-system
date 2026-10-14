@@ -27,3 +27,4 @@ evals/__pycache__/
 evals/tests/__pycache__/
 evals/heldout_v2/__pycache__/
 evals/longrun/__pycache__/
+evals/longrun/world_realistic/items.json

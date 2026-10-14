@@ -7,6 +7,7 @@
   "2026-11-03"
  ],
  "history_start": "2026-07-13",
+ "slack_channels": null,
  "slack_users": [
   {
    "email": "dana.k@kestrel.example",
@@ -90,5 +91,6 @@
   "kestrel": "employer",
   "oss": "side-project",
   "personal": "personal"
- }
+ },
+ "world": "easy"
 }
