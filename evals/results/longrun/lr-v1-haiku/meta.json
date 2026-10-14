@@ -1,0 +1,13 @@
+{
+ "run_id": "lr-v1-haiku",
+ "instructions": "instructions/longrun_v1.md",
+ "instructions_sha256": "c15e3c0c82a782964afb2998c4b050ef5cd42430f1238e71b20156194ef6963c",
+ "model": "claude-haiku-4-5-20251001",
+ "date": "2026-10-14",
+ "cli_version": "2.1.296 (Claude Code)",
+ "world_lock": {
+  "gold.json": "7138d0e58ea8b050b0613f4c791e2c0b1568838affd247d1197cf4536c3e5dc8",
+  "items.json": "f5fbf98f43a7a14033d801098263c0e6d5d8e0fc56febe50b8a0559a0df5e67b",
+  "meta.json": "dcad932f8ad22d1b613282678a5ecb0c2465beca6ab86af411b3fc9aef63cbbe"
+ }
+}
