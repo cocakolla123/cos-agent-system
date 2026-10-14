@@ -2311,6 +2311,12 @@
  },
  {
   "c1": {
+   "aliases": [
+    [
+     "status",
+     "update"
+    ]
+   ],
    "blocked_on": null,
    "due": "2026-10-16",
    "gist": [
@@ -2323,6 +2329,12 @@
    "workspace": "kestrel"
   },
   "c2": {
+   "aliases": [
+    [
+     "status",
+     "update"
+    ]
+   ],
    "blocked_on": null,
    "due": "2026-11-13",
    "gist": [

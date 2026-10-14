@@ -293,9 +293,11 @@ def ht11(s):
         src.append(s.email(d + "T16:00:00Z", WORK, addr("ines"), "Weekly status",
                            "Status: cron migration, load test, runbook. No blockers.",
                            sent=True))
+    # alias added after lrr-v2 (CORRECTIONS.md #3): "Friday status update"
+    al = [["status", "update"]]
     return {"sources": src,
-            "c1": open_(["weekly", "status"], "kestrel", "2026-10-16", "high"),
-            "c2": open_(["weekly", "status"], "kestrel", "2026-11-13", None)}
+            "c1": dict(open_(["weekly", "status"], "kestrel", "2026-10-16", "high"), aliases=al),
+            "c2": dict(open_(["weekly", "status"], "kestrel", "2026-11-13", None), aliases=al)}
 
 
 # ------------------------------------- auto-reply vs real reply

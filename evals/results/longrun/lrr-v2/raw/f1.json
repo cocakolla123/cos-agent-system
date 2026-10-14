@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:27:21.056708+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Four updates to the open list, two new Kestrel obligations and one company-wide one. Output:\n\n[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-360-load-test-scheduler-v2\",\"name\":\"Load test scheduler v2 before launch\",\"attrs\":{\"due\":\"2026-09-30\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0550\",\"jr-0549\"],\"refs\":[\"PLAT-360\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"review-rota-api-pr-470\",\"name\":\"Review rota-api PR #470 (Batch shift import) in Alex's absence\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"gh-0036\",\"gh-0035\"],\"refs\":[\"kestrel/rota-api#470\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"friday-status-update-ines\",\"name\":\"Send Ines the short Friday status update\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0718\",\"sl-17371\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"scheduler-v2-design-doc-circulate\",\"name\":\"Circulate the scheduler v2 design doc two days before the Oct 22 architecture review\",\"attrs\":{\"due\":\"2026-10-20\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0679\",\"cal-0008\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rotate-leaked-aws-key\",\"name\":\"Rotate and revoke the leaked AWS access key in kestrel/infra (commit 9f2c1ab)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-17349\",\"sl-17348\",\"em-0680\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"sl-17333\",\"sl-17332\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-322-cron-migration-scheduler-v2\",\"name\":\"Migrate cron jobs to scheduler v2\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"medium\",\"evidence\":[\"sl-17323\",\"jr-0544\",\"sl-17322\"],\"refs\":[\"PLAT-322\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-maintenance-window-confirm\",\"name\":\"Confirm the Nov 15 maintenance window to Alex Brennan (Northwind Clinics)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"medium\",\"evidence\":[\"em-0672\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"evidence\":[\"em-0692\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"benefits-enrollment-nov-6\",\"name\":\"Complete benefits enrollment (otherwise defaults to the basic plan)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"medium\",\"evidence\":[\"sl-17376\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]}\n]",
+  "total_cost_usd": 0.3664653,
+  "duration_ms": 37634,
+  "duration_api_ms": 32445,
+  "num_turns": 16,
+  "usage": {
+   "input_tokens": 20,
+   "cache_creation_input_tokens": 63835,
+   "cache_read_input_tokens": 654553,
+   "output_tokens": 4563,
+   "output_tokens_details": {
+    "thinking_tokens": 1416
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 63835,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1723,
+     "cache_read_input_tokens": 89420,
+     "cache_creation_input_tokens": 1453,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1453
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 20,
+    "outputTokens": 4563,
+    "cacheReadInputTokens": 654553,
+    "cacheCreationInputTokens": 63835,
+    "webSearchRequests": 0,
+    "costUSD": 0.3664653,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 1416,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}
