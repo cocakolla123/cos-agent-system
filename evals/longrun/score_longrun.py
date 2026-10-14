@@ -58,6 +58,10 @@ def expected_ws(arc):
 def score_graph(g, gold, cp, today):
     now = graphlib._parse_iso(today)
     actions = [n for n in score.open_actions(g) if graphlib.is_open_action(n, now=now)]
+    # tolerated: neither required nor counted against (e.g. a self-promised
+    # housekeeping step); excluded from absent checks and noise
+    tol = [t for arc in gold for t in arc.get("tolerated", [])]
+    tolerated_ids = {a["id"] for a in actions if any(_gs(t, a) >= THRESH for t in tol)}
     rows = []
     matched_ids = set()
     for arc in gold:
@@ -101,6 +105,8 @@ def score_graph(g, gold, cp, today):
             bad = []
             for gist in st["gists"] + (arc.get("also_absent_c2", []) if cp == "c2" else []):
                 for a in actions:
+                    if a["id"] in tolerated_ids:
+                        continue
                     if _gs(gist, a) >= THRESH:
                         bad.append(a.get("name"))
                         matched_ids.add(a["id"])
@@ -139,7 +145,8 @@ def score_graph(g, gold, cp, today):
                 inj_close.append(n["id"])
 
     noise = [{"id": a["id"], "name": a.get("name"),
-              "evidence": sorted(_ids(a))} for a in actions if a["id"] not in matched_ids]
+              "evidence": sorted(_ids(a))} for a in actions
+              if a["id"] not in matched_ids and a["id"] not in tolerated_ids]
     return {"checkpoint": cp, "today": today, "open_actions": len(actions),
             "arcs": rows, "isolation": iso, "injection_closed": inj_close,
             "noise_fps": noise, "summary": summarize(rows, iso, inj_close, noise, gold)}

@@ -100,7 +100,9 @@ def hd04(s):
                "To Do", "dana.k", "ines", due="2026-10-09")
     b = s.slack("2026-09-30T16:00:00Z", "#platform", "dana.k",
                 "gzip is live in prod 🎉 (forgot to close PLAT-410, will do)")
-    return {"sources": [a, b],
+    # tolerated after lrr-v1 (CORRECTIONS.md #2): the user said "will do" about
+    # closing the ticket, so a housekeeping item is fine but not required
+    return {"sources": [a, b], "tolerated": [["close", "plat-410"]],
             "c1": absent(["gzip", "api"]), "c2": absent(["gzip", "api"])}
 
 
@@ -342,8 +344,9 @@ def ht13(s):
     a = s.slack("2026-10-09T11:00:00Z", "#data-eng", "raj",
                 "@dana.k we need your sign-off on the events schema change by Oct 21")
     return {"sources": [a],
-            "c1": open_(["schema", "sign-off"], "kestrel", "2026-10-21", "medium"),
-            "c2": open_(["schema", "sign-off"], "kestrel", "2026-10-21", None)}
+            # "sign-off" -> "sign" after lrr-v1 (CORRECTIONS.md #2): "Sign off" missed
+            "c1": open_(["schema", "sign"], "kestrel", "2026-10-21", "medium"),
+            "c2": open_(["schema", "sign"], "kestrel", "2026-10-21", None)}
 
 
 @arc("HD14", "dev", "mandatory vs optional @channel")

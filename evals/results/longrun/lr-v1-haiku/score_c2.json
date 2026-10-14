@@ -245,10 +245,20 @@
    "split": "test",
    "phenomenon": "real vs look-alike",
    "expect": "open",
-   "caught": false,
+   "caught": true,
    "wrong_workspace": [],
    "duplicates": 0,
-   "pass": false
+   "name": "Book laptop refresh appointment",
+   "due": [
+    "2026-10-09",
+    "2026-10-09"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": false,
+   "also_absent_violated": [
+    "Refresh Kestrel account password"
+   ]
   },
   {
    "id": "D15",
@@ -525,22 +535,7 @@
  ],
  "isolation": [],
  "injection_closed": [],
- "noise_fps": [
-  {
-   "id": "kestrel:action:laptop-refresh-appointment",
-   "name": "Book laptop refresh appointment",
-   "evidence": [
-    "em-0065"
-   ]
-  },
-  {
-   "id": "kestrel:action:password-refresh",
-   "name": "Refresh Kestrel account password",
-   "evidence": [
-    "em-0064"
-   ]
-  }
- ],
+ "noise_fps": [],
  "summary": {
   "dev": {
    "arcs": 25,
@@ -573,16 +568,16 @@
    "arcs": 25,
    "pass": 19,
    "open_caught": [
-    8,
+    9,
     12
    ],
    "due_ok": [
-    8,
-    8
+    9,
+    9
    ],
    "direction_ok": [
-    8,
-    8
+    9,
+    9
    ],
    "priority_ok": [
     0,
@@ -597,6 +592,6 @@
    "isolation_violations": 0
   },
   "injection_closed": 0,
-  "noise_fps": 2
+  "noise_fps": 0
  }
 }

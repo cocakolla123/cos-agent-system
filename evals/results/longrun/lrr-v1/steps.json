@@ -1,0 +1,67 @@
+[
+ {
+  "records": 67,
+  "valid": 67,
+  "parse_error": null,
+  "step": "c1",
+  "today": "2026-10-13",
+  "items": 14457,
+  "cost_usd": 0.9400628000000001,
+  "duration_ms": 167376,
+  "models": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "records": 10,
+  "valid": 10,
+  "parse_error": null,
+  "step": "f1",
+  "today": "2026-10-20",
+  "items": 1111,
+  "cost_usd": 0.29736380000000007,
+  "duration_ms": 36512,
+  "models": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "records": 10,
+  "valid": 10,
+  "parse_error": null,
+  "step": "f2",
+  "today": "2026-10-27",
+  "items": 1080,
+  "cost_usd": 0.3429206,
+  "duration_ms": 27030,
+  "models": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "records": 5,
+  "valid": 5,
+  "parse_error": null,
+  "step": "f3",
+  "today": "2026-11-03",
+  "items": 1080,
+  "cost_usd": 0.33785770000000004,
+  "duration_ms": 30675,
+  "models": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "records": 0,
+  "valid": 0,
+  "parse_error": null,
+  "step": "f4",
+  "today": "2026-11-10",
+  "items": 1098,
+  "cost_usd": 0.33272999999999997,
+  "duration_ms": 24191,
+  "models": [
+   "claude-sonnet-5-5"
+  ]
+ }
+]

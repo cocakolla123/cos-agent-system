@@ -1,0 +1,1113 @@
+{
+ "checkpoint": "c2",
+ "today": "2026-11-10",
+ "open_actions": 42,
+ "arcs": [
+  {
+   "id": "D01",
+   "split": "dev",
+   "phenomenon": "stale open",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T01",
+   "split": "test",
+   "phenomenon": "stale open",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Northwind Kestrel's data retention policy",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D02",
+   "split": "dev",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T02",
+   "split": "test",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D03",
+   "split": "dev",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T03",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D04",
+   "split": "dev",
+   "phenomenon": "moved deadline",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Migrate cron jobs to scheduler v2 (PLAT-322)",
+   "due": [
+    "2026-11-13",
+    "2026-11-13"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T04",
+   "split": "test",
+   "phenomenon": "moved deadline",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D05",
+   "split": "dev",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T05",
+   "split": "test",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D06",
+   "split": "dev",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T06",
+   "split": "test",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D07",
+   "split": "dev",
+   "phenomenon": "own promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T07",
+   "split": "test",
+   "phenomenon": "own promise",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Lena the API field list for the new settings screen",
+   "due": [
+    "2026-09-30",
+    "2026-09-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D08",
+   "split": "dev",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T08",
+   "split": "test",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D09",
+   "split": "dev",
+   "phenomenon": "duplicate surfaces",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T09",
+   "split": "test",
+   "phenomenon": "duplicate surfaces",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Northwind the RCA for the Sep 2 outage (RTA-130)",
+   "due": [
+    "2026-09-18",
+    "2026-09-18"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D10",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T10",
+   "split": "test",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D11",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T11",
+   "split": "test",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Confirm the Nov 15 maintenance window to Alex Brennan (Northwind)",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D12",
+   "split": "dev",
+   "phenomenon": "injection",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Review tinyq PR #89 (Fix double drain)",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T12",
+   "split": "test",
+   "phenomenon": "injection",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D14",
+   "split": "dev",
+   "phenomenon": "real vs look-alike",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T14",
+   "split": "test",
+   "phenomenon": "real vs look-alike",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Book laptop swap appointment via IT booking page",
+   "due": [
+    "2026-10-09",
+    "2026-10-09"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D15",
+   "split": "dev",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Draft the retry-policy RFC",
+   "due": [
+    "2026-09-04",
+    "2026-09-04"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T15",
+   "split": "test",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Think about Q4 growth goals for 1:1 with Ines",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D16",
+   "split": "dev",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T16",
+   "split": "test",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D17",
+   "split": "dev",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T17",
+   "split": "test",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D18",
+   "split": "dev",
+   "phenomenon": "reopened",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T18",
+   "split": "test",
+   "phenomenon": "reopened",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Fix CSV import dropping the last row (rota-api #430, regression in 2.14)",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D19",
+   "split": "dev",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T19",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D20",
+   "split": "dev",
+   "phenomenon": "security",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T20",
+   "split": "test",
+   "phenomenon": "security",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Renew TLS certificate for api.kestrel.example (expires Nov 2)",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D21",
+   "split": "dev",
+   "phenomenon": "workspace isolation",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T21",
+   "split": "test",
+   "phenomenon": "workspace isolation",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Grace Liu (Halcyon Talent) an updated resume",
+   "due": [
+    "2026-10-01",
+    "2026-10-01"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D22",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Call BrightSmile Dental to reschedule cancelled appointment",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T22",
+   "split": "test",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Sign lease renewal with Harbor Lane Properties",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D23",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T23",
+   "split": "test",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Write the migration guide for v1 customers",
+   "due": [
+    "2026-09-10",
+    "2026-09-10"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D24",
+   "split": "dev",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Export the on-call schedule to calendars (PLAT-380)",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T24",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D25",
+   "split": "dev",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Add idempotency keys to webhook delivery (PLAT-401)",
+   "due": [
+    "2026-11-20",
+    "2026-11-20"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T25",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T26",
+   "split": "test",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Metrics endpoint for the worker pool (PLAT-390)",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D26",
+   "split": "dev",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send backup restore test evidence for SOC 2 audit",
+   "due": [
+    "2026-09-25",
+    "2026-09-25"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD01",
+   "split": "dev",
+   "phenomenon": "sarcasm is not a promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT01",
+   "split": "test",
+   "phenomenon": "sarcasm is not a promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD02",
+   "split": "dev",
+   "phenomenon": "conditional promise",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Produce the churn report from Raj's usage export",
+   "due": [
+    "2026-10-02",
+    "2026-10-02"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT02",
+   "split": "test",
+   "phenomenon": "conditional promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD03",
+   "split": "dev",
+   "phenomenon": "user delegates",
+   "expect": "absent",
+   "present": [
+    "Regression run for 2.15 (delegated to Mei)"
+   ],
+   "pass": false
+  },
+  {
+   "id": "HT03",
+   "split": "test",
+   "phenomenon": "user delegates",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD04",
+   "split": "dev",
+   "phenomenon": "stale tracker status",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT04",
+   "split": "test",
+   "phenomenon": "stale tracker status",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD05",
+   "split": "dev",
+   "phenomenon": "one task, different words",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Perf benchmark for the roster API and roster latency numbers (PLAT-420)",
+   "due": [
+    "2026-10-15",
+    "2026-10-15"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT05",
+   "split": "test",
+   "phenomenon": "one task, different words",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Write platform staffing case for Q4 headcount",
+   "due": [
+    "2026-10-19",
+    "2026-10-19"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD06",
+   "split": "dev",
+   "phenomenon": "question that is a task",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Produce Postgres 18 upgrade plan before Oct 20 planning meeting",
+   "due": [
+    "2026-10-20",
+    "2026-10-20"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT06",
+   "split": "test",
+   "phenomenon": "question that is a task",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Reply to Lena: will the API support bulk edits?",
+   "due": [
+    "2026-10-16",
+    "2026-10-16"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD07",
+   "split": "dev",
+   "phenomenon": "quoted ask already answered",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT07",
+   "split": "test",
+   "phenomenon": "quoted ask already answered",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Northwind (Alex Brennan) the pen-test summary",
+   "due": [
+    "2026-10-22",
+    "2026-10-22"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD08",
+   "split": "dev",
+   "phenomenon": "one ask among many",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Review the IAM policy diff",
+   "due": [
+    "2026-10-15",
+    "2026-10-15"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT08",
+   "split": "test",
+   "phenomenon": "one ask among many",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send Victor the conference budget request",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD09",
+   "split": "dev",
+   "phenomenon": "relative date",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Look at the pager config",
+   "due": [
+    "2026-10-12",
+    "2026-10-12"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT09",
+   "split": "test",
+   "phenomenon": "relative date",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Write API v1 deprecation notice text for Tomas",
+   "due": [
+    "2026-10-13",
+    "2026-10-13"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD10",
+   "split": "dev",
+   "phenomenon": "auto-resolved alert",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT10",
+   "split": "test",
+   "phenomenon": "auto-resolved alert",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD11",
+   "split": "dev",
+   "phenomenon": "recurring",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Submit October timesheet",
+   "due": [
+    "2026-11-02",
+    "2026-11-02"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT11",
+   "split": "test",
+   "phenomenon": "recurring",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "HD12",
+   "split": "dev",
+   "phenomenon": "auto-reply is not an answer",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT12",
+   "split": "test",
+   "phenomenon": "auto-reply is not an answer",
+   "expect": "absent",
+   "present": [
+    "Send the approved MSA redlines to Northwind (LEG-55)"
+   ],
+   "pass": false
+  },
+  {
+   "id": "HD13",
+   "split": "dev",
+   "phenomenon": "mention in a muted channel",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Confirm the cron schedule for the billing jobs",
+   "due": [
+    "2026-10-16",
+    "2026-10-16"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT13",
+   "split": "test",
+   "phenomenon": "mention in a muted channel",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Sign off on the events schema change",
+   "due": [
+    "2026-10-21",
+    "2026-10-21"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD14",
+   "split": "dev",
+   "phenomenon": "mandatory vs optional @channel",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Rotate SSH keys per the new security policy",
+   "due": [
+    "2026-10-23",
+    "2026-10-23"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT14",
+   "split": "test",
+   "phenomenon": "mandatory vs optional @channel",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Complete benefits enrollment",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD15",
+   "split": "dev",
+   "phenomenon": "shared with one other person",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Warehouse cutover plan (infra side, with Raj)",
+   "due": [
+    "2026-10-23",
+    "2026-10-23"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT15",
+   "split": "test",
+   "phenomenon": "shared with one other person",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Build the consumer side of queue sharding (PLAT-430), pairing with Alex",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HD16",
+   "split": "dev",
+   "phenomenon": "your area, not given to you",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT16",
+   "split": "test",
+   "phenomenon": "your area, not given to you",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD17",
+   "split": "dev",
+   "phenomenon": "small group chat",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Reply to Lena: does the roster API return each location's timezone names?",
+   "due": [
+    "2026-10-14",
+    "2026-10-14"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT17",
+   "split": "test",
+   "phenomenon": "small group chat",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD18",
+   "split": "dev",
+   "phenomenon": "ask buried in a long thread",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Add timeline to the INC-240 incident doc",
+   "due": [
+    "2026-10-08",
+    "2026-10-08"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "HT18",
+   "split": "test",
+   "phenomenon": "ask buried in a long thread",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Update the scheduler v2 launch checklist with infra steps",
+   "due": [
+    "2026-10-19",
+    "2026-10-19"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  }
+ ],
+ "isolation": [],
+ "injection_closed": [],
+ "noise_fps": [],
+ "summary": {
+  "dev": {
+   "arcs": 43,
+   "pass": 42,
+   "open_caught": [
+    18,
+    18
+   ],
+   "due_ok": [
+    18,
+    18
+   ],
+   "direction_ok": [
+    18,
+    18
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "duplicated": 0,
+   "wrong_workspace": 0,
+   "absent_ok": [
+    24,
+    25
+   ],
+   "isolation_violations": 0
+  },
+  "test": {
+   "arcs": 43,
+   "pass": 41,
+   "open_caught": [
+    21,
+    22
+   ],
+   "due_ok": [
+    21,
+    21
+   ],
+   "direction_ok": [
+    21,
+    21
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "duplicated": 0,
+   "wrong_workspace": 0,
+   "absent_ok": [
+    20,
+    21
+   ],
+   "isolation_violations": 0
+  },
+  "injection_closed": 0,
+  "noise_fps": 0
+ }
+}

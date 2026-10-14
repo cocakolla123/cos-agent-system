@@ -786,7 +786,31 @@
   "split": "dev"
  },
  {
+  "also_absent": [
+   [
+    "password",
+    "verify"
+   ],
+   [
+    "account",
+    "password"
+   ],
+   [
+    "password",
+    "expire"
+   ]
+  ],
   "c1": {
+   "aliases": [
+    [
+     "laptop",
+     "refresh"
+    ],
+    [
+     "laptop",
+     "appointment"
+    ]
+   ],
    "blocked_on": null,
    "due": "2026-10-09",
    "gist": [
@@ -799,6 +823,16 @@
    "workspace": "kestrel"
   },
   "c2": {
+   "aliases": [
+    [
+     "laptop",
+     "refresh"
+    ],
+    [
+     "laptop",
+     "appointment"
+    ]
+   ],
    "blocked_on": null,
    "due": "2026-10-09",
    "gist": [
@@ -816,6 +850,14 @@
     [
      "password",
      "verify"
+    ],
+    [
+     "account",
+     "password"
+    ],
+    [
+     "password",
+     "expire"
     ]
    ]
   },
@@ -1125,7 +1167,7 @@
    "blocked_on": null,
    "due": "2026-10-09",
    "gist": [
-    "rotate",
+    "aws",
     "key"
    ],
    "owner": "user",
@@ -1136,7 +1178,7 @@
   "c2": {
    "gists": [
     [
-     "rotate",
+     "aws",
      "key"
     ]
    ],
