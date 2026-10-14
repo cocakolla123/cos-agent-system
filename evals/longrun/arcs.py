@@ -309,8 +309,9 @@ def t08(s):
     return {"sources": [a, b],
             "c1": open_(["renewal", "quote"], "kestrel", None, "medium",
                         owner="counterparty", blocked_on="priya"),
-            "c2": open_(["renewal", "quote"], "kestrel", None, None,
-                        owner="counterparty", blocked_on="priya")}
+            # corrected after lr-v1 (CORRECTIONS.md #1): T25 says Kestrel is not
+            # renewing Stratus, which makes the quote request moot
+            "c2": absent(["renewal", "quote"])}
 
 
 # -------------------------------------------------------- duplicate surfaces

@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:08:43.804141+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rotate-leaked-aws-key\",\"name\":\"Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-0213\",\"em-0067\",\"sl-0214\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-360-load-test-scheduler-v2\",\"name\":\"Load test scheduler v2 (PLAT-360)\",\"attrs\":{\"due\":\"2026-09-30\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0045\",\"sl-0202\",\"cal-0006\",\"jr-0046\"],\"refs\":[\"PLAT-360\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"review-rota-api-pr-470\",\"name\":\"Review rota-api#470 (Batch shift import) in Alex's absence\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"sl-0195\",\"sl-0196\",\"gh-0035\",\"em-0051\",\"gh-0036\"],\"refs\":[\"rota-api#470\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"circulate-scheduler-v2-design-doc\",\"name\":\"Circulate scheduler v2 design doc two days before Oct 22 architecture review\",\"attrs\":{\"due\":\"2026-10-20\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"cal-0008\",\"em-0066\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"sl-0197\",\"sl-0198\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-322-cron-migration\",\"name\":\"Migrate cron jobs to scheduler v2 (PLAT-322)\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"medium\",\"evidence\":[\"jr-0040\",\"sl-0187\",\"sl-0188\"],\"refs\":[\"PLAT-322\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"confirm-northwind-maintenance-window-nov-15\",\"name\":\"Confirm Nov 15 maintenance window to Alex Brennan (Northwind)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"medium\",\"evidence\":[\"em-0059\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"review-stratus-security-questionnaire\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"evidence\":[\"em-0079\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.1523243,
+  "duration_ms": 16660,
+  "duration_api_ms": 14101,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 28010,
+   "cache_read_input_tokens": 213743,
+   "output_tokens": 1889,
+   "output_tokens_details": {
+    "thinking_tokens": 423
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 28010,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1563,
+     "cache_read_input_tokens": 50737,
+     "cache_creation_input_tokens": 4311,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 4311
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 10,
+    "outputTokens": 1889,
+    "cacheReadInputTokens": 213743,
+    "cacheCreationInputTokens": 28010,
+    "webSearchRequests": 0,
+    "costUSD": 0.1523243,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 423,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 25,
+ "attempt": 1
+}

@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-14T00:09:04.065484+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access-rta-90\",\"name\":\"Waiting on IT for read access to analytics replica (RTA-90)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0052\",\"em-0053\",\"em-0054\"],\"refs\":[\"RTA-90\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"security-awareness-training\",\"name\":\"Complete annual security awareness training\",\"attrs\":{\"due\":\"2026-09-15\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0060\",\"em-0061\",\"em-0062\",\"em-0063\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a Corvid Systems final-round interview slot\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"low\",\"status\":\"done\",\"evidence\":[\"em-0071\",\"em-0072\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-0182\",\"sl-0183\",\"jr-0034\",\"jr-0035\",\"jr-0036\",\"sl-0184\",\"doc-0008\"],\"refs\":[\"PLAT-301\",\"INC-212\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-0193\",\"jr-0043\",\"jr-0044\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"notifications-rfc-comments\",\"name\":\"Add comments on the notifications RFC for Tomas\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0050\",\"sl-0189\",\"sl-0190\",\"sl-0191\",\"sl-0192\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-0055\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.1441632,
+  "duration_ms": 15441,
+  "duration_api_ms": 12472,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 27885,
+   "cache_read_input_tokens": 172272,
+   "output_tokens": 1538,
+   "output_tokens_details": {
+    "thinking_tokens": 213
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 27885,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1214,
+     "cache_read_input_tokens": 50109,
+     "cache_creation_input_tokens": 4814,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 4814
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1538,
+    "cacheReadInputTokens": 172272,
+    "cacheCreationInputTokens": 27885,
+    "webSearchRequests": 0,
+    "costUSD": 0.1441632,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 213,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 24,
+ "attempt": 1
+}
