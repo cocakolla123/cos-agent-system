@@ -277,6 +277,63 @@ Three judgment rules, all of which cost the user trust when broken:
 Already-satisfied obligations are worth emitting *with* their status (the user asking "did I
 submit that?" is a real question), but they must never appear on the to-do list.
 
+### Step 1d: Applications, work that lives elsewhere, and content nobody committed to
+Four situations a first run on a real personal inbox hits at once. Each one fails quietly if
+handled with the rules above alone.
+
+**Applications are series too.** A job, contract or platform application moves through
+receipt, then screens, then interviews, then an outcome, and only some steps put the next move
+on the user.
+- An "application submitted" or "thanks for applying" receipt is not a task. A "profile is
+  live" or talent-pool notice is not one either.
+- A rejection ends the series. Re-emit it with `attrs.status: "rejected"` (or "withdrawn",
+  "expired") so it leaves both the to-do list and the live applications. Do not list
+  rejections one by one; a platform that sent many becomes one line in the report.
+- Record each live application once, with `attrs.job_application: true` and `attrs.stage`. It
+  becomes an `Action` only when a step is owed: reply with availability, book a call, take an
+  assessment, send a document, prepare for an interview that has a time.
+- **A time the user proposed and nobody confirmed** is an `Action` due at that time, with
+  `blocked_on` the person who has to confirm. When the proposed window has passed with no
+  reply, it becomes a chase. Priority comes from the date rule as usual.
+- **A self-scheduling link from the counterparty** (a booking page, "pick a slot") means the
+  user can unblock the item without waiting. Say so in the Action's name. Do not leave it
+  only `blocked_on` the other side.
+- A scheduling step that went quiet after the user's last reply (a call happened, then nothing)
+  is a follow-up the user owns. Record it undated, with the date of the last contact in the
+  name.
+
+**Work that lives in a system you cannot see.** Some orgs show clear evidence that the user
+does work for them, but none of the work itself reaches a connected source. The evidence looks
+like: repository invitations from the org's provisioning bot, CI or review-bot notifications
+on the user's own submissions, post-project surveys, payouts, an org-specific login identity,
+"your profile is live". The mail is all notifications. The assignment, its deadline and its
+status live in the org's own portal, chat or tracker. Two failure modes:
+- *Inventing work from notifications.* A bot's "run failed" or "blocking issues" comment is not
+  a deadline. Do not emit an Action for every notification thread. If a bot review gates the
+  user's own open submission and the newest activity on it is recent, emit one Action for the
+  submission, citing the bot review. Otherwise do not emit one.
+- *Saying nothing.* The org is real, recent and probably has open work, and the dashboard shows
+  none of it. That is the case Step 5 calls an unexplained zero, hidden inside one workspace.
+
+So for each such org, record its workspace with `attrs.needs_connect: true` and add one residual
+question for Step 4: offer to connect the system where the work lives (name it when the evidence
+shows it: a code host org, a contractor portal, a team chat, a tracker), or ask the user what is
+active there and when it is due. One question per org, not per notification. A marketplace
+where the user only applies (receipts and rejections, no work evidence) does not get this
+question. Its live applications are handled by the rules above.
+
+**Template rows and machine-written pages are not commitments.** A connected tracker or notes
+tool often holds seed content (rows like "Task 1" or "Write FAQ for launch" that came with a
+template and were never edited). It may also hold long planning pages written by an assistant,
+including an earlier run of this system. Neither is something the user or a counterparty said
+the user owes. Use them as context. Do not emit an Action from them unless another source
+corroborates it, and say in the report that you set them aside.
+
+**A calendar that lacks what the mail schedules is a finding.** When mail shows interviews or
+calls with times and the calendar holds none of them, the calendar is not the user's source of
+truth for those. Report the mismatch in Step 5 instead of concluding "no meetings". Research is
+read-only, so do not create the events.
+
 ## Step 2 — Persist to the graph
 Write the records into the graph via `research.ingest(graph, records)` (see `research.py`). Because
 upsert dedups by stable id, this is safe to run repeatedly. Concretely: assemble the records as
@@ -295,7 +352,8 @@ persist it with `attrs.dormant: true` so it stays queryable without claiming to 
 don't spend a Step 4 question on it. For each remaining
 proposal whose `kind` is unambiguous (single strong signal), adopt it silently. For proposals that
 are ambiguous or `kind: unknown`, **ask the user one short question** ("Is *Acme* your employer,
-a freelance client, or something else?") — and nothing else. Persist confirmed workspaces with
+a freelance client, or something else?") — and nothing else, apart from the connect-or-tell-me
+questions from Step 1d (one per org whose work lives in a system you cannot see). Persist confirmed workspaces with
 `research.workspace_records(proposals)` → `ingest`.
 
 ## Step 5 — Report (and check your own coverage)

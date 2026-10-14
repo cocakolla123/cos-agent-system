@@ -94,9 +94,13 @@ DEFAULT_MAX_IDLE_DAYS = 365
 # attrs['status'] values that assert an engagement is over. Deliberately narrow:
 # only words that can only mean "this ended". "closed"/"done"/"completed" are
 # excluded — a completed document or a closed ticket is normal lifecycle, and
-# sections.py already handles Ticket status separately.
+# sections.py already handles Ticket status separately. Outcome words for an
+# application or an invitation ("rejected", "not selected", "withdrawn",
+# "declined", "expired") end it just as surely; a first run on a real job-search
+# inbox recorded a rejection as status "rejected" and it stayed on the to-do list.
 TERMINAL_STATUSES = frozenset(
-    {"concluded", "ended", "terminated", "offboarded", "cancelled", "canceled"})
+    {"concluded", "ended", "terminated", "offboarded", "cancelled", "canceled",
+     "rejected", "not selected", "withdrawn", "declined", "expired"})
 
 # attrs['status'] values that mean an **Action** no longer needs doing. Read
 # only by is_open_action(), never by is_concluded() — the distinction is the
@@ -534,7 +538,7 @@ def is_concluded(node):
     if a.get("concluded"):
         return True
     status = a.get("status")
-    return isinstance(status, str) and status.strip().lower() in TERMINAL_STATUSES
+    return isinstance(status, str) and _norm_status(status) in TERMINAL_STATUSES
 
 
 def is_current(node, now=None, max_idle_days=DEFAULT_MAX_IDLE_DAYS):

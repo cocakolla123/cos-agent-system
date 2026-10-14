@@ -341,6 +341,14 @@ class TestObligations(unittest.TestCase):
             n = self._action(graph.slug(status), status=status)
             self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
 
+    def test_outcome_statuses_conclude(self):
+        """An application or invitation that ended (rejected, not selected,
+        withdrawn, declined, expired) is over, not open."""
+        for status in ("rejected", "Not_Selected", "withdrawn", "declined", "expired"):
+            n = self._action(graph.slug(status), status=status)
+            self.assertTrue(graph.is_concluded(n), status)
+            self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
+
     def test_unknown_status_leaves_an_action_open(self):
         n = self._action("pending", status="pending")
         self.assertTrue(graph.is_open_action(n, now=self.NOW))

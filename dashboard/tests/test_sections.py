@@ -57,6 +57,22 @@ class TestSectionData(unittest.TestCase):
         self.assertEqual([i["title"] for i in sections.blocked_work(self.g)],
                          ["Old bug"])
 
+    def test_blocked_on_counts_as_blocked(self):
+        self.g.upsert_node("Action", "job-search", "chase", name="Recruiter call",
+                           attrs={"blocked_on": "the recruiter"}, now=_t(1))
+        items = {i["title"]: i for i in sections.blocked_work(self.g)}
+        self.assertEqual(items["Recruiter call"]["sub"], "waiting on the recruiter")
+        self.assertIn("Old bug", items)
+
+    def test_rejected_application_leaves_lists(self):
+        self.g.upsert_node("Action", "job-search", "rej", name="Rejected role",
+                           attrs={"job_application": True, "status": "rejected"},
+                           now=_t(1))
+        self.assertNotIn("Rejected role",
+                         [i["title"] for i in sections.job_applications(self.g)])
+        self.assertNotIn("Rejected role",
+                         [i["title"] for i in sections.next_actions(self.g)])
+
     def test_investigations(self):
         self.assertEqual(len(sections.investigations(self.g)), 1)
 

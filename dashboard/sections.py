@@ -40,8 +40,15 @@ _PRIORITY_RANK = {"high": 0, "medium": 1, "low": 2}
 
 
 def _blocked(n):
+    # ``blocked_on`` is what /cos-research is told to record for an item
+    # waiting on someone else, so it counts as blocked without a separate flag.
     a = n.get("attrs", {}) or {}
-    return bool(a.get("blocked")) or a.get("status") == "blocked"
+    return bool(a.get("blocked")) or a.get("status") == "blocked" or bool(a.get("blocked_on"))
+
+
+def _blocked_label(n):
+    on = (n.get("attrs", {}) or {}).get("blocked_on")
+    return "waiting on %s" % on if on else "blocked"
 
 
 def _truthy(n, key):
@@ -177,7 +184,7 @@ def people_waiting(g, ws=None):
 
 
 def blocked_work(g, ws=None):
-    return sorted((_item(n, "blocked") for n in _current(g.query(workspace=ws)) if _blocked(n)),
+    return sorted((_item(n, _blocked_label(n)) for n in _current(g.query(workspace=ws)) if _blocked(n)),
                   key=lambda x: x["title"])
 
 
