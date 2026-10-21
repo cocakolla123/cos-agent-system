@@ -134,7 +134,7 @@ LEDGER = [
      "text": "'Benchmark numbers' and 'latency numbers for the review' are the same task."},
 ]
 
-DAILY = """Monday, Oct 13
+DAILY = """Tuesday, Oct 13
 
 Since Friday: 404 Slack messages, 16 mails and 18 Jira updates across the connected
 accounts. Most of it is noise, asks to other people, or bots.

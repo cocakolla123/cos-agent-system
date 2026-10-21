@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-21T18:37:32.339826+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my complete analysis of the fixture data, here are the normalized records for this incremental poll:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire\",\n    \"name\": \"Review vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"evidence\": [\"em-0693\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"victor-hale\", \"type\": \"cancelled_by\"}]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"data-retention-policy-northwind\",\n    \"name\": \"Deliver data retention policy to Northwind for audit compliance\",\n    \"attrs\": {\n      \"due\": \"2026-11-06\",\n      \"priority\": \"high\",\n      \"blocked_on\": null,\n      \"evidence\": [\"em-0658\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"alex-brennan\", \"type\": \"requested_by\"}]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"victor-hale\",\n    \"name\": \"Victor Hale\",\n    \"attrs\": {\n      \"email\": \"victor@kestrel.example\",\n      \"title\": \"Director of Engineering\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"alex-brennan\",\n    \"name\": \"Alex Brennan\",\n    \"attrs\": {\n      \"email\": \"alex.brennan@northwind.example\",\n      \"title\": \"Operations Lead, Northwind Clinics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.1949281,
+  "duration_ms": 73937,
+  "duration_api_ms": 70036,
+  "num_turns": 25,
+  "usage": {
+   "input_tokens": 122,
+   "cache_creation_input_tokens": 43706,
+   "cache_read_input_tokens": 761841,
+   "output_tokens": 6242,
+   "output_tokens_details": {
+    "thinking_tokens": 3739
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 43706,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2214,
+     "cache_read_input_tokens": 71398,
+     "cache_creation_input_tokens": 176,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 176
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 122,
+    "outputTokens": 6242,
+    "cacheReadInputTokens": 761841,
+    "cacheCreationInputTokens": 43706,
+    "webSearchRequests": 0,
+    "costUSD": 0.1949281,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3739,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

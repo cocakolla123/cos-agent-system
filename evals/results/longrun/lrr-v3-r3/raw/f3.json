@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-21T18:31:21.826111+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rta-101-timezone-bug-shift-export\",\"name\":\"Fix reopened timezone bug in shift export, Australia/Lord_Howe (RTA-101)\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"jr-0554\",\"jr-0555\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"status\":\"cancelled\",\"due\":\"2026-10-29\",\"priority\":\"medium\",\"evidence\":[\"em-0692\",\"em-0693\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Waiting on Priya (Stratus Monitoring) for the 50-seat renewal quote\",\"attrs\":{\"status\":\"cancelled\",\"priority\":\"medium\",\"evidence\":[\"em-0668\",\"em-0669\",\"em-0693\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Northwind Kestrel's data retention policy\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"em-0656\",\"em-0657\",\"em-0658\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"status\":\"done\",\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"sl-17332\",\"sl-17333\",\"sl-17334\",\"doc-0009\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-update-to-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"sl-17371\",\"em-0715\",\"em-0716\",\"em-0717\",\"em-0718\",\"em-0719\",\"em-0720\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]}\n]",
+  "total_cost_usd": 0.227547,
+  "duration_ms": 22487,
+  "duration_api_ms": 19804,
+  "num_turns": 11,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 44599,
+   "cache_read_input_tokens": 254310,
+   "output_tokens": 2370,
+   "output_tokens_details": {
+    "thinking_tokens": 572
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 44599,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1298,
+     "cache_read_input_tokens": 68436,
+     "cache_creation_input_tokens": 8411,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 8411
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 10,
+    "outputTokens": 2370,
+    "cacheReadInputTokens": 254310,
+    "cacheCreationInputTokens": 44599,
+    "webSearchRequests": 0,
+    "costUSD": 0.227547,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 572,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

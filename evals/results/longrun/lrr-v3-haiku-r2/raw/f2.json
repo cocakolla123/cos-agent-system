@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:36:11.108573+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my analysis of all sources, here is the JSON output with updated records:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"final-round-interview\",\n    \"name\": \"Pick final-round interview slot with Corvid Systems\",\n    \"attrs\": {\n      \"due\": \"2026-10-23\",\n      \"priority\": \"medium\",\n      \"status\": \"booked\",\n      \"evidence\": [\"em-0684\", \"em-0685\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"security-awareness-training\",\n    \"name\": \"Complete security awareness training\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"completed\",\n      \"evidence\": [\"em-0675\", \"em-0676\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"notifications-rfc-comments\",\n    \"name\": \"Provide comments on notifications RFC\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\"sl-17325\", \"sl-17326\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"tomas-reyes\", \"type\": \"blocked_on\"}]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"october-timesheet\",\n    \"name\": \"Submit October timesheet\",\n    \"attrs\": {\n      \"due\": \"2026-11-02\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0714\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-msa-redlines\",\n    \"name\": \"Send approved Northwind MSA redlines\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0727\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-401-idempotency-keys\",\n    \"name\": \"Add idempotency keys to webhook delivery\",\n    \"attrs\": {\n      \"due\": \"2026-11-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"jr-0559\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"PLAT-401\", \"type\": \"tracked_in\"}]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"tomas-reyes\",\n    \"name\": \"Tomas Reyes\",\n    \"attrs\": {\n      \"email\": \"tomas@kestrel.example\",\n      \"title\": \"Product Manager, Scheduling\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.2317312,
+  "duration_ms": 74183,
+  "duration_api_ms": 70561,
+  "num_turns": 26,
+  "usage": {
+   "input_tokens": 114,
+   "cache_creation_input_tokens": 55411,
+   "cache_read_input_tokens": 866702,
+   "output_tokens": 6825,
+   "output_tokens_details": {
+    "thinking_tokens": 3862
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 55411,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2034,
+     "cache_read_input_tokens": 82474,
+     "cache_creation_input_tokens": 805,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 805
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 114,
+    "outputTokens": 6825,
+    "cacheReadInputTokens": 866702,
+    "cacheCreationInputTokens": 55411,
+    "webSearchRequests": 0,
+    "costUSD": 0.2317312,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3862,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

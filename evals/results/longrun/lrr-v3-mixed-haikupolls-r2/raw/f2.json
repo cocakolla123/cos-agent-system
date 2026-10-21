@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:37:59.344664+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my analysis of the fixture data, I'll now compile the JSON array of updated and new records for this incremental poll:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"corvid-final-round-slot\",\n    \"name\": \"Pick a Corvid Systems final-round interview slot\",\n    \"attrs\": {\n      \"due\": \"2026-10-23\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0684\", \"em-0685\"],\n      \"status\": \"done\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"halcyon-updated-resume\",\n    \"name\": \"Send updated resume to Grace Liu (Halcyon Talent)\",\n    \"attrs\": {\n      \"due\": \"2026-10-01\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0686\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.85,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"security-awareness-training\",\n    \"name\": \"Complete annual security awareness training\",\n    \"attrs\": {\n      \"due\": \"2026-09-15\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0673\", \"em-0674\", \"em-0675\", \"em-0676\"],\n      \"status\": \"done\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"it-access-analytics-replica\",\n    \"name\": \"Awaiting IT access to analytics replica (RTA-90)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0665\", \"em-0666\", \"em-0667\"],\n      \"status\": \"done\",\n      \"refs\": [\"RTA-90\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-msa-redlines-legal-review\",\n    \"name\": \"Awaiting Legal review of Northwind MSA redlines (LEG-55)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0725\", \"em-0726\", \"em-0727\"],\n      \"status\": \"done\",\n      \"refs\": [\"LEG-55\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-301-postmortem-inc-212\",\n    \"name\": \"Write postmortem for INC-212 queue outage (PLAT-301)\",\n    \"attrs\": {\n      \"due\": \"2026-07-31\",\n      \"priority\": \"high\",\n      \"evidence\": [\"jr-0538\", \"jr-0539\", \"sl-17317\", \"jr-0540\", \"sl-17319\"],\n      \"status\": \"done\",\n      \"refs\": [\"PLAT-301\", \"INC-212\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-355-oncall-runbook-rewrite\",\n    \"name\": \"Rewrite the on-call runbook (PLAT-355, taken over from Sam)\",\n    \"attrs\": {\n      \"due\": \"2026-10-09\",\n      \"priority\": \"high\",\n      \"evidence\": [\"jr-0547\", \"sl-17328\", \"jr-0548\"],\n      \"status\": \"done\",\n      \"refs\": [\"PLAT-355\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.99,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-401-webhook-idempotency-keys\",\n    \"name\": \"Add idempotency keys to webhook delivery (PLAT-401)\",\n    \"attrs\": {\n      \"due\": \"2026-11-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"jr-0559\"],\n      \"refs\": [\"PLAT-401\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"october-timesheet-submission\",\n    \"name\": \"Submit October timesheet\",\n    \"attrs\": {\n      \"due\": \"2026-11-02\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0714\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"ines-moreau\",\n    \"name\": \"Ines Moreau\",\n    \"attrs\": {\n      \"title\": \"Engineering Manager, Platform\",\n      \"email\": \"ines@kestrel.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.17835410000000002,
+  "duration_ms": 80626,
+  "duration_api_ms": 76999,
+  "num_turns": 20,
+  "usage": {
+   "input_tokens": 74,
+   "cache_creation_input_tokens": 46151,
+   "cache_read_input_tokens": 464381,
+   "output_tokens": 7908,
+   "output_tokens_details": {
+    "thinking_tokens": 4939
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 46151,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2728,
+     "cache_read_input_tokens": 70490,
+     "cache_creation_input_tokens": 3529,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 3529
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 74,
+    "outputTokens": 7908,
+    "cacheReadInputTokens": 464381,
+    "cacheCreationInputTokens": 46151,
+    "webSearchRequests": 0,
+    "costUSD": 0.17835410000000002,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 4939,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

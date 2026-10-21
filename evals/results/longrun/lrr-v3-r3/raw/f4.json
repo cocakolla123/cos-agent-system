@@ -1,0 +1,67 @@
+{
+ "scenario": "f4",
+ "started": "2026-10-21T18:31:46.145592+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-update-to-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"high\",\"evidence\":[\"sl-17371\",\"em-0715\",\"em-0716\",\"em-0717\",\"em-0718\",\"em-0719\",\"em-0720\",\"em-0721\"]},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]}]",
+  "total_cost_usd": 0.26727779999999995,
+  "duration_ms": 21855,
+  "duration_api_ms": 19486,
+  "num_turns": 15,
+  "usage": {
+   "input_tokens": 18,
+   "cache_creation_input_tokens": 47567,
+   "cache_read_input_tokens": 528638,
+   "output_tokens": 2411,
+   "output_tokens_details": {
+    "thinking_tokens": 551
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 47567,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 320,
+     "cache_read_input_tokens": 78514,
+     "cache_creation_input_tokens": 1301,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1301
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 18,
+    "outputTokens": 2411,
+    "cacheReadInputTokens": 528638,
+    "cacheCreationInputTokens": 47567,
+    "webSearchRequests": 0,
+    "costUSD": 0.26727779999999995,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 551,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1098,
+ "attempt": 1
+}

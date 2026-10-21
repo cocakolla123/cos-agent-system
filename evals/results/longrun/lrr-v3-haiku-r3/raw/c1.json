@@ -1,0 +1,67 @@
+{
+ "scenario": "c1",
+ "started": "2026-10-21T18:32:10.452793+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"shard-queue-consumers\", \"name\": \"Shard the job queue (consumer side)\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-30\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"alex-park\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"rotate-aws-key\", \"name\": \"Rotate and revoke leaked AWS access key\", \"attrs\": {\"priority\": \"high\", \"due\": \"2026-10-09\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"q4-hiring-justification\", \"name\": \"Write platform staffing case for Q4 headcount\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-19\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"api-bulk-edits-question\", \"name\": \"Answer Lena: does roster API support bulk edits?\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-16\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"lena-fischer\", \"type\": \"awaiting_answer\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"warehouse-cutover-plan\", \"name\": \"Warehouse cutover plan (infrastructure side)\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-23\", \"blocked_on\": \"raj-patel\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}, {\"to_kind\": \"Person\", \"to_key\": \"raj-patel\", \"type\": \"collaborating_with\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"roster-api-timezone-response\", \"name\": \"Answer Lena: does roster API return timezone names?\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-14\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"lena-fischer\", \"type\": \"awaiting_answer\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"perf-benchmark-roster\", \"name\": \"Perf benchmark for the roster API\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-15\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"notifications-rfc-comments\", \"name\": \"RFC comments on notifications\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-16\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"tomas-reyes\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"postgres-18-plan\", \"name\": \"Postgres 18 upgrade plan\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-20\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"conference-budget\", \"name\": \"Conference budget request\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-30\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"victor-hale\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"pentest-summary\", \"name\": \"Send pen-test summary to Northwind\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-22\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"alex-brennan\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"deprecation-notice-api\", \"name\": \"API v1 deprecation notice text\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-15\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"tomas-reyes\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"arch-review-design-doc\", \"name\": \"Circulate design doc for scheduler v2 architecture review\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-10-20\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Meeting\", \"to_key\": \"arch-review-scheduler-v2\", \"type\": \"for\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"weekly-status-report\", \"name\": \"Weekly status report to Ines\", \"attrs\": {\"priority\": \"low\", \"due\": null, \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"recurring\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"load-test-scheduler-v2\", \"name\": \"Load test scheduler v2\", \"attrs\": {\"priority\": \"high\", \"due\": \"2026-09-30\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": [{\"to_kind\": \"Person\", \"to_key\": \"ines-moreau\", \"type\": \"requested_by\"}]},\n{\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"tls-cert-renewal\", \"name\": \"Renew TLS certificate for api.kestrel.example\", \"attrs\": {\"priority\": \"high\", \"due\": \"2026-11-02\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []},\n{\"kind\": \"Action\", \"workspace\": \"personal\", \"key\": \"lease-renewal-sign\", \"name\": \"Sign lease renewal\", \"attrs\": {\"priority\": \"low\", \"due\": \"2026-10-30\", \"blocked_on\": null}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"ines-moreau\", \"name\": \"Ines Moreau\", \"attrs\": {\"title\": \"Engineering Manager, Platform\", \"email\": \"ines@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"alex-park\", \"name\": \"Alex Park\", \"attrs\": {\"title\": \"Backend Engineer, Platform\", \"email\": \"alex.park@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"raj-patel\", \"name\": \"Raj Patel\", \"attrs\": {\"title\": \"Data Engineer\", \"email\": \"raj@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"lena-fischer\", \"name\": \"Lena Fischer\", \"attrs\": {\"title\": \"Product Designer\", \"email\": \"lena@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"tomas-reyes\", \"name\": \"Tomas Reyes\", \"attrs\": {\"title\": \"Product Manager, Scheduling\", \"email\": \"tomas@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"victor-hale\", \"name\": \"Victor Hale\", \"attrs\": {\"title\": \"Director of Engineering\", \"email\": \"victor@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"alex-brennan\", \"name\": \"Alex Brennan\", \"attrs\": {\"title\": \"Operations Lead, Northwind Clinics\", \"email\": \"alex.brennan@northwind.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.99, \"edges\": []},\n{\"kind\": \"Meeting\", \"workspace\": \"kestrel\", \"key\": \"arch-review-scheduler-v2\", \"name\": \"Architecture review: scheduler v2\", \"attrs\": {\"date\": \"2026-10-22\", \"organizer\": \"ines@kestrel.example\", \"presenter\": \"dana.k@kestrel.example\"}, \"source\": \"eval-fixture\", \"confidence\": 0.95, \"edges\": []}\n]\n```",
+  "total_cost_usd": 0.3671788,
+  "duration_ms": 115494,
+  "duration_api_ms": 111166,
+  "num_turns": 36,
+  "usage": {
+   "input_tokens": 186,
+   "cache_creation_input_tokens": 79092,
+   "cache_read_input_tokens": 1462838,
+   "output_tokens": 12505,
+   "output_tokens_details": {
+    "thinking_tokens": 3483
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 79092,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 2680,
+     "cache_read_input_tokens": 101539,
+     "cache_creation_input_tokens": 5421,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5421
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 186,
+    "outputTokens": 12505,
+    "cacheReadInputTokens": 1462838,
+    "cacheCreationInputTokens": 79092,
+    "webSearchRequests": 0,
+    "costUSD": 0.3671788,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3483,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 14457,
+ "attempt": 1
+}

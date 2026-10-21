@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-21T18:39:32.247815+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-360-load-test-scheduler-v2\",\n    \"name\": \"Load test scheduler v2 (PLAT-360)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"jr-0549\",\n        \"sl-17337\",\n        \"cal-0006\",\n        \"jr-0550\"\n      ],\n      \"refs\": [\n        \"PLAT-360\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"review-rota-api-pr-470\",\n    \"name\": \"Review rota-api PR #470 (Batch shift import)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"gh-0035\",\n        \"sl-17330\",\n        \"gh-0036\"\n      ],\n      \"refs\": [\n        \"rota-api#470\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"scheduler-v2-architecture-review-design-doc\",\n    \"name\": \"Circulate scheduler v2 design doc before the Oct 22 architecture review\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"cal-0008\",\n        \"em-0679\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Put together the Q4 capacity numbers\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\",\n      \"evidence\": [\n        \"sl-17332\",\n        \"sl-17333\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-322-cron-migration-scheduler-v2\",\n    \"name\": \"Migrate cron jobs to scheduler v2 (PLAT-322)\",\n    \"attrs\": {\n      \"due\": \"2026-11-13\",\n      \"priority\": \"high\",\n      \"evidence\": [\n        \"jr-0544\",\n        \"sl-17322\",\n        \"em-0717\",\n        \"sl-17323\"\n      ],\n      \"refs\": [\n        \"PLAT-322\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-maintenance-window-confirmation\",\n    \"name\": \"Confirm maintenance window for Nov 15 with Northwind\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0672\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"alex-brennan\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire-review\",\n    \"name\": \"Review vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0692\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"victor-hale\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"alex-brennan\",\n    \"name\": \"Alex Brennan\",\n    \"attrs\": {\n      \"email\": \"alex.brennan@northwind.example\",\n      \"title\": \"Operations Lead, Northwind Clinics\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"victor-hale\",\n    \"name\": \"Victor Hale\",\n    \"attrs\": {\n      \"email\": \"victor@kestrel.example\",\n      \"title\": \"Director of Engineering\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9\n  }\n]\n```",
+  "total_cost_usd": 0.2190388,
+  "duration_ms": 87723,
+  "duration_api_ms": 84481,
+  "num_turns": 20,
+  "usage": {
+   "input_tokens": 114,
+   "cache_creation_input_tokens": 47521,
+   "cache_read_input_tokens": 768678,
+   "output_tokens": 9403,
+   "output_tokens_details": {
+    "thinking_tokens": 3800
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 47521,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1398,
+     "cache_read_input_tokens": 73741,
+     "cache_creation_input_tokens": 1648,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1648
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 114,
+    "outputTokens": 9403,
+    "cacheReadInputTokens": 768678,
+    "cacheCreationInputTokens": 47521,
+    "webSearchRequests": 0,
+    "costUSD": 0.2190388,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3800,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}

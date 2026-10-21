@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:35:27.443684+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a final-round interview slot with Corvid Systems\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0684\",\"em-0685\"],\"refs\":[]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access-rta-90\",\"name\":\"Awaiting IT's read access to the analytics replica (RTA-90); access granted\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0665\",\"em-0666\",\"em-0667\"],\"refs\":[\"RTA-90\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-legal-review\",\"name\":\"Awaiting Legal's review of the Northwind MSA redlines (ticket LEG-55); approved\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0725\",\"em-0726\",\"em-0727\"],\"refs\":[\"LEG-55\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"send-northwind-msa-redlines\",\"name\":\"Send the Legal-approved MSA redlines to Northwind\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-0727\"],\"refs\":[\"LEG-55\"]},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"security-awareness-training\",\"name\":\"Complete the annual security awareness training\",\"attrs\":{\"due\":\"2026-09-15\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0673\",\"em-0674\",\"em-0675\",\"em-0676\"],\"refs\":[]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0539\",\"jr-0538\",\"jr-0540\",\"sl-17319\",\"doc-0008\"],\"refs\":[\"PLAT-301\",\"INC-212\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook-rewrite\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0547\",\"jr-0548\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-to-ines\",\"name\":\"Send Ines a short status update every Friday (Oct 23 sent; next: Oct 30)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"high\",\"evidence\":[\"sl-17371\",\"em-0717\",\"em-0716\",\"em-0715\",\"em-0718\",\"em-0719\"],\"refs\":[]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-0559\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"october-timesheet\",\"name\":\"Submit the October timesheet\",\"attrs\":{\"due\":\"2026-11-02\",\"priority\":\"medium\",\"evidence\":[\"em-0714\"],\"refs\":[]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}\n]",
+  "total_cost_usd": 0.2902447,
+  "duration_ms": 29812,
+  "duration_api_ms": 25684,
+  "num_turns": 15,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 52485,
+   "cache_read_input_tokens": 426467,
+   "output_tokens": 3763,
+   "output_tokens_details": {
+    "thinking_tokens": 954
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 52485,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1960,
+     "cache_read_input_tokens": 84090,
+     "cache_creation_input_tokens": 643,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 643
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 14,
+    "outputTokens": 3763,
+    "cacheReadInputTokens": 426467,
+    "cacheCreationInputTokens": 52485,
+    "webSearchRequests": 0,
+    "costUSD": 0.2902447,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 954,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}
