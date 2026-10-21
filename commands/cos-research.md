@@ -329,10 +329,50 @@ including an earlier run of this system. Neither is something the user or a coun
 the user owes. Use them as context. Do not emit an Action from them unless another source
 corroborates it, and say in the report that you set them aside.
 
+This does not cover a log of real state that an automation keeps, such as an applications tracker
+whose rows say a form was filled and is waiting for the user to submit it. Those rows are claims
+about the world. Check the newest ones against mail and emit what still holds; ask about a batch
+that is too old to check.
+
+**A time with no zone is ambiguous until the other side confirms it.** When the user proposes
+"5:15" and the counterparty is in another time zone, record the Action at the zone the
+counterparty's confirmation states, and if there is no confirmation yet, say in the name that
+the zone is unconfirmed. Do not assume the user's own zone.
+
 **A calendar that lacks what the mail schedules is a finding.** When mail shows interviews or
 calls with times and the calendar holds none of them, the calendar is not the user's source of
 truth for those. Report the mismatch in Step 5 instead of concluding "no meetings". Research is
 read-only, so do not create the events.
+
+### Step 1e: The user's own projects (what is going on in each)
+Side projects, apps and tools the user builds are part of their work even when no message
+mentions them, and the repo or folder itself says what state they are in. The code-hosting and
+local-filesystem modules above list them as nouns. This step reads inside each one.
+
+Which projects: every repository or project folder the user owns or pushes to with activity in
+the last 90 days, every project the user names in their own context, and every project that
+mail, Drive or a beta-testing invite ties to the user. A project the user names that you cannot
+find in any connected source gets one Step 4 question: connect where it lives (another code host
+account, an org, a local folder), or say what is going on with it.
+
+For each, record a `Project` node in the user's personal workspace (`attrs.personal_project:
+true`) with:
+- `attrs.last_activity`, from the newest commit or file change, not the container's metadata.
+- `attrs.state_summary`: one or two plain sentences on what is in flight. Read the last few
+  dozen commit subjects for the current theme (a redesign underway, a fix being released), the
+  open branches and PRs, and whether the newest commits are marked work in progress.
+- `attrs.health`: the default branch's CI on its newest commit. If it is red, say since when and
+  which job. A job that fails within seconds before any step runs is a runner, billing or
+  configuration problem, not a code failure; say that, and do not treat each run as news.
+- Pending items the project's own documents put on the user: a runbook whose apply steps have no
+  record of being run, an ops log's "still open" list, a decision noted as pending with the
+  user, a README's "remaining before" list.
+- Other people pushing to it, as `Person` edges. Shared work is the user's too.
+
+Emit an `Action` only for something owed, at normal priority rules: red CI on the default branch
+of a project the user owns (one Action per project, not per run), a pending runbook step or
+decision recorded in the repo, a review or issue waiting on the user. A project that is simply
+being worked on gets a state summary, not a task.
 
 ## Step 2 — Persist to the graph
 Write the records into the graph via `research.ingest(graph, records)` (see `research.py`). Because

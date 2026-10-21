@@ -220,10 +220,18 @@ def freelance_work(g, ws=None):
             sorted(out, key=lambda n: n["id"])]
 
 
+def _project_line(n):
+    # /cos-research Step 1e records what is going on inside each project;
+    # show that rather than a bare name.
+    a = n.get("attrs", {}) or {}
+    return " · ".join(str(a[k]) for k in ("state_summary", "health") if a.get(k))
+
+
 def personal_projects(g, ws=None):
     out = [n for n in _current(g.query(type_="Repository") + g.query(type_="Project"))
-           if n["workspace"] == "personal" and (ws in (None, "personal"))]
-    return [_item(n) for n in sorted(out, key=lambda n: n["id"])]
+           if (n["workspace"] == "personal" or _truthy(n, "personal_project"))
+           and (ws is None or n["workspace"] == ws)]
+    return [_item(n, _project_line(n)) for n in sorted(out, key=lambda n: n["id"])]
 
 
 # The section registry: (label, function). Order = dashboard order.

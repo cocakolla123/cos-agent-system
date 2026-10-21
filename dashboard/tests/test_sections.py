@@ -87,6 +87,18 @@ class TestSectionData(unittest.TestCase):
         self.assertEqual([i["title"] for i in sections.personal_projects(self.g)],
                          ["sideproj"])
 
+    def test_personal_project_shows_state(self):
+        self.g.upsert_node("Project", "side", "app", name="Photo app",
+                           attrs={"personal_project": True,
+                                  "state_summary": "redesign in progress",
+                                  "health": "CI red since Oct 20"}, now=_t(1))
+        items = {i["title"]: i for i in sections.personal_projects(self.g)}
+        self.assertEqual(items["Photo app"]["sub"],
+                         "redesign in progress · CI red since Oct 20")
+        self.assertIn("sideproj", items)
+        self.assertNotIn("Photo app",
+                         [i["title"] for i in sections.personal_projects(self.g, "personal")])
+
     def test_workspace_filter_isolates(self):
         # scoped to employer -> no personal repo in projects
         titles = [i["title"] for i in sections.projects(self.g, ws="employer")]
