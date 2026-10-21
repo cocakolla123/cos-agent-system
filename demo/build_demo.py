@@ -12,6 +12,7 @@ that graph, a correction ledger taken from the run's real dev failures, a
 daily log, meeting notes and an open question.
 """
 import json
+import re
 import os
 import shutil
 import sys
@@ -75,31 +76,31 @@ QUEUE = [
     # Each draft answers a task the research engine found in the recorded run;
     # the facts in them are the world's own (bracketed parts are left for
     # Dana to fill in, which is what the Edit button is for).
-    {"id": "q-1013-tomas-deprecation", "status": "pending", "action_type": "message_send",
+    {"id": "q-1013-tomas-deprecation", "task": "kestrel:action:api-v1-deprecation-notice", "status": "pending", "action_type": "message_send",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:40:00-07:00",
      "short_summary": "Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)",
      "proposed_tool_call": 'gmail-work.send to Tomas, re "Deprecation notice", with text: "Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today."',
      "context": "Task: Write API v1 deprecation notice text for Tomas (due 2026-10-13). Source: his email of Oct 8, 'I need the API v1 deprecation notice text by next Tuesday.'"},
-    {"id": "q-1013-alex-cron", "status": "pending", "action_type": "message_send",
+    {"id": "q-1013-alex-cron", "task": "kestrel:action:confirm-billing-cron-schedule", "status": "pending", "action_type": "message_send",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:44:00-07:00",
      "short_summary": "Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)",
      "proposed_tool_call": 'slack.send_message in #proj-billing-migration, thread of Oct 12, with text: "Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes."',
      "context": "Task: Confirm the cron schedule for the billing jobs for Alex (due 2026-10-16). Source: '@dana.k can you confirm the cron schedule for the billing jobs by Oct 16? we cut over the week after.'"},
-    {"id": "q-1013-laptop-swap", "status": "pending", "action_type": "it_booking",
+    {"id": "q-1013-laptop-swap", "task": "kestrel:action:laptop-refresh-booking", "status": "pending", "action_type": "self_do",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:45:00-07:00",
      "short_summary": "Book the laptop swap on the IT booking page (was due Oct 9)",
-     "proposed_tool_call": "Open the IT booking page and pick a laptop swap slot. No connector can book it, so this is yours to do; mark it handled after.",
+     "proposed_tool_call": "1. Open the Kestrel IT booking page (linked in IT's Sep 23 mail from it@kestrel.example).\n  * 2. Pick a laptop swap slot.\n  * 3. Mark this handled. No connector can book it, so this one is yours.",
      "context": "Task: Book laptop swap appointment with IT (due 2026-10-09, overdue). Source: Kestrel IT, it@kestrel.example, Sep 23. Not the look-alike 'password expires' mail from kestrel-helpdesk.example on Sep 22, which was set aside as phishing."},
-    {"id": "q-1013-grace-resume", "status": "pending", "action_type": "message_send",
+    {"id": "q-1013-grace-resume", "task": "job-search:action:halcyon-updated-resume", "status": "pending", "action_type": "message_send",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:47:00-07:00",
      "short_summary": "Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]",
      "proposed_tool_call": 'gmail-personal.send to Grace Liu, re "Updated resume", with text: "Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you."',
      "context": "Job-search workspace: drafted from the personal mailbox, never the work account. Task: Send updated resume to Grace Liu (asked for it by Oct 1)."},
-    {"id": "q-1012-alex-ack", "status": "approved", "action_type": "message_send",
+    {"id": "q-1012-alex-ack", "task": "kestrel:action:confirm-billing-cron-schedule", "status": "approved", "action_type": "message_send",
      "priority": "medium", "drafted_by": "cos-drafter",
      "created": "2026-10-12T16:10:00-07:00",
      "short_summary": "Slack: acknowledge Alex's cron question (will confirm by Oct 16)",
@@ -141,7 +142,8 @@ accounts. Most of it is noise, asks to other people, or bots.
 
 Open tasks: {n_open} in total, {n_high} high priority.
 
-Drafted for approval: 3 messages and 1 to-do for you (see the approval queue).
+Drafted: a next step for every open task ({n_msg} messages waiting for approval,
+{n_self} drafted for you to do yourself). They are on each task in the Command Center.
 Nothing has been sent.
 
 Set aside: the Sep 22 "password expires" mail from kestrel-helpdesk.example, a
@@ -184,6 +186,59 @@ CHAT = """**You** (Oct 13, 08:58): what's most urgent today?
 """
 
 
+NEXT_STEPS = os.path.join(HERE, "next_steps.json")
+
+
+def queue_value(text, keep_lines):
+    """A queue field is one '- key: value' line. A self_do draft keeps its
+    lines as '  * ' continuation bullets, which the queue parser folds back
+    into separate lines; a message is joined onto one line."""
+    lines = [l.strip() for l in text.strip().splitlines() if l.strip()]
+    if not keep_lines:
+        return " ".join(lines)
+    return lines[0] + "".join("\n  * " + l for l in lines[1:])
+
+
+def queue_entries(g, open_):
+    """The hand-written entries above, tied to their tasks, plus one drafted
+    next step (demo/next_steps.json, from draft_next_steps.py) for every
+    other open task, so every task in the Command Center has something on it."""
+    import graph
+    out, covered = [], set()
+    for e in QUEUE:
+        e = dict(e)
+        tid = e.pop("task", None)
+        ctx = e.pop("context")
+        if tid:
+            e["task"] = tid
+            if e["status"] == "pending":
+                covered.add(tid)
+        e["context"] = ctx
+        out.append(e)
+    drafts = {}
+    if os.path.exists(NEXT_STEPS):
+        drafts = {d["task"]: d for d in json.load(open(NEXT_STEPS))["entries"]}
+    for n in sorted(open_, key=lambda n: n["id"]):
+        d = drafts.get(n["id"])
+        if n["id"] in covered or not d:
+            continue
+        a = n.get("attrs") or {}
+        ev = a.get("evidence") or []
+        out.append({
+            "id": "q-1013-" + n["id"].split(":action:", 1)[-1][:40],
+            "status": "pending", "action_type": d["action_type"],
+            "priority": graph.effective_priority(n), "drafted_by": "cos-poll",
+            "created": "2026-10-13T08:50:00-07:00",
+            "short_summary": " ".join(d["short_summary"].split()),
+            "proposed_tool_call": queue_value(d["proposed_tool_call"],
+                                              d["action_type"] == "self_do"),
+            "task": n["id"],
+            "context": "Task: %s. Sources: %s." % (
+                n["name"], ", ".join(ev) if isinstance(ev, list) else ev),
+        })
+    return out
+
+
 def build():
     if os.path.exists(STATE):
         shutil.rmtree(STATE)
@@ -199,12 +254,6 @@ def build():
     shutil.copy(os.path.join(HERE, "responses.json"), os.path.join(STATE, "responses.json"))
     with open(os.path.join(WS, "workspaces.json"), "w") as f:
         json.dump(WORKSPACES, f, indent=1)
-    q = QUEUE_HEADER
-    for e in QUEUE:
-        q += "\n### %s\n" % e["id"]
-        q += "".join("- %s: %s\n" % (k, v) for k, v in e.items() if k != "id")
-    with open(os.path.join(WS, "approval-queue.md"), "w") as f:
-        f.write(q)
     with open(os.path.join(WS, "corrections.jsonl"), "w") as f:
         for ev in LEDGER:
             f.write(json.dumps(ev) + "\n")
@@ -213,7 +262,17 @@ def build():
     os.environ["COS_FIXED_NOW"] = TODAY + "T16:00:00Z"
     g = graph.Graph.load(os.path.join(WS, "graph"))
     open_ = [n for n in g.nodes.values() if n["type"] == "Action" and graph.is_open_action(n)]
-    daily = DAILY.format(n_open=len(open_),
+    queue = queue_entries(g, open_)
+    q = QUEUE_HEADER
+    for e in queue:
+        q += "\n### %s\n" % e["id"]
+        q += "".join("- %s: %s\n" % (k, v) for k, v in e.items() if k != "id")
+    with open(os.path.join(WS, "approval-queue.md"), "w") as f:
+        f.write(q)
+    live = [e for e in queue if e["status"] == "pending"]
+    daily = DAILY.format(n_msg=sum(e["action_type"] == "message_send" for e in live),
+                         n_self=sum(e["action_type"] == "self_do" for e in live),
+                         n_open=len(open_),
                          n_high=sum(1 for n in open_ if graph.effective_priority(n) == "high"))
     # saved chat replies quote the graph rather than hand-written claims
     import sections
