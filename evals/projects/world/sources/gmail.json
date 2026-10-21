@@ -1,0 +1,5 @@
+[
+{"body": "Ana Ruiz has invited you to test Harbor Map. Open the link on your iPhone to start testing build 0.4.", "connector": "gmail", "date": "2026-10-07T18:00:00Z", "from": "TestFlight <no_reply@testflight.example>", "id": "em-01", "subject": "Ana Ruiz has invited you to test Harbor Map", "to": "riya@mail.example"},
+{"body": "Ten new SwiftUI tricks.", "connector": "gmail", "date": "2026-10-19T09:00:00Z", "from": "DevNews <news@devnews.example>", "id": "em-02", "subject": "This week in Swift", "to": "riya@mail.example"},
+{"body": "Run failed for ios on main. ios-build-and-test failed in 4s.", "connector": "gmail", "date": "2026-10-16T12:00:00Z", "from": "GitHub <noreply@github.example>", "id": "em-03", "subject": "[riyap/glimmer] Run failed: ios - main", "to": "riya@mail.example"}
+]
