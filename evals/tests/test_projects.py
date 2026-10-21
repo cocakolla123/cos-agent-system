@@ -39,7 +39,10 @@ ORACLE = {"records": [
     act("tide-runbook", "Run the cash-ledger runbook apply steps", "tidepool-quant"),
     act("tide-vendor", "Decide on the data vendor Pro plan upgrade", "tidepool-quant"),
     act("tide-ci", "Fix the pyright typecheck failure on main", "tidepool-quant"),
-], "questions": ["You mentioned Harbor Map. Where does it live?"]}
+    proj("harbor-map", "shared repo anaruiz/harbor-map; Riya authored PR #12 (merged)",
+         "deploys of Riya's PRs blocked: not a member of the owner's deploy team"),
+], "questions": ["Harbor Map lives in anaruiz/harbor-map, which the connector cannot read; "
+                 "the owner must install the app. Connect it?"]}
 
 
 class TestProjectsWorld(unittest.TestCase):
@@ -84,6 +87,13 @@ class TestProjectsScorer(unittest.TestCase):
                 r["name"] = "Review PR #14 before Thursday's TestFlight build"
         rows = {r["project"]: r for r in run_projects.score(recs, GOLD)["rows"]}
         self.assertTrue(rows["glimmer"]["pass"], rows["glimmer"])
+
+    def test_shared_repo_must_be_named(self):
+        vague = json.loads(json.dumps(ORACLE))
+        vague["records"] = [r for r in vague["records"] if r["key"] != "harbor-map"]
+        vague["questions"] = ["You mentioned Harbor Map. Where does it live?"]
+        rows = {r["project"]: r for r in run_projects.score(vague, GOLD)["rows"]}
+        self.assertFalse(rows["(named but missing)"]["pass"])
 
     def test_dormant_project_with_action_fails(self):
         bad = json.loads(json.dumps(ORACLE))

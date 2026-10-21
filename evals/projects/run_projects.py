@@ -182,8 +182,16 @@ def score(out, gold):
     q_ok = any(_has_any(q, gold["question_any"]) for q in questions) or any(
         (r.get("attrs") or {}).get("needs_connect") and _has_any(_blob(r), gold["question_any"])
         for r in recs)
+    checks = {"question": q_ok}
+    sr = gold.get("shared_repo")
+    if sr:
+        everything = _blob(recs) + " " + json.dumps(questions).lower()
+        checks["repo_named"] = sr["name"] in everything
+        checks["user_work_recorded"] = _has_any(everything, sr["did_any"])
+        checks["blocker_recorded"] = _has_any(everything, sr["blocker_any"])
+    q_ok = all(checks.values())
     rows.append({"project": "(named but missing)", "pass": q_ok,
-                 "checks": {"question": q_ok}, "extra_actions": []})
+                 "checks": checks, "extra_actions": []})
     ok_all &= q_ok
     return {"pass": ok_all, "rows": rows}
 

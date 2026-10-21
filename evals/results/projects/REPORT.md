@@ -46,6 +46,27 @@ matches the most expected Actions (`_best_pairing`), with a regression test.
 No model output or label was changed. Re-scoring the same saved outputs
 gives 3 of 3.
 
+## Round 2: a shared repo visible only through mail (2026-10-21)
+
+A first pass on a real account missed a project the user pushes to in
+someone else's repo: the code-host connector cannot see it, and only a
+beta-testing invite pointed at it. Step 1e now searches code-host
+notification mail for collaborator invites and the user's PRs. The world
+gained the same case (collaborator invite, two merged PRs by the user, a
+deploy bot blocking each PR), and the scorer requires the repo's
+`owner/name`, the user's work there and the blocker.
+
+Raw output: `raw/20261021T175904Z/`. **3 of 3 runs pass every check**
+(default model, $0.14 to $0.17 a run). Every run named the repo, recorded
+PRs #11 and #12 as the user's and merged, recorded the blocked deploys, and
+asked for the owner to install the connector's app instead of asking where
+the project lives. All round-1 traps still passed.
+
+Not scored: runs asked more questions than the rule calls for (2, 3 and 5;
+the rule wants only residual ones). Some duplicate an Action already
+emitted (whether the runbook steps were run). Worth tightening if it shows
+up on real data.
+
 ## Limits
 
 - Local folders are given as connector JSON plus real files; the model does

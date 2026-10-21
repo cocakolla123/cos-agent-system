@@ -96,5 +96,20 @@
  "question_any": [
   "harbor"
  ],
+ "shared_repo": {
+  "blocker_any": [
+   "deploy",
+   "not a member"
+  ],
+  "did_any": [
+   "#12",
+   "pr 12",
+   "pr #12",
+   "#11",
+   "authored",
+   "merged"
+  ],
+  "name": "anaruiz/harbor-map"
+ },
  "today": "2026-10-21"
 }

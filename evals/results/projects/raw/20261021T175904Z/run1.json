@@ -1,0 +1,65 @@
+{
+ "scenario": "projects-1",
+ "started": "2026-10-21T17:59:44.728358+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n{\"records\":[\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"glimmer\",\"name\":\"Glimmer\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-20\",\"state_summary\":\"Mid v3 redesign (glass panels, new type, new tab bar). Home, reveal and feed screens are done, and profile and post are still to do. App/HomeView.swift has uncommitted changes, and an earlier commit was marked WIP. Open sign-up (anyone 13+) and the v2 merge shipped on 10-19/10-20, and devpal's PR #14 (comment moderation queue) is open for your review ahead of Thursday's TestFlight build.\",\"health\":\"Red on main since 2026-10-19 (last green 2026-10-15, 'Search tab'). Both jobs, ios-build-and-test and backend-tests, fail in 3-4s with no steps run on every commit. That points to a runner, billing or configuration problem, not a code failure.\",\"repo\":\"riyap/glimmer\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/glimmer\",\"type\":\"hosted_at\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/glimmer\",\"name\":\"riyap/glimmer\",\"attrs\":{\"last_activity\":\"2026-10-21\"},\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"tidepool-quant\",\"name\":\"Tidepool Quant\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-06\",\"state_summary\":\"A personal paper-trading research platform in the paper validation phase. The cash-ledger fix was merged on 10-06. The repair script's dry run is done, but the apply steps have no record of being run. Before real money it still needs clean unattended paper runs and the human approval gate. The data vendor's monthly cap is exhausted and the Pro plan upgrade decision is pending with you.\",\"health\":\"Red on main since 2026-10-06 (merge of fix/cash-ledger). The typecheck job fails with pyright reporting 3 errors in src/ledger.py, and unit-tests pass. This is a real code failure.\",\"repo\":\"riyap/tidepool-quant\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/tidepool-quant\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/tidepool-quant\",\"name\":\"riyap/tidepool-quant\",\"attrs\":{\"last_activity\":\"2026-10-06\"},\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"cos-helper\",\"name\":\"cos-helper\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-18\",\"state_summary\":\"A small assistant that reads your calendar and mail and lists what you owe. The calendar module (PR #3) was merged and its tests added on 10-18. The dashboard and graph upsert refactor landed earlier in October.\",\"health\":\"Green. The tests job passed on the newest commit (2026-10-18).\",\"repo\":\"riyap/cos-helper\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/cos-helper\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/cos-helper\",\"name\":\"riyap/cos-helper\",\"attrs\":{\"last_activity\":\"2026-10-18\"},\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"harbor-map\",\"name\":\"Harbor Map\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-08\",\"state_summary\":\"This is Ana Ruiz's repo, anaruiz/harbor-map, and you are a collaborator, invited 2026-09-30. You authored and merged PR #11 (fix sign-in redirect, 10-06) and PR #12 (dock search and tide overlay, 10-08). You were also invited to TestFlight testing of build 0.4 on 10-07. It is visible only through mail, not the GitHub connector.\",\"health\":\"Unknown, since CI is not visible. A recurring blocker is that deploybot comments 'Deployment blocked: riyap is not a member of the anaruiz team' on your PRs (#11 and #12).\",\"repo\":\"anaruiz/harbor-map\"},\"confidence\":0.75,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"anaruiz\",\"type\":\"owner_collaborator\"}]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"devpal\",\"name\":\"devpal\",\"attrs\":{\"role\":\"collaborator on glimmer\"},\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"anaruiz\",\"name\":\"Ana Ruiz\",\"attrs\":{\"role\":\"owner of anaruiz/harbor-map\"},\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"review-glimmer-pr-14\",\"name\":\"Review devpal's PR #14 (comment moderation queue) in riyap/glimmer before Thursday's TestFlight build\",\"attrs\":{\"priority\":\"high\",\"refs\":[\"glimmer\"],\"due\":\"2026-10-22\",\"requested_by\":\"devpal\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"fix-glimmer-ci\",\"name\":\"Fix glimmer CI: every run on main fails in 3-4s with no steps run since 10-19 (check runner, billing or workflow config)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"glimmer\"]},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"fix-tidepool-typecheck\",\"name\":\"Fix the 3 pyright errors in src/ledger.py that have kept tidepool-quant main red since 10-06\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"run-tidepool-ledger-repair\",\"name\":\"Run the cash-ledger repair apply steps (curve, ladder, ack) from the runbook and record each in docs/ops-log.md\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"decide-tidepool-data-vendor-plan\",\"name\":\"Decide on the data vendor Pro plan upgrade (monthly cap exhausted, noted as pending with you since 09-23)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]}\n],\n\"questions\":[\n\"Harbor Map (anaruiz/harbor-map) is Ana Ruiz's repo, so the GitHub connector can't see it. Its CI and open reviews are unknown. Ana Ruiz, as owner, would need to install the connector's app on it. Separately, deploybot has blocked deployment on both of your PRs (#11, #12) because you aren't a member of the anaruiz team. Do you want to ask Ana to add you or adjust that check?\",\n\"Did the cash-ledger repair apply steps (curve, ladder, ack) get run outside the ops log, or are they still pending?\",\n\"Is old-portfolio (last touched 2024-09-30) still something you're working on? I left it out as inactive.\"\n]}\n```",
+  "total_cost_usd": 0.14079360000000002,
+  "duration_ms": 35133,
+  "duration_api_ms": 30370,
+  "num_turns": 14,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 20300,
+   "cache_read_input_tokens": 162776,
+   "output_tokens": 4330,
+   "output_tokens_details": {
+    "thinking_tokens": 464
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 20300,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 3279,
+     "cache_read_input_tokens": 44407,
+     "cache_creation_input_tokens": 6590,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 6590
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 4330,
+    "cacheReadInputTokens": 162776,
+    "cacheCreationInputTokens": 20300,
+    "webSearchRequests": 0,
+    "costUSD": 0.14079360000000002,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 464,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
