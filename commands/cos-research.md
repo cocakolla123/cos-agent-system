@@ -368,9 +368,19 @@ local-filesystem modules above list them as nouns. This step reads inside each o
 
 Which projects: every repository or project folder the user owns or pushes to with activity in
 the last 90 days, every project the user names in their own context, and every project that
-mail, Drive or a beta-testing invite ties to the user. A project the user names that you cannot
-find in any connected source gets one Step 4 question: connect where it lives (another code host
-account, an org, a local folder), or say what is going on with it.
+mail, Drive or a beta-testing invite ties to the user. **Repositories owned by someone else are
+often invisible to the code-host connector** (it sees only repos where its app is installed),
+even when the user is a collaborator who pushes to them. Mail still carries them. Search the
+code host's notification mail for collaborator invitations and for PRs and issues the user
+authored or was mentioned on, and record each such repo by its `owner/name`, with
+`last_activity` and what the user did there (PRs authored and merged, open reviews), taken from
+the newest notifications. Record a recurring blocker in those notifications too, such as a
+deploy check that fails on every one of the user's PRs.
+
+A project the user names that you still cannot find, or a shared repo you can see only through
+mail, gets one Step 4 question. If you know where it lives, name the repo and say what access is
+missing: for example, the repo's owner must install the connector's app. Otherwise ask where it
+lives (another code host account, an org, a local folder), or what is going on with it.
 
 For each, record a `Project` node in the user's personal workspace (`attrs.personal_project:
 true`) with:
