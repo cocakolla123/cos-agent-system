@@ -1871,6 +1871,8 @@ def update_graph_node(node_id, name=None, note=None, priority=None, status=None)
             changed.append("notes")
         if priority and priority != attrs.get("priority"):
             attrs["priority"] = priority
+            # a hand-set priority is never overridden by the due-date rule
+            attrs["priority_source"] = "user"
             changed.append("priority→" + priority)
         if status:
             attrs["status"] = status

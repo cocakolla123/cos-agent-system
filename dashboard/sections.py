@@ -57,7 +57,8 @@ def _truthy(n, key):
 
 def _pri(n):
     # same default as research.DEFAULT_PRIORITY and the task board
-    return _PRIORITY_RANK.get((n.get("attrs", {}) or {}).get("priority", "medium"), 1)
+    # effective, not stored: a medium item becomes high the week it is due
+    return _PRIORITY_RANK.get(_graph.effective_priority(n), 1)
 
 
 def _url(n):
@@ -117,7 +118,7 @@ def _days_label(n):
     """Human deadline phrase for an obligation, or its priority if undated."""
     days = _graph.due_days(n)
     if days is None:
-        return (n.get("attrs", {}) or {}).get("priority", "")
+        return _graph.effective_priority(n)
     if days < 0:
         n_days = int(-days) + 1          # any part of a day late reads as a day
         return "overdue by %d day%s" % (n_days, "" if n_days == 1 else "s")
@@ -174,7 +175,7 @@ def daily_priorities(g, ws=None, limit=8):
         [n for n in _current(g.query(type_="Ticket", workspace=ws))
          if (n.get("attrs", {}) or {}).get("status") not in ("closed", "done")]
     cands.sort(key=lambda n: (_pri(n), n.get("last_verified", "")), reverse=False)
-    return [_item(n, (n.get("attrs", {}) or {}).get("priority", "")) for n in cands[:limit]]
+    return [_item(n, _graph.effective_priority(n)) for n in cands[:limit]]
 
 
 def people_waiting(g, ws=None):
@@ -391,7 +392,7 @@ def _todo_row_data(g, n):
         "title": n.get("name", n["id"]),
         "note": str(a.get("note", "")),
         "evidence": str(a.get("evidence", "")),
-        "priority": str(a.get("priority", "medium")),
+        "priority": _graph.effective_priority(n),
         "due": str(a.get("due", "")),
         "ws": n.get("workspace", ""),
         "url": _url(n),

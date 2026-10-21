@@ -421,3 +421,33 @@ def _snapshot_views(views_dir):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestEffectivePriority(unittest.TestCase):
+    NOW = graph._parse_iso("2026-10-13T12:00:00Z")
+
+    def _n(self, **attrs):
+        return {"type": "Action", "attrs": attrs}
+
+    def test_due_within_three_days_or_overdue_is_high(self):
+        for due in ("2026-10-16", "2026-10-13", "2026-10-01",
+                    "2026-10-16T23:59:00-07:00"):
+            self.assertEqual(graph.effective_priority(
+                self._n(priority="medium", due=due), now=self.NOW), "high", due)
+
+    def test_further_out_or_undated_keeps_stored(self):
+        self.assertEqual(graph.effective_priority(
+            self._n(priority="medium", due="2026-10-17"), now=self.NOW), "medium")
+        self.assertEqual(graph.effective_priority(
+            self._n(priority="low"), now=self.NOW), "low")
+        self.assertEqual(graph.effective_priority(self._n(), now=self.NOW), "medium")
+
+    def test_same_item_rises_as_the_date_nears(self):
+        n = self._n(priority="medium", due="2026-11-03")
+        self.assertEqual(graph.effective_priority(n, now=self.NOW), "medium")
+        self.assertEqual(graph.effective_priority(
+            n, now=graph._parse_iso("2026-11-01T09:00:00Z")), "high")
+
+    def test_user_set_priority_is_never_overridden(self):
+        n = self._n(priority="low", priority_source="user", due="2026-10-14")
+        self.assertEqual(graph.effective_priority(n, now=self.NOW), "low")

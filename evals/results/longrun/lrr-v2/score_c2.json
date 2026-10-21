@@ -26,7 +26,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D02",
@@ -75,7 +81,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T04",
@@ -140,7 +152,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D08",
@@ -181,7 +199,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D10",
@@ -222,7 +246,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D12",
@@ -239,7 +269,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "low",
+    "low"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T12",
@@ -272,7 +308,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D15",
@@ -289,7 +331,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T15",
@@ -306,7 +354,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "low",
+    "low"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D16",
@@ -363,7 +417,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "medium",
+    "medium"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D19",
@@ -404,7 +464,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D21",
@@ -429,7 +495,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D22",
@@ -446,7 +518,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "low",
+    "low"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T22",
@@ -463,7 +541,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D23",
@@ -488,7 +572,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D24",
@@ -505,7 +595,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T24",
@@ -530,7 +626,8 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "T25",
@@ -555,7 +652,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "D26",
@@ -572,7 +675,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD01",
@@ -605,7 +714,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT02",
@@ -662,7 +777,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": false
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
   },
   {
    "id": "HT05",
@@ -679,7 +800,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD06",
@@ -696,7 +823,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT06",
@@ -713,7 +846,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD07",
@@ -738,7 +877,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD08",
@@ -755,7 +900,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT08",
@@ -772,7 +923,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD09",
@@ -789,7 +946,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT09",
@@ -806,7 +969,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD10",
@@ -839,7 +1008,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT11",
@@ -849,7 +1024,8 @@
    "caught": false,
    "wrong_workspace": [],
    "duplicates": 0,
-   "pass": false
+   "pass": false,
+   "pass_eff": false
   },
   {
    "id": "HD12",
@@ -874,7 +1050,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "medium",
+    "medium"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD13",
@@ -891,7 +1073,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT13",
@@ -908,7 +1096,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD14",
@@ -925,7 +1119,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT14",
@@ -942,7 +1142,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD15",
@@ -959,7 +1165,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT15",
@@ -976,7 +1188,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HD16",
@@ -1009,7 +1227,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT17",
@@ -1034,7 +1258,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   },
   {
    "id": "HT18",
@@ -1051,7 +1281,13 @@
    ],
    "due_ok": true,
    "direction_ok": true,
-   "pass": true
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
   }
  ],
  "isolation": [],
@@ -1077,6 +1313,11 @@
     0,
     0
    ],
+   "priority_eff_ok": [
+    17,
+    17
+   ],
+   "pass_eff": 42,
    "duplicated": 1,
    "wrong_workspace": 0,
    "absent_ok": [
@@ -1104,6 +1345,11 @@
     0,
     0
    ],
+   "priority_eff_ok": [
+    22,
+    22
+   ],
+   "pass_eff": 42,
    "duplicated": 0,
    "wrong_workspace": 0,
    "absent_ok": [

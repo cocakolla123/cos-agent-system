@@ -71,6 +71,19 @@ def _ensure_priority(node):
     attrs["priority"] = p if p in PRIORITIES else DEFAULT_PRIORITY
 
 
+def _keep_user_priority(g, r):
+    """A priority the user set by hand outranks a later crawl's guess."""
+    if r.get("kind") != "Action" or "priority" not in (r.get("attrs") or {}):
+        return r
+    nid = graph.node_id(r["workspace"], r["kind"], r["key"])
+    old = (g.nodes.get(nid) or {}).get("attrs") or {}
+    if old.get("priority_source") != "user":
+        return r
+    r = dict(r)
+    r["attrs"] = {k: v for k, v in r["attrs"].items() if k != "priority"}
+    return r
+
+
 def ingest(g, records, now=None):
     """Upsert a batch of records into graph ``g``. Returns counts.
 
@@ -89,6 +102,7 @@ def ingest(g, records, now=None):
     n_edges = 0
     touched = []
     for r in records:
+        r = _keep_user_priority(g, r)
         node = g.upsert_node(
             r["kind"], r["workspace"], r["key"],
             name=r.get("name"), attrs=r.get("attrs"),

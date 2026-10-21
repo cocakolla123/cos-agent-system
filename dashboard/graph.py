@@ -586,6 +586,45 @@ def due_days(node, now=None):
     return (due - _utcnow(now)).total_seconds() / 86400.0
 
 
+PRIORITY_LEVELS = ("high", "medium", "low")
+# Rule H1 in commands/cos-research.md: overdue or due within this many days
+# is high, whoever asked. It is pure date math, so it is computed here every
+# time the dashboard asks rather than frozen when the item was extracted.
+HIGH_WITHIN_DAYS = 3
+
+
+def days_until_due(node, now=None):
+    """Whole calendar days from today to the due date (negative if past),
+    ``None`` if undated. The due date is read in its own time zone, so a
+    deadline of "Oct 16, 11:59 PM PT" is Oct 16, not Oct 17."""
+    attrs = node.get("attrs", {}) or {}
+    due = _parse_iso(attrs.get("due") or attrs.get("due_on"))
+    if due is None:
+        return None
+    return (due.date() - _utcnow(now).date()).days
+
+
+def effective_priority(node, now=None):
+    """The priority to show and rank by today.
+
+    An item extracted three weeks before its deadline is rightly medium then
+    and wrongly medium the week it is due: the stored value is a snapshot.
+    This keeps the stored value as the floor and applies H1 on top: overdue
+    or due within HIGH_WITHIN_DAYS calendar days is high. A priority the user
+    set by hand (``attrs.priority_source == "user"``) is never overridden.
+    """
+    attrs = node.get("attrs", {}) or {}
+    stored = str(attrs.get("priority") or "").strip().lower()
+    if stored not in PRIORITY_LEVELS:
+        stored = "medium"
+    if attrs.get("priority_source") == "user":
+        return stored
+    days = days_until_due(node, now=now)
+    if days is not None and days <= HIGH_WITHIN_DAYS:
+        return "high"
+    return stored
+
+
 def is_overdue(node, now=None):
     """True if this obligation had a deadline and it has passed."""
     days = due_days(node, now=now)

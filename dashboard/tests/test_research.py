@@ -368,3 +368,17 @@ class TestOrphanObligations(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestUserPriorityKept(unittest.TestCase):
+    def test_later_crawl_does_not_overwrite_hand_set_priority(self):
+        g = graph.Graph()
+        research.ingest(g, [research.record("Action", "w", "a", name="x",
+                                            attrs={"priority": "medium"})])
+        nid = graph.node_id("w", "Action", "a")
+        g.nodes[nid]["attrs"].update(priority="low", priority_source="user")
+        research.ingest(g, [research.record("Action", "w", "a", name="x",
+                                            attrs={"priority": "high", "due": "2026-10-20"})])
+        a = g.nodes[nid]["attrs"]
+        self.assertEqual(a["priority"], "low")
+        self.assertEqual(a["due"], "2026-10-20")
