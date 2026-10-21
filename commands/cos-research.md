@@ -160,6 +160,21 @@ Check every surface that can hold one, not just mail: a ticket assigned to the u
 block that is really a task, an unsubmitted form, a review request on a PR, a failing check
 blocking the user's own submission, a dated event referenced in a doc.
 
+**Assigned tracker work is an obligation even when no message mentions it.** A ticket or issue
+whose current state has the user as assignee, or a PR where the user is an individually requested
+reviewer, stays open until it is done/closed/merged or another source says the work is finished;
+take its due-date field. Read the newest state: a ticket reassigned away, or a review request
+withdrawn, is no longer the user's. A review requested from a whole team is not an individual
+obligation. **Hand-offs close items:** when the user asks someone to take a task and they accept
+("on it", "I've got it"), it leaves the user's list rather than lingering as "delegated"; if they
+never answered, it stays open `blocked_on` them. Personal, side-project and job-search obligations
+count like work ones, each in its own workspace. **Read the newest state only:** a ticket or PR seen several
+times counts by its latest snapshot. **One piece of work is one Action** however many surfaces
+word it differently (say a ticket "migrate the auth service", a message "move auth over", a calendar
+block "auth cutover"): merge them and cite every source. In messaging, search for the user's handle and
+name across all channels (mentions in muted channels count), read every DM and group DM in
+full, and read the thread around each hit for later replies that close or reassign it.
+
 **Read the user's own sent mail — it is the highest-precision obligation signal there is.** Every
 other surface makes you infer whether the user owes something; their outbox has them saying so.
 "Could I please have a few more days to complete it", "I wasn't able to do the assessment on
@@ -213,12 +228,16 @@ Emit each obligation as `kind: "Action"` with:
     7 days; security or access work with a date (a TLS/SSL certificate, a credential or
     password, an access log or access audit, a security incident).
   - **low**: a quick reply to a colleague's question with no deadline; volunteer or personal
-    work due more than 7 days out or undated; explicitly soft wording ("no rush", "when you
+    work due more than 7 days out or undated ("personal" means personal and side-project work;
+    job-search work is not personal for this rule); explicitly soft wording ("no rush", "when you
     get a chance", "would be great").
   - **medium**: everything else (peer requests, dated work beyond those windows, undated
     work requests).
   Priority ranks *undated* obligations against each other. If you omit it, ingest records
   `medium`.
+- `attrs.clear_attrs` — a list of attribute names to remove when re-emitting an existing Action
+  (for example `["blocked_on"]` when a waiting item becomes the user's own task, or `["due"]` when a
+  deadline is withdrawn). An empty value never erases an attribute; only this does.
 - `attrs.blocked_on` — who the user is waiting on, when the next move is somebody else's (a
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state
@@ -275,6 +294,103 @@ Three judgment rules, all of which cost the user trust when broken:
 Already-satisfied obligations are worth emitting *with* their status (the user asking "did I
 submit that?" is a real question), but they must never appear on the to-do list.
 
+### Step 1d: Applications, work that lives elsewhere, and content nobody committed to
+Four situations a first run on a real personal inbox hits at once. Each one fails quietly if
+handled with the rules above alone.
+
+**Applications are series too.** A job, contract or platform application moves through
+receipt, then screens, then interviews, then an outcome, and only some steps put the next move
+on the user.
+- An "application submitted" or "thanks for applying" receipt is not a task. A "profile is
+  live" or talent-pool notice is not one either.
+- A rejection ends the series. Re-emit it with `attrs.status: "rejected"` (or "withdrawn",
+  "expired") so it leaves both the to-do list and the live applications. Do not list
+  rejections one by one; a platform that sent many becomes one line in the report.
+- Record each live application once, with `attrs.job_application: true` and `attrs.stage`. It
+  becomes an `Action` only when a step is owed: reply with availability, book a call, take an
+  assessment, send a document, prepare for an interview that has a time.
+- **A time the user proposed and nobody confirmed** is an `Action` due at that time, with
+  `blocked_on` the person who has to confirm. When the proposed window has passed with no
+  reply, it becomes a chase. Priority comes from the date rule as usual.
+- **A self-scheduling link from the counterparty** (a booking page, "pick a slot") means the
+  user can unblock the item without waiting. Say so in the Action's name. Do not leave it
+  only `blocked_on` the other side.
+- A scheduling step that went quiet after the user's last reply (a call happened, then nothing)
+  is a follow-up the user owns. Record it undated, with the date of the last contact in the
+  name.
+
+**Work that lives in a system you cannot see.** Some orgs show clear evidence that the user
+does work for them, but none of the work itself reaches a connected source. The evidence looks
+like: repository invitations from the org's provisioning bot, CI or review-bot notifications
+on the user's own submissions, post-project surveys, payouts, an org-specific login identity,
+"your profile is live". The mail is all notifications. The assignment, its deadline and its
+status live in the org's own portal, chat or tracker. Two failure modes:
+- *Inventing work from notifications.* A bot's "run failed" or "blocking issues" comment is not
+  a deadline. Do not emit an Action for every notification thread. If a bot review gates the
+  user's own open submission and the newest activity on it is recent, emit one Action for the
+  submission, citing the bot review. Otherwise do not emit one.
+- *Saying nothing.* The org is real, recent and probably has open work, and the dashboard shows
+  none of it. That is the case Step 5 calls an unexplained zero, hidden inside one workspace.
+
+So for each such org, record its workspace with `attrs.needs_connect: true` and add one residual
+question for Step 4: offer to connect the system where the work lives (name it when the evidence
+shows it: a code host org, a contractor portal, a team chat, a tracker), or ask the user what is
+active there and when it is due. One question per org, not per notification. A marketplace
+where the user only applies (receipts and rejections, no work evidence) does not get this
+question. Its live applications are handled by the rules above.
+
+**Template rows and machine-written pages are not commitments.** A connected tracker or notes
+tool often holds seed content (rows like "Task 1" or "Write FAQ for launch" that came with a
+template and were never edited). It may also hold long planning pages written by an assistant,
+including an earlier run of this system. Neither is something the user or a counterparty said
+the user owes. Use them as context. Do not emit an Action from them unless another source
+corroborates it, and say in the report that you set them aside.
+
+This does not cover a log of real state that an automation keeps, such as an applications tracker
+whose rows say a form was filled and is waiting for the user to submit it. Those rows are claims
+about the world. Check the newest ones against mail and emit what still holds; ask about a batch
+that is too old to check.
+
+**A time with no zone is ambiguous until the other side confirms it.** When the user proposes
+"5:15" and the counterparty is in another time zone, record the Action at the zone the
+counterparty's confirmation states, and if there is no confirmation yet, say in the name that
+the zone is unconfirmed. Do not assume the user's own zone.
+
+**A calendar that lacks what the mail schedules is a finding.** When mail shows interviews or
+calls with times and the calendar holds none of them, the calendar is not the user's source of
+truth for those. Report the mismatch in Step 5 instead of concluding "no meetings". Research is
+read-only, so do not create the events.
+
+### Step 1e: The user's own projects (what is going on in each)
+Side projects, apps and tools the user builds are part of their work even when no message
+mentions them, and the repo or folder itself says what state they are in. The code-hosting and
+local-filesystem modules above list them as nouns. This step reads inside each one.
+
+Which projects: every repository or project folder the user owns or pushes to with activity in
+the last 90 days, every project the user names in their own context, and every project that
+mail, Drive or a beta-testing invite ties to the user. A project the user names that you cannot
+find in any connected source gets one Step 4 question: connect where it lives (another code host
+account, an org, a local folder), or say what is going on with it.
+
+For each, record a `Project` node in the user's personal workspace (`attrs.personal_project:
+true`) with:
+- `attrs.last_activity`, from the newest commit or file change, not the container's metadata.
+- `attrs.state_summary`: one or two plain sentences on what is in flight. Read the last few
+  dozen commit subjects for the current theme (a redesign underway, a fix being released), the
+  open branches and PRs, and whether the newest commits are marked work in progress.
+- `attrs.health`: the default branch's CI on its newest commit. If it is red, say since when and
+  which job. A job that fails within seconds before any step runs is a runner, billing or
+  configuration problem, not a code failure; say that, and do not treat each run as news.
+- Pending items the project's own documents put on the user: a runbook whose apply steps have no
+  record of being run, an ops log's "still open" list, a decision noted as pending with the
+  user, a README's "remaining before" list.
+- Other people pushing to it, as `Person` edges. Shared work is the user's too.
+
+Emit an `Action` only for something owed, at normal priority rules: red CI on the default branch
+of a project the user owns (one Action per project, not per run), a pending runbook step or
+decision recorded in the repo, a review or issue waiting on the user. A project that is simply
+being worked on gets a state summary, not a task.
+
 ## Step 2 — Persist to the graph
 Write the records into the graph via `research.ingest(graph, records)` (see `research.py`). Because
 upsert dedups by stable id, this is safe to run repeatedly. Concretely: assemble the records as
@@ -293,7 +409,8 @@ persist it with `attrs.dormant: true` so it stays queryable without claiming to 
 don't spend a Step 4 question on it. For each remaining
 proposal whose `kind` is unambiguous (single strong signal), adopt it silently. For proposals that
 are ambiguous or `kind: unknown`, **ask the user one short question** ("Is *Acme* your employer,
-a freelance client, or something else?") — and nothing else. Persist confirmed workspaces with
+a freelance client, or something else?") — and nothing else, apart from the connect-or-tell-me
+questions from Step 1d (one per org whose work lives in a system you cannot see). Persist confirmed workspaces with
 `research.workspace_records(proposals)` → `ingest`.
 
 ## Step 5 — Report (and check your own coverage)

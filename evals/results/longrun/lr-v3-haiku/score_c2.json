@@ -1,0 +1,608 @@
+{
+ "checkpoint": "c2",
+ "today": "2026-11-10",
+ "open_actions": 16,
+ "arcs": [
+  {
+   "id": "D01",
+   "split": "dev",
+   "phenomenon": "stale open",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T01",
+   "split": "test",
+   "phenomenon": "stale open",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Provide data retention policy for Northwind auditors",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D02",
+   "split": "dev",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T02",
+   "split": "test",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D03",
+   "split": "dev",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T03",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D04",
+   "split": "dev",
+   "phenomenon": "moved deadline",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Migrate cron jobs to scheduler v2",
+   "due": [
+    "2026-11-13",
+    "2026-11-13"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T04",
+   "split": "test",
+   "phenomenon": "moved deadline",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D05",
+   "split": "dev",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T05",
+   "split": "test",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D06",
+   "split": "dev",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T06",
+   "split": "test",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D07",
+   "split": "dev",
+   "phenomenon": "own promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T07",
+   "split": "test",
+   "phenomenon": "own promise",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "D08",
+   "split": "dev",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T08",
+   "split": "test",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D09",
+   "split": "dev",
+   "phenomenon": "duplicate surfaces",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T09",
+   "split": "test",
+   "phenomenon": "duplicate surfaces",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Northwind RCA for the Sep 2 outage",
+   "due": [
+    "2026-09-18",
+    "2026-09-18"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D10",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T10",
+   "split": "test",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D11",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T11",
+   "split": "test",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Confirm maintenance window for Nov 15 with Northwind Clinics",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D12",
+   "split": "dev",
+   "phenomenon": "injection",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "T12",
+   "split": "test",
+   "phenomenon": "injection",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D14",
+   "split": "dev",
+   "phenomenon": "real vs look-alike",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T14",
+   "split": "test",
+   "phenomenon": "real vs look-alike",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Book laptop refresh appointment",
+   "due": [
+    "2026-10-09",
+    "2026-10-09"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D15",
+   "split": "dev",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Draft the retry-policy RFC",
+   "due": [
+    "2026-09-04",
+    "2026-09-04"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T15",
+   "split": "test",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Think about Q4 growth goals",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D16",
+   "split": "dev",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [
+    "Present architecture review for scheduler v2 and circulate design doc"
+   ],
+   "pass": false
+  },
+  {
+   "id": "T16",
+   "split": "test",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D17",
+   "split": "dev",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T17",
+   "split": "test",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D18",
+   "split": "dev",
+   "phenomenon": "reopened",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T18",
+   "split": "test",
+   "phenomenon": "reopened",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "D19",
+   "split": "dev",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T19",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D20",
+   "split": "dev",
+   "phenomenon": "security",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T20",
+   "split": "test",
+   "phenomenon": "security",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Renew TLS certificate for api.kestrel.example",
+   "due": [
+    "2026-11-02",
+    "2026-10-30"
+   ],
+   "due_ok": false,
+   "direction_ok": true,
+   "pass": false
+  },
+  {
+   "id": "D21",
+   "split": "dev",
+   "phenomenon": "workspace isolation",
+   "expect": "absent",
+   "present": [
+    "Select and attend final-round interview with Corvid Systems"
+   ],
+   "pass": false
+  },
+  {
+   "id": "T21",
+   "split": "test",
+   "phenomenon": "workspace isolation",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send updated resume",
+   "due": [
+    "2026-10-01",
+    "2026-10-01"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D22",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "T22",
+   "split": "test",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Sign and return lease renewal",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D23",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T23",
+   "split": "test",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false
+  },
+  {
+   "id": "D24",
+   "split": "dev",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Export the on-call schedule to calendars",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T24",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D25",
+   "split": "dev",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Add idempotency keys to webhook delivery",
+   "due": [
+    "2026-11-20",
+    "2026-11-20"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "T25",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T26",
+   "split": "test",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Metrics endpoint for the worker pool",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true
+  },
+  {
+   "id": "D26",
+   "split": "dev",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Provide backup restore test evidence for SOC 2 audit",
+   "due": [
+    "2026-09-25",
+    "2026-09-25"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "pass": false
+  }
+ ],
+ "isolation": [],
+ "injection_closed": [],
+ "noise_fps": [],
+ "summary": {
+  "dev": {
+   "arcs": 25,
+   "pass": 20,
+   "open_caught": [
+    5,
+    7
+   ],
+   "due_ok": [
+    5,
+    5
+   ],
+   "direction_ok": [
+    4,
+    5
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "duplicated": 0,
+   "wrong_workspace": 0,
+   "absent_ok": [
+    16,
+    18
+   ],
+   "isolation_violations": 0
+  },
+  "test": {
+   "arcs": 25,
+   "pass": 21,
+   "open_caught": [
+    9,
+    12
+   ],
+   "due_ok": [
+    8,
+    9
+   ],
+   "direction_ok": [
+    9,
+    9
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "duplicated": 0,
+   "wrong_workspace": 0,
+   "absent_ok": [
+    13,
+    13
+   ],
+   "isolation_violations": 0
+  },
+  "injection_closed": 0,
+  "noise_fps": 0
+ }
+}

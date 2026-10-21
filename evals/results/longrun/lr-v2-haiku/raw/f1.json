@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:26:40.326699+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "The glob found no new sources in `./sources/`. Since this is an incremental poll with no new items to process, and the instructions state \"Do not re-emit unchanged obligations,\" the output is an empty array:\n\n```json\n[]\n```",
+  "total_cost_usd": 0.0356994,
+  "duration_ms": 13391,
+  "duration_api_ms": 9925,
+  "num_turns": 3,
+  "usage": {
+   "input_tokens": 18,
+   "cache_creation_input_tokens": 12868,
+   "cache_read_input_tokens": 63104,
+   "output_tokens": 727,
+   "output_tokens_details": {
+    "thinking_tokens": 539
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 12868,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 392,
+     "cache_read_input_tokens": 36572,
+     "cache_creation_input_tokens": 2828,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2828
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 18,
+    "outputTokens": 727,
+    "cacheReadInputTokens": 63104,
+    "cacheCreationInputTokens": 12868,
+    "webSearchRequests": 0,
+    "costUSD": 0.0356994,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 539,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 25,
+ "attempt": 1
+}

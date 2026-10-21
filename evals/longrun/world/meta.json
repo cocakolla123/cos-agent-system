@@ -1,0 +1,96 @@
+{
+ "c2": "2026-11-10",
+ "future_weeks": [
+  "2026-10-13",
+  "2026-10-20",
+  "2026-10-27",
+  "2026-11-03"
+ ],
+ "history_start": "2026-07-13",
+ "slack_channels": null,
+ "slack_users": [
+  {
+   "email": "dana.k@kestrel.example",
+   "id": "dana.k",
+   "real_name": "Dana Kowalski",
+   "title": "Senior Backend Engineer, Platform"
+  },
+  {
+   "email": "ines@kestrel.example",
+   "id": "ines",
+   "real_name": "Ines Moreau",
+   "title": "Engineering Manager, Platform"
+  },
+  {
+   "email": "victor@kestrel.example",
+   "id": "victor",
+   "real_name": "Victor Hale",
+   "title": "Director of Engineering"
+  },
+  {
+   "email": "tomas@kestrel.example",
+   "id": "tomas",
+   "real_name": "Tomas Reyes",
+   "title": "Product Manager, Scheduling"
+  },
+  {
+   "email": "alex.park@kestrel.example",
+   "id": "alex.p",
+   "real_name": "Alex Park",
+   "title": "Backend Engineer, Platform"
+  },
+  {
+   "email": "dana.lee@kestrel.example",
+   "id": "dana.lee",
+   "real_name": "Dana Lee",
+   "title": "Frontend Engineer"
+  },
+  {
+   "email": "sam@kestrel.example",
+   "id": "sam",
+   "real_name": "Sam Okoye",
+   "title": "Site Reliability Engineer"
+  },
+  {
+   "email": "mei@kestrel.example",
+   "id": "mei",
+   "real_name": "Mei Tanaka",
+   "title": "QA Engineer"
+  },
+  {
+   "email": "raj@kestrel.example",
+   "id": "raj",
+   "real_name": "Raj Patel",
+   "title": "Data Engineer"
+  },
+  {
+   "email": "lena@kestrel.example",
+   "id": "lena",
+   "real_name": "Lena Fischer",
+   "title": "Product Designer"
+  },
+  {
+   "email": "alex.brennan@northwind.example",
+   "id": "alex.brennan",
+   "real_name": "Alex Brennan",
+   "title": "Operations Lead, Northwind Clinics (external, shared channel)"
+  }
+ ],
+ "today": "2026-10-13",
+ "user": {
+  "email": "dana.k@kestrel.example",
+  "github": "dana-k",
+  "name": "Dana Kowalski",
+  "other_emails": [
+   "dana.kowalski@mailbox.example"
+  ],
+  "slack": "dana.k"
+ },
+ "workspaces": {
+  "job-search": "job-search",
+  "kestrel": "employer",
+  "oss": "side-project",
+  "personal": "personal"
+ },
+ "world": "easy"
+}

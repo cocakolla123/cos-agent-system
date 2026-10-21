@@ -47,14 +47,14 @@ _FORBIDDEN_IN_ALLOWLIST = ("mcp__", "Bash", "Write", "Edit", "WebFetch",
                            "WebSearch", "Agent", "NotebookEdit")
 
 
-def assert_isolated():
+def assert_isolated(allowed=ALLOWED_TOOLS):
     """The runner's own precondition: fixtures only, ever."""
     for bad in _FORBIDDEN_IN_ALLOWLIST:
-        if bad.lower() in ALLOWED_TOOLS.lower():
+        if bad.lower() in allowed.lower():
             raise SystemExit(
                 "refusing to run: allowlist %r contains %r — the eval runner "
                 "may never reach a connector or mutate anything" %
-                (ALLOWED_TOOLS, bad))
+                (allowed, bad))
 
 
 def sha256_file(path):
@@ -136,12 +136,15 @@ def extract_json_array(text):
     return None, err if candidates else "no JSON array in output"
 
 
-def run_scenario(scn, sdir, prompt, model, timeout):
+def run_scenario(scn, sdir, prompt, model, timeout, allowed=ALLOWED_TOOLS):
+    """``allowed`` may only add read-only tools (the long-run harness adds
+    Grep, standing in for connector search); assert_isolated checks it."""
+    assert_isolated(allowed)
     cmd = [
         CLAUDE, "-p", prompt,
         "--output-format", "json",
         "--permission-mode", "dontAsk",
-        "--allowedTools", ALLOWED_TOOLS,
+        "--allowedTools", allowed,
         "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}',
     ]
     if model:

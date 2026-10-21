@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:34:37.827851+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rotate-leaked-aws-key\",\"name\":\"Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)\",\"attrs\":{\"status\":\"done\",\"priority\":\"high\",\"due\":\"2026-10-09\",\"evidence\":[\"sl-17348\",\"em-0680\",\"sl-17349\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-360-load-test-scheduler-v2\",\"name\":\"Load test scheduler v2 (PLAT-360)\",\"attrs\":{\"status\":\"done\",\"priority\":\"high\",\"due\":\"2026-09-30\",\"evidence\":[\"jr-0549\",\"jr-0550\",\"sl-17337\",\"cal-0006\"],\"refs\":[\"PLAT-360\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"review-rota-api-pr-470\",\"name\":\"Review rota-api PR #470 (Batch shift import)\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"gh-0035\",\"gh-0036\",\"sl-17330\"],\"refs\":[\"rota-api#470\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"scheduler-v2-architecture-review-design-doc\",\"name\":\"Circulate scheduler v2 design doc before the Oct 22 architecture review\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"due\":\"2026-10-20\",\"evidence\":[\"cal-0008\",\"em-0679\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"friday-status-update-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"high\",\"evidence\":[\"sl-17371\",\"em-0717\",\"em-0718\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-322-cron-migration-scheduler-v2\",\"name\":\"Migrate cron jobs to scheduler v2 (PLAT-322)\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"medium\",\"evidence\":[\"jr-0544\",\"sl-17322\",\"em-0717\",\"sl-17323\"],\"refs\":[\"PLAT-322\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"sl-17332\",\"sl-17333\"]},\"source\":\"eval-fixture\",\"confidence\":0.92,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"benefits-enrollment\",\"name\":\"Complete benefits enrollment by Nov 6 (else defaults to basic plan)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"medium\",\"evidence\":[\"sl-17376\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-maintenance-window-confirm\",\"name\":\"Confirm the Nov 15 maintenance window to Alex Brennan (Northwind)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"medium\",\"evidence\":[\"em-0672\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"evidence\":[\"em-0692\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]}]",
+  "total_cost_usd": 0.3282877,
+  "duration_ms": 28508,
+  "duration_api_ms": 24525,
+  "num_turns": 9,
+  "usage": {
+   "input_tokens": 16,
+   "cache_creation_input_tokens": 62253,
+   "cache_read_input_tokens": 481037,
+   "output_tokens": 3114,
+   "output_tokens_details": {
+    "thinking_tokens": 874
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 62253,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1693,
+     "cache_read_input_tokens": 88435,
+     "cache_creation_input_tokens": 856,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 856
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 16,
+    "outputTokens": 3114,
+    "cacheReadInputTokens": 481037,
+    "cacheCreationInputTokens": 62253,
+    "webSearchRequests": 0,
+    "costUSD": 0.3282877,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 874,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}

@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-14T00:34:54.678509+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"notifications-rfc-comments\",\n    \"name\": \"Review and comment on notifications RFC\",\n    \"attrs\": {\n      \"status\": \"done\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-355-on-call-runbook\",\n    \"name\": \"PLAT-355: Rewrite the on-call runbook\",\n    \"attrs\": {\n      \"status\": \"done\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-401-idempotency-keys\",\n    \"name\": \"PLAT-401: Add idempotency keys to webhook delivery\",\n    \"attrs\": {\n      \"due\": \"2026-11-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"jr-0559\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"october-timesheet-submission\",\n    \"name\": \"Submit October timesheet\",\n    \"attrs\": {\n      \"due\": \"2026-11-02\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0714\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"corvid-final-round-interview\",\n    \"name\": \"Final round interview at Corvid\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0685\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.2559492,
+  "duration_ms": 101758,
+  "duration_api_ms": 97006,
+  "num_turns": 29,
+  "usage": {
+   "input_tokens": 130,
+   "cache_creation_input_tokens": 61350,
+   "cache_read_input_tokens": 915942,
+   "output_tokens": 8305,
+   "output_tokens_details": {
+    "thinking_tokens": 4545
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 61350,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 672,
+     "cache_read_input_tokens": 83624,
+     "cache_creation_input_tokens": 4258,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 4258
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 130,
+    "outputTokens": 8305,
+    "cacheReadInputTokens": 915942,
+    "cacheCreationInputTokens": 61350,
+    "webSearchRequests": 0,
+    "costUSD": 0.2559492,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 4545,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

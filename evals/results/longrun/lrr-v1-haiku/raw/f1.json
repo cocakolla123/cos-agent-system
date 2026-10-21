@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:24:38.821629+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity\",\n    \"name\": \"Q4 capacity numbers\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-17333\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-maint\",\n    \"name\": \"Confirm maintenance window for Nov 15\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0672\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security\",\n    \"name\": \"Review vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0692\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.1450802,
+  "duration_ms": 84987,
+  "duration_api_ms": 81341,
+  "num_turns": 13,
+  "usage": {
+   "input_tokens": 50,
+   "cache_creation_input_tokens": 38171,
+   "cache_read_input_tokens": 249032,
+   "output_tokens": 8757,
+   "output_tokens_details": {
+    "thinking_tokens": 7612
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 38171,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 7466,
+     "cache_read_input_tokens": 57356,
+     "cache_creation_input_tokens": 7347,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 7347
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 50,
+    "outputTokens": 8757,
+    "cacheReadInputTokens": 249032,
+    "cacheCreationInputTokens": 38171,
+    "webSearchRequests": 0,
+    "costUSD": 0.1450802,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 7612,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}

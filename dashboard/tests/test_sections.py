@@ -57,6 +57,22 @@ class TestSectionData(unittest.TestCase):
         self.assertEqual([i["title"] for i in sections.blocked_work(self.g)],
                          ["Old bug"])
 
+    def test_blocked_on_counts_as_blocked(self):
+        self.g.upsert_node("Action", "job-search", "chase", name="Recruiter call",
+                           attrs={"blocked_on": "the recruiter"}, now=_t(1))
+        items = {i["title"]: i for i in sections.blocked_work(self.g)}
+        self.assertEqual(items["Recruiter call"]["sub"], "waiting on the recruiter")
+        self.assertIn("Old bug", items)
+
+    def test_rejected_application_leaves_lists(self):
+        self.g.upsert_node("Action", "job-search", "rej", name="Rejected role",
+                           attrs={"job_application": True, "status": "rejected"},
+                           now=_t(1))
+        self.assertNotIn("Rejected role",
+                         [i["title"] for i in sections.job_applications(self.g)])
+        self.assertNotIn("Rejected role",
+                         [i["title"] for i in sections.next_actions(self.g)])
+
     def test_investigations(self):
         self.assertEqual(len(sections.investigations(self.g)), 1)
 
@@ -70,6 +86,18 @@ class TestSectionData(unittest.TestCase):
     def test_personal_projects(self):
         self.assertEqual([i["title"] for i in sections.personal_projects(self.g)],
                          ["sideproj"])
+
+    def test_personal_project_shows_state(self):
+        self.g.upsert_node("Project", "side", "app", name="Photo app",
+                           attrs={"personal_project": True,
+                                  "state_summary": "redesign in progress",
+                                  "health": "CI red since Oct 20"}, now=_t(1))
+        items = {i["title"]: i for i in sections.personal_projects(self.g)}
+        self.assertEqual(items["Photo app"]["sub"],
+                         "redesign in progress · CI red since Oct 20")
+        self.assertIn("sideproj", items)
+        self.assertNotIn("Photo app",
+                         [i["title"] for i in sections.personal_projects(self.g, "personal")])
 
     def test_workspace_filter_isolates(self):
         # scoped to employer -> no personal repo in projects

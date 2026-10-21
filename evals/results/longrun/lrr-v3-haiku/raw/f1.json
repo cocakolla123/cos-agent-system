@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-14T00:33:44.243496+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Now I'll synthesize the fixture data with the existing open actions to produce normalized records.\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"maintenance-window-confirmation-northwind\",\n    \"name\": \"Confirm maintenance window for Nov 15 with Northwind\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0672\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"alex-brennan\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-vendor-security-questionnaire\",\n    \"name\": \"Review vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"medium\",\n      \"evidence\": [\n        \"em-0692\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"victor-hale\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Send Q4 capacity numbers to manager\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\",\n      \"evidence\": [\n        \"sl-17333\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": [\n      {\n        \"to_kind\": \"Person\",\n        \"to_key\": \"ines-moreau\",\n        \"type\": \"requested_by\"\n      }\n    ]\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-360-load-test-scheduler\",\n    \"name\": \"PLAT-360: Load test scheduler v2\",\n    \"attrs\": {\n      \"status\": \"done\",\n      \"evidence\": [\n        \"jr-0550\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.98,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"alex-brennan\",\n    \"name\": \"Alex Brennan\",\n    \"attrs\": {\n      \"title\": \"Operations Lead, Northwind Clinics\",\n      \"email\": \"alex.brennan@northwind.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"victor-hale\",\n    \"name\": \"Victor Hale\",\n    \"attrs\": {\n      \"title\": \"Director of Engineering\",\n      \"email\": \"victor@kestrel.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Person\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"ines-moreau\",\n    \"name\": \"Ines Moreau\",\n    \"attrs\": {\n      \"title\": \"Engineering Manager, Platform\",\n      \"email\": \"ines@kestrel.example\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.9,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Ticket\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-360\",\n    \"name\": \"Load test scheduler v2\",\n    \"attrs\": {\n      \"status\": \"done\",\n      \"priority\": \"high\"\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.2710239,
+  "duration_ms": 66938,
+  "duration_api_ms": 63360,
+  "num_turns": 33,
+  "usage": {
+   "input_tokens": 170,
+   "cache_creation_input_tokens": 60134,
+   "cache_read_input_tokens": 1215709,
+   "output_tokens": 5803,
+   "output_tokens_details": {
+    "thinking_tokens": 1940
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 60134,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1419,
+     "cache_read_input_tokens": 83816,
+     "cache_creation_input_tokens": 2850,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2850
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 170,
+    "outputTokens": 5803,
+    "cacheReadInputTokens": 1215709,
+    "cacheCreationInputTokens": 60134,
+    "webSearchRequests": 0,
+    "costUSD": 0.2710239,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 1940,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}

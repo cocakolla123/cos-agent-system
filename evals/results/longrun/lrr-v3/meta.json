@@ -1,0 +1,15 @@
+{
+ "run_id": "lrr-v3",
+ "instructions": "instructions/longrun_v3.md",
+ "instructions_sha256": "1cdc647811054234a45a2208686c26a848250b926c435ca2698c35a80915a404",
+ "model": null,
+ "date": "2026-10-14",
+ "cli_version": "2.1.296 (Claude Code)",
+ "world": "realistic",
+ "tools": "Read,Glob,Grep",
+ "world_lock": {
+  "gold.json": "5a3babdc3c989378dcb3e6c1f0f6cf8274b8cbaab59ccaaad2a795dc36115c90",
+  "items.json": "6395d117fe91fe3ca1e1d5fa6cd05e5c15f1559ea5adff5c4be4b0cb4c194e19",
+  "meta.json": "e47088df8f5ea3bc21fda18f727204eb203082c37afdf667d733f7f3ec7b8679"
+ }
+}

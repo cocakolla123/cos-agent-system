@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-14T00:09:23.159371+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Kestrel data retention policy to Alex Brennan (Northwind) for compliance audit\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"blocked_on\":null,\"evidence\":[\"em-0043\",\"em-0044\",\"em-0045\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"review-stratus-security-questionnaire\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-0079\",\"em-0080\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Waiting on Priya (Stratus Monitoring) for 50-seat renewal quote\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"blocked_on\":\"Priya (Stratus Monitoring)\",\"evidence\":[\"em-0055\",\"em-0056\",\"em-0080\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rta-101-timezone-bug-reopened\",\"name\":\"Fix reopened timezone bug in shift export (RTA-101, Australia/Lord_Howe)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"jr-0050\",\"jr-0051\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-0197\",\"sl-0198\",\"sl-0199\",\"doc-0009\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]}\n]",
+  "total_cost_usd": 0.13752189999999997,
+  "duration_ms": 13716,
+  "duration_api_ms": 11227,
+  "num_turns": 5,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 26785,
+   "cache_read_input_tokens": 170559,
+   "output_tokens": 1331,
+   "output_tokens_details": {
+    "thinking_tokens": 290
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 26785,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 999,
+     "cache_read_input_tokens": 49257,
+     "cache_creation_input_tokens": 4566,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 4566
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 1331,
+    "cacheReadInputTokens": 170559,
+    "cacheCreationInputTokens": 26785,
+    "webSearchRequests": 0,
+    "costUSD": 0.13752189999999997,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 290,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 20,
+ "attempt": 1
+}

@@ -1,0 +1,67 @@
+[
+ {
+  "records": 37,
+  "valid": 37,
+  "parse_error": null,
+  "step": "c1",
+  "today": "2026-10-13",
+  "items": 335,
+  "cost_usd": 0.39034360000000007,
+  "duration_ms": 135660,
+  "models": [
+   "claude-haiku-4-5-20251001"
+  ]
+ },
+ {
+  "records": 9,
+  "valid": 9,
+  "parse_error": null,
+  "step": "f1",
+  "today": "2026-10-20",
+  "items": 25,
+  "cost_usd": 0.1212265,
+  "duration_ms": 57963,
+  "models": [
+   "claude-haiku-4-5-20251001"
+  ]
+ },
+ {
+  "records": 6,
+  "valid": 6,
+  "parse_error": null,
+  "step": "f2",
+  "today": "2026-10-27",
+  "items": 24,
+  "cost_usd": 0.07662379999999999,
+  "duration_ms": 38506,
+  "models": [
+   "claude-haiku-4-5-20251001"
+  ]
+ },
+ {
+  "records": 4,
+  "valid": 4,
+  "parse_error": null,
+  "step": "f3",
+  "today": "2026-11-03",
+  "items": 20,
+  "cost_usd": 0.0999949,
+  "duration_ms": 47032,
+  "models": [
+   "claude-haiku-4-5-20251001"
+  ]
+ },
+ {
+  "records": 0,
+  "valid": 0,
+  "parse_error": null,
+  "step": "f4",
+  "today": "2026-11-10",
+  "items": 19,
+  "cost_usd": 0.07079099999999999,
+  "duration_ms": 43767,
+  "models": [
+   "claude-haiku-4-5-20251001"
+  ]
+ }
+]

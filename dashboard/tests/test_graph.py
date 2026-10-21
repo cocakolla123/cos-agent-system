@@ -341,6 +341,14 @@ class TestObligations(unittest.TestCase):
             n = self._action(graph.slug(status), status=status)
             self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
 
+    def test_outcome_statuses_conclude(self):
+        """An application or invitation that ended (rejected, not selected,
+        withdrawn, declined, expired) is over, not open."""
+        for status in ("rejected", "Not_Selected", "withdrawn", "declined", "expired"):
+            n = self._action(graph.slug(status), status=status)
+            self.assertTrue(graph.is_concluded(n), status)
+            self.assertFalse(graph.is_open_action(n, now=self.NOW), status)
+
     def test_unknown_status_leaves_an_action_open(self):
         n = self._action("pending", status="pending")
         self.assertTrue(graph.is_open_action(n, now=self.NOW))
@@ -353,6 +361,21 @@ class TestObligations(unittest.TestCase):
                           now=self.NOW)
         self.assertFalse(graph.is_concluded(n))
         self.assertTrue(graph.is_current(n, now=self.NOW))
+
+    def test_empty_value_does_not_erase_but_clear_attrs_does(self):
+        g = graph.Graph()
+        g.upsert_node("Action", "work", "a1",
+                      attrs={"due": "2026-10-01", "blocked_on": "legal"}, now=self.NOW)
+        g.upsert_node("Action", "work", "a1", attrs={"blocked_on": None}, now=self.NOW)
+        n = g.nodes[graph.node_id("work", "Action", "a1")]
+        self.assertEqual(n["attrs"]["blocked_on"], "legal")
+        g.upsert_node("Action", "work", "a1",
+                      attrs={"clear_attrs": ["blocked_on"], "note": "send it"},
+                      now=self.NOW)
+        self.assertNotIn("blocked_on", n["attrs"])
+        self.assertNotIn("clear_attrs", n["attrs"])
+        self.assertEqual(n["attrs"]["due"], "2026-10-01")
+        self.assertEqual(n["attrs"]["note"], "send it")
 
     def test_non_action_is_never_an_open_action(self):
         g = graph.Graph()
