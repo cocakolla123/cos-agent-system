@@ -58,6 +58,11 @@ except Exception:  # pragma: no cover - defensive
 # V2.1 (M9): self-learning correction loop. Guarded; with the module missing or
 # the toggle off, chat behaves exactly as before.
 try:
+    import codefix as _codefix
+except Exception:  # pragma: no cover - defensive
+    _codefix = None
+
+try:
     import learning as _learning
 except Exception:  # pragma: no cover - defensive
     _learning = None
@@ -391,7 +396,10 @@ def _set_status_locked(path, entry_id, new_status, note, from_status):
     if not matches:
         return False
     last = matches[-1]
-    new_text = text[: last.start(1)] + new_status + text[last.end() :]
+    # keep the "### <id> ... - status: " prefix and replace only the value;
+    # cutting from start(1) deleted the entry's header and status label, so the
+    # entry vanished from the queue and its value fused onto the entry above
+    new_text = text[: last.end(1)] + new_status + text[last.end() :]
     if note:
         insert_at = new_text.find("\n### ", last.start())
         marker = f"\n- dashboard_note: {note}"
@@ -1200,8 +1208,10 @@ def render_entry(e):
     entry_id = e.get("id", "")
     safe_id = html.escape(entry_id)
     b64_id = base64.b64encode(entry_id.encode()).decode()
-    executable = action_type in ACTION_TOOLS
-    icon = ICONS.get(action_type, DEFAULT_ICON)
+    is_fix = action_type == "code_fix"
+    # a code fix is executed by codefix.open_pr, not by a granted tool
+    executable = action_type in ACTION_TOOLS or (is_fix and _codefix is not None)
+    icon = "🛠️" if is_fix else ICONS.get(action_type, DEFAULT_ICON)
     title = html.escape(human_title(e))
     quick_line = html.escape(e.get("short_summary", "") or e.get("proposed_tool_call", "")[:140])
     priority = e.get("priority", "medium")
@@ -1220,7 +1230,8 @@ def render_entry(e):
     if status == "pending":
         if executable:
             summary = html.escape(e.get("proposed_tool_call", ""))[:400]
-            btn_label = "Approve &amp; create draft" if action_type == "message_send" else "Approve &amp; send"
+            btn_label = ("Approve &amp; open PR" if is_fix else
+                         "Approve &amp; create draft" if action_type == "message_send" else "Approve &amp; send")
             actions = (
                 f"<button class=\"primary\" data-id=\"{safe_id}\" data-action-type=\"{html.escape(action_type)}\" "
                 f"data-summary=\"{summary}\" onclick=\"approve(this)\">{btn_label}</button>"
@@ -1240,7 +1251,7 @@ def render_entry(e):
             f"<textarea id='feedback-{b64_id}' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea>"
             f"<button class='small' data-id=\"{safe_id}\" onclick=\"revise(this)\">Revise</button>"
         )
-        if executable:
+        if executable and not is_fix:
             raw_text = extract_message_text(e.get("proposed_tool_call", ""))
             revise_box += (
                 f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleEdit(this)\">Edit</button>"
@@ -1292,6 +1303,7 @@ def render_entry(e):
   </div>
   <div class="tab-panel" id="panel-{b64_id}-details" data-entry="{b64_id}">
     <pre>{html.escape(e.get('proposed_tool_call',''))}</pre>
+    {render_fix_details(e) if is_fix else ""}
     <div class="meta">{html.escape(e.get('context',''))}</div>
     {render_linked_domain(e)}
   </div>
@@ -1300,6 +1312,28 @@ def render_entry(e):
   <div class="result" id="result-{b64_id}"></div>
 </div>
 """
+
+
+def render_fix_details(e):
+    """Diff and test result for a code_fix card: what the user is approving."""
+    passed = e.get("test_exit") == "0"
+    pill = ('<span class="priority-tag priority-low">✅ tests pass</span>' if passed else
+            '<span class="priority-tag priority-high">❌ tests fail: not approvable</span>')
+    diff = _codefix.read_diff(e) if _codefix is not None else ""
+    tests = ""
+    try:
+        with open(os.path.splitext(e.get("diff_file", ""))[0] + ".tests.txt") as f:
+            tests = f.read()[-4000:]
+    except OSError:
+        pass
+    return (
+        f"<div class='meta'>Branch <code>{html.escape(e.get('branch',''))}</code> from "
+        f"<code>{html.escape(e.get('base_branch','main'))}</code> in "
+        f"<code>{html.escape(e.get('repo',''))}</code>. Approving pushes the branch and "
+        f"opens a pull request. Nothing is ever merged.</div>"
+        f"<div class='meta'>{pill} <code>{html.escape(e.get('test_command',''))}</code></div>"
+        f"<details><summary>Test output</summary><pre>{html.escape(tests)}</pre></details>"
+        f"<details open><summary>Diff</summary><pre class='diff'>{html.escape(diff)}</pre></details>")
 
 
 def render_archived_entry(e):
@@ -2348,6 +2382,26 @@ class Handler(BaseHTTPRequestHandler):
             if not ok:
                 ok = set_status(entry_id, "approved", note="sent manually after drafting", from_status="drafted")
             self._send_json({"message": f"{entry_id} marked handled" if ok else "entry not found"})
+            return
+
+        if self.path == "/approve" and data.get("action_type") == "code_fix":
+            # Deterministic: push the fix branch and open a PR. No model call,
+            # no tool grant, and no merge path (see codefix.open_pr).
+            entry_id = data.get("id", "")
+            entry = next((e for e in parse_approval_queue()
+                          if e.get("id") == entry_id and e.get("status") == "pending"), None)
+            if entry is None or _codefix is None:
+                self._send_json({"success": False, "message": "no pending code fix %s" % entry_id}, 400)
+                return
+            try:
+                url = _codefix.open_pr(entry)
+            except Exception as exc:
+                set_status(entry_id, "failed", note="PR not opened: %s" % exc)
+                self._send_json({"success": False, "message": "PR not opened: %s" % exc})
+                return
+            set_status(entry_id, "approved", note="PR opened (not merged): %s" % url)
+            self._send_json({"success": True, "message": "Pull request opened: %s. "
+                             "It is not merged; review and merge it on GitHub." % url})
             return
 
         if self.path == "/approve":

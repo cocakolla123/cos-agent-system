@@ -314,6 +314,9 @@ GUARDRAIL_PATHS = [
     "commands/cos-approve-confirmed.md",
     "dashboard/audit.py",
     "dashboard/learning.py",
+    # pushes branches and opens PRs on approval; the no-merge rule lives here
+    "dashboard/codefix.py",
+    "commands/cos-fix.md",
 ]
 GUARDRAIL_BASENAMES = ["APPROVAL_POLICY.md"]
 

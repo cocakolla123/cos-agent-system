@@ -7,7 +7,7 @@
 #                       | bash -s -- --repo https://github.com/YOU/YOUR-REPO.git [--start]
 #
 # What it does: finds a Python >= 3.12, checks for the claude CLI, installs
-# the ten /cos-* commands + /setup into ~/.claude/commands/global/ (backing up
+# the /cos-* commands + /setup into ~/.claude/commands/global/ (backing up
 # anything it would overwrite), makes this folder a git repo (the learn loop
 # self-commits its kept improvements), and tells you the two commands that
 # start everything. --start also launches the dashboard right away.

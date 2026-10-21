@@ -123,7 +123,13 @@ Each claim below names what enforces it, what it covers, and what it does not.
   the record level in all four runs; the eval runner itself uses `Read,Glob` only, so eval
   results do not exercise the production grant.
 - **One execution path**: only `/cos-approve` holds mutating grants, only against the exact
-  stored `proposed_tool_call`, only after you approve.
+  stored `proposed_tool_call`, only after you approve. The one exception is a code fix, and
+  it is narrower still: `/cos-fix` drafts the fix on its own `cos/fix-*` branch in a
+  separate worktree, with a test that reproduces the bug. `dashboard/codefix.py` then re-runs
+  the tests itself and shows the diff and the result on the card. Approving runs plain code,
+  with no model call: it pushes that branch and opens a pull request with `gh`. It has no
+  merge path and refuses merge commands, so merging stays yours. A fix whose tests fail
+  cannot be approved.
 - **Self-modification guardrails** (`dashboard/learning.py`, `is_change_allowed`): the
   approval surface and the learning module itself refuse self-edits; SHA-256 baselines and a
   dashboard drift banner back that up.
