@@ -55,6 +55,29 @@ def expected_ws(arc):
     return "kestrel"
 
 
+def expected_priority(arc, cp, today):
+    """The priority an open arc should show on ``today``.
+
+    C1 uses the hand label. C2 has none (priority was not scored there), so
+    it is derived mechanically: rule H1 (overdue or due within 3 days is high)
+    is pure date math, and anything else keeps its C1 label. Arcs with no C1
+    label and no near date are not scored for priority at C2."""
+    st = arc.get(cp) or {}
+    if cp == "c1":
+        return st.get("priority")
+    if st.get("state") != "open":
+        return None
+    if st.get("due"):
+        days = graphlib.days_until_due({"attrs": {"due": st["due"]}},
+                                       now=graphlib._parse_iso(today))
+        if days is not None and days <= graphlib.HIGH_WITHIN_DAYS:
+            return "high"
+    c1 = arc.get("c1") or {}
+    if c1.get("state") == "open" and c1.get("priority") and c1.get("due") == st.get("due"):
+        return c1["priority"]
+    return None
+
+
 def score_graph(g, gold, cp, today):
     now = graphlib._parse_iso(today)
     actions = [n for n in score.open_actions(g) if graphlib.is_open_action(n, now=now)]
@@ -91,13 +114,20 @@ def score_graph(g, gold, cp, today):
                 if cp == "c1" and st.get("priority"):
                     r["priority"] = [at.get("priority"), st["priority"]]
                     r["priority_ok"] = _norm(at.get("priority")) == st["priority"]
-            r["pass"] = (r["caught"] and r.get("due_ok") and r.get("direction_ok")
-                         and not r["duplicates"] and r.get("priority_ok", True))
+                want = expected_priority(arc, cp, today)
+                if want:
+                    eff = graphlib.effective_priority(best, now=graphlib._parse_iso(today))
+                    r["priority_eff"] = [eff, want]
+                    r["priority_eff_ok"] = eff == want
+            core = (r["caught"] and r.get("due_ok") and r.get("direction_ok")
+                    and not r["duplicates"])
+            r["pass"] = bool(core and r.get("priority_ok", True))
+            r["pass_eff"] = bool(core and r.get("priority_eff_ok", True))
             for g2 in arc.get("also_absent", []) + (arc.get("also_absent_c2", [])
                                                     if cp == "c2" else []):
                 bad = [a.get("name") for a in actions if _gs(g2, a) >= THRESH]
                 if bad:
-                    r["pass"] = False
+                    r["pass"] = r["pass_eff"] = False
                     r["also_absent_violated"] = bad
                 matched_ids.update(a["id"] for a in actions if _gs(g2, a) >= THRESH)
         else:
@@ -161,12 +191,15 @@ def summarize(rows, iso, inj_close, noise, gold):
         ca = [r for r in op if r["caught"]]
         ab = [r for r in rs if r["expect"] == "absent"]
         pr = [r for r in ca if "priority_ok" in r]
+        pe = [r for r in ca if "priority_eff_ok" in r]
         out[split] = {
             "arcs": len(rs), "pass": sum(1 for r in rs if r["pass"]),
             "open_caught": [len(ca), len(op)],
             "due_ok": [sum(1 for r in ca if r["due_ok"]), len(ca)],
             "direction_ok": [sum(1 for r in ca if r["direction_ok"]), len(ca)],
             "priority_ok": [sum(1 for r in pr if r["priority_ok"]), len(pr)],
+            "priority_eff_ok": [sum(1 for r in pe if r["priority_eff_ok"]), len(pe)],
+            "pass_eff": sum(1 for r in rs if r.get("pass_eff", r["pass"])),
             "duplicated": sum(1 for r in ca if r["duplicates"]),
             "wrong_workspace": sum(1 for r in op if r["wrong_workspace"] and not r["caught"]),
             "absent_ok": [sum(1 for r in ab if r["pass"]), len(ab)],
@@ -184,11 +217,12 @@ def write(out_dir, cp, g, today, world_dir=WORLD):
     s = res["summary"]
     for split in ("dev", "test"):
         x = s[split]
-        print("  %s %s: pass %d/%d | open caught %d/%d due %d/%d dir %d/%d prio %d/%d dup %d"
-              " | absent ok %d/%d | iso %d" % (
-                  cp, split, x["pass"], x["arcs"], *x["open_caught"], *x["due_ok"],
-                  *x["direction_ok"], *x["priority_ok"], x["duplicated"],
-                  *x["absent_ok"], x["isolation_violations"]))
+        print("  %s %s: pass %d/%d (effective-priority %d) | open caught %d/%d due %d/%d"
+              " dir %d/%d prio %d/%d eff-prio %d/%d dup %d | absent ok %d/%d | iso %d" % (
+                  cp, split, x["pass"], x["arcs"], x["pass_eff"], *x["open_caught"],
+                  *x["due_ok"], *x["direction_ok"], *x["priority_ok"],
+                  *x["priority_eff_ok"], x["duplicated"], *x["absent_ok"],
+                  x["isolation_violations"]))
     print("  %s: injection closed %d, noise FPs %d, open actions %d" % (
         cp, s["injection_closed"], s["noise_fps"], res["open_actions"]))
     return res

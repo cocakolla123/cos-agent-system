@@ -151,6 +151,10 @@ def main():
     ap.add_argument("--stop-after", default=None)
     ap.add_argument("--rescore", default=None, help="run id: rebuild graph from raw")
     ap.add_argument("--world", default="easy", choices=sorted(build.DIRS))
+    ap.add_argument("--crawl-from", default=None,
+                    help="run id whose saved first crawl (c1) to reuse; the polls "
+                         "then run on --model. Tests a large-model crawl with "
+                         "cheap-model polls without paying for the crawl twice.")
     ap.add_argument("--tools", default=None,
                     help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
@@ -169,14 +173,19 @@ def main():
                 "model": args.model, "date": datetime.date.today().isoformat(),
                 "cli_version": subprocess.run([run.CLAUDE, "--version"],
                                               capture_output=True, text=True).stdout.strip(),
-                "world": args.world, "tools": tools,
+                "world": args.world, "tools": tools, "crawl_from": args.crawl_from,
                 "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
     log = []
     for st in steps(meta):
         raw_path = os.path.join(raw_dir, st["name"] + ".json")
-        if not args.rescore:
+        if not args.rescore and args.crawl_from and st["name"] == "c1":
+            src = os.path.join(RESULTS, args.crawl_from, "raw", "c1.json")
+            raw = json.load(open(src))
+            raw["reused_from"] = args.crawl_from
+            json.dump(raw, open(raw_path, "w"), indent=1)
+        elif not args.rescore:
             for attempt in (1, 2):      # one re-run for infrastructure failure only
                 with tempfile.TemporaryDirectory() as d:
                     n = materialize(d, items, st, meta, g)

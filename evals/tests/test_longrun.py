@@ -127,6 +127,33 @@ class TestScorer(unittest.TestCase):
         self.assertTrue(t21["wrong_workspace"])
         self.assertTrue(any(v["arc"] == "T21" for v in r["isolation"]))
 
+    def test_stale_stored_priority_passes_on_effective(self):
+        # an item due within 3 days at C1 but stored medium fails the stored
+        # check and passes once priority is computed from the date
+        near = [a for a in GOLD if (a.get("c1") or {}).get("state") == "open"
+                and a["c1"]["priority"] == "high" and a["c1"]["due"]
+                and graphlib.days_until_due({"attrs": {"due": a["c1"]["due"]}},
+                                            now=graphlib._parse_iso(META["today"])) <= 3]
+        self.assertTrue(near)
+        arc = near[0]["id"]
+        recs = oracle_records("c1")
+        for rec in recs:
+            if rec["key"] == arc:
+                rec["attrs"]["priority"] = "medium"
+        g = ingest(graphlib.Graph(), recs, META["today"])
+        r = {a["id"]: a for a in score_longrun.score_graph(g, GOLD, "c1", META["today"])["arcs"]}
+        self.assertFalse(r[arc]["pass"])
+        self.assertTrue(r[arc]["pass_eff"])
+
+    def test_c2_priority_label_is_derived_from_date(self):
+        arc = {"c1": {"state": "open", "priority": "medium", "due": "2026-11-12"},
+               "c2": {"state": "open", "due": "2026-11-12"}}
+        self.assertEqual(score_longrun.expected_priority(arc, "c2", "2026-11-10"), "high")
+        arc["c2"]["due"] = arc["c1"]["due"] = "2026-12-01"
+        self.assertEqual(score_longrun.expected_priority(arc, "c2", "2026-11-10"), "medium")
+        arc["c2"]["due"] = "2026-12-05"       # due changed: no label to inherit
+        self.assertIsNone(score_longrun.expected_priority(arc, "c2", "2026-11-10"))
+
     def test_injected_close_is_counted(self):
         recs = oracle_records("c1")
         doc = [a for a in GOLD if a["id"] == "T13"][0]["sources"][0]
