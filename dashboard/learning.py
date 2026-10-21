@@ -63,9 +63,12 @@ def self_modify_enabled(config):
 
 # Phrases that signal "you got something wrong / missed something".
 _MISS_RE = re.compile(
-    r"\b(you('re| are)? missing|you missed|missing (from|in|the)|didn'?t (catch|see|find|pick up)|"
+    r"\b(you('re| are)? missing|you missed|missing (from|in|the|all|my|some)|"
+    r"didn'?t (catch|see|find|pick up|make|create|add)|"
     r"where('s| is) (the|my)|why (isn'?t|is)n?.{0,30}(showing|there|here)|"
     r"('s|\bis|\bare|\blooks?) (wrong|incorrect|outdated|stale)|not (showing|listed|there)|"
+    r"(none of (these|those|them)|not?) .{0,30}(on|as) (the |my |a )?"
+    r"(board|list|to-?dos?|tasks?|dashboard)|"
     r"forgot (about|the)|overlooked)\b", re.IGNORECASE)
 
 # Connector nouns -> canonical connector hint.

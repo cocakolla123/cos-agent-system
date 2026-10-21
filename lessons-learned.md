@@ -417,3 +417,60 @@ it was aimed at.**
 - **Root cause (two layers):** (1) setup's "register a scheduler" step is easy to skip and nothing detects the gap — a config file describing a schedule looks exactly like a working schedule. (2) macOS TCC denies launchd agents access to protected folders (Downloads/Documents/Desktop), so any deployment living there can't be ticked by launchd at all without the user hand-granting Full Disk Access.
 - **Change:** the dashboard server now runs the ticker in-process (fires poll-tick.sh every 5 min while it serves; the script keeps all interval/window gating, so ticks stay idempotent and an external cron remains an optional, harmless supplement). setup.md Step 6 rewritten accordingly.
 - **Proof:** first in-process tick fired within seconds of server start and recorded poll-last-run.json; a /cos-poll run was live immediately after.
+
+## 2026-10-14 — a prose rule is not a control: the same miss came back a month later
+- **Symptom:** the user reported that **every** follow-up in one whole workstream was absent from
+  the to-do list — four counterparties he named, all mid-pipeline, none on the board. The entities
+  themselves were all present and correctly discovered.
+- **Root cause (`normalization`, and a *recurrence*):** the obligations had been written as
+  **attributes of nouns** — the pipeline entities carried `blocked_on: "<counterparty> to
+  respond"` and `stage: "awaiting-reply"`, and their notes spelled the whole situation out. The
+  to-do board reads `Action` nodes and nothing else, so the facts were in the graph and absent
+  from the list. `blocked_on` is defined by the research module for `Action` nodes *only*, which
+  makes its presence on any other node type a positive fingerprint of the miss — no inference
+  needed. **This is the identical class the 2026-09-12 correction fixed with a prose-only change
+  to Step 1c** ("a verb stored as an adjective on a noun is a dropped obligation"). The rule was
+  right, nothing read it, and it did not bind.
+  - Two secondary defects found on the way: (a) the correction classifier scoped the report to
+    *ticketing* because the user wrote "not on the **board**" — **a word naming the surface where
+    the user expected to see something is not evidence about the connector it came from**, and the
+    mis-scope would have sent the remediation pass at the wrong connector and filed the outcome
+    under a signature that can never match the recurrence. (b) the recurrence detector returned
+    "not recurring" because the corrections ledger had been left behind by a same-day workspace
+    move — **a starved detector reads exactly like a negative one**, and this one's silence would
+    have licensed another prose-only fix.
+- **Change:** `research.py` gains `obligation_signals` / `orphan_obligations` /
+  `derive_orphan_actions`, and **`ingest` calls them** — a non-`Action` node carrying an
+  Action-only obligation attr now mints its companion `Action` automatically, scoped to nodes the
+  batch touched, with `counts['derived_actions']` reporting it. The derived task **inherits only
+  what the noun already asserted**: no due date (never fabricate one), and no `status`, so a task
+  the user marks done is not resurrected by the next crawl — the regression that would have made
+  the control worse than the bug, pinned by its own test. `commands/cos-research.md` Step 1c now
+  points the rule at its enforcement and gains the missing **stall vocabulary**: the obligation
+  keyword list only matched obligations somebody was actively *pressing*, while the entire class
+  where the user is the one waiting stalls in courteous, deadline-free language (*will keep you
+  updated · we will reschedule · get back to you*) and so matched nothing at all — invisible
+  precisely while it rots. 310 tests green (255 + 55 eval-harness), no guardrail drift, snapshot
+  `snap-20261014T012601Z` kept.
+- **Proof:** open obligations in that workstream went **0 → 5**, the most time-critical one (a
+  call the counterparty had offered to hold, chased twice, unanswered, with the last slot he
+  himself named falling the next day) is **#1 on the list, due today**, and widening around the
+  named items recovered a sibling thread at the same employer that the same gap had swallowed.
+  Then the new detector, run across the whole graph, found a **second** stranded obligation in an
+  unrelated workstream that nobody had reported — a blocked piece of freelance work, visible under
+  "blocked" and absent from the to-do list — and minted its task too. One named item also turned
+  out **not** to be a task at all: the "status update I haven't read yet" was a rejection, and the
+  message carried no unread label, so it was recorded as concluded rather than conjured into a
+  to-do. **Taking the user's framing literally would have created a phantom task.**
+- **Where this is now encoded:** `research.orphan_obligations` + `ingest`, and
+  `commands/cos-research.md` Step 1c. **Rules: (a) when a prose rule is violated a second time,
+  the fix is not better prose — give the rule a reader, and the fingerprint to read is usually an
+  attribute the schema already reserves for the thing that went missing; (b) a vocabulary of
+  urgency cannot find an obligation nobody is pressing — sweep for the stall, not just the
+  deadline; (c) a safety net must inherit, never invent: no fabricated dates, and nothing that
+  can overwrite a decision the user already made; (d) a detector with no data reads like a
+  detector with good news — before trusting "not recurring", check that the ledger it reads
+  survived the last migration; (e) the word a user uses for **where** they expected to see
+  something says nothing about **where it came from**, and classifying on it mis-routes the fix;
+  (f) a user's report is evidence about the *gap*, not about every fact in it — verify each named
+  item, because one of them being already-closed is as likely as one being missed.**

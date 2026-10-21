@@ -80,9 +80,14 @@ def ingest(g, records, now=None):
     created (the endpoint node is expected from another module or a prior run);
     the target node is auto-created as a stub if unseen, so an edge is never
     silently dropped.
+
+    Last, every node this batch touched is checked for a **stranded
+    obligation** and the matching ``Action`` is minted if one is missing — see
+    ``derive_orphan_actions``. ``counts['derived_actions']`` reports how many.
     """
     n_nodes = 0
     n_edges = 0
+    touched = []
     for r in records:
         node = g.upsert_node(
             r["kind"], r["workspace"], r["key"],
@@ -92,6 +97,7 @@ def ingest(g, records, now=None):
         if r["kind"] == "Action":
             _ensure_priority(node)
         n_nodes += 1
+        touched.append(node)
         frm = node["id"]
         for e in r.get("edges", []):
             to_ws = e.get("to_workspace", r["workspace"])
@@ -107,7 +113,131 @@ def ingest(g, records, now=None):
             g.upsert_edge(frm, to_id, e["type"], source=r.get("source"),
                           confidence=e.get("confidence", 1.0), now=now)
             n_edges += 1
-    return {"nodes": n_nodes, "edges": n_edges}
+    derived = derive_orphan_actions(g, nodes=touched, now=now)
+    return {"nodes": n_nodes + len(derived), "edges": n_edges,
+            "derived_actions": len(derived)}
+
+
+# ---------------------------------------------------------------------------
+# Stranded obligations — make "a verb is not an adjective" bind
+# ---------------------------------------------------------------------------
+
+# attrs the research module defines for **Action nodes only** (Step 1c of
+# commands/cos-research.md). On any other node type their presence is positive
+# evidence that an obligation was recorded as a property of a noun.
+OBLIGATION_ONLY_ATTRS = ("blocked_on",)
+
+# attrs['stage'] values asserting the user is mid-pipeline, waiting on a reply.
+AWAITING_STAGE_PREFIXES = ("awaiting", "waiting")
+
+# Suffix appended to the stranding node's key to make the companion Action's
+# key. Stable, so re-deriving upserts the same node instead of duplicating it.
+DERIVED_ACTION_SUFFIX = ":followup"
+
+
+def obligation_signals(node):
+    """Which Action-only obligation signals ``node`` carries. Empty for an
+    Action (an Action holding ``blocked_on`` is the rule working, not failing)
+    and for any node that records no waiting state at all."""
+    if node.get("type") == "Action":
+        return []
+    attrs = node.get("attrs", {}) or {}
+    found = [k for k in OBLIGATION_ONLY_ATTRS if str(attrs.get(k) or "").strip()]
+    stage = str(attrs.get("stage") or "").strip().lower()
+    if stage.startswith(AWAITING_STAGE_PREFIXES):
+        found.append("stage=%s" % stage)
+    return found
+
+
+def orphan_obligations(g, nodes=None, now=None):
+    """Nodes carrying an obligation that never became a to-do.
+
+    The companion to ``window_audit``, and it exists for the same reason. Step
+    1c of the research module has said since the first correction that **a verb
+    stored as an adjective on a noun is a dropped obligation** — whenever an
+    entity's attrs describe something the user must respond to, the matching
+    ``Action`` must be emitted too. That rule was prose, nothing read it, and
+    the identical miss came back: a whole workstream's follow-ups sat in the
+    graph as pipeline entities carrying ``blocked_on`` and ``stage:
+    awaiting-…``, while the to-do list — which reads ``Action`` nodes and
+    nothing else — was empty. An instruction with nothing reading it is a
+    comment, not a control.
+
+    Returns ``[(node, signals)]`` for nodes that are *current* (a concluded or
+    long-dormant entity owes nothing) and have no companion Action yet.
+    """
+    out = []
+    for node in (g.nodes.values() if nodes is None else nodes):
+        signals = obligation_signals(node)
+        if not signals:
+            continue
+        if not graph.is_current(node, now=now):
+            continue
+        if _derived_action_id(node) in g.nodes:
+            continue
+        out.append((node, signals))
+    out.sort(key=lambda pair: pair[0]["id"])
+    return out
+
+
+def derive_orphan_actions(g, nodes=None, now=None):
+    """Mint the missing companion ``Action`` for each stranded obligation.
+
+    Deliberately thin: it copies only what the stranding node already asserts
+    and **invents nothing** — no deadline (Step 1c: never fabricate one), and
+    no ``status``, so a user who marks the derived task done is not overruled
+    by the next crawl re-deriving it. ``priority`` is likewise left out and
+    defaults to medium, so a priority set later survives too.
+
+    Returns the derived nodes.
+    """
+    derived = []
+    for node, signals in orphan_obligations(g, nodes=nodes, now=now):
+        attrs = node.get("attrs", {}) or {}
+        new_attrs = {
+            "derived_from": node["id"],
+            "derived_reason": "obligation stranded on a %s (%s)" % (
+                node.get("type", "node"), ", ".join(signals)),
+        }
+        for k in ("blocked_on", "last_activity", "evidence", "refs",
+                  "window_days", "workspace_kind"):
+            if attrs.get(k):
+                new_attrs[k] = attrs[k]
+        action = g.upsert_node(
+            "Action", node.get("workspace"),
+            _derived_action_key(node), name=_derived_action_name(node),
+            attrs=new_attrs, source=node.get("source"),
+            confidence=min(0.75, float(node.get("confidence", 0.75) or 0.75)),
+            now=now)
+        _ensure_priority(action)
+        g.upsert_edge(action["id"], node["id"], "relates_to",
+                      source=node.get("source"), confidence=0.9, now=now)
+        derived.append(action)
+    return derived
+
+
+def _derived_action_key(node):
+    """Key for a node's companion Action, from the stranding node's own key."""
+    return node["id"].split(":")[-1] + DERIVED_ACTION_SUFFIX
+
+
+def _derived_action_id(node):
+    return graph.node_id(node.get("workspace"), "Action",
+                         _derived_action_key(node))
+
+
+def _derived_action_name(node):
+    """Name the derived task, putting the waiting party in the title when
+    ``blocked_on`` actually holds one. Step 1c asks for a party ("name the
+    party and the date they were last contacted") but modules also write a
+    *state* there ("PR closed, unresolved"), which reads as nonsense after
+    "Follow up with". Short and comma-free is the party form; anything longer
+    stays in attrs, where the task's detail pane shows it."""
+    base = node.get("name") or node["id"]
+    who = str((node.get("attrs", {}) or {}).get("blocked_on") or "").strip()
+    if who and len(who) <= 40 and "," not in who:
+        return "Follow up with %s — %s" % (who, base)
+    return "Follow up — %s" % base
 
 
 def infer_workspaces(records):
