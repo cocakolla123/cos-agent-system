@@ -11,9 +11,13 @@ run `evals/results/longrun/lrr-v3` (first checkpoint, 2026-10-13). They are not
 hand-written.
 
 **What is staged:** a crawl does not produce an approval queue or a history of
-corrections, so `build_demo.py` adds them. The drafts answer tasks from that
-graph and quote the world's own messages (bracketed parts are left for the
-user to fill in). The three corrections are the long-run test's actual dev
+corrections, so `build_demo.py` adds them. Every open task carries one drafted
+next step, shown on the task in the Command Center: a message waiting for
+approval, or (when no connected tool can do it) a draft for Dana to finish
+herself. Four are hand-written; the rest come from `draft_next_steps.py`, which
+runs the poll's "a next step for every open task" rule once over the world
+(each task's own sources only, $0.60) and saves `next_steps.json`. Bracketed
+parts are facts the sources do not give, left for the user to fill in. The three corrections are the long-run test's actual dev
 failures and the rule changes that fixed them. Saved chat replies that state
 counts are computed from the graph at build time.
 

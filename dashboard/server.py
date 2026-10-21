@@ -221,7 +221,7 @@ RESEARCH_TOOLS = CONFIG.get(
 # Resolution order: env CLAUDE_BIN > config claude_bin > bare "claude".
 CLAUDE_BIN = os.environ.get("CLAUDE_BIN") or CONFIG.get("claude_bin") or "claude"
 DOMAIN_TAG = CONFIG["domain_tag"]
-ICONS = {"message_send": "💬", "ticket_update": "🎫", "calendar_change": "📅"}
+ICONS = {"message_send": "💬", "ticket_update": "🎫", "calendar_change": "📅", "self_do": "📝"}
 DEFAULT_ICON = "🔧"
 # V2 (M8, issue #31): action-type registry — new action types can be added via
 # config.json's "action_types": {"<type>": {"icon": "🚀", "label": "Deploys"}}
@@ -873,6 +873,12 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .todo-medium {{ border-left:4px solid #e8b93c; }}
 .todo-low {{ border-left:4px solid #c9c9d0; }}
 .todo-badge {{ margin-right:.25rem; }}
+.todo-draft {{ display:inline-block; margin-left:.3rem; padding:.05rem .45rem; border-radius:999px; background:#e3eefb; color:#0d5aa7; font-size:.74rem; font-weight:600; white-space:nowrap; }}
+.tm-next {{ border:1px solid #e2e2e7; border-radius:10px; padding:.5rem .7rem; margin:.5rem 0; background:#fafbfd; }}
+.tm-next-head {{ font-weight:700; margin-bottom:.3rem; }}
+.tm-next .card {{ margin:0; box-shadow:none; border:none; padding:0; background:transparent; }}
+.tm-plan {{ white-space:pre-wrap; font-size:.9rem; }}
+.draft-text {{ background:#fff; border:1px solid #e2e2e7; border-radius:8px; padding:.5rem .7rem; margin:.4rem 0; }}
 .todo-late {{ color:#b8144f; font-weight:600; font-size:.82rem; }}
 .todo-detail {{ position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }}
 .td-empty {{ color:#8a8a90; text-align:center; padding:3rem 0; }}
@@ -950,7 +956,7 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 
 {command_center}
 
-<h2>Approval queue — pending ({pending_count})</h2>
+<h2>Approval queue — not tied to a task ({pending_count})</h2>
 {queue_html}
 
 {drafted_section}
@@ -1202,6 +1208,26 @@ document.getElementById("chatInput")?.addEventListener("keydown", (e) => {{
 """
 
 
+def plain_lines(text):
+    """A multi-line queue value as the user should read it: the '* ' / '- '
+    continuation markers the queue file needs are dropped."""
+    return "\n".join(re.sub(r"^[*-]\s+", "", l) for l in text.split("\n"))
+
+
+def draft_preview(e):
+    """The drafted words themselves, readable on the card without opening
+    Details: a message's text, or a self_do entry's whole draft."""
+    at = e.get("action_type", "")
+    call = e.get("proposed_tool_call", "")
+    if at == "self_do":
+        body = plain_lines(call)
+    elif at == "message_send":
+        body = extract_message_text(call)
+    else:
+        return ""
+    return "<div class='tm-plan draft-text'>" + html.escape(body) + "</div>" if body else ""
+
+
 def render_entry(e):
     status = e.get("status", "pending")
     action_type = e.get("action_type", "")
@@ -1241,10 +1267,13 @@ def render_entry(e):
             link_label, link_url = external_link_for(e)
             link_html = f' · <a href="{link_url}" target="_blank">{link_label}</a>' if link_url else ""
             actions = (
-                f"<button data-id=\"{safe_id}\" data-copy=\"{html.escape(e.get('proposed_tool_call',''))}\" onclick=\"copyText(this)\">Copy text</button>"
+                f"<button data-id=\"{safe_id}\" data-copy=\"{html.escape(plain_lines(e.get('proposed_tool_call','')))}\" onclick=\"copyText(this)\">Copy text</button>"
                 f"<button data-id=\"{safe_id}\" onclick=\"markHandled(this)\">Mark handled</button>"
-                f"<span class='meta'>No agent can execute this ({html.escape(action_type)}) "
-                f"directly{link_html} — copy the text, do it yourself, then mark handled.</span>"
+                + (f"<span class='meta'>Drafted for you: no connected tool can do this one"
+                   f"{link_html}. Copy the draft, finish it yourself, then mark handled.</span>"
+                   if action_type == "self_do" else
+                   f"<span class='meta'>No agent can execute this ({html.escape(action_type)}) "
+                   f"directly{link_html} — copy the text, do it yourself, then mark handled.</span>")
             )
         revise_box = (
             f"<div style='margin-top:.75rem'>"
@@ -1299,7 +1328,8 @@ def render_entry(e):
     <button class="tab-btn" id="btn-{b64_id}-details" data-entry="{b64_id}" onclick="showTab('{safe_id}','details')">Details</button>
   </div>
   <div class="tab-panel active" id="panel-{b64_id}-quick" data-entry="{b64_id}">
-    <div class="quick-line">{quick_line}</div>
+    {"" if quick_line == title else '<div class="quick-line">' + quick_line + '</div>'}
+    {draft_preview(e)}
   </div>
   <div class="tab-panel" id="panel-{b64_id}-details" data-entry="{b64_id}">
     <pre>{html.escape(e.get('proposed_tool_call',''))}</pre>
@@ -1987,7 +2017,46 @@ def update_graph_node(node_id, name=None, note=None, priority=None, status=None)
         return True, "saved: " + ", ".join(changed)
 
 
-def render_command_center(requested_ws=None):
+_TASK_IN_CONTEXT = re.compile(r"Task:\s*(.+?)\s*(?:\(due|\(was due|\.\s|$)")
+
+CHIP_LABELS = {"message_send": "✉️ draft ready", "code_fix": "🛠️ fix ready",
+               "self_do": "📝 drafted for you"}
+
+
+def entry_task_id(e, g):
+    """The graph task an approval entry was drafted for, or None.
+
+    Uses the entry's ``task`` field (a graph node id). Older entries carry
+    only ``context: Task: <name> ...``; those match an Action of that exact
+    name (case-insensitive)."""
+    if g is None:
+        return None
+    tid = (e.get("task") or "").strip()
+    if tid and tid in g.nodes:
+        return tid
+    m = _TASK_IN_CONTEXT.search(e.get("context", "") or "")
+    if not m:
+        return None
+    name = m.group(1).strip().lower()
+    for n in g.nodes.values():
+        if n.get("type") in ("Action", "Ticket") and (n.get("name") or "").strip().lower() == name:
+            return n["id"]
+    return None
+
+
+def attach_to_tasks(pending, g):
+    """Group pending entries by the task they belong to: {task_id: [card]}."""
+    out = {}
+    for e in pending:
+        tid = entry_task_id(e, g)
+        if tid:
+            out.setdefault(tid, []).append({
+                "id": e.get("id"), "html": render_entry(e),
+                "label": CHIP_LABELS.get(e.get("action_type", ""), "⏳ needs approval")})
+    return out
+
+
+def render_command_center(requested_ws=None, pending=None, used=None):
     """Render the V2 graph-powered command-center block, or "" if unavailable.
 
     Fully guarded: no knowledge graph, missing V2 modules, or any rendering
@@ -1998,7 +2067,8 @@ def render_command_center(requested_ws=None):
         return ""
     try:
         g, registry, active = _sections.load_for_dashboard(COS_DIR, requested_ws)
-        return _sections.render_sections(g, registry, active)
+        attached = attach_to_tasks(pending or [], g)
+        return _sections.render_sections(g, registry, active, attached=attached, used=used)
     except Exception as exc:  # pragma: no cover - defensive
         try:
             with open(os.path.join(DASHBOARD_DIR, "server.log"), "a") as f:
@@ -2085,7 +2155,13 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             return
         requested_ws = (parse_qs(parsed.query).get("workspace", [None]) or [None])[0]
-        command_center = render_command_center(requested_ws)
+        entries = parse_approval_queue()
+        pending = sorted(
+            (e for e in entries if e.get("status") == "pending"),
+            key=lambda e: (PRIORITY_ORDER.get(e.get("priority", "medium"), 1), e.get("created", "")),
+        )
+        shown_on_tasks = set()
+        command_center = render_command_center(requested_ws, pending, shown_on_tasks)
         today_brief = ""
         side_panel = ""
         if _sections is not None:
@@ -2102,12 +2178,27 @@ class Handler(BaseHTTPRequestHandler):
                 today_brief = ""
                 side_panel = ""
         label, daily = latest_daily_log()
-        entries = parse_approval_queue()
-        pending = sorted(
-            (e for e in entries if e.get("status") == "pending"),
-            key=lambda e: (PRIORITY_ORDER.get(e.get("priority", "medium"), 1), e.get("created", "")),
-        )
-        queue_html = "".join(render_entry(e) for e in pending) or "<div class='empty'>Nothing pending.</div>"
+        gg_tasks = None
+        if _sections is not None:
+            try:
+                gg_tasks = _sections.load_for_dashboard(COS_DIR, requested_ws)[0]
+            except Exception:
+                gg_tasks = None
+        # a card tied to a task shows only on that task; one whose task is in
+        # another workspace view waits there, not in this list
+        tied = {e.get("id"): entry_task_id(e, gg_tasks) for e in pending}
+        loose = [e for e in pending if not tied[e.get("id")]]
+        on_board = sum(1 for e in pending if tied[e.get("id")] in shown_on_tasks)
+        elsewhere = len(pending) - len(loose) - on_board
+        queue_html = "".join(render_entry(e) for e in loose) or "<div class='empty'>Nothing else pending.</div>"
+        notes = []
+        if on_board:
+            notes.append("%d waiting for approval on their tasks in the Command Center above "
+                         "(look for the draft chip)" % on_board)
+        if elsewhere:
+            notes.append("%d on tasks in other workspace views" % elsewhere)
+        if notes:
+            queue_html = "<div class='quick-line'>%s.</div>" % "; ".join(notes) + queue_html
         failed = [e for e in entries if e.get("status") == "failed"]
         failed_html = "".join(render_failed_entry(e) for e in failed)
         drafted = [e for e in entries if e.get("status") == "drafted"]
@@ -2128,7 +2219,7 @@ class Handler(BaseHTTPRequestHandler):
             chat_html=render_chat_log(),
             daily_label=label or "no daily log yet",
             daily=html.escape(daily) or "(empty)",
-            pending_count=len(pending),
+            pending_count=len(loose),
             queue_html=queue_html,
             failed_section=(f"<h2>⚠️ Failed attempts ({len(failed)})</h2>{failed_html}" if failed else ""),
             drafted_section=(f"<h2>📝 Drafted — waiting for you to send ({len(drafted)})</h2>{drafted_html}" if drafted else ""),

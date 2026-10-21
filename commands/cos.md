@@ -96,8 +96,16 @@ there:
 - proposed_tool_call: <exact fully-qualified tool name + parameters>
 - drafted_by: <agent>
 - created: <ISO timestamp>
+- task: <graph node id of the task this answers, when there is one>
 - context: <why, source links>
 ```
+
+Always set `task` when the action answers an open task in the graph: the dashboard shows the
+card on that task in the Command Center instead of in a separate list. When a task's next
+step is something no connected tool can do (write a document, book through a web page, do
+the training), queue it as `action_type: self_do` with the drafted text (an outline, the
+first paragraph, a checklist, the exact words to paste) in `proposed_tool_call`. The user
+copies it and marks it handled; nothing is executed.
 
 `id` = `<source-id>:<action-type>`. Before adding, check for an existing entry with the same
 id — if found and still `pending`, mark it `stale` and add the new one instead of duplicating.

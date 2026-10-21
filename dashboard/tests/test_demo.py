@@ -46,6 +46,22 @@ class TestDemo(unittest.TestCase):
         resp = json.load(open(os.path.join(self.state, "responses.json")))
         self.assertIn("computed from the graph", resp["/chat"]["urgent"])
 
+    def test_every_open_task_has_a_pending_next_step(self):
+        sys.path.insert(0, os.path.join(ROOT, "dashboard"))
+        import graph
+        os.environ["COS_FIXED_NOW"] = build_demo.TODAY + "T16:00:00Z"
+        try:
+            g = graph.Graph.load(os.path.join(self.state, "workspace", "graph"))
+            open_ = {n["id"] for n in g.nodes.values()
+                     if n["type"] == "Action" and graph.is_open_action(n)}
+        finally:
+            os.environ.pop("COS_FIXED_NOW", None)
+        text = open(os.path.join(self.state, "workspace", "approval-queue.md")).read()
+        blocks = text.split("\n### ")[2:]
+        tied = {re.search(r"^- task: (.+)$", b, re.M).group(1) for b in blocks
+                if "- status: pending" in b and "- task: " in b}
+        self.assertEqual(open_ - tied, set())
+
     def test_static_pages_have_no_reload_and_local_links(self):
         page = ('<html><head></head><a href="?workspace=all">All</a>'
                 '<a href="?workspace=job-search">J</a><script>location.reload()</script>')

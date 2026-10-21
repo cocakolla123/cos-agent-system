@@ -39,6 +39,19 @@ The full narrow check:
 - For each `pending` `approval-queue.md` entry, re-check its real source and mark it
   `superseded` (via `cos-knowledge`, with a one-line reason) if someone else already resolved
   it. Leave unchanged entries alone.
+- **A next step for every open task.** Every open task in the Command Center should carry
+  something the user can act on. For each open `Action` in the graph (highest effective
+  priority and nearest due date first, at most 10 per tick) with no `pending` entry whose
+  `task` is its id, queue one entry with `task: <node id>`:
+  - if the next move is a message or reply a connected tool can send, a `message_send` draft
+    to the person who asked, in the thread they asked in;
+  - otherwise a `self_do` entry whose `proposed_tool_call` is the drafted work itself: an
+    outline with real headings for a document, the steps for a booking or a form, the text
+    to paste.
+  Ground every draft in the task's own sources; never invent dates, numbers, names or
+  outcomes. Leave a fact you do not have as a bracketed blank (`[date]`). A task that is
+  waiting on someone else gets a short follow-up draft to that person only if the wait is
+  past its due date; otherwise skip it.
 - **Priority reassessment.** For each still-`pending` entry, look at its `created` date and
   current `priority`. If it's old (roughly 30+ days with no update, and especially 6+ months)
   and still sitting at `medium`/`high` with no fresh signal, check whether it's actually tied

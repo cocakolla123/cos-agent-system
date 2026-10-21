@@ -401,11 +401,18 @@ def _todo_row_data(g, n):
     }
 
 
-def render_todo_board(g, ws=None, limit=25):
+def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
     """The interactive to-do list (M13) — the live deployment's task-card UX
     ported onto Action nodes: a compact scrollable list, critical/overdue on
     top, each row expanding into a front-and-center modal with description,
-    per-task chat, direct edit, mark-done, and priority control."""
+    per-task chat, direct edit, mark-done, and priority control.
+
+    ``attached`` maps a task id to the approval cards drafted for it (dicts
+    with ``html`` and ``label``). Those cards are shown inside the task's
+    detail pane, with a small chip on the row; the ids of tasks actually shown
+    go into ``used`` so the caller can leave those cards out of the separate
+    queue list."""
+    attached = attached or {}
     nodes = [n for n in g.query(type_="Action", workspace=ws)
              if _graph.is_open_action(n)]
     for n in _current(g.query(type_="Ticket", workspace=ws)):
@@ -418,9 +425,21 @@ def render_todo_board(g, ws=None, limit=25):
     if not nodes:
         return ""
     rows = []
-    for n in nodes[:limit]:
+    cards = []
+    for i, n in enumerate(nodes[:limit]):
         d = _todo_row_data(g, n)
+        mine = attached.get(n["id"]) or []
+        if mine:
+            d["q"] = str(i)
+            cards.append('<template id="tdq-%d">%s</template>' % (
+                i, "".join(c["html"] for c in mine)))
+            if used is not None:
+                used.add(n["id"])
+        else:
+            d["nextstep"] = str((n.get("attrs") or {}).get("next_step", ""))
         data = " ".join('data-%s="%s"' % (k, _esc(v)) for k, v in d.items())
+        chip = "".join(' <span class="todo-draft">%s</span>' % _esc(c["label"])
+                       for c in mine[:1])
         pri = d["priority"]
         badge = {"high": "🔺", "medium": "▪️", "low": "▫️"}.get(pri, "▪️")
         late = ' <span class="todo-late">%s</span>' % _esc(d["duelabel"]) \
@@ -429,8 +448,8 @@ def render_todo_board(g, ws=None, limit=25):
                 if d["duelabel"] else "")
         rows.append(
             '<div class="todo-row todo-%s" %s onclick="todoOpen(this)">'
-            '<span class="todo-badge">%s</span> %s%s</div>' % (
-                _esc(pri), data, badge, _esc(d["title"]), late))
+            '<span class="todo-badge">%s</span> %s%s%s</div>' % (
+                _esc(pri), data, badge, _esc(d["title"]), late, chip))
     # LinkedIn-Jobs pattern: compact card list on the left, the selected task
     # expanded big in a sticky detail pane beside it; first task auto-opens.
     detail = """
@@ -449,7 +468,11 @@ def render_todo_board(g, ws=None, limit=25):
       <button class="primary" onclick="todoDone()">✓ Mark done</button>
       <button class="small" onclick="todoSave()">Save changes</button>
     </div>
-    <textarea id="tmNote" rows="5" placeholder="Description / notes..."></textarea>
+    <div class="tm-next" id="tmNext">
+      <div class="quick-line tm-next-head">Next step</div>
+      <div id="tmQueue"></div>
+    </div>
+    <textarea id="tmNote" rows="3" placeholder="Description / notes..."></textarea>
     <div class="tm-evidence sec-sub" id="tmEvidence"></div>
     <div id="tmResult" class="result"></div>
     <div class="tm-chat">
@@ -479,6 +502,17 @@ function todoOpen(el) {
   document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
   const link = document.getElementById("tmLink");
   if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
+  const q = document.getElementById("tmQueue");
+  const tpl = d.q ? document.getElementById("tdq-" + d.q) : null;
+  if (tpl) {
+    q.innerHTML = "";
+    q.appendChild(tpl.content.cloneNode(true));
+  } else if (d.nextstep) {
+    q.innerHTML = "<div class='tm-plan'></div>";
+    q.firstChild.textContent = d.nextstep;
+  } else {
+    q.innerHTML = "<div class='sec-sub'>Nothing drafted for this task yet. The next poll drafts one.</div>";
+  }
   loadTodoChat(d.id);
   document.getElementById("tmResult").textContent = "";
   if (window.innerWidth < 980) {
@@ -557,9 +591,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return ('<section class="graph-section" id="%s"><h3>To-Do / Next Actions '
             '<span class="sec-count">%d</span></h3>'
             '<div class="quick-line">critical &amp; overdue on top — click a task to open it</div>'
-            '<div class="todo-board"><div class="todo-list">%s</div>%s</div></section>' % (
+            '<div class="todo-board"><div class="todo-list">%s</div>%s</div>%s</section>' % (
                 _slug_anchor("To-Do / Next Actions"), len(nodes),
-                "".join(rows), detail))
+                "".join(rows), detail, "".join(cards)))
 
 
 def render_calendar(g, ws=None, today=None):
@@ -641,8 +675,9 @@ def render_today_brief(g, active=None, today=None):
     return '<div class="today-brief">%s</div>' % "".join(parts)
 
 
-def render_sections(g, registry=None, active=None):
-    """Render the whole graph-powered block. Returns "" if the graph is empty."""
+def render_sections(g, registry=None, active=None, attached=None, used=None):
+    """Render the whole graph-powered block. Returns "" if the graph is empty.
+    ``attached``/``used``: see render_todo_board."""
     if g is None or not g.nodes:
         return ""
     parts = []
@@ -650,7 +685,7 @@ def render_sections(g, registry=None, active=None):
         parts.append(render_workspace_switcher(registry, active))
     # M13: the task board is the front of the page (the answer), before the
     # workstream/inventory cards (the evidence) — LinkedIn-Jobs split view.
-    parts.append(render_todo_board(g, active))
+    parts.append(render_todo_board(g, active, attached=attached, used=used))
     parts.append(_render_objectives(g, active))
     for label, fn in SECTIONS:
         if label == "To-Do / Next Actions":

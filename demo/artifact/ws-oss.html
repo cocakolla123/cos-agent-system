@@ -159,6 +159,12 @@ input[type=text], input[type=time] { padding:.4rem .6rem; border-radius:8px; bor
 .todo-medium { border-left:4px solid #e8b93c; }
 .todo-low { border-left:4px solid #c9c9d0; }
 .todo-badge { margin-right:.25rem; }
+.todo-draft { display:inline-block; margin-left:.3rem; padding:.05rem .45rem; border-radius:999px; background:#e3eefb; color:#0d5aa7; font-size:.74rem; font-weight:600; white-space:nowrap; }
+.tm-next { border:1px solid #e2e2e7; border-radius:10px; padding:.5rem .7rem; margin:.5rem 0; background:#fafbfd; }
+.tm-next-head { font-weight:700; margin-bottom:.3rem; }
+.tm-next .card { margin:0; box-shadow:none; border:none; padding:0; background:transparent; }
+.tm-plan { white-space:pre-wrap; font-size:.9rem; }
+.draft-text { background:#fff; border:1px solid #e2e2e7; border-radius:8px; padding:.5rem .7rem; margin:.4rem 0; }
 .todo-late { color:#b8144f; font-weight:600; font-size:.82rem; }
 .todo-detail { position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
 .td-empty { color:#8a8a90; text-align:center; padding:3rem 0; }
@@ -237,7 +243,8 @@ accounts. Most of it is noise, asks to other people, or bots.
 
 Open tasks: 51 in total, 31 high priority.
 
-Drafted for approval: 3 messages and 1 to-do for you (see the approval queue).
+Drafted: a next step for every open task (19 messages waiting for approval,
+32 drafted for you to do yourself). They are on each task in the Command Center.
 Nothing has been sent.
 
 Set aside: the Sep 22 &quot;password expires&quot; mail from kestrel-helpdesk.example, a
@@ -246,7 +253,7 @@ look-alike of Kestrel IT. Not a task.
 
 
 
-<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" style="margin:8px 0;font-size:13px">Workspace: <a href="index.html">All</a> · <a href="ws-job-search.html">Job search</a> · <a href="ws-kestrel.html">Kestrel Labs</a> · <a href="ws-oss.html" class="ws-active">Open source</a> · <a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">1</span></h3><div class="quick-line">critical &amp; overdue on top — click a task to open it</div><div class="todo-board"><div class="todo-list"><div class="todo-row todo-low" data-id="oss:action:tinyq-pr-89-review" data-title="Review tinyq PR #89 (Fix double drain)" data-note="" data-evidence="[&#x27;gh-0038&#x27;]" data-priority="low" data-due="" data-ws="oss" data-url="" data-duelabel="low" data-overdue="" onclick="todoOpen(this)"><span class="todo-badge">▫️</span> Review tinyq PR #89 (Fix double drain) <span class="sec-sub">low</span></div></div>
+<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" style="margin:8px 0;font-size:13px">Workspace: <a href="index.html">All</a> · <a href="ws-job-search.html">Job search</a> · <a href="ws-kestrel.html">Kestrel Labs</a> · <a href="ws-oss.html" class="ws-active">Open source</a> · <a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">1</span></h3><div class="quick-line">critical &amp; overdue on top — click a task to open it</div><div class="todo-board"><div class="todo-list"><div class="todo-row todo-low" data-id="oss:action:tinyq-pr-89-review" data-title="Review tinyq PR #89 (Fix double drain)" data-note="" data-evidence="[&#x27;gh-0038&#x27;]" data-priority="low" data-due="" data-ws="oss" data-url="" data-duelabel="low" data-overdue="" data-q="0" onclick="todoOpen(this)"><span class="todo-badge">▫️</span> Review tinyq PR #89 (Fix double drain) <span class="sec-sub">low</span> <span class="todo-draft">📝 drafted for you</span></div></div>
 <div class="todo-detail" id="todoDetail">
   <div class="td-empty" id="tdEmpty">Select a task</div>
   <div id="tdBody" style="display:none">
@@ -262,7 +269,11 @@ look-alike of Kestrel IT. Not a task.
       <button class="primary" onclick="todoDone()">✓ Mark done</button>
       <button class="small" onclick="todoSave()">Save changes</button>
     </div>
-    <textarea id="tmNote" rows="5" placeholder="Description / notes..."></textarea>
+    <div class="tm-next" id="tmNext">
+      <div class="quick-line tm-next-head">Next step</div>
+      <div id="tmQueue"></div>
+    </div>
+    <textarea id="tmNote" rows="3" placeholder="Description / notes..."></textarea>
     <div class="tm-evidence sec-sub" id="tmEvidence"></div>
     <div id="tmResult" class="result"></div>
     <div class="tm-chat">
@@ -292,6 +303,17 @@ function todoOpen(el) {
   document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
   const link = document.getElementById("tmLink");
   if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
+  const q = document.getElementById("tmQueue");
+  const tpl = d.q ? document.getElementById("tdq-" + d.q) : null;
+  if (tpl) {
+    q.innerHTML = "";
+    q.appendChild(tpl.content.cloneNode(true));
+  } else if (d.nextstep) {
+    q.innerHTML = "<div class='tm-plan'></div>";
+    q.firstChild.textContent = d.nextstep;
+  } else {
+    q.innerHTML = "<div class='sec-sub'>Nothing drafted for this task yet. The next poll drafts one.</div>";
+  }
   loadTodoChat(d.id);
   document.getElementById("tmResult").textContent = "";
   if (window.innerWidth < 980) {
@@ -366,98 +388,49 @@ document.addEventListener("DOMContentLoaded", () => {
   const first = document.querySelector(".todo-row");
   if (first && window.innerWidth >= 980) todoOpen(first);
 });
-</script></div></section></div>
-
-<h2>Approval queue — pending (4)</h2>
-
+</script></div><template id="tdq-0">
 <div class="card pending">
-  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
-  <div class="card-title">Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)</div>
-  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-tomas-deprecation</code></div>
+  <span class="badge pending">📝 pending</span><span class="priority-tag priority-low">⚪ Low</span>
+  <div class="card-title">Steps to review tinyq PR #89 (Fix double drain) from olu-a</div>
+  <div class="meta">self_do · drafted by cos-poll · <code>q-1013-tinyq-pr-89-review</code></div>
   
   <div class="tabs">
-    <button class="tab-btn active" id="btn-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-quick" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u" onclick="showTab('q-1013-tomas-deprecation','quick')">Quick</button>
-    <button class="tab-btn" id="btn-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-details" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u" onclick="showTab('q-1013-tomas-deprecation','details')">Details</button>
+    <button class="tab-btn active" id="btn-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==-quick" data-entry="cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==" onclick="showTab('q-1013-tinyq-pr-89-review','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==-details" data-entry="cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==" onclick="showTab('q-1013-tinyq-pr-89-review','details')">Details</button>
   </div>
-  <div class="tab-panel active" id="panel-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-quick" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u">
-    <div class="quick-line">Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)</div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==-quick" data-entry="cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==">
+    
+    <div class='tm-plan draft-text'>1. Open dana-k/tinyq PR #89 and read issue #88 to confirm the double drain behavior.
+2. Check the diff: does acking before release remove the double drain? Look for a case where the ack succeeds but the release fails.
+3. Confirm a test reproduces #88 and passes with the fix.
+4. Run the test suite locally.
+5. Leave review comments: [findings].
+6. Approve or request changes, then thank olu-a.</div>
   </div>
-  <div class="tab-panel" id="panel-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-details" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u">
-    <pre>gmail-work.send to Tomas, re &quot;Deprecation notice&quot;, with text: &quot;Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.&quot;</pre>
-    <div class="meta">Task: Write API v1 deprecation notice text for Tomas (due 2026-10-13). Source: his email of Oct 8, &#x27;I need the API v1 deprecation notice text by next Tuesday.&#x27;</div>
+  <div class="tab-panel" id="panel-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==-details" data-entry="cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==">
+    <pre>1. Open dana-k/tinyq PR #89 and read issue #88 to confirm the double drain behavior.
+* 2. Check the diff: does acking before release remove the double drain? Look for a case where the ack succeeds but the release fails.
+* 3. Confirm a test reproduces #88 and passes with the fix.
+* 4. Run the test suite locally.
+* 5. Leave review comments: [findings].
+* 6. Approve or request changes, then thank olu-a.</pre>
+    
+    <div class="meta">Task: Review tinyq PR #89 (Fix double drain). Sources: gh-0038.</div>
     
   </div>
-  <div class="actions"><button class="primary" data-id="q-1013-tomas-deprecation" data-action-type="message_send" data-summary="gmail-work.send to Tomas, re &quot;Deprecation notice&quot;, with text: &quot;Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-tomas-deprecation" onclick="reject(this)">Reject</button></div>
-  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-tomas-deprecation" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-tomas-deprecation" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-tomas-deprecation" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','`')">Code</button></div><textarea id='editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='3' oninput="updateSlackPreview('q-1013-tomas-deprecation')">Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u'></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-tomas-deprecation" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-tomas-deprecation" onclick="sendDiscuss(this)">Send</button></div></div>
-  <div class="result" id="result-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u"></div>
+  <div class="actions"><button data-id="q-1013-tinyq-pr-89-review" data-copy="1. Open dana-k/tinyq PR #89 and read issue #88 to confirm the double drain behavior.
+2. Check the diff: does acking before release remove the double drain? Look for a case where the ack succeeds but the release fails.
+3. Confirm a test reproduces #88 and passes with the fix.
+4. Run the test suite locally.
+5. Leave review comments: [findings].
+6. Approve or request changes, then thank olu-a." onclick="copyText(this)">Copy text</button><button data-id="q-1013-tinyq-pr-89-review" onclick="markHandled(this)">Mark handled</button><span class='meta'>Drafted for you: no connected tool can do this one. Copy the draft, finish it yourself, then mark handled.</span></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-tinyq-pr-89-review" onclick="revise(this)">Revise</button></div>
+  <div class="result" id="result-cS0xMDEzLXRpbnlxLXByLTg5LXJldmlldw=="></div>
 </div>
+</template></section></div>
 
-<div class="card pending">
-  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
-  <div class="card-title">Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)</div>
-  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-alex-cron</code></div>
-  
-  <div class="tabs">
-    <button class="tab-btn active" id="btn-cS0xMDEzLWFsZXgtY3Jvbg==-quick" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==" onclick="showTab('q-1013-alex-cron','quick')">Quick</button>
-    <button class="tab-btn" id="btn-cS0xMDEzLWFsZXgtY3Jvbg==-details" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==" onclick="showTab('q-1013-alex-cron','details')">Details</button>
-  </div>
-  <div class="tab-panel active" id="panel-cS0xMDEzLWFsZXgtY3Jvbg==-quick" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==">
-    <div class="quick-line">Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)</div>
-  </div>
-  <div class="tab-panel" id="panel-cS0xMDEzLWFsZXgtY3Jvbg==-details" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==">
-    <pre>slack.send_message in #proj-billing-migration, thread of Oct 12, with text: &quot;Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.&quot;</pre>
-    <div class="meta">Task: Confirm the cron schedule for the billing jobs for Alex (due 2026-10-16). Source: &#x27;@dana.k can you confirm the cron schedule for the billing jobs by Oct 16? we cut over the week after.&#x27;</div>
-    
-  </div>
-  <div class="actions"><button class="primary" data-id="q-1013-alex-cron" data-action-type="message_send" data-summary="slack.send_message in #proj-billing-migration, thread of Oct 12, with text: &quot;Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-alex-cron" onclick="reject(this)">Reject</button></div>
-  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-alex-cron" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-alex-cron" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-alex-cron" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWFsZXgtY3Jvbg==' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWFsZXgtY3Jvbg==' rows='3' oninput="updateSlackPreview('q-1013-alex-cron')">Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWFsZXgtY3Jvbg=='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-alex-cron" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWFsZXgtY3Jvbg==' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWFsZXgtY3Jvbg==' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-alex-cron" onclick="sendDiscuss(this)">Send</button></div></div>
-  <div class="result" id="result-cS0xMDEzLWFsZXgtY3Jvbg=="></div>
-</div>
-
-<div class="card pending">
-  <span class="badge pending">🔧 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-domain">Kestrel</span>
-  <div class="card-title">Book the laptop swap on the IT booking page (was due Oct 9)</div>
-  <div class="meta">it_booking · drafted by cos-drafter · <code>q-1013-laptop-swap</code></div>
-  
-  <div class="tabs">
-    <button class="tab-btn active" id="btn-cS0xMDEzLWxhcHRvcC1zd2Fw-quick" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw" onclick="showTab('q-1013-laptop-swap','quick')">Quick</button>
-    <button class="tab-btn" id="btn-cS0xMDEzLWxhcHRvcC1zd2Fw-details" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw" onclick="showTab('q-1013-laptop-swap','details')">Details</button>
-  </div>
-  <div class="tab-panel active" id="panel-cS0xMDEzLWxhcHRvcC1zd2Fw-quick" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw">
-    <div class="quick-line">Book the laptop swap on the IT booking page (was due Oct 9)</div>
-  </div>
-  <div class="tab-panel" id="panel-cS0xMDEzLWxhcHRvcC1zd2Fw-details" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw">
-    <pre>Open the IT booking page and pick a laptop swap slot. No connector can book it, so this is yours to do; mark it handled after.</pre>
-    <div class="meta">Task: Book laptop swap appointment with IT (due 2026-10-09, overdue). Source: Kestrel IT, it@kestrel.example, Sep 23. Not the look-alike &#x27;password expires&#x27; mail from kestrel-helpdesk.example on Sep 22, which was set aside as phishing.</div>
-    
-  </div>
-  <div class="actions"><button data-id="q-1013-laptop-swap" data-copy="Open the IT booking page and pick a laptop swap slot. No connector can book it, so this is yours to do; mark it handled after." onclick="copyText(this)">Copy text</button><button data-id="q-1013-laptop-swap" onclick="markHandled(this)">Mark handled</button><span class='meta'>No agent can execute this (it_booking) directly — copy the text, do it yourself, then mark handled.</span></div>
-  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWxhcHRvcC1zd2Fw' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-laptop-swap" onclick="revise(this)">Revise</button></div>
-  <div class="result" id="result-cS0xMDEzLWxhcHRvcC1zd2Fw"></div>
-</div>
-
-<div class="card pending">
-  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
-  <div class="card-title">Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]</div>
-  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-grace-resume</code></div>
-  
-  <div class="tabs">
-    <button class="tab-btn active" id="btn-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-quick" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==" onclick="showTab('q-1013-grace-resume','quick')">Quick</button>
-    <button class="tab-btn" id="btn-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-details" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==" onclick="showTab('q-1013-grace-resume','details')">Details</button>
-  </div>
-  <div class="tab-panel active" id="panel-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-quick" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==">
-    <div class="quick-line">Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]</div>
-  </div>
-  <div class="tab-panel" id="panel-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-details" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==">
-    <pre>gmail-personal.send to Grace Liu, re &quot;Updated resume&quot;, with text: &quot;Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.&quot;</pre>
-    <div class="meta">Job-search workspace: drafted from the personal mailbox, never the work account. Task: Send updated resume to Grace Liu (asked for it by Oct 1).</div>
-    
-  </div>
-  <div class="actions"><button class="primary" data-id="q-1013-grace-resume" data-action-type="message_send" data-summary="gmail-personal.send to Grace Liu, re &quot;Updated resume&quot;, with text: &quot;Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-grace-resume" onclick="reject(this)">Reject</button></div>
-  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-grace-resume" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-grace-resume" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-grace-resume" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='3' oninput="updateSlackPreview('q-1013-grace-resume')">Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWdyYWNlLXJlc3VtZQ=='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-grace-resume" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-grace-resume" onclick="sendDiscuss(this)">Send</button></div></div>
-  <div class="result" id="result-cS0xMDEzLWdyYWNlLXJlc3VtZQ=="></div>
-</div>
-
+<h2>Approval queue — not tied to a task (0)</h2>
+<div class='quick-line'>1 waiting for approval on their tasks in the Command Center above (look for the draft chip); 50 on tasks in other workspace views.</div><div class='empty'>Nothing else pending.</div>
 
 
 
