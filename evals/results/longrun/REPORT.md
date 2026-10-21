@@ -187,7 +187,63 @@ Haiku 4.5 (`replay.py --crawl-from`).
 Haiku polls cost about a fifth less and lose 6 arcs. What it got wrong is all poll
 work: a moved deadline left at the old date (D04), two items that should have closed
 left open (T04, T08), a new recurring ask and a mandatory @channel missed (HT11,
-HT14), and an auto-reply taken as an answer (HT12). Its last poll returned no records
-at all. On this evidence the cheap-model polls are not worth it: the saving is small
+HT14), and an auto-reply taken as an answer (HT12). On this evidence the cheap-model polls are not worth it: the saving is small
 (a Haiku poll takes more turns) and it drops the updates polls exist for. One run;
 the repeats in the next section put error bars on it.
+
+## Error bars (2026-10-21): repeated runs and a blind second labeler
+
+Every number above came from one run per setup. Each setup was run again with the same
+instructions (`longrun_v3.md`), the same world and the same scorer
+(`evals/longrun/repeats.py` prints the summary; `repeats.json` holds it).
+
+| setup | runs | C1 dev /42 | C1 test /40 | C2 dev /43 | C2 test /43 | cost of the 4 polls |
+|---|---|---|---|---|---|---|
+| default model throughout | 5 | 40.6 (38-42) | 38.8 (37-40) | 41.4 (38-43) | 41.8 (40-43) | $1.12 ($1.06-1.24) |
+| default crawl + Haiku polls | 3 | 41 (reused crawl) | 40 (reused crawl) | 41.7 (41-42) | 38.0 (38-38) | $0.91 ($0.83-0.99) |
+| Haiku throughout | 3 | 19.3 (18-22) | 19.7 (19-20) | 26.7 (25-29) | 25.7 (24-27) | $0.91 ($0.80-1.04) |
+
+Mean, then range. Effective-priority passes are the same as stored for the default
+model in every run; for Haiku C1 they are about one higher (dev 20.3, test 20.7).
+
+What this changes:
+
+- **The first default run was the best of five.** "40/40 on test" is really 37 to 40,
+  mean 38.8. The typical default run gets two or three arcs wrong at C1 and one or two
+  at C2. The weakest run (r5) was the weakest at every checkpoint.
+- **Three arcs fail repeatedly on the default model.** D26 (3 of 5 runs) and T23 (2 of
+  5) are partial completions: part of a task was done in the thread ("access review
+  export already sent") and the system kept the whole task open with that note in the
+  name, instead of narrowing the open task to what is left. The scorer counts the done
+  part as present when it should be gone. T26 (3 of 5 at C1) is a manager override:
+  the manager lowered the priority to medium, the run recorded low. Every other
+  failing arc failed in only one run. The partial-completion pattern is the one worth a
+  rule; it was not fixed here because D26 is a dev arc and T23 a test arc, and a fix
+  must be checked on dev only.
+- **Haiku polls lose the same arcs every time.** The mixed repeats reuse lrr-v3's
+  crawl, so they measure poll variance only. All three runs miss the same five test
+  arcs (T04, T08, HT11, HT12, HT14), so the drop from 41.8 to 38.0 on C2 test is not
+  noise. The saving is about $0.21 per month of polls (19%). The conclusion stands:
+  keep the default model for polls.
+- **Haiku throughout is about half the default model, with or without luck.** Its
+  run-to-run spread (2 to 3 arcs) is small next to the gap (about 20 arcs).
+- **An empty last poll is normal.** The last week has almost no new traffic; default
+  run r4 also returned no records for it.
+
+### Blind second labeler
+
+A second labeler, given only RULES.md, the world and shuffled case ids (no answer key,
+no arc names), labeled every gold arc and a 120-item noise sample
+(`evals/longrun/second-labeler/`).
+
+- Open or gone: 81 of 82 at C1, 85 of 86 at C2. On every arc both call open, due date,
+  priority, workspace and owner agree (49 of 49 at C1, 41 of 41 at C2).
+- Noise: 0 of 120 sampled noise items flagged as obligations.
+- The two disagreements (D20 at C1, T08 at C2) were reconciled in
+  `RECONCILIATION.md`; both keep the original answer key, so no labels changed. The
+  labeler also found that RULES.md called 2026-10-13 a Monday (it is a Tuesday) and
+  stated the C1 window as inclusive; the code always used `date < today`, so no score
+  changes, and the wording is noted there.
+
+The gold labels are therefore not one person's reading: an independent labeler agrees
+on 166 of 168 state calls and every field.

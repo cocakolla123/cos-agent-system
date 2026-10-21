@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:30:25.250071+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a Corvid Systems final-round interview slot\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0684\",\"em-0685\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access-request\",\"name\":\"Analytics replica read access for RTA-90: waiting on IT\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-0665\",\"em-0666\",\"em-0667\"],\"refs\":[\"RTA-90\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"security-awareness-training\",\"name\":\"Complete the annual security awareness training\",\"attrs\":{\"due\":\"2026-09-15\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0673\",\"em-0674\",\"em-0675\",\"em-0676\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-legal-review\",\"name\":\"Send Northwind the approved MSA redlines (Legal approved, LEG-55)\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-0725\",\"em-0726\",\"em-0727\"],\"refs\":[\"LEG-55\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0538\",\"jr-0539\",\"jr-0540\",\"sl-17317\",\"sl-17318\",\"sl-17319\",\"doc-0008\"],\"refs\":[\"PLAT-301\",\"INC-212\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook-rewrite\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-0547\",\"jr-0548\",\"sl-17328\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"notifications-rfc-comments\",\"name\":\"Add comments to the notifications RFC\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-0663\",\"sl-17324\",\"sl-17325\",\"sl-17326\",\"sl-17327\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-0559\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"submit-october-timesheet\",\"name\":\"Submit the October timesheet\",\"attrs\":{\"due\":\"2026-11-02\",\"priority\":\"medium\",\"evidence\":[\"em-0714\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]}\n]",
+  "total_cost_usd": 0.2766301,
+  "duration_ms": 37328,
+  "duration_api_ms": 30542,
+  "num_turns": 13,
+  "usage": {
+   "input_tokens": 14,
+   "cache_creation_input_tokens": 50349,
+   "cache_read_input_tokens": 427561,
+   "output_tokens": 3245,
+   "output_tokens_details": {
+    "thinking_tokens": 780
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 50349,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1670,
+     "cache_read_input_tokens": 82304,
+     "cache_creation_input_tokens": 293,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 293
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 14,
+    "outputTokens": 3245,
+    "cacheReadInputTokens": 427561,
+    "cacheCreationInputTokens": 50349,
+    "webSearchRequests": 0,
+    "costUSD": 0.2766301,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 780,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

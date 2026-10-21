@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:35:25.741932+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Now I have a complete picture from all the sources. Let me compile the final output with only the changed and new obligations:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"notifications-rfc-comments\",\n    \"name\": \"RFC comments on notifications\",\n    \"attrs\": {\n      \"due\": \"2026-10-16\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\"sl-17326\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"weekly-status-report\",\n    \"name\": \"Weekly status report to Ines\",\n    \"attrs\": {\n      \"priority\": \"low\",\n      \"status\": \"submitted\",\n      \"evidence\": [\"em-0719\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-401-idempotency-keys\",\n    \"name\": \"Add idempotency keys to webhook delivery\",\n    \"attrs\": {\n      \"due\": \"2026-11-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"jr-0559\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"october-timesheet\",\n    \"name\": \"Submit October timesheet\",\n    \"attrs\": {\n      \"due\": \"2026-11-02\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0714\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"corvid-final-round-interview\",\n    \"name\": \"Corvid final round interview\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0685\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.95\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-msa-redlines\",\n    \"name\": \"Send Northwind MSA redlines\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0727\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 0.90\n  }\n]\n```",
+  "total_cost_usd": 0.2689754,
+  "duration_ms": 124404,
+  "duration_api_ms": 120900,
+  "num_turns": 26,
+  "usage": {
+   "input_tokens": 106,
+   "cache_creation_input_tokens": 68016,
+   "cache_read_input_tokens": 686874,
+   "output_tokens": 12830,
+   "output_tokens_details": {
+    "thinking_tokens": 9992
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 68016,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1371,
+     "cache_read_input_tokens": 81290,
+     "cache_creation_input_tokens": 14594,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 14594
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 106,
+    "outputTokens": 12830,
+    "cacheReadInputTokens": 686874,
+    "cacheCreationInputTokens": 68016,
+    "webSearchRequests": 0,
+    "costUSD": 0.2689754,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 9992,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

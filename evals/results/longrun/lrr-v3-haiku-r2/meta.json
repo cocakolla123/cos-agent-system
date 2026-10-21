@@ -1,0 +1,16 @@
+{
+ "run_id": "lrr-v3-haiku-r2",
+ "instructions": "instructions/longrun_v3.md",
+ "instructions_sha256": "1cdc647811054234a45a2208686c26a848250b926c435ca2698c35a80915a404",
+ "model": "claude-haiku-4-5-20251001",
+ "date": "2026-10-21",
+ "cli_version": "2.1.306 (Claude Code)",
+ "world": "realistic",
+ "tools": "Read,Glob,Grep",
+ "crawl_from": null,
+ "world_lock": {
+  "gold.json": "04f1d874d7730d06b415f47e13e74b66da7aa66b113ed13c1820e5f20950b330",
+  "items.json": "6395d117fe91fe3ca1e1d5fa6cd05e5c15f1559ea5adff5c4be4b0cb4c194e19",
+  "meta.json": "e47088df8f5ea3bc21fda18f727204eb203082c37afdf667d733f7f3ec7b8679"
+ }
+}

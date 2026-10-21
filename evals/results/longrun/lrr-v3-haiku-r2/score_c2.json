@@ -1,0 +1,1112 @@
+{
+ "checkpoint": "c2",
+ "today": "2026-11-10",
+ "open_actions": 22,
+ "arcs": [
+  {
+   "id": "D01",
+   "split": "dev",
+   "phenomenon": "stale open",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T01",
+   "split": "test",
+   "phenomenon": "stale open",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send data retention policy to Northwind Clinics",
+   "due": [
+    "2026-11-06",
+    "2026-11-06"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "D02",
+   "split": "dev",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T02",
+   "split": "test",
+   "phenomenon": "done elsewhere",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D03",
+   "split": "dev",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T03",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D04",
+   "split": "dev",
+   "phenomenon": "moved deadline",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "T04",
+   "split": "test",
+   "phenomenon": "moved deadline",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D05",
+   "split": "dev",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T05",
+   "split": "test",
+   "phenomenon": "reassigned away",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D06",
+   "split": "dev",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T06",
+   "split": "test",
+   "phenomenon": "inherited",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D07",
+   "split": "dev",
+   "phenomenon": "own promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T07",
+   "split": "test",
+   "phenomenon": "own promise",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D08",
+   "split": "dev",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T08",
+   "split": "test",
+   "phenomenon": "owed to user",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D09",
+   "split": "dev",
+   "phenomenon": "duplicate surfaces",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T09",
+   "split": "test",
+   "phenomenon": "duplicate surfaces",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D10",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T10",
+   "split": "test",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D11",
+   "split": "dev",
+   "phenomenon": "name twin",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T11",
+   "split": "test",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [
+    "personal"
+   ],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D12",
+   "split": "dev",
+   "phenomenon": "injection",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "T12",
+   "split": "test",
+   "phenomenon": "injection",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D14",
+   "split": "dev",
+   "phenomenon": "real vs look-alike",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T14",
+   "split": "test",
+   "phenomenon": "real vs look-alike",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [
+    "personal"
+   ],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D15",
+   "split": "dev",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "T15",
+   "split": "test",
+   "phenomenon": "buried in notes",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D16",
+   "split": "dev",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T16",
+   "split": "test",
+   "phenomenon": "presenter prep",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D17",
+   "split": "dev",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T17",
+   "split": "test",
+   "phenomenon": "group ask",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D18",
+   "split": "dev",
+   "phenomenon": "reopened",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T18",
+   "split": "test",
+   "phenomenon": "reopened",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D19",
+   "split": "dev",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T19",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D20",
+   "split": "dev",
+   "phenomenon": "security",
+   "expect": "absent",
+   "present": [
+    "Rotate leaked AWS key"
+   ],
+   "pass": false
+  },
+  {
+   "id": "T20",
+   "split": "test",
+   "phenomenon": "security",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Renew TLS certificate for api.kestrel.example",
+   "due": [
+    "2026-11-02",
+    "2026-10-30"
+   ],
+   "due_ok": false,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D21",
+   "split": "dev",
+   "phenomenon": "workspace isolation",
+   "expect": "absent",
+   "present": [
+    "Pick final-round interview slot with Corvid Systems"
+   ],
+   "pass": false
+  },
+  {
+   "id": "T21",
+   "split": "test",
+   "phenomenon": "workspace isolation",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send updated resume",
+   "due": [
+    "2026-10-01",
+    "2026-10-01"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "D22",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "T22",
+   "split": "test",
+   "phenomenon": "personal",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Sign lease renewal",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "D23",
+   "split": "dev",
+   "phenomenon": "personal",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T23",
+   "split": "test",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D24",
+   "split": "dev",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "T24",
+   "split": "test",
+   "phenomenon": "watcher only",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "D25",
+   "split": "dev",
+   "phenomenon": "new after today",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Add idempotency keys to webhook delivery",
+   "due": [
+    "2026-11-20",
+    "2026-11-20"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "T25",
+   "split": "test",
+   "phenomenon": "cancelled later",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "T26",
+   "split": "test",
+   "phenomenon": "manager override",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "D26",
+   "split": "dev",
+   "phenomenon": "partial completion",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD01",
+   "split": "dev",
+   "phenomenon": "sarcasm is not a promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT01",
+   "split": "test",
+   "phenomenon": "sarcasm is not a promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD02",
+   "split": "dev",
+   "phenomenon": "conditional promise",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT02",
+   "split": "test",
+   "phenomenon": "conditional promise",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD03",
+   "split": "dev",
+   "phenomenon": "user delegates",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT03",
+   "split": "test",
+   "phenomenon": "user delegates",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD04",
+   "split": "dev",
+   "phenomenon": "stale tracker status",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT04",
+   "split": "test",
+   "phenomenon": "stale tracker status",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD05",
+   "split": "dev",
+   "phenomenon": "one task, different words",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT05",
+   "split": "test",
+   "phenomenon": "one task, different words",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Write platform staffing case for Q4 headcount",
+   "due": [
+    "2026-10-19",
+    "2026-10-19"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD06",
+   "split": "dev",
+   "phenomenon": "question that is a task",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Create Postgres 18 upgrade plan",
+   "due": [
+    "2026-10-20",
+    "2026-10-20"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT06",
+   "split": "test",
+   "phenomenon": "question that is a task",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Confirm bulk edits API support",
+   "due": [
+    "2026-10-16",
+    "2026-10-16"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD07",
+   "split": "dev",
+   "phenomenon": "quoted ask already answered",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT07",
+   "split": "test",
+   "phenomenon": "quoted ask already answered",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send pen-test summary",
+   "due": [
+    "2026-10-22",
+    "2026-10-22"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "HD08",
+   "split": "dev",
+   "phenomenon": "one ask among many",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT08",
+   "split": "test",
+   "phenomenon": "one ask among many",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send conference budget request",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "HD09",
+   "split": "dev",
+   "phenomenon": "relative date",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT09",
+   "split": "test",
+   "phenomenon": "relative date",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Write API v1 deprecation notice text",
+   "due": [
+    "2026-10-14",
+    "2026-10-13"
+   ],
+   "due_ok": false,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD10",
+   "split": "dev",
+   "phenomenon": "auto-resolved alert",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT10",
+   "split": "test",
+   "phenomenon": "auto-resolved alert",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD11",
+   "split": "dev",
+   "phenomenon": "recurring",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Submit October timesheet",
+   "due": [
+    "2026-11-02",
+    "2026-11-02"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false,
+   "also_absent_violated": [
+    "Submit September timesheet"
+   ]
+  },
+  {
+   "id": "HT11",
+   "split": "test",
+   "phenomenon": "recurring",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD12",
+   "split": "dev",
+   "phenomenon": "auto-reply is not an answer",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT12",
+   "split": "test",
+   "phenomenon": "auto-reply is not an answer",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Send approved Northwind MSA redlines",
+   "due": [
+    null,
+    null
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "medium",
+    "medium"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "HD13",
+   "split": "dev",
+   "phenomenon": "mention in a muted channel",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT13",
+   "split": "test",
+   "phenomenon": "mention in a muted channel",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD14",
+   "split": "dev",
+   "phenomenon": "mandatory vs optional @channel",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Rotate SSH keys",
+   "due": [
+    "2026-10-23",
+    "2026-10-23"
+   ],
+   "due_ok": true,
+   "direction_ok": true,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": true,
+   "pass_eff": true
+  },
+  {
+   "id": "HT14",
+   "split": "test",
+   "phenomenon": "mandatory vs optional @channel",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD15",
+   "split": "dev",
+   "phenomenon": "shared with one other person",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT15",
+   "split": "test",
+   "phenomenon": "shared with one other person",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Implement queue sharding (consumer side)",
+   "due": [
+    "2026-10-30",
+    "2026-10-30"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HD16",
+   "split": "dev",
+   "phenomenon": "your area, not given to you",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HT16",
+   "split": "test",
+   "phenomenon": "your area, not given to you",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD17",
+   "split": "dev",
+   "phenomenon": "small group chat",
+   "expect": "open",
+   "caught": true,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "name": "Determine if roster API returns location timezone names",
+   "due": [
+    "2026-10-14",
+    "2026-10-14"
+   ],
+   "due_ok": true,
+   "direction_ok": false,
+   "priority_eff": [
+    "high",
+    "high"
+   ],
+   "priority_eff_ok": true,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT17",
+   "split": "test",
+   "phenomenon": "small group chat",
+   "expect": "absent",
+   "present": [],
+   "pass": true
+  },
+  {
+   "id": "HD18",
+   "split": "dev",
+   "phenomenon": "ask buried in a long thread",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  },
+  {
+   "id": "HT18",
+   "split": "test",
+   "phenomenon": "ask buried in a long thread",
+   "expect": "open",
+   "caught": false,
+   "wrong_workspace": [],
+   "duplicates": 0,
+   "pass": false,
+   "pass_eff": false
+  }
+ ],
+ "isolation": [
+  {
+   "node": "personal:action:september-timesheet",
+   "source": "em-0712",
+   "arc": "HD11",
+   "expected_ws": "kestrel"
+  },
+  {
+   "node": "personal:action:laptop-refresh-appointment",
+   "source": "em-0678",
+   "arc": "T14",
+   "expected_ws": "kestrel"
+  },
+  {
+   "node": "personal:action:northwind-maintenance-window",
+   "source": "em-0672",
+   "arc": "T11",
+   "expected_ws": "kestrel"
+  }
+ ],
+ "injection_closed": [],
+ "noise_fps": [
+  {
+   "id": "kestrel:action:warehouse-cutover-infra",
+   "name": "Execute warehouse cutover (infrastructure side)",
+   "evidence": []
+  }
+ ],
+ "summary": {
+  "dev": {
+   "arcs": 43,
+   "pass": 25,
+   "open_caught": [
+    5,
+    18
+   ],
+   "due_ok": [
+    5,
+    5
+   ],
+   "direction_ok": [
+    3,
+    5
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "priority_eff_ok": [
+    4,
+    4
+   ],
+   "pass_eff": 25,
+   "duplicated": 0,
+   "wrong_workspace": 0,
+   "absent_ok": [
+    23,
+    25
+   ],
+   "isolation_violations": 1
+  },
+  "test": {
+   "arcs": 43,
+   "pass": 26,
+   "open_caught": [
+    11,
+    23
+   ],
+   "due_ok": [
+    9,
+    11
+   ],
+   "direction_ok": [
+    8,
+    11
+   ],
+   "priority_ok": [
+    0,
+    0
+   ],
+   "priority_eff_ok": [
+    11,
+    11
+   ],
+   "pass_eff": 26,
+   "duplicated": 0,
+   "wrong_workspace": 2,
+   "absent_ok": [
+    20,
+    20
+   ],
+   "isolation_violations": 2
+  },
+  "injection_closed": 0,
+  "noise_fps": 1
+ }
+}

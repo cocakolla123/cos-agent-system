@@ -1,0 +1,67 @@
+{
+ "scenario": "f1",
+ "started": "2026-10-21T18:36:47.425701+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my analysis of the connector data, here are the updated records for this incremental poll:\n\n```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-360-load-test-scheduler-v2\",\n    \"name\": \"Load test scheduler v2 (PLAT-360)\",\n    \"attrs\": {\n      \"due\": \"2026-09-30\",\n      \"priority\": \"high\",\n      \"evidence\": [\"jr-0550\", \"sl-17337\", \"cal-0006\"],\n      \"status\": \"done\",\n      \"refs\": [\"PLAT-360\"]\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"review-rota-api-pr-470\",\n    \"name\": \"Review rota-api PR #470 (Batch shift import)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"evidence\": [\"gh-0036\", \"sl-17330\"],\n      \"status\": \"done\",\n      \"refs\": [\"rota-api#470\"]\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"scheduler-v2-architecture-review-design-doc\",\n    \"name\": \"Circulate scheduler v2 design doc before the Oct 22 architecture review\",\n    \"attrs\": {\n      \"due\": \"2026-10-20\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"cal-0008\", \"em-0679\"],\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-322-cron-migration-scheduler-v2\",\n    \"name\": \"Migrate cron jobs to scheduler v2 (PLAT-322)\",\n    \"attrs\": {\n      \"due\": \"2026-11-13\",\n      \"priority\": \"high\",\n      \"evidence\": [\"jr-0544\", \"sl-17322\", \"em-0717\", \"sl-17323\"],\n      \"refs\": [\"PLAT-322\"]\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Put together the Q4 capacity numbers\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-17332\", \"sl-17333\"]\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-maintenance-window-confirmation\",\n    \"name\": \"Confirm the maintenance window for Nov 15 with Northwind (Alex Brennan)\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"em-0672\"]\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire-review\",\n    \"name\": \"Review vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-0692\"]\n    }\n  }\n]\n```",
+  "total_cost_usd": 0.22990950000000004,
+  "duration_ms": 70194,
+  "duration_api_ms": 66894,
+  "num_turns": 24,
+  "usage": {
+   "input_tokens": 130,
+   "cache_creation_input_tokens": 53313,
+   "cache_read_input_tokens": 907085,
+   "output_tokens": 6489,
+   "output_tokens_details": {
+    "thinking_tokens": 2864
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 53313,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 886,
+     "cache_read_input_tokens": 79258,
+     "cache_creation_input_tokens": 1923,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1923
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 130,
+    "outputTokens": 6489,
+    "cacheReadInputTokens": 907085,
+    "cacheCreationInputTokens": 53313,
+    "webSearchRequests": 0,
+    "costUSD": 0.22990950000000004,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 2864,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1111,
+ "attempt": 1
+}

@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-21T18:41:02.206083+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Based on my systematic search through all connector sources, I'll now generate the normalized records with updates from the incremental poll:\n\n```json\n[\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-301-postmortem-inc-212\", \"name\": \"Write postmortem for INC-212 queue outage (PLAT-301)\", \"attrs\": {\"status\": \"done\", \"priority\": \"high\", \"evidence\": [\"jr-0540\", \"sl-17319\", \"doc-0008\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"PLAT-301\", \"type\": \"refs\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-355-oncall-runbook-rewrite\", \"name\": \"Rewrite the on-call runbook (PLAT-355, taken over from Sam)\", \"attrs\": {\"status\": \"done\", \"priority\": \"high\", \"evidence\": [\"jr-0548\", \"sl-17325\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"PLAT-355\", \"type\": \"refs\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"security-awareness-training\", \"name\": \"Complete annual security awareness training\", \"attrs\": {\"status\": \"done\", \"priority\": \"high\", \"evidence\": [\"em-0676\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"corvid-final-round-slot\", \"name\": \"Pick a Corvid Systems final-round interview slot\", \"attrs\": {\"status\": \"done\", \"priority\": \"medium\", \"evidence\": [\"em-0685\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"northwind-msa-redlines-legal-review\", \"name\": \"Awaiting Legal review of Northwind MSA redlines (LEG-55)\", \"attrs\": {\"priority\": \"medium\", \"evidence\": [\"em-0725\", \"em-0726\", \"em-0727\"], \"refs\": [\"LEG-55\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"LEG-55\", \"type\": \"refs\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-401-webhook-idempotency-keys\", \"name\": \"Add idempotency keys to webhook delivery (PLAT-401)\", \"attrs\": {\"due\": \"2026-11-20\", \"priority\": \"medium\", \"evidence\": [\"jr-0559\"], \"refs\": [\"PLAT-401\"]}, \"source\": \"eval-fixture\", \"confidence\": 1.0, \"edges\": [{\"to_kind\": \"Ticket\", \"to_key\": \"PLAT-401\", \"type\": \"refs\"}]},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"october-timesheet\", \"name\": \"Submit October timesheet\", \"attrs\": {\"due\": \"2026-11-02\", \"priority\": \"low\", \"evidence\": [\"em-0714\"]}, \"source\": \"eval-fixture\", \"confidence\": 0.9, \"edges\": []},\n  {\"kind\": \"Person\", \"workspace\": \"kestrel\", \"key\": \"kestrel-legal\", \"name\": \"Kestrel Legal\", \"attrs\": {}, \"source\": \"eval-fixture\", \"confidence\": 0.8, \"edges\": []}\n]\n```",
+  "total_cost_usd": 0.1889019,
+  "duration_ms": 55644,
+  "duration_api_ms": 50681,
+  "num_turns": 20,
+  "usage": {
+   "input_tokens": 114,
+   "cache_creation_input_tokens": 50308,
+   "cache_read_input_tokens": 672569,
+   "output_tokens": 4183,
+   "output_tokens_details": {
+    "thinking_tokens": 1753
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 50308,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 1309,
+     "cache_read_input_tokens": 72837,
+     "cache_creation_input_tokens": 5339,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5339
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 114,
+    "outputTokens": 4183,
+    "cacheReadInputTokens": 672569,
+    "cacheCreationInputTokens": 50308,
+    "webSearchRequests": 0,
+    "costUSD": 0.1889019,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 1753,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}
