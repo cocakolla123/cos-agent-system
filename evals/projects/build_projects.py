@@ -5,7 +5,7 @@ Writes ./world/: real project folders under projects/ (README, runbooks, logs,
 code) plus connector-style JSON under sources/ (local git state, GitHub repos,
 CI runs and PRs, mail). Deterministic; all names and domains are fictional.
 
-    python3 evals/projects/build.py            # (re)write evals/projects/world
+    python3 evals/projects/build_projects.py            # (re)write evals/projects/world
 """
 import json
 import os

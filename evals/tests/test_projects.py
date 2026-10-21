@@ -11,7 +11,7 @@ PD = os.path.join(os.path.dirname(HERE), "projects")
 sys.path.insert(0, os.path.dirname(HERE))
 sys.path.insert(0, PD)
 
-import build          # noqa: E402
+import build_projects as build  # noqa: E402
 import run_projects   # noqa: E402
 
 GOLD = json.load(open(os.path.join(PD, "gold.json")))
