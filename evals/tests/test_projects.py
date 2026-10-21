@@ -75,6 +75,16 @@ class TestProjectsScorer(unittest.TestCase):
         self.assertFalse(rows["cos-helper"]["pass"])
         self.assertFalse(rows["glimmer"]["pass"])
 
+    def test_pairing_is_not_greedy(self):
+        # a review that mentions a "build" can also satisfy the CI group;
+        # it must still pair with the review so the CI task is not "extra"
+        recs = json.loads(json.dumps(ORACLE))
+        for r in recs["records"]:
+            if r["key"] == "glimmer-pr14":
+                r["name"] = "Review PR #14 before Thursday's TestFlight build"
+        rows = {r["project"]: r for r in run_projects.score(recs, GOLD)["rows"]}
+        self.assertTrue(rows["glimmer"]["pass"], rows["glimmer"])
+
     def test_dormant_project_with_action_fails(self):
         bad = json.loads(json.dumps(ORACLE))
         bad["records"].append(act("pf", "Update old-portfolio projects page", "old-portfolio"))

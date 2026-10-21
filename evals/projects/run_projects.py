@@ -123,6 +123,33 @@ def _matches(r, groups):
     return all(_has_any(t, g) for g in groups)
 
 
+def _best_pairing(mine, expected):
+    """Pair expected actions with emitted ones to match as many as possible.
+    A greedy pass in key order let one expected action take an emitted one
+    that only it and another could match (a review mentioning a "build"),
+    leaving the other unmatched; projects have a handful of each, so try
+    every assignment."""
+    names = list(expected)
+    best = {}
+
+    def go(k, used, cur):
+        nonlocal best
+        if len(cur) + (len(names) - k) <= len(best):
+            return
+        if k == len(names):
+            best = dict(cur)
+            return
+        for i, r in enumerate(mine):
+            if i not in used and _matches(r, expected[names[k]]):
+                cur[names[k]] = i
+                go(k + 1, used | {i}, cur)
+                del cur[names[k]]
+        go(k + 1, used, cur)
+
+    go(0, frozenset(), {})
+    return best
+
+
 def score(out, gold):
     rows, ok_all = [], True
     recs = (out or {}).get("records") or []
@@ -143,13 +170,10 @@ def score(out, gold):
                 checks["collaborator"] = g["collaborator"] in _blob(recs)
         else:
             checks["not_live"] = (not projrec) or bool(a.get("dormant"))
-        used = set()
-        for name, groups in g["actions"].items():
-            hit = next((i for i, r in enumerate(mine)
-                        if i not in used and _matches(r, groups)), None)
-            checks["action:" + name] = hit is not None
-            if hit is not None:
-                used.add(hit)
+        pairing = _best_pairing(mine, g["actions"])
+        used = set(pairing.values())
+        for name in g["actions"]:
+            checks["action:" + name] = name in pairing
         extra = [r.get("name") or r.get("key") for i, r in enumerate(mine) if i not in used]
         checks["no_extra_actions"] = not extra
         ok = all(checks.values())

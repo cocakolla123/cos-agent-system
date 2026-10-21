@@ -1,0 +1,65 @@
+{
+ "scenario": "projects-1",
+ "started": "2026-10-21T17:53:02.585560+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n{\"records\":[\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"glimmer\",\"name\":\"glimmer\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-20T23:02:00-07:00\",\"state_summary\":\"Daily photo app for college students. The v3 redesign (glass panels, new type, new tab bar) is in progress: foundation, home, reveal and feed screens are committed, and profile and post screens are still to do. App/HomeView.swift has uncommitted changes. v2 (leaderboard, weekly votes, open sign-up) merged on Oct 19, and devpal is also pushing to it.\",\"health\":\"Red. CI on main has failed on every run since the Oct 19 v2 merge (the Oct 16 failure email suggests it started earlier), and the last green run was Oct 15 (Search tab). Both jobs, ios-build-and-test and backend-tests, fail in 3-4 seconds with no steps run. That points to a runner, billing or workflow-configuration problem rather than a code failure.\",\"open_prs\":[\"#14 Comments: moderation queue for flagged comments (review requested from Riya)\"],\"pending_items\":[\"Fix CI runner/config\",\"Review PR #14 before Thursday's TestFlight build\"]},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/glimmer\",\"type\":\"hosted_at\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"tidepool-quant\",\"name\":\"tidepool-quant\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-06T01:05:00-07:00\",\"state_summary\":\"Personal paper-trading research platform in its paper validation phase. The cash-ledger fix merged on Oct 6, but the repair script's apply steps have no record of being run. Before real money it still needs clean unattended paper runs and the human approval gate.\",\"health\":\"Red since 2026-10-06. On the merge commit of fix/cash-ledger, the typecheck job fails with pyright reporting 3 errors in src/ledger.py. The unit-tests job passes. This is a real code failure.\",\"pending_items\":[\"Runbook apply steps (curve, ladder, ack) not run; the dry run was done on Oct 5\",\"Data vendor monthly cap exhausted; the Pro plan upgrade decision has been pending with Riya since Sep 23\",\"Fix 3 pyright errors in src/ledger.py\"]},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/tidepool-quant\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"cos-helper\",\"name\":\"cos-helper\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-18T16:20:00-07:00\",\"state_summary\":\"Small assistant that reads calendar and mail and lists what Riya owes. The calendar module (PR #3) merged and has tests, the graph upsert was refactored, and an initial dashboard exists. It is actively worked on and nothing is owed.\",\"health\":\"Green. The newest commit, 'Add calendar module tests', passed CI.\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/cos-helper\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"harbor-map\",\"name\":\"Harbor Map\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-07T18:00:00Z\",\"state_summary\":\"Riya names it as a current personal project. The only trace in any connected source is a TestFlight invite from Ana Ruiz (Oct 7) to test build 0.4. There is no repository or local folder, so its state is unknown.\",\"health\":\"unknown\"},\"confidence\":0.4,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"Ana Ruiz\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/glimmer\",\"name\":\"riyap/glimmer\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-21T06:02:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/tidepool-quant\",\"name\":\"riyap/tidepool-quant\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-06T08:05:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/cos-helper\",\"name\":\"riyap/cos-helper\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-18T23:20:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"devpal\",\"name\":\"devpal\",\"attrs\":{\"role\":\"GitHub collaborator on glimmer\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"pushes_to\"}]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"Ana Ruiz\",\"name\":\"Ana Ruiz\",\"attrs\":{\"role\":\"Sent the Harbor Map TestFlight invite\"},\"confidence\":0.6,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"harbor-map\",\"type\":\"invited_to_test\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"review-glimmer-pr-14\",\"name\":\"Review glimmer PR #14 (comment moderation queue) before Thursday's TestFlight build\",\"attrs\":{\"priority\":\"high\",\"refs\":[\"glimmer\"],\"due\":\"2026-10-22\",\"requested_by\":\"devpal\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"glimmer-ci-red\",\"name\":\"Fix glimmer CI on main: both jobs fail in 3-4s with no steps run (runner, billing or workflow configuration)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"glimmer\"],\"detail\":\"Failing since the Oct 19 merge of v2 (the Oct 16 failure email suggests earlier); last green run Oct 15. This is one item, not one per run. It needs a look at the Actions settings, billing or runner config. It may block the Thursday TestFlight build.\"},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-fix-pyright-ledger\",\"name\":\"Fix 3 pyright errors in src/ledger.py (typecheck red on main since 2026-10-06)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-run-ledger-repair\",\"name\":\"Run the cash-ledger repair apply steps (curve, ladder, ack) per the runbook and log each in ops-log.md\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"The dry run was done on 2026-10-05. The ops log records that the apply steps have not been run.\"},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-vendor-plan-decision\",\"name\":\"Decide on the data vendor Pro plan upgrade (monthly cap exhausted)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"The ops log has marked this pending with Riya since 2026-09-23.\"},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]}\n],\n\"questions\":[\"Where does Harbor Map live? The only trace is Ana Ruiz's TestFlight invite for build 0.4. Connect its code host account, org or local folder, or tell me what is going on with it, and say whether you are building it or only testing it.\"]}\n```",
+  "total_cost_usd": 0.13545279999999998,
+  "duration_ms": 33776,
+  "duration_api_ms": 29801,
+  "num_turns": 14,
+  "usage": {
+   "input_tokens": 6,
+   "cache_creation_input_tokens": 19377,
+   "cache_read_input_tokens": 117728,
+   "output_tokens": 4616,
+   "output_tokens_details": {
+    "thinking_tokens": 707
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 19377,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 3612,
+     "cache_read_input_tokens": 43910,
+     "cache_creation_input_tokens": 5912,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5912
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 6,
+    "outputTokens": 4616,
+    "cacheReadInputTokens": 117728,
+    "cacheCreationInputTokens": 19377,
+    "webSearchRequests": 0,
+    "costUSD": 0.13545279999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 707,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
