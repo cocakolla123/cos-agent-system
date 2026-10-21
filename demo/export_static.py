@@ -4,7 +4,8 @@
     python3 demo/build_demo.py && python3 demo/export_static.py
 
 Starts the dashboard in demo mode on a free local port, saves one page per
-workspace filter to demo/site/, and replaces the page's network calls with
+workspace filter to demo/site/ (plain files) and demo/artifact/ (the same
+pages shaped for claude.ai artifact hosting), and replaces the page's network calls with
 the same saved responses the demo server gives (demo/state/responses.json).
 The result can be hosted anywhere as plain files: no server, no model, no
 connector, nothing that can send.
@@ -81,6 +82,25 @@ def staticize(html_text, shim):
     return html_text.replace("<head>", "<head>\n" + shim, 1)
 
 
+TITLE = "Kestrel Labs Chief of Staff"
+VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+
+
+def for_artifact(page, is_index):
+    """claude.ai artifact hosting wraps the index page in its own document
+    skeleton, so that page drops its doctype/html/head/body tags; the other
+    pages are served as-is and keep theirs, plus a viewport meta."""
+    page = re.sub(r"<title>.*?</title>", "<title>%s</title>" % TITLE, page, count=1, flags=re.S)
+    if not is_index:
+        return page.replace("<head>", "<head>\n" + VIEWPORT, 1)
+    head = page[page.index("<head>") + len("<head>"):page.index("</head>")]
+    head = head.replace('<meta charset="utf-8">', "")
+    body_open = re.search(r"<body[^>]*>", page)
+    body = page[body_open.end():page.rindex("</body>")]
+    title = "<title>%s</title>" % TITLE
+    return title + "\n" + head.replace(title, "").strip() + "\n" + body
+
+
 def main():
     cfg = os.path.join(STATE, "config.json")
     if not os.path.exists(cfg):
@@ -106,9 +126,14 @@ def main():
         os.makedirs(SITE, exist_ok=True)
         pages = {None: "?workspace=all"}
         pages.update({w: "?workspace=" + w for w in workspaces})
+        art = os.path.join(HERE, "artifact")
+        os.makedirs(art, exist_ok=True)
         for ws, query in pages.items():
+            page = staticize(fetch(port, query), shim)
             with open(os.path.join(SITE, page_name(ws)), "w") as f:
-                f.write(staticize(fetch(port, query), shim))
+                f.write(page)
+            with open(os.path.join(art, page_name(ws)), "w") as f:
+                f.write(for_artifact(page, ws is None))
     finally:
         proc.terminate()
         proc.wait(timeout=10)

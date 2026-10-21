@@ -32,3 +32,6 @@ python3 demo/export_static.py                    # demo/site/, plain files
 ```
 
 `demo/site/` can be hosted anywhere that serves files. Open `index.html`.
+`demo/artifact/` is the same pages shaped for claude.ai artifact hosting (the index
+page without its own html/head/body tags); the published copy is private to its
+owner until shared from its Share menu.

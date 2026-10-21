@@ -1,0 +1,884 @@
+<!doctype html>
+<html><head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+/* Demo build: no server behind this page. Every request answers from saved
+   responses; nothing is sent anywhere. */
+window.__DEMO_RESPONSES = {"/approve": "Demo mode: nothing was sent. In the real app, approving runs exactly the tool call shown on the card (for a Slack or Gmail message it creates a draft for you to send), logs it to the audit trail, and archives the card.", "/reject": "Demo mode: rejected (nothing changes here). In the real app a rejection with a reason becomes a correction the system learns from; see Self-learning.", "/revise": "Demo mode: in the real app the drafter rewrites the card using your note and puts the new version back in the queue for approval. Nothing is ever sent from a revise.", "/save-edit": "Demo mode: your edit would replace the drafted text on the card. It still waits for your approval.", "/mark-handled": "Demo mode: marked handled. In the real app this archives the card and closes the task.", "/add-task": "Demo mode: in the real app this goes to the inbox and the next poll turns it into a task.", "/chat": {"default": "Demo mode: this is a saved reply, not a live model. In the real app the chief of staff answers from your knowledge graph and connectors (read-only), and anything it wants to do outside goes to the approval queue first.", "urgent": "Saved reply, computed from the graph: across all workspaces 18 tasks are overdue and 1 due today. Due today: Write API v1 deprecation notice text for Tomas. Most overdue: Write postmortem for INC-212 queue outage (PLAT-301); Send Kestrel data retention policy to Alex Brennan (Northwind); Draft the retry-policy RFC. Drafts for several of these are in the approval queue; nothing is sent until you approve.", "missed": "Saved reply: In the real app this starts the correction loop. It looks for the item you say was missed, works out why the crawl missed it (a connector not searched, a rule that dropped it, a stale status), changes the cause, re-runs, and records the lesson. Three past corrections are shown under Self-learning.", "waiting": "Saved reply, computed from the graph: 3 tasks are waiting on someone else: Awaiting IT access to analytics replica (RTA-90) (on Kestrel IT); Awaiting Legal review of Northwind MSA redlines (LEG-55) (on Kestrel Legal); Awaiting Priya's renewal quote for the 50-seat Stratus plan (on Priya (Stratus Monitoring))."}, "/entry-chat": {"default": "Saved reply: In the real app you can discuss any task or draft here. The assistant reads the sources behind it and can change its notes, priority or status for you; it cannot send anything from this box."}, "/action-update": "Demo mode: in the real app this updates the task (title, notes, priority or done) and records the change.", "/poll-now": "Demo mode: no polls run here. In the real app this checks each connected account for new items since the last poll.", "/start-research": "Demo mode: the research crawl already ran on this fictional world; this page shows its recorded result."};
+window.__DEMO_DEFAULT = "Demo mode: nothing was sent or changed. In the real app this runs only on your machine, against your own connected accounts.";
+function demoReply(path, body) {
+  const r = window.__DEMO_RESPONSES[path];
+  if (typeof r === "string") return r;
+  if (r && typeof r === "object") {
+    const probe = ["message", "id", "text"].map(k => String((body || {})[k] || "")).join(" ").toLowerCase();
+    for (const k of Object.keys(r)) if (k !== "default" && probe.includes(k.toLowerCase())) return r[k];
+    return r["default"] || window.__DEMO_DEFAULT;
+  }
+  return window.__DEMO_DEFAULT;
+}
+function demoReload() {}
+window.fetch = async function (url, opts) {
+  const path = String(url).split("?")[0];
+  const json = o => new Response(JSON.stringify(o), {headers: {"Content-Type": "application/json"}});
+  if (opts && String(opts.method || "").toUpperCase() === "POST") {
+    let body = {};
+    try { body = JSON.parse(opts.body || "{}"); } catch (e) {}
+    return json({message: demoReply(path, body), demo: true});
+  }
+  if (path === "/entry-chat-log") return json({messages: []});
+  if (path === "/auth-requests") return json({requests: []});
+  if (path === "/graph-version") return json({v: "demo"});
+  return json({message: window.__DEMO_DEFAULT, demo: true});
+};
+</script><meta charset="utf-8"><title>Kestrel Labs Chief of Staff</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  max-width: 880px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem;
+  color: #1d1d1f; background: #fbfbfd; line-height: 1.55; font-size: 15px;
+}
+h1 { font-size: 1.6rem; margin-bottom: .25rem; }
+.subtitle { color: #6e6e73; font-size: .9rem; margin-bottom: 2rem; }
+h2 { font-size: 1.15rem; margin: 2.5rem 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid #e5e5e7; display:flex; align-items:center; justify-content:space-between; }
+h3 { font-size: .95rem; color: #444; margin: 1.2rem 0 .6rem; }
+pre { white-space: pre-wrap; background: #f5f5f7; padding: 1rem; border-radius: 10px; font-size: .85rem; line-height: 1.5; max-height: 320px; overflow-y: auto; }
+.card { border: 1px solid #e5e5e7; border-radius: 12px; padding: 1.25rem 1.4rem; margin-bottom: 1rem; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+.card.stale, .card.approved, .card.rejected, .card.superseded { opacity: .5; }
+.card-title { font-size: 1.02rem; font-weight: 600; margin: .1rem 0 .5rem; }
+.badge { display:inline-flex; align-items:center; gap:.3rem; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; padding: .2rem .6rem; border-radius: 20px; background:#f0f0f0; color:#555; margin-right:.5rem; }
+.badge.pending { background:#fff4d6; color:#8a6300; }
+.badge.approved { background:#dcf5e3; color:#137333; }
+.badge.rejected, .badge.stale, .badge.superseded { background:#fde8e8; color:#a3282a; }
+.badge.failed { background:#ffe0b2; color:#8a4b00; }
+.card.failed { border-color:#f0b429; opacity:1; }
+.badge.drafted { background:#d6e9ff; color:#0b4a8f; }
+.card.drafted { border-color:#7ab8f5; opacity:1; }
+.button-link { display:inline-block; padding:.5rem 1rem; border-radius:8px; background:#0071e3; color:#fff; text-decoration:none; font-size:.85rem; font-weight:500; margin:.5rem 0; }
+.meta { color: #86868b; font-size: .82rem; margin-bottom: .75rem; }
+.tabs { display:flex; gap: .4rem; margin-bottom: .75rem; }
+.tab-btn { font-size: .8rem; padding: .3rem .8rem; border-radius: 8px; border: 1px solid #d7d7db; background:#f5f5f7; cursor:pointer; color:#444; }
+.tab-btn.active { background:#1d1d1f; color:#fff; border-color:#1d1d1f; }
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+.quick-line { font-size: .92rem; color:#333; margin-bottom: .5rem; }
+button { padding: .5rem 1rem; border-radius: 8px; border: 1px solid #c7c7cc; background:#fff; cursor:pointer; margin-right:.5rem; font-size: .85rem; font-weight: 500; }
+button:hover { background:#f5f5f7; }
+button.primary { background:#0071e3; color:#fff; border-color:#0071e3; }
+button.primary:hover { background:#0060c0; }
+button.small { padding: .35rem .7rem; font-size: .78rem; }
+textarea { width: 100%; padding:.6rem; font-family:inherit; font-size:.88rem; border-radius:8px; border:1px solid #d7d7db; margin-bottom:.5rem; resize: vertical; }
+input[type=text], input[type=time] { padding:.4rem .6rem; border-radius:8px; border:1px solid #d7d7db; font-size:.85rem; }
+.actions { display:flex; align-items:center; gap:.5rem; flex-wrap: wrap; margin-top:.5rem; }
+.result { font-size:.82rem; margin-top:.5rem; white-space:pre-wrap; color:#137333; }
+.empty { color:#86868b; font-size:.9rem; padding: .5rem 0; }
+.pill-row { display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.75rem; }
+.day-pill { font-size:.78rem; padding:.25rem .6rem; border-radius:14px; border:1px solid #d7d7db; background:#f5f5f7; cursor:pointer; }
+.day-pill.on { background:#0071e3; color:#fff; border-color:#0071e3; }
+.poll-status { font-size:.85rem; color:#6e6e73; }
+.inbox-item { font-size:.88rem; padding:.35rem 0; border-bottom:1px solid #f0f0f0; }
+.chat-bubble { position:fixed; bottom:1.5rem; right:1.5rem; width:56px; height:56px; border-radius:50%; background:#0071e3; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:1000; }
+.chat-box { border: 1px solid #e5e5e7; border-radius: 12px; background:#fff; padding: 1rem; }
+.chat-panel-hidden { display:none; }
+#chatPanel { position:fixed; bottom:1.5rem; right:1.5rem; width:min(380px, 90vw); z-index:1000; box-shadow:0 8px 30px rgba(0,0,0,0.2); }
+.chat-panel-header { display:flex; justify-content:space-between; align-items:center; font-weight:600; margin-bottom:.5rem; }
+.chat-close { cursor:pointer; color:#86868b; font-weight:400; }
+#chatPanel .chat-log { max-height: 320px; }
+.chat-log { max-height: 420px; overflow-y: auto; margin-bottom: .75rem; display:flex; flex-direction:column; gap:.6rem; }
+.chat-msg { padding:.65rem .9rem; border-radius: 12px; max-width: 85%; font-size:.9rem; }
+.chat-you { background:#0071e3; color:#fff; align-self:flex-end; }
+.chat-assistant { background:#f0f0f2; color:#1d1d1f; align-self:flex-start; }
+.chat-role { font-size:.72rem; opacity:.75; margin-bottom:.2rem; }
+.chat-you .meta { color:#d8ecff; }
+.chat-body { white-space: pre-wrap; }
+.chat-input-row { display:flex; gap:.5rem; }
+.chat-input-row textarea { flex:1; margin-bottom:0; }
+.demo-banner { background:#eef4ff; border:1px solid #b9cdf5; color:#1d3b72; border-radius:10px; padding:.75rem 1rem; margin:0 0 1rem; line-height:1.45; }
+.priority-tag { display:inline-block; font-size:.75rem; font-weight:600; padding:.15rem .55rem; border-radius:20px; margin-left:.3rem; }
+.priority-high { background:#fde3e3; color:#a3282a; }
+.priority-medium { background:#fff3cd; color:#8a6300; }
+.priority-low { background:#f0f0f0; color:#666; }
+.priority-note { font-style: italic; margin-top:-.3rem; margin-bottom:.5rem; }
+.tag-pill { display:inline-block; font-size:.72rem; font-weight:600; padding:.15rem .55rem; border-radius:20px; margin-left:.3rem; background:#eee; color:#555; }
+.tag-ticket { background:#e3ecfd; color:#1451b8; }
+.tag-message { background:#e9e3fd; color:#4a2fb3; }
+.tag-calendar { background:#e3fdf0; color:#0e7d4f; }
+.tag-domain { background:#fde3e9; color:#b8144f; }
+.tag-meeting { background:#e3f2fd; color:#0d5aa7; }
+.graph-command-center { margin:1rem 0 1.5rem; padding:1rem 1.1rem; background:#f7fbff; border:1px solid #d6e6f5; border-radius:12px; }
+.graph-command-center > h2 { margin:.1rem 0 .6rem; }
+.cc-sub { font-weight:400; font-size:.8rem; color:#5b6b7a; }
+.graph-section { margin:.5rem 0 .9rem; }
+.graph-section h3 { margin:.3rem 0 .35rem; font-size:.95rem; }
+.graph-section ul { margin:.1rem 0; padding-left:1.1rem; }
+.graph-section li { margin:.12rem 0; font-size:.9rem; }
+.sec-count { display:inline-block; min-width:1.2rem; padding:0 .4rem; background:#e3eefb; color:#0d5aa7; border-radius:8px; font-size:.72rem; }
+.sec-type { color:#5b6b7a; font-size:.76rem; text-transform:uppercase; letter-spacing:.02em; }
+.sec-sub { color:#5b6b7a; font-size:.82rem; }
+.ws-switcher a { margin:0 .15rem; text-decoration:none; color:#0d5aa7; }
+.ws-switcher a.ws-active { font-weight:700; text-decoration:underline; }
+.objective-card { margin:.35rem 0; padding:.5rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; }
+.obj-title { font-weight:600; font-size:.9rem; }
+.obj-timeline { font-size:.82rem; color:#3a4a58; margin-top:.2rem; }
+.tl-step { white-space:nowrap; }
+.acct-row { margin:.3rem 0; padding:.45rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; font-size:.9rem; }
+.acct-dot { font-weight:700; margin-right:.2rem; }
+.acct-id { color:#3a4a58; margin:0 .35rem; }
+.ws-chip { display:inline-block; padding:0 .5rem; background:#e3eefb; color:#0d5aa7; border-radius:9px; font-size:.75rem; }
+.acct-meta { color:#8a8a90; font-size:.78rem; margin-left:.35rem; }
+.acct-fix { color:#b8144f; font-size:.8rem; margin-top:.25rem; }
+.auth-overlay { position:fixed; inset:0; background:rgba(20,20,30,.55); z-index:1000; display:flex; align-items:center; justify-content:center; }
+.auth-box { background:#fff; border-radius:14px; padding:1.3rem 1.5rem; max-width:440px; box-shadow:0 12px 40px rgba(0,0,0,.25); }
+.auth-box h3 { margin:.1rem 0 .6rem; }
+.auth-reason { color:#3a4a58; }
+.auth-note { color:#8a8a90; font-size:.8rem; }
+.auth-buttons { margin-top:.8rem; display:flex; gap:.5rem; }
+.auth-refuse { color:#b8144f; }
+.guardrail-alert { margin:.6rem 0; padding:.7rem 1rem; background:#fff2f4; border:2px solid #e0526f; border-radius:10px; font-size:.9rem; }
+.coverage-note { margin:.6rem 0; padding:.6rem 1rem; background:#fffaf0; border:1px solid #e0b25c; border-radius:10px; font-size:.85rem; color:#6b4e1f; }
+.start-research-card { margin:1rem 0; padding:1rem 1.2rem; background:#f2fff5; border:1px solid #bfe5bf; border-radius:12px; }
+.start-research-card h2 { margin:.1rem 0 .4rem; }
+.today-brief { margin:.4rem 0 .8rem; padding:.8rem 1rem; background:#fffbe9; border:1px solid #efdc9e; border-radius:10px; font-size:.95rem; }
+.tb-line { margin:.25rem 0; }
+.tb-overdue { color:#b8144f; }
+.today-brief a { color:#0d5aa7; }
+.obj-next { font-size:.88rem; margin:.25rem 0; }
+.obj-next a { color:#0d5aa7; text-decoration:none; }
+.obj-next-none { color:#8a8a90; }
+.obj-details summary { font-size:.78rem; color:#5b6b7a; cursor:pointer; margin-top:.2rem; }
+.graph-section a { color:inherit; text-decoration:underline dotted; }
+/* M13: LinkedIn-Jobs-style task board — compact list left, big detail right */
+.todo-board { display:grid; grid-template-columns: minmax(280px, 340px) 1fr; gap:14px; align-items:start; }
+@media (max-width: 979px) { .todo-board { grid-template-columns: 1fr; } }
+.todo-list { max-height:560px; overflow-y:auto; padding-right:2px; }
+.todo-row { background:#fff; border:1px solid #e2e2e7; border-radius:10px; padding:.6rem .8rem; margin-bottom:.5rem; cursor:pointer; font-size:.9rem; box-shadow:0 1px 2px rgba(0,0,0,.06); }
+.todo-row:hover { box-shadow:0 2px 6px rgba(0,0,0,.12); }
+.todo-selected { border-color:#0d5aa7; box-shadow:inset 3px 0 0 #0d5aa7, 0 2px 6px rgba(0,0,0,.10); }
+.todo-high { border-left:4px solid #e0526f; }
+.todo-medium { border-left:4px solid #e8b93c; }
+.todo-low { border-left:4px solid #c9c9d0; }
+.todo-badge { margin-right:.25rem; }
+.todo-late { color:#b8144f; font-weight:600; font-size:.82rem; }
+.todo-detail { position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+.td-empty { color:#8a8a90; text-align:center; padding:3rem 0; }
+.tm-title { width:100%; font-size:1.1rem; font-weight:700; border:1px solid transparent; border-radius:8px; padding:.35rem .5rem; }
+.tm-title:hover, .tm-title:focus { border-color:#e2e2e7; }
+.tm-meta { margin:.4rem 0; display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+#tmNote { width:100%; margin-top:.3rem; }
+.tm-evidence { margin:.2rem 0 .5rem; }
+.tm-controls { display:flex; gap:.5rem; align-items:center; margin:.5rem 0; flex-wrap:wrap; }
+.tm-chat { border-top:1px solid #eee; margin-top:.6rem; padding-top:.5rem; }
+.tm-chat-log { max-height:200px; overflow-y:auto; font-size:.88rem; }
+.tm-msg { background:#f4f4f6; border-radius:8px; padding:.35rem .6rem; margin:.25rem 0; white-space:pre-wrap; }
+.tm-you { background:#e3eefb; }
+.tm-thinking { color:#8a8a90; }
+.side-panel { display:none; }
+@media (min-width: 1280px) {
+  .side-panel { display:block; position:fixed; top:16px; right:16px; width:300px; max-height:92vh; overflow-y:auto; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding: .8rem 1rem; z-index:50; }
+  /* Center the content column within the space LEFT of the fixed sidebar —
+     a bare margin-right here leaves body's auto left margin to swallow all
+     the slack and shoves the page off-center (first-run feedback). */
+  body { max-width: 980px;
+         margin-left: max(1.5rem, calc((100vw - 348px - 980px) / 2));
+         margin-right: 348px; }
+  .side-panel h3 { margin:.2rem 0 .5rem; }
+  .side-panel .today-brief { margin:.2rem 0 .6rem; }
+}
+.cal-box { margin-top:.6rem; }
+.cal-head { font-weight:700; font-size:.9rem; margin-bottom:.3rem; }
+.cal { width:100%; border-collapse:collapse; font-size:.78rem; text-align:center; }
+.cal th { color:#8a8a90; font-weight:500; padding:.15rem; }
+.cal td { padding:.22rem .1rem; border-radius:6px; }
+.cal-out { color:#c9c9d0; }
+.cal-today { background:#0d5aa7; color:#fff; font-weight:700; }
+.cal-marked { background:#e3eefb; }
+.cal-today.cal-marked { background:#0d5aa7; }
+.cal-dot { color:#e0526f; font-size:.7rem; vertical-align:top; }
+.linked-domain { margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }
+.linked-domain-title { font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }
+.linked-domain pre { background:#fff; color:#1d1d1f; font-size:.88rem; }
+.lite-markdown ul { margin:.2rem 0 .5rem; padding-left:1.2rem; }
+.lite-markdown li { margin-bottom:.35rem; font-size:.88rem; line-height:1.5; }
+.lite-markdown p { margin:.3rem 0; font-size:.88rem; line-height:1.5; }
+.archived-item { opacity:.7; padding:.75rem 1rem; }
+.slack-preview-label, .extra-notes-label { font-size:.75rem; color:#6e6e73; margin-top:.5rem; margin-bottom:.25rem; }
+.slack-preview { background:#f8f8fa; border:1px solid #e5e5e7; border-radius:8px; padding:.7rem .9rem; font-size:.9rem; min-height:1.5em; margin-bottom:.4rem; }
+.slack-preview code { background:#e8e8ea; padding:.1rem .3rem; border-radius:4px; font-family:ui-monospace,monospace; }
+</style></head><body>
+<aside class="side-panel"><h3>Today</h3><div class="today-brief"><div class="tb-line">▶ <strong>Next up:</strong> Sign lease renewal with Harbor Lane Properties · Call BrightSmile Dental to reschedule the cancelled Sep 9 appointment</div></div><div class="cal-box"><div class="cal-head">October 2026</div><table class="cal"><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr><tr><td class="cal-out" title="">27</td><td class="cal-out" title="">28</td><td class="cal-out" title="">29</td><td class="cal-out" title="">30</td><td class="" title="">1</td><td class="" title="">2</td><td class="" title="">3</td></tr><tr><td class="" title="">4</td><td class="" title="">5</td><td class="" title="">6</td><td class="" title="">7</td><td class="" title="">8</td><td class="" title="">9</td><td class="" title="">10</td></tr><tr><td class="" title="">11</td><td class="" title="">12</td><td class="cal-today" title="">13</td><td class="" title="">14</td><td class="" title="">15</td><td class="" title="">16</td><td class="" title="">17</td></tr><tr><td class="" title="">18</td><td class="" title="">19</td><td class="" title="">20</td><td class="" title="">21</td><td class="" title="">22</td><td class="" title="">23</td><td class="" title="">24</td></tr><tr><td class="" title="">25</td><td class="" title="">26</td><td class="" title="">27</td><td class="" title="">28</td><td class="" title="">29</td><td class="cal-marked" title="⏰ Sign lease renewal with Harbor Lane Prop">30<span class='cal-dot'>•</span></td><td class="" title="">31</td></tr></table></div></aside>
+<h1>CoS Dashboard</h1>
+<div class="subtitle">2026-10-13 · last checked: recorded crawl of the fictional world, 2026-10-13
+  <button class="small" onclick="pollNow()" title="Full sweep: checks every configured connector (messages, email, tickets, calendar, ...) plus the general re-check">Poll now</button>
+  <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">➕ Add context</button>
+</div>
+<div id="pollResult" class="result"></div>
+
+<div id="chatBubble" class="chat-bubble" onclick="toggleChat()">💬</div>
+<div id="chatPanel" class="chat-box chat-panel-hidden">
+  <div class="chat-panel-header">Chat <span class="chat-close" onclick="toggleChat()">✕</span></div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-input-row">
+    <textarea id="chatInput" rows="2" placeholder="Just off a call, or want to plan something out loud? Type here..."></textarea>
+    <button class="primary" onclick="sendChat()">Send</button>
+  </div>
+  <div class="result" id="chatResult"></div>
+</div>
+
+<div class="demo-banner"><strong>Live demo on fictional data.</strong> This is Dana Kowalski, an engineer at Kestrel Labs, a made-up company: about 18,000 Slack messages, mails, Jira tickets and calendar events over three months. The task list below is what the research engine actually extracted from that world in a recorded run. Nothing here talks to a real account or a model: approve, chat and revise answer from saved responses. Data as of 2026-10-13.</div>
+
+
+<h2>Today <span></span></h2>
+<div class="today-brief"><div class="tb-line">▶ <strong>Next up:</strong> Sign lease renewal with Harbor Lane Properties · Call BrightSmile Dental to reschedule the cancelled Sep 9 appointment</div></div>
+<pre>Monday, Oct 13
+
+Since Friday: 404 Slack messages, 16 mails and 18 Jira updates across the connected
+accounts. Most of it is noise, asks to other people, or bots.
+
+Open tasks: 51 in total, 31 high priority.
+
+Drafted for approval: 3 messages and 1 to-do for you (see the approval queue).
+Nothing has been sent.
+
+Set aside: the Sep 22 &quot;password expires&quot; mail from kestrel-helpdesk.example, a
+look-alike of Kestrel IT. Not a task.
+</pre>
+
+
+
+<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" style="margin:8px 0;font-size:13px">Workspace: <a href="index.html">All</a> · <a href="ws-job-search.html">Job search</a> · <a href="ws-kestrel.html">Kestrel Labs</a> · <a href="ws-oss.html">Open source</a> · <a href="ws-personal.html" class="ws-active">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">2</span></h3><div class="quick-line">critical &amp; overdue on top — click a task to open it</div><div class="todo-board"><div class="todo-list"><div class="todo-row todo-low" data-id="personal:action:lease-renewal-sign" data-title="Sign lease renewal with Harbor Lane Properties" data-note="" data-evidence="[&#x27;em-0688&#x27;]" data-priority="low" data-due="2026-10-30" data-ws="personal" data-url="" data-duelabel="due in 17 days" data-overdue="" onclick="todoOpen(this)"><span class="todo-badge">▫️</span> Sign lease renewal with Harbor Lane Properties <span class="sec-sub">due in 17 days</span></div><div class="todo-row todo-low" data-id="personal:action:dental-reschedule" data-title="Call BrightSmile Dental to reschedule the cancelled Sep 9 appointment" data-note="" data-evidence="[&#x27;em-0687&#x27;]" data-priority="low" data-due="" data-ws="personal" data-url="" data-duelabel="low" data-overdue="" onclick="todoOpen(this)"><span class="todo-badge">▫️</span> Call BrightSmile Dental to reschedule the cancelled Sep 9 appointment <span class="sec-sub">low</span></div></div>
+<div class="todo-detail" id="todoDetail">
+  <div class="td-empty" id="tdEmpty">Select a task</div>
+  <div id="tdBody" style="display:none">
+    <input id="tmTitle" class="tm-title" />
+    <div class="tm-meta"><span id="tmWs" class="ws-chip"></span>
+      <span id="tmDue" class="sec-sub"></span>
+      <a id="tmLink" target="_blank" rel="noopener" style="display:none">open source ↗</a></div>
+    <div class="tm-controls">
+      <select id="tmPriority">
+        <option value="high">🔺 high priority</option><option value="medium">▪️ medium</option>
+        <option value="low">▫️ low</option>
+      </select>
+      <button class="primary" onclick="todoDone()">✓ Mark done</button>
+      <button class="small" onclick="todoSave()">Save changes</button>
+    </div>
+    <textarea id="tmNote" rows="5" placeholder="Description / notes..."></textarea>
+    <div class="tm-evidence sec-sub" id="tmEvidence"></div>
+    <div id="tmResult" class="result"></div>
+    <div class="tm-chat">
+      <div class="quick-line">Chat about this task</div>
+      <div class="tm-chat-log" id="tmChatLog"></div>
+      <div class="chat-input-row">
+        <textarea id="tmChatInput" rows="2" placeholder="Ask about it, plan it, break it down..."></textarea>
+        <button class="small" onclick="todoChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let _todoId = null;
+function todoOpen(el) {
+  document.querySelectorAll(".todo-row").forEach(r => r.classList.remove("todo-selected"));
+  el.classList.add("todo-selected");
+  const d = el.dataset;
+  _todoId = d.id;
+  document.getElementById("tdEmpty").style.display = "none";
+  document.getElementById("tdBody").style.display = "block";
+  document.getElementById("tmTitle").value = d.title;
+  document.getElementById("tmNote").value = d.note;
+  document.getElementById("tmPriority").value = d.priority || "medium";
+  document.getElementById("tmWs").textContent = d.ws;
+  document.getElementById("tmDue").textContent = d.duelabel || (d.due ? ("due " + d.due) : "no deadline");
+  document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
+  const link = document.getElementById("tmLink");
+  if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
+  loadTodoChat(d.id);
+  document.getElementById("tmResult").textContent = "";
+  if (window.innerWidth < 980) {
+    document.getElementById("todoDetail").scrollIntoView({behavior: "smooth"});
+  }
+}
+async function todoSave() {
+  const r = await post("/action-update", {id: _todoId,
+    name: document.getElementById("tmTitle").value,
+    note: document.getElementById("tmNote").value,
+    priority: document.getElementById("tmPriority").value});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => demoReload(), 900);
+}
+async function todoDone() {
+  const r = await post("/action-update", {id: _todoId, status: "done"});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => demoReload(), 900);
+}
+function escChat(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+async function fetchTodoChat(id) {
+  try {
+    const r = await fetch("/entry-chat-log?id=" + encodeURIComponent(id), {cache: "no-store"});
+    return (await r.json()).messages || [];
+  } catch (e) { return null; }
+}
+async function loadTodoChat(id) {
+  const log = document.getElementById("tmChatLog");
+  log.innerHTML = "";
+  const msgs = await fetchTodoChat(id);
+  if (_todoId !== id || !msgs || !msgs.length) return;
+  log.innerHTML = msgs.map(m =>
+    "<div class='tm-msg" + (m.role === "you" ? " tm-you" : "") + "'>" + escChat(m.text) + "</div>"
+  ).join("");
+  log.scrollTop = log.scrollHeight;
+}
+async function todoChat() {
+  const input = document.getElementById("tmChatInput");
+  const log = document.getElementById("tmChatLog");
+  const msg = input.value.trim();
+  if (!msg) return;
+  const id = _todoId;
+  const prior = ((await fetchTodoChat(id)) || []).length;
+  log.innerHTML += "<div class='tm-msg tm-you'>" + escChat(msg) + "</div>";
+  input.value = "";
+  log.innerHTML += "<div class='tm-msg tm-thinking' id='tmThinking'>thinking… (a reply can take a minute)</div>";
+  let reply = null;
+  try {
+    const r = await post("/entry-chat", {id: id, message: msg});
+    reply = r.message;
+  } catch (e) {
+    // Safari aborts fetches at ~60s while the model is still thinking; the
+    // server finishes and persists the reply anyway — poll the log for it.
+    reply = await pollTodoReply(id, prior);
+  }
+  if (_todoId !== id) return;
+  document.getElementById("tmThinking")?.remove();
+  log.innerHTML += "<div class='tm-msg'>" +
+    escChat(reply || "(no reply yet — reopen this task shortly)") + "</div>";
+  log.scrollTop = log.scrollHeight;
+}
+async function pollTodoReply(id, prior) {
+  for (let i = 0; i < 100; i++) {
+    await new Promise(res => setTimeout(res, 3000));
+    const msgs = await fetchTodoChat(id);
+    if (msgs && msgs.length >= prior + 2 && msgs[msgs.length - 1].role === "assistant")
+      return msgs[msgs.length - 1].text;
+  }
+  return null;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  const first = document.querySelector(".todo-row");
+  if (first && window.innerWidth >= 980) todoOpen(first);
+});
+</script></div></section></div>
+
+<h2>Approval queue — pending (4)</h2>
+
+<div class="card pending">
+  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)</div>
+  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-tomas-deprecation</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-quick" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u" onclick="showTab('q-1013-tomas-deprecation','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-details" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u" onclick="showTab('q-1013-tomas-deprecation','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-quick" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u">
+    <div class="quick-line">Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u-details" data-entry="cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u">
+    <pre>gmail-work.send to Tomas, re &quot;Deprecation notice&quot;, with text: &quot;Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.&quot;</pre>
+    <div class="meta">Task: Write API v1 deprecation notice text for Tomas (due 2026-10-13). Source: his email of Oct 8, &#x27;I need the API v1 deprecation notice text by next Tuesday.&#x27;</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-tomas-deprecation" data-action-type="message_send" data-summary="gmail-work.send to Tomas, re &quot;Deprecation notice&quot;, with text: &quot;Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-tomas-deprecation" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-tomas-deprecation" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-tomas-deprecation" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-tomas-deprecation" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u','`')">Code</button></div><textarea id='editbox-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='3' oninput="updateSlackPreview('q-1013-tomas-deprecation')">Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u'></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-tomas-deprecation" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-tomas-deprecation" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLXRvbWFzLWRlcHJlY2F0aW9u"></div>
+</div>
+
+<div class="card pending">
+  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)</div>
+  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-alex-cron</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWFsZXgtY3Jvbg==-quick" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==" onclick="showTab('q-1013-alex-cron','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWFsZXgtY3Jvbg==-details" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==" onclick="showTab('q-1013-alex-cron','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWFsZXgtY3Jvbg==-quick" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==">
+    <div class="quick-line">Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWFsZXgtY3Jvbg==-details" data-entry="cS0xMDEzLWFsZXgtY3Jvbg==">
+    <pre>slack.send_message in #proj-billing-migration, thread of Oct 12, with text: &quot;Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.&quot;</pre>
+    <div class="meta">Task: Confirm the cron schedule for the billing jobs for Alex (due 2026-10-16). Source: &#x27;@dana.k can you confirm the cron schedule for the billing jobs by Oct 16? we cut over the week after.&#x27;</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-alex-cron" data-action-type="message_send" data-summary="slack.send_message in #proj-billing-migration, thread of Oct 12, with text: &quot;Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-alex-cron" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-alex-cron" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-alex-cron" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-alex-cron" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWFsZXgtY3Jvbg==' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWFsZXgtY3Jvbg==','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWFsZXgtY3Jvbg==' rows='3' oninput="updateSlackPreview('q-1013-alex-cron')">Confirming the billing job schedule ahead of the cutover: [schedule]. Shout if the cutover week changes.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWFsZXgtY3Jvbg=='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-alex-cron" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWFsZXgtY3Jvbg==' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWFsZXgtY3Jvbg==' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWFsZXgtY3Jvbg==' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-alex-cron" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLWFsZXgtY3Jvbg=="></div>
+</div>
+
+<div class="card pending">
+  <span class="badge pending">🔧 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-domain">Kestrel</span>
+  <div class="card-title">Book the laptop swap on the IT booking page (was due Oct 9)</div>
+  <div class="meta">it_booking · drafted by cos-drafter · <code>q-1013-laptop-swap</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWxhcHRvcC1zd2Fw-quick" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw" onclick="showTab('q-1013-laptop-swap','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWxhcHRvcC1zd2Fw-details" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw" onclick="showTab('q-1013-laptop-swap','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWxhcHRvcC1zd2Fw-quick" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw">
+    <div class="quick-line">Book the laptop swap on the IT booking page (was due Oct 9)</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWxhcHRvcC1zd2Fw-details" data-entry="cS0xMDEzLWxhcHRvcC1zd2Fw">
+    <pre>Open the IT booking page and pick a laptop swap slot. No connector can book it, so this is yours to do; mark it handled after.</pre>
+    <div class="meta">Task: Book laptop swap appointment with IT (due 2026-10-09, overdue). Source: Kestrel IT, it@kestrel.example, Sep 23. Not the look-alike &#x27;password expires&#x27; mail from kestrel-helpdesk.example on Sep 22, which was set aside as phishing.</div>
+    
+  </div>
+  <div class="actions"><button data-id="q-1013-laptop-swap" data-copy="Open the IT booking page and pick a laptop swap slot. No connector can book it, so this is yours to do; mark it handled after." onclick="copyText(this)">Copy text</button><button data-id="q-1013-laptop-swap" onclick="markHandled(this)">Mark handled</button><span class='meta'>No agent can execute this (it_booking) directly — copy the text, do it yourself, then mark handled.</span></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWxhcHRvcC1zd2Fw' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-laptop-swap" onclick="revise(this)">Revise</button></div>
+  <div class="result" id="result-cS0xMDEzLWxhcHRvcC1zd2Fw"></div>
+</div>
+
+<div class="card pending">
+  <span class="badge pending">💬 pending</span><span class="priority-tag priority-high">🔴 High</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]</div>
+  <div class="meta">message_send · drafted by cos-drafter · <code>q-1013-grace-resume</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-quick" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==" onclick="showTab('q-1013-grace-resume','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-details" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==" onclick="showTab('q-1013-grace-resume','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-quick" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==">
+    <div class="quick-line">Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWdyYWNlLXJlc3VtZQ==-details" data-entry="cS0xMDEzLWdyYWNlLXJlc3VtZQ==">
+    <pre>gmail-personal.send to Grace Liu, re &quot;Updated resume&quot;, with text: &quot;Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.&quot;</pre>
+    <div class="meta">Job-search workspace: drafted from the personal mailbox, never the work account. Task: Send updated resume to Grace Liu (asked for it by Oct 1).</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-grace-resume" data-action-type="message_send" data-summary="gmail-personal.send to Grace Liu, re &quot;Updated resume&quot;, with text: &quot;Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.&quot;" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-grace-resume" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-grace-resume" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-grace-resume" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-grace-resume" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='3' oninput="updateSlackPreview('q-1013-grace-resume')">Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you.</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWdyYWNlLXJlc3VtZQ=='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-grace-resume" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWdyYWNlLXJlc3VtZQ==' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-grace-resume" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLWdyYWNlLXJlc3VtZQ=="></div>
+</div>
+
+
+
+
+
+
+<h2 onclick="toggleArchive()" style="cursor:pointer">📦 Archive (2) <span id="archiveToggle">▸</span></h2>
+<div id="archiveSection" style="display:none">
+  <div class="quick-line">Handled/rejected/resolved items — never deleted. "Clear archive"
+  moves these into a separate archive file to keep this page lean; it never touches
+  SHARED_CONTEXT.md, decisions.md, projects/, or any agent memory — those are completely
+  separate and keep everything learned from this work permanently.</div>
+  
+<div class="card archived-item">
+  <span class="badge approved">approved</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Slack: acknowledge Alex&#x27;s cron question (will confirm by Oct 16)</div>
+  <div class="meta">message_send · <code>q-1012-alex-ack</code></div>
+</div>
+
+<div class="card archived-item">
+  <span class="badge rejected">rejected</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Reply to the optional #general @channel about the offsite poll</div>
+  <div class="meta">message_send · <code>q-1010-offsite-replyall</code></div>
+</div>
+
+  <button class="small" onclick="clearArchive()">Clear archive (move to archive file)</button>
+  <div id="archiveResult" class="result"></div>
+</div>
+
+<h2>Recent meeting summaries</h2>
+
+<div class="card">
+  <span class="tag-pill tag-meeting">Meeting</span>
+  <div class="card-title">Architecture review: scheduler v2 (Dana presents)</div>
+  <div class="meta">2026-10-22 14:00 UTC, organized by Ines</div>
+  <pre>Upcoming. Dana is the presenter.
+
+Action items:
+The design doc should go out before the review (on the task list).</pre>
+</div>
+
+<div class="card">
+  <span class="tag-pill tag-meeting">Meeting</span>
+  <div class="card-title">Platform standup (Slack)</div>
+  <div class="meta">2026-10-12 09:30</div>
+  <pre>Alex: on-call follow-ups. Raj: schema cleanup. Mei: triage.
+
+Action items:
+None for Dana from the standup itself. Raj separately needs Dana&#x27;s sign-off on the events schema change by Oct 21 (on the task list).</pre>
+</div>
+
+
+<h2>🔌 Accounts &amp; connections <button class="small" onclick="probeAccounts()">Check now</button> <button class="small" onclick="connectAccount()">➕ Connect an account</button></h2><div id="connectForm" style="display:none;margin:.4rem 0"><div class="quick-line">First account of a service: connect it in <a href="https://claude.ai/settings/connectors" target="_blank">Claude's connector settings</a>, then hit <strong>Check now</strong>. <strong>Second Gmail account?</strong> The built-in connector only holds one Google login, so extra mailboxes get their own local, read-only server — name it and start below; the dashboard automates every step it can and tells you the moments it needs you.</div><input id="mbName" placeholder="short name, e.g. asu" style="max-width:12rem"> <button class="small" onclick="startMailbox()">Start</button><div id="connectStatus" class="result"></div></div><script>function connectAccount(){const f=document.getElementById('connectForm');f.style.display=f.style.display==='none'?'block':'none';}async function startMailbox(){const name=document.getElementById('mbName').value.trim();const out=document.getElementById('connectStatus');if(!name){out.textContent='give it a short name, e.g. asu';return;}out.textContent='working...';const st=await post('/add-mailbox',{name:name});renderMailboxStep(st,name);}function renderMailboxStep(st,name){const out=document.getElementById('connectStatus');if(st.step==='needs_keys'){out.innerHTML="<strong>One-time setup (once per computer, then never again):</strong><ol>"+"<li><a href='https://console.cloud.google.com/apis/credentials' target='_blank'>Open Google Cloud Console → Credentials</a></li>"+"<li>Enable the <a href='https://console.cloud.google.com/apis/library/gmail.googleapis.com' target='_blank'>Gmail API</a> for the project</li>"+"<li>Create Credentials → OAuth client ID → type <em>Desktop app</em></li>"+"<li>Download the JSON and save it as <code>"+st.keys_path+"</code></li></ol>"+"<button class='small' onclick='startMailbox()'>I saved the key file — continue</button>";}else if(st.step==='auth_started'){out.textContent=st.message+' — waiting for the sign-in to finish...';pollMailbox(name);}else if(st.step==='connected'){out.textContent=st.message;setTimeout(()=>demoReload(),4000);}else{out.textContent=st.message||'error';}}async function pollMailbox(name){for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,3000));try{const r=await fetch('/mailbox-status?name='+encodeURIComponent(name),{cache:'no-store'});const st=await r.json();if(st.authorized){const done=await post('/add-mailbox',{name:name});renderMailboxStep(done,name);return;}}catch(e){}}}</script><div class="quick-line" style="margin-bottom:.4rem">no connector accounts configured</div><div id="accountsResult" class="result"></div><div class="quick-line">No connector accounts configured yet. A second account of the same service (e.g. another Gmail) works two ways: custom/remote connectors can be added again as a separate named instance in Claude's connector settings, but first-party connectors (Gmail, Calendar, Drive) allow one Google account each — cover a second mailbox by auto-forwarding it into the connected one, or add a local MCP server for it (<code>claude mcp add</code>). /cos-accounts (or Check now) then detects new instances, probes who each is logged in as, and binds them to workspaces automatically.</div><script>async function probeAccounts(){document.getElementById('accountsResult').textContent='probing...';const r=await post('/probe-accounts',{});document.getElementById('accountsResult').textContent=r.message;setTimeout(()=>demoReload(),2500);}</script>
+
+<h2>Autonomous polling</h2>
+<div class="quick-line" style="margin-bottom:1rem">A free 60-second tick checks whether any
+connector below is actually due before spending anything — most ticks cost nothing. Each
+connector has its own interval and active window; outside its window it just skips.</div>
+
+<div class="card">
+  <div class="card-title">Slack (fast check)</div>
+  <form id="scheduleForm-slack" class="scheduleForm" data-connector="slack">
+    <div class="pill-row"><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','mon')">Mon</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','tue')">Tue</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','wed')">Wed</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','thu')">Thu</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','fri')">Fri</span><span class="day-pill" data-connector="slack" onclick="toggleDay(this,'slack','sat')">Sat</span><span class="day-pill" data-connector="slack" onclick="toggleDay(this,'slack','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('slack')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-slack" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Gmail (fast check)</div>
+  <form id="scheduleForm-gmail" class="scheduleForm" data-connector="gmail">
+    <div class="pill-row"><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','mon')">Mon</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','tue')">Tue</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','wed')">Wed</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','thu')">Thu</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','fri')">Fri</span><span class="day-pill" data-connector="gmail" onclick="toggleDay(this,'gmail','sat')">Sat</span><span class="day-pill" data-connector="gmail" onclick="toggleDay(this,'gmail','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('gmail')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-gmail" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Jira (fast check)</div>
+  <form id="scheduleForm-jira" class="scheduleForm" data-connector="jira">
+    <div class="pill-row"><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','mon')">Mon</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','tue')">Tue</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','wed')">Wed</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','thu')">Thu</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','fri')">Fri</span><span class="day-pill" data-connector="jira" onclick="toggleDay(this,'jira','sat')">Sat</span><span class="day-pill" data-connector="jira" onclick="toggleDay(this,'jira','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('jira')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-jira" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Calendar (fast check)</div>
+  <form id="scheduleForm-calendar" class="scheduleForm" data-connector="calendar">
+    <div class="pill-row"><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','mon')">Mon</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','tue')">Tue</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','wed')">Wed</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','thu')">Thu</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','fri')">Fri</span><span class="day-pill" data-connector="calendar" onclick="toggleDay(this,'calendar','sat')">Sat</span><span class="day-pill" data-connector="calendar" onclick="toggleDay(this,'calendar','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('calendar')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-calendar" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">General (deep sweep + meeting detection)</div>
+  <form id="scheduleForm-general" class="scheduleForm" data-connector="general">
+    <div class="pill-row"><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','mon')">Mon</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','tue')">Tue</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','wed')">Wed</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','thu')">Thu</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','fri')">Fri</span><span class="day-pill" data-connector="general" onclick="toggleDay(this,'general','sat')">Sat</span><span class="day-pill" data-connector="general" onclick="toggleDay(this,'general','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('general')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-general" class="result"></div>
+</div>
+
+
+
+<h2>🧠 Self-learning</h2>
+<div class="quick-line" style="margin-bottom:.6rem">When you tell the chat something was missed
+or wrong, the system fetches it, reasons about <em>why</em> it was missed, fixes the cause
+(config, instructions, or its own code — gated by its test suite with automatic rollback), and
+records the lesson. It never touches anything external; approval gating is untouchable.</div>
+<div class="quick-line">
+  <label><input type="checkbox" id="slMaster" checked
+    onchange="setSelfLearning()"> Auto self-learning mode</label>
+  &nbsp;&nbsp;
+  <label><input type="checkbox" id="slCode"  
+    onchange="setSelfLearning()"> May fix its own code (otherwise drafts fixes as tasks)</label>
+  <span style="color:#5b6b7a"></span>
+</div>
+<div id="slResult" class="result"></div>
+<script>
+async function setSelfLearning() {
+  const master = document.getElementById("slMaster").checked;
+  const code = document.getElementById("slCode").checked;
+  document.getElementById("slCode").disabled = !master;
+  const res = await post("/set-self-learning", {self_learning: master, self_modify_code: code});
+  document.getElementById("slResult").textContent = res.message || "";
+}
+</script>
+
+
+<div class="quick-line" style="margin-top:.5rem"><strong>Recently learned:</strong><ul><li><strong>&#x27;Benchmark numbers&#x27; and &#x27;latency numbers for the review&#x27; are the same task.</strong> → one piece of work listed twice → <em>Instructions: one piece of work is one task however many places word it differently; merge and cite every source.</em> ✓</li><li><strong>The Corvid final-round slot pick shows as low. Interviews are not personal erran</strong> → job-search read as personal for priority → <em>Instructions: job-search work is not &#x27;personal&#x27; for the low-priority rule.</em> ✓</li><li><strong>Mei said &#x27;on it&#x27; about the dashboard migration last week, why is it still on my </strong> → accepted hand-off kept as delegated → <em>Instructions: when the person a task is handed to accepts (&#x27;on it&#x27;), it leaves your list instead of staying as &#x27;delegate</em> ✓</li></ul></div>
+
+
+
+
+<div id="contextModal" class="auth-overlay" style="display:none">
+  <div class="auth-box" style="max-width:520px">
+    <h3>📋 Give me some context?</h3>
+    <p class="auth-reason">Before I research your accounts and build your agents, you can give
+    me a head start: paste anything (who you are, what you work on, current projects) or attach
+    files — <strong>.md, .txt, .pdf, .docx</strong> (resume, project doc, team notes). This
+    seeds the knowledge graph as your own highest-confidence facts. Totally optional — skip and
+    I'll figure things out from your connectors instead.</p>
+    <textarea id="ctxText" rows="5" style="width:100%" placeholder="Paste context here — e.g. 'I'm a systems engineer at Acme working on contact-center routing; side project: an iOS app; also job hunting for staff roles.'"></textarea>
+    <input type="file" id="ctxFiles" accept=".md,.txt,.pdf,.docx" multiple style="margin-top:.5rem">
+    <div class="auth-buttons">
+      <button class="primary" onclick="ctxSave()">Save context</button>
+      <button class="small" onclick="ctxSkip()">Close</button>
+    </div>
+    <div id="ctxResult" class="result"></div>
+  </div>
+</div>
+<script>
+function ctxOpen() { document.getElementById("contextModal").style.display = "flex"; }
+async function ctxSkip() {
+  
+  document.getElementById("contextModal").style.display = "none";
+}
+function _readB64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",", 2)[1] || "");
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+async function ctxSave() {
+  const out = document.getElementById("ctxResult");
+  const text = document.getElementById("ctxText").value.trim();
+  const files = document.getElementById("ctxFiles").files;
+  if (!text && !files.length) { out.textContent = "nothing to save — paste text or pick a file"; return; }
+  let msgs = [];
+  if (text) {
+    const r = await post("/context-text", {text: text});
+    msgs.push(r.message);
+  }
+  for (const f of files) {
+    const b64 = await _readB64(f);
+    const r = await post("/context-file", {filename: f.name, data_b64: b64});
+    msgs.push(r.message);
+  }
+  out.textContent = msgs.join(" · ");
+  document.getElementById("ctxText").value = "";
+  setTimeout(() => { document.getElementById("contextModal").style.display = "none"; }, 1800);
+}
+</script>
+
+
+<h2>New task</h2>
+<form id="taskForm">
+<textarea name="text" rows="2" placeholder="Describe what you want the agents to look at..."></textarea>
+<button class="primary" type="submit">Add to inbox</button>
+</form>
+<div id="taskResult" class="result"></div>
+<h3>Inbox</h3>
+<div class='inbox-item'>✅ remind me to send Victor the conference budget request <span class='meta'>(2026-10-12T18:02)</span></div>
+
+<h2>Open questions</h2>
+<pre>Open questions for Dana (asked once, only what the crawl could not infer):
+
+1. The &quot;tinyq&quot; repository on GitHub: is it a personal open-source project, or part of
+   Kestrel work? It is filed under Open source until you say otherwise.
+</pre>
+
+<script>
+async function post(url, body) {
+  const r = await fetch(url, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(body)});
+  return r.json();
+}
+function showTab(entryId, tab) {
+  const b64 = btoa(entryId);
+  document.querySelectorAll(`[data-entry="${b64}"].tab-panel`).forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(`[data-entry="${b64}"].tab-btn`).forEach(el => el.classList.remove("active"));
+  document.getElementById("panel-" + b64 + "-" + tab).classList.add("active");
+  document.getElementById("btn-" + b64 + "-" + tab).classList.add("active");
+}
+document.getElementById("taskForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const text = e.target.text.value.trim();
+  if (!text) return;
+  const res = await post("/add-task", {text});
+  document.getElementById("taskResult").textContent = res.message || "added";
+  setTimeout(() => demoReload(), 600);
+});
+async function approve(btn) {
+  const id = btn.dataset.id, actionType = btn.dataset.actionType, summary = btn.dataset.summary;
+  if (!confirm("Really execute this now?\n\n" + summary)) return;
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Running... (can take a minute or two)";
+  const res = await post("/approve", {id: id, action_type: actionType});
+  el.textContent = res.message;
+  if (res.success) setTimeout(() => demoReload(), 1200);
+}
+async function reject(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Reject this item? (bookkeeping only, nothing was sent)")) return;
+  await post("/reject", {id: id});
+  demoReload();
+}
+async function markHandled(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Mark this as handled by you already?")) return;
+  await post("/mark-handled", {id: id});
+  demoReload();
+}
+async function revise(btn) {
+  const id = btn.dataset.id;
+  const feedback = document.getElementById("feedback-" + btoa(id)).value.trim();
+  if (!feedback) return;
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Revising...";
+  const res = await post("/revise", {id: id, feedback: feedback});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1200);
+}
+function toggleEdit(btn) {
+  const box = document.getElementById("edit-" + btoa(btn.dataset.id));
+  box.style.display = box.style.display === "none" ? "block" : "none";
+  if (box.style.display === "block") updateSlackPreview(btn.dataset.id);
+}
+function wrapSelection(textareaId, marker) {
+  const ta = document.getElementById(textareaId);
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  ta.value = ta.value.slice(0, start) + marker + selected + marker + ta.value.slice(end);
+  ta.focus();
+  ta.dispatchEvent(new Event("input"));
+}
+function renderSlackMrkdwn(text) {
+  const esc = document.createElement("div");
+  esc.textContent = text;
+  let html = esc.innerHTML;
+  html = html.replace(/\*([^*\n]+)\*/g, "<b>$1</b>");
+  html = html.replace(/_([^_\n]+)_/g, "<i>$1</i>");
+  html = html.replace(/~([^~\n]+)~/g, "<s>$1</s>");
+  html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  html = html.replace(/\n/g, "<br>");
+  return html;
+}
+function updateSlackPreview(id) {
+  const ta = document.getElementById("editbox-" + btoa(id));
+  const preview = document.getElementById("preview-" + btoa(id));
+  if (ta && preview) preview.innerHTML = renderSlackMrkdwn(ta.value) || "<span class='meta'>(empty)</span>";
+}
+async function saveEdit(btn) {
+  const id = btn.dataset.id, actionType = btn.dataset.actionType;
+  const text = document.getElementById("editbox-" + btoa(id)).value;
+  const notes = document.getElementById("notes-" + btoa(id)).value.trim();
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Saving...";
+  const res = await post("/save-edit", {id: id, action_type: actionType, text: text, notes: notes});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1000);
+}
+function toggleDiscuss(btn) {
+  const box = document.getElementById("discuss-" + btoa(btn.dataset.id));
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+async function sendDiscuss(btn) {
+  const id = btn.dataset.id;
+  const b64 = btoa(id);
+  const input = document.getElementById("discussInput-" + b64);
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  const log = document.getElementById("discussLog-" + b64);
+  log.innerHTML += `<div class="chat-msg chat-you"><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = text;
+  const res = await post("/entry-chat", {id: id, message: text});
+  log.innerHTML += `<div class="chat-msg chat-assistant"><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = res.message || "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+async function pollNow() {
+  const el = document.getElementById("pollResult");
+  el.textContent = "Polling now — this can take a minute or two...";
+  const res = await post("/poll-now", {});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1500);
+}
+let selectedDaysByConnector = {};
+for (const [k, v] of Object.entries({"slack": ["mon", "tue", "wed", "thu", "fri"], "gmail": ["mon", "tue", "wed", "thu", "fri"], "jira": ["mon", "tue", "wed", "thu", "fri"], "calendar": ["mon", "tue", "wed", "thu", "fri"], "general": ["mon", "tue", "wed", "thu", "fri"]})) {
+  selectedDaysByConnector[k] = new Set(v);
+}
+function toggleDay(el, connector, day) {
+  const s = selectedDaysByConnector[connector];
+  if (s.has(day)) { s.delete(day); el.classList.remove("on"); }
+  else { s.add(day); el.classList.add("on"); }
+}
+function set247(connector) {
+  selectedDaysByConnector[connector] = new Set(["mon","tue","wed","thu","fri","sat","sun"]);
+  document.querySelectorAll(`.day-pill[data-connector="${connector}"]`).forEach(el => el.classList.add("on"));
+  const form = document.getElementById("scheduleForm-" + connector);
+  form.start.value = "00:00"; form.end.value = "23:59";
+}
+document.querySelectorAll("form.scheduleForm").forEach(form => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const connector = form.dataset.connector;
+    const res = await post("/set-poll-mode", {
+      connector: connector,
+      interval_min: parseInt(form.interval.value, 10) || 15,
+      days: Array.from(selectedDaysByConnector[connector]),
+      start: form.start.value, end: form.end.value
+    });
+    document.getElementById("scheduleResult-" + connector).textContent = res.message;
+    setTimeout(() => demoReload(), 800);
+  });
+});
+async function copyText(btn) {
+  await navigator.clipboard.writeText(btn.dataset.copy);
+  const original = btn.textContent;
+  btn.textContent = "Copied!";
+  setTimeout(() => { btn.textContent = original; }, 1500);
+}
+async function retryFailed(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Reset this to pending so you can approve it again?")) return;
+  await post("/retry-failed", {id: id});
+  demoReload();
+}
+function toggleArchive() {
+  const sec = document.getElementById("archiveSection");
+  const arrow = document.getElementById("archiveToggle");
+  const hidden = sec.style.display === "none";
+  sec.style.display = hidden ? "block" : "none";
+  arrow.textContent = hidden ? "▾" : "▸";
+}
+async function clearArchive() {
+  if (!confirm("Move all archived items to approval-queue-archive.md? Nothing is deleted, and SHARED_CONTEXT/decisions/memory files are never touched.")) return;
+  const res = await post("/clear-archive", {});
+  document.getElementById("archiveResult").textContent = res.message;
+  setTimeout(() => demoReload(), 1000);
+}
+function toggleChat() {
+  const panel = document.getElementById("chatPanel");
+  const bubble = document.getElementById("chatBubble");
+  const hidden = panel.classList.contains("chat-panel-hidden");
+  panel.classList.toggle("chat-panel-hidden");
+  bubble.style.display = hidden ? "none" : "flex";
+  if (hidden) document.getElementById("chatInput").focus();
+}
+async function sendChat() {
+  const box = document.getElementById("chatInput");
+  const text = box.value.trim();
+  if (!text) return;
+  box.value = "";
+  const log = document.getElementById("chatLog");
+  log.innerHTML += `<div class="chat-msg chat-you"><div class="chat-role">You</div><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = text;
+  log.scrollTop = log.scrollHeight;
+  document.getElementById("chatResult").textContent = "Thinking... (can take a minute or two)";
+  const res = await post("/chat", {message: text});
+  document.getElementById("chatResult").textContent = "";
+  log.innerHTML += `<div class="chat-msg chat-assistant"><div class="chat-role">Assistant</div><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = res.message || "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+document.getElementById("chatInput")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+
+</script>
+</body></html>
