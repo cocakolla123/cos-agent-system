@@ -1,0 +1,65 @@
+{
+ "scenario": "projects-0",
+ "started": "2026-10-21T17:52:24.900104+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n{\"records\":[\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"glimmer\",\"name\":\"glimmer\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-20T23:02:00-07:00\",\"state_summary\":\"Daily photo app for college students. The v3 redesign (glass panels, new type, new tab bar; home, reveal and feed screens done, profile and post still to do) is landing on main. Open sign-up, leaderboard and weekly votes from v2 merged on Oct 19-20. App/HomeView.swift has uncommitted changes. PR #14 (comment moderation queue, from devpal) is open and waiting on Riya ahead of Thursday's TestFlight build.\",\"health\":\"Red on main since 2026-10-19 (the 'Merge v2' commit); the last green run was 'Search tab' on 2026-10-15. Both jobs, ios-build-and-test and backend-tests, fail within 3-4 seconds before any step runs on all five failing runs. That points to a runner, billing or workflow-configuration problem rather than a code failure.\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/glimmer\",\"type\":\"hosted_in\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"tidepool-quant\",\"name\":\"tidepool-quant\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-06T01:05:00-07:00\",\"state_summary\":\"Personal paper-trading research platform in the paper-validation phase. The cash-ledger fix and a dry-run-first repair script merged on Oct 6. The repair runbook's apply steps have no record of being run. Remaining before real money: clean unattended paper runs, then the human approval gate.\",\"health\":\"Red on main since 2026-10-06: the typecheck job fails at pyright with 3 errors in src/ledger.py. unit-tests pass. This is a real code failure, not a runner problem.\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/tidepool-quant\",\"type\":\"hosted_in\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"cos-helper\",\"name\":\"cos-helper\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-18T16:20:00-07:00\",\"state_summary\":\"Small assistant that reads calendar and mail and lists what Riya owes. The calendar module (PR #3) merged on Oct 18, and the graph upsert was refactored on Oct 17.\",\"health\":\"Green: tests pass on the newest commit on main.\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/cos-helper\",\"type\":\"hosted_in\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"harbor-map\",\"name\":\"Harbor Map\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-07T18:00:00Z\",\"state_summary\":\"Riya names it as a current project. The only trace is a TestFlight invite from Ana Ruiz to test build 0.4 (Oct 7). No repo or folder is connected, so its state is unknown.\",\"health\":\"unknown\"},\"confidence\":0.4,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"Ana Ruiz\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/glimmer\",\"name\":\"riyap/glimmer\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-21T06:02:00Z\"},\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/tidepool-quant\",\"name\":\"riyap/tidepool-quant\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-06T08:05:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/cos-helper\",\"name\":\"riyap/cos-helper\",\"attrs\":{\"private\":true,\"pushed_at\":\"2026-10-18T23:20:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"devpal\",\"name\":\"devpal\",\"attrs\":{\"role\":\"glimmer collaborator; pushes to main and authored PR #14\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"pushes_to\"}]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"Ana Ruiz\",\"name\":\"Ana Ruiz\",\"attrs\":{\"role\":\"invited Riya to test Harbor Map build 0.4 on TestFlight\"},\"confidence\":0.6,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"harbor-map\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"glimmer-review-pr-14\",\"name\":\"Review glimmer PR #14 (comment moderation queue) before Thursday's TestFlight build\",\"attrs\":{\"priority\":\"high\",\"refs\":[\"glimmer\"],\"due\":\"2026-10-22\",\"requested_by\":\"devpal\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"glimmer-fix-ci\",\"name\":\"Fix glimmer CI on main: both jobs fail in 3-4s before any step runs (check runner, billing and workflow config)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"glimmer\"],\"detail\":\"Red since 2026-10-19; last green 2026-10-15. Needs one fix, not one task per run.\"},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-fix-typecheck\",\"name\":\"Fix 3 pyright errors in tidepool-quant src/ledger.py (typecheck red on main since Oct 6)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-run-ledger-repair\",\"name\":\"Run the cash-ledger repair apply steps (curve, ladder, ack) and log each in docs/ops-log.md\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"Only the Oct 5 dry run is recorded; the apply steps have no record of being run.\"},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"tidepool-vendor-plan-decision\",\"name\":\"Decide on the data vendor Pro plan upgrade (monthly cap exhausted)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"The ops log (2026-09-23) lists this as still open, pending with Riya.\"},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]}\n],\n\"questions\":[\n\"Where does Harbor Map live? Its only trace is Ana Ruiz's TestFlight invite for build 0.4. Connect its repo or folder (another GitHub account or org, or a local folder), or tell me what is going on with it.\",\n\"Is old-portfolio (last touched 2024-09-30) retired? I left it out as inactive.\"\n]}\n```",
+  "total_cost_usd": 0.1511529,
+  "duration_ms": 35962,
+  "duration_api_ms": 32209,
+  "num_turns": 14,
+  "usage": {
+   "input_tokens": 8,
+   "cache_creation_input_tokens": 22684,
+   "cache_read_input_tokens": 158709,
+   "output_tokens": 4453,
+   "output_tokens_details": {
+    "thinking_tokens": 661
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 22684,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 3397,
+     "cache_read_input_tokens": 44152,
+     "cache_creation_input_tokens": 5923,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5923
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 8,
+    "outputTokens": 4453,
+    "cacheReadInputTokens": 158709,
+    "cacheCreationInputTokens": 22684,
+    "webSearchRequests": 0,
+    "costUSD": 0.1511529,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 661,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}

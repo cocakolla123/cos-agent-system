@@ -1,0 +1,197 @@
+[
+ {
+  "pass": true,
+  "rows": [
+   {
+    "project": "cos-helper",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "glimmer",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "collaborator": true,
+     "action:ci-red": true,
+     "action:review-pr-14": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "old-portfolio",
+    "pass": true,
+    "checks": {
+     "not_live": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "tidepool-quant",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "action:ci-red": true,
+     "action:runbook-apply": true,
+     "action:vendor-decision": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "(named but missing)",
+    "pass": true,
+    "checks": {
+     "question": true
+    },
+    "extra_actions": []
+   }
+  ],
+  "run": "run0.json",
+  "cost": 0.1511529,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "pass": true,
+  "rows": [
+   {
+    "project": "cos-helper",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "glimmer",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "collaborator": true,
+     "action:ci-red": true,
+     "action:review-pr-14": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "old-portfolio",
+    "pass": true,
+    "checks": {
+     "not_live": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "tidepool-quant",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "action:ci-red": true,
+     "action:runbook-apply": true,
+     "action:vendor-decision": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "(named but missing)",
+    "pass": true,
+    "checks": {
+     "question": true
+    },
+    "extra_actions": []
+   }
+  ],
+  "run": "run1.json",
+  "cost": 0.13545279999999998,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "pass": true,
+  "rows": [
+   {
+    "project": "cos-helper",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "glimmer",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "collaborator": true,
+     "action:ci-red": true,
+     "action:review-pr-14": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "old-portfolio",
+    "pass": true,
+    "checks": {
+     "not_live": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "tidepool-quant",
+    "pass": true,
+    "checks": {
+     "project_record": true,
+     "state_summary": true,
+     "health": true,
+     "action:ci-red": true,
+     "action:runbook-apply": true,
+     "action:vendor-decision": true,
+     "no_extra_actions": true
+    },
+    "extra_actions": []
+   },
+   {
+    "project": "(named but missing)",
+    "pass": true,
+    "checks": {
+     "question": true
+    },
+    "extra_actions": []
+   }
+  ],
+  "run": "run2.json",
+  "cost": 0.143467,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ }
+]

@@ -1,0 +1,100 @@
+{
+ "projects": {
+  "cos-helper": {
+   "actions": {},
+   "active": true,
+   "summary_any": [
+    "calendar",
+    "assistant",
+    "graph",
+    "test",
+    "dashboard"
+   ]
+  },
+  "glimmer": {
+   "actions": {
+    "ci-red": [
+     [
+      "ci",
+      "build",
+      "workflow",
+      "runner",
+      "actions",
+      "billing",
+      "minutes"
+     ]
+    ],
+    "review-pr-14": [
+     [
+      "review"
+     ],
+     [
+      "14",
+      "moderation"
+     ]
+    ]
+   },
+   "active": true,
+   "collaborator": "devpal",
+   "health_any": [
+    "runner",
+    "billing",
+    "minutes",
+    "no steps",
+    "before any step",
+    "infrastructure",
+    "seconds",
+    "not a code",
+    "configuration"
+   ],
+   "summary_any": [
+    "redesign",
+    "v3"
+   ]
+  },
+  "old-portfolio": {
+   "actions": {},
+   "active": false
+  },
+  "tidepool-quant": {
+   "actions": {
+    "ci-red": [
+     [
+      "typecheck",
+      "pyright",
+      "ci"
+     ]
+    ],
+    "runbook-apply": [
+     [
+      "runbook",
+      "repair",
+      "apply"
+     ]
+    ],
+    "vendor-decision": [
+     [
+      "vendor",
+      "plan",
+      "upgrade"
+     ]
+    ]
+   },
+   "active": true,
+   "health_any": [
+    "typecheck",
+    "pyright",
+    "type"
+   ],
+   "summary_any": [
+    "ledger",
+    "cash",
+    "paper"
+   ]
+  }
+ },
+ "question_any": [
+  "harbor"
+ ],
+ "today": "2026-10-21"
+}
