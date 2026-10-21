@@ -94,9 +94,12 @@ it again at C2 against the C2 date would measure staleness, which is
 reported separately. For rule L2, "personal" means the `personal` and `oss`
 workspaces; `job-search` is not counted as personal.
 
-Labels were written by the author together with the arcs. There is no blind
-second labeler yet; every failure is read before it is counted, and a label
-error found that way is logged in `CORRECTIONS.md` with both scores.
+Labels were written by the author together with the arcs. Every failure is
+read before it is counted, and a label error found that way is logged in
+`CORRECTIONS.md` with both scores. A blind second labeler (a subagent working
+from raw items only) relabeled all 87 arcs of the realistic world and audited a
+sample of non-arc items; agreement and resolutions are in
+`second-labeler/RECONCILIATION.md`.
 
 ## Run sequence
 

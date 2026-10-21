@@ -1,0 +1,6 @@
+21/Oct/2026 18:31:43 127.0.0.1 "GET / HTTP/1.1" 200 -
+21/Oct/2026 18:31:43 127.0.0.1 "GET /?workspace=all HTTP/1.1" 200 -
+21/Oct/2026 18:31:43 127.0.0.1 "GET /?workspace=kestrel HTTP/1.1" 200 -
+21/Oct/2026 18:31:43 127.0.0.1 "GET /?workspace=job-search HTTP/1.1" 200 -
+21/Oct/2026 18:31:43 127.0.0.1 "GET /?workspace=personal HTTP/1.1" 200 -
+21/Oct/2026 18:31:43 127.0.0.1 "GET /?workspace=oss HTTP/1.1" 200 -
