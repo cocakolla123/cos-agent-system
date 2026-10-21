@@ -1,0 +1,65 @@
+{
+ "scenario": "projects-0",
+ "started": "2026-10-21T17:59:04.447935+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "{\"records\":[\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"glimmer\",\"name\":\"glimmer\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-20T23:02:00-07:00\",\"state_summary\":\"Daily photo app for college students. A v3 redesign (glass panels, new type, new tab bar; home, reveal and feed screens done, profile and post still to come) is in flight on main. v2 merged on 10-19, with open sign-up (13+, school optional), a leaderboard and weekly votes. App/HomeView.swift has uncommitted changes. devpal's comment moderation PR #14 is open and wants Riya's review ahead of Thursday's TestFlight build.\",\"health\":\"Red. Every main run since 2026-10-19 (merge of v2) has failed. Both jobs, ios-build-and-test and backend-tests, die in 3-4 seconds with no steps run, so this is a runner, billing or workflow configuration problem and not a code failure. The last green run was 'Search tab' on 10-15. It needs one fix, not a look at each run.\",\"repo\":\"riyap/glimmer\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/glimmer\",\"type\":\"hosted_at\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"collaborator\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"tidepool-quant\",\"name\":\"tidepool-quant\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-06T01:05:00-07:00\",\"state_summary\":\"Personal paper-trading research platform in the paper validation phase. The cash-ledger fix and repair script were merged on 10-06. The repair dry run is done, but none of the apply steps are recorded as run. Before real money it still needs clean unattended paper runs and then the human approval gate.\",\"health\":\"Red since 2026-10-06 (merge of fix/cash-ledger). The typecheck job fails with 3 pyright errors in src/ledger.py. This is a real failure, because the steps ran. unit-tests pass.\",\"repo\":\"riyap/tidepool-quant\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/tidepool-quant\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"cos-helper\",\"name\":\"cos-helper\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-18T16:20:00-07:00\",\"state_summary\":\"Small assistant that reads calendar and mail and lists what Riya owes. The calendar module (PR #3) was merged on 10-18 and an initial dashboard exists. Open TODOs in graph.py: edge dedup, multiple accounts, slow on big graphs.\",\"health\":\"Green. The tests job passed on the newest commit, 'Add calendar module tests'.\",\"repo\":\"riyap/cos-helper\"},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"riyap/cos-helper\",\"type\":\"hosted_at\"}]},\n{\"kind\":\"Project\",\"workspace\":\"personal\",\"key\":\"harbor-map\",\"name\":\"Harbor Map\",\"attrs\":{\"personal_project\":true,\"last_activity\":\"2026-10-08T17:06:00Z\",\"state_summary\":\"Ana Ruiz's repo anaruiz/harbor-map, where Riya is a collaborator. It is visible only through mail, not the code-host connector. Riya authored and merged PR #11 (fix sign-in redirect, 10-06) and PR #12 (dock search and tide overlay, 10-08). Ana also invited Riya to test build 0.4 on TestFlight on 10-07.\",\"health\":\"Unknown. The connector cannot see the repo. Recurring blocker: deploybot blocks the deploy on Riya's PRs (#11 and #12) because riyap is not a member of the anaruiz team.\",\"repo\":\"anaruiz/harbor-map\"},\"confidence\":0.75,\"edges\":[{\"to_kind\":\"Repository\",\"to_key\":\"anaruiz/harbor-map\",\"type\":\"hosted_at\"},{\"to_kind\":\"Person\",\"to_key\":\"anaruiz\",\"type\":\"owner\"}]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/glimmer\",\"name\":\"riyap/glimmer\",\"attrs\":{\"last_activity\":\"2026-10-21T06:02:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/tidepool-quant\",\"name\":\"riyap/tidepool-quant\",\"attrs\":{\"last_activity\":\"2026-10-06T08:05:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"riyap/cos-helper\",\"name\":\"riyap/cos-helper\",\"attrs\":{\"last_activity\":\"2026-10-18T23:20:00Z\"},\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Repository\",\"workspace\":\"personal\",\"key\":\"anaruiz/harbor-map\",\"name\":\"anaruiz/harbor-map\",\"attrs\":{\"last_activity\":\"2026-10-08T17:06:00Z\",\"visibility\":\"seen only via mail notifications; connector app not installed\",\"recurring_blocker\":\"deploybot: riyap is not a member of the anaruiz team, so deploys are blocked on every one of Riya's PRs\"},\"confidence\":0.7,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"anaruiz\",\"type\":\"owner\"}]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"devpal\",\"name\":\"devpal\",\"attrs\":{\"role\":\"glimmer collaborator; pushes to main and authored PR #14\"},\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Person\",\"workspace\":\"personal\",\"key\":\"anaruiz\",\"name\":\"Ana Ruiz\",\"attrs\":{\"role\":\"owner of anaruiz/harbor-map; invited Riya as collaborator and TestFlight tester\"},\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"review-glimmer-pr-14\",\"name\":\"Review glimmer PR #14 (comment moderation queue) for devpal before Thursday's TestFlight build\",\"attrs\":{\"priority\":\"high\",\"refs\":[\"glimmer\"],\"due\":\"2026-10-22\",\"source\":\"riyap/glimmer PR #14, review requested by devpal on 2026-10-20\"},\"confidence\":0.95,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"},{\"to_kind\":\"Person\",\"to_key\":\"devpal\",\"type\":\"requested_by\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"fix-glimmer-ci\",\"name\":\"Fix glimmer's red CI on main: both jobs fail in 3-4s with no steps run, since 2026-10-19\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"glimmer\"],\"detail\":\"This looks like a runner, billing or workflow configuration problem and not a code failure. Check the Actions billing and runner settings and the workflow file. It will matter for Thursday's TestFlight build.\"},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"glimmer\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"fix-tidepool-typecheck\",\"name\":\"Fix tidepool-quant's red typecheck on main (3 pyright errors in src/ledger.py, since 2026-10-06)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"]},\"confidence\":0.9,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"run-tidepool-ledger-repair\",\"name\":\"Run the cash-ledger repair apply steps (curve, ladder, ack) and log each in ops-log.md\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"docs/runbook_cash_ledger_2026-10.md says the dry run is done on 10-05. The ops log records that the apply steps have not been run, and nothing since then says otherwise.\"},\"confidence\":0.85,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"decide-tidepool-data-vendor-plan\",\"name\":\"Decide on the data vendor Pro plan upgrade (monthly cap exhausted)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"tidepool-quant\"],\"detail\":\"The ops log of 2026-09-23 lists this as still open and pending with Riya.\"},\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"tidepool-quant\",\"type\":\"belongs_to\"}]},\n{\"kind\":\"Action\",\"workspace\":\"personal\",\"key\":\"test-harbor-map-0-4\",\"name\":\"Try Harbor Map build 0.4 on TestFlight (invite from Ana Ruiz)\",\"attrs\":{\"priority\":\"low\",\"refs\":[\"harbor-map\"],\"source\":\"TestFlight invite, 2026-10-07\"},\"confidence\":0.6,\"edges\":[{\"to_kind\":\"Project\",\"to_key\":\"harbor-map\",\"type\":\"belongs_to\"},{\"to_kind\":\"Person\",\"to_key\":\"anaruiz\",\"type\":\"requested_by\"}]}\n],\n\"questions\":[\n\"Harbor Map (anaruiz/harbor-map) is Ana Ruiz's repo, so I can see it only through mail. To read its CI and open PRs, Ana would need to install the connector's app on it. Separately, deploybot has blocked the deploy on your PRs #11 and #12 because riyap is not on the anaruiz team. Do you want to ask Ana to add you, or is that deploy check expected to fail?\",\n\"Do you want me to treat old-portfolio (last commit 2024-09-30) as inactive and leave it out of your active work?\"\n]}",
+  "total_cost_usd": 0.1659532,
+  "duration_ms": 38621,
+  "duration_api_ms": 33627,
+  "num_turns": 15,
+  "usage": {
+   "input_tokens": 10,
+   "cache_creation_input_tokens": 22924,
+   "cache_read_input_tokens": 211472,
+   "output_tokens": 5309,
+   "output_tokens_details": {
+    "thinking_tokens": 691
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 22924,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 4093,
+     "cache_read_input_tokens": 50983,
+     "cache_creation_input_tokens": 363,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 363
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 10,
+    "outputTokens": 5309,
+    "cacheReadInputTokens": 211472,
+    "cacheCreationInputTokens": 22924,
+    "webSearchRequests": 0,
+    "costUSD": 0.1659532,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 691,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ }
+}
