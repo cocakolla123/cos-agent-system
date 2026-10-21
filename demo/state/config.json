@@ -1,0 +1,26 @@
+{
+ "demo": true,
+ "demo_today": "2026-10-13",
+ "demo_responses": "responses.json",
+ "workspace_dir": "workspace",
+ "orchestrator_cwd": ".",
+ "ticket_host": null,
+ "ticket_system_name": "Jira",
+ "action_tools": {
+  "message_send": "slack.send_message",
+  "ticket_update": "jira.add_comment",
+  "calendar_change": "calendar.create_event"
+ },
+ "base_tools": "Read",
+ "chat_tools": "Read",
+ "revise_tools": "Read",
+ "poll_tools": "Read",
+ "domain_tag": "Kestrel",
+ "domain_keywords": [
+  "kestrel"
+ ],
+ "domain_url_keywords": [],
+ "self_learning": true,
+ "self_modify_code": false,
+ "live_refresh": false
+}

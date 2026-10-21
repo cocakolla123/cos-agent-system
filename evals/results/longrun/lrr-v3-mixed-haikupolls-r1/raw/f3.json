@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-21T18:18:21.069912+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"rta-101-timezone-bug-shift-export\",\n    \"name\": \"Fix reopened timezone bug in shift export (RTA-101)\",\n    \"attrs\": {\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"jr-0554\",\n        \"jr-0555\"\n      ],\n      \"refs\": [\n        \"RTA-101\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Put together the Q4 capacity numbers\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"sl-17332\",\n        \"sl-17333\",\n        \"sl-17334\",\n        \"doc-0009\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire-review\",\n    \"name\": \"Review the vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"high\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"em-0692\",\n        \"em-0693\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-data-retention-policy\",\n    \"name\": \"Send Kestrel data retention policy to Alex Brennan (Northwind)\",\n    \"attrs\": {\n      \"due\": \"2026-11-06\",\n      \"priority\": \"high\",\n      \"evidence\": [\n        \"em-0656\",\n        \"em-0657\",\n        \"em-0658\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"friday-status-update-ines\",\n    \"name\": \"Send Ines a short status update every Friday\",\n    \"attrs\": {\n      \"due\": \"2026-11-06\",\n      \"priority\": \"medium\",\n      \"status\": \"done\",\n      \"evidence\": [\n        \"sl-17371\",\n        \"em-0717\",\n        \"em-0718\",\n        \"em-0720\"\n      ]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.2317294,
+  "duration_ms": 92131,
+  "duration_api_ms": 88420,
+  "num_turns": 25,
+  "usage": {
+   "input_tokens": 154,
+   "cache_creation_input_tokens": 47860,
+   "cache_read_input_tokens": 985054,
+   "output_tokens": 7470,
+   "output_tokens_details": {
+    "thinking_tokens": 3525
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 47860,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 8,
+     "output_tokens": 833,
+     "cache_read_input_tokens": 74178,
+     "cache_creation_input_tokens": 1550,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 1550
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 154,
+    "outputTokens": 7470,
+    "cacheReadInputTokens": 985054,
+    "cacheCreationInputTokens": 47860,
+    "webSearchRequests": 0,
+    "costUSD": 0.2317294,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 3525,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 1080,
+ "attempt": 1
+}

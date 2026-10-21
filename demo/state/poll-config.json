@@ -1,0 +1,47 @@
+{
+ "slack": {
+  "days": [
+   "mon",
+   "tue",
+   "wed",
+   "thu",
+   "fri"
+  ]
+ },
+ "gmail": {
+  "days": [
+   "mon",
+   "tue",
+   "wed",
+   "thu",
+   "fri"
+  ]
+ },
+ "jira": {
+  "days": [
+   "mon",
+   "tue",
+   "wed",
+   "thu",
+   "fri"
+  ]
+ },
+ "calendar": {
+  "days": [
+   "mon",
+   "tue",
+   "wed",
+   "thu",
+   "fri"
+  ]
+ },
+ "general": {
+  "days": [
+   "mon",
+   "tue",
+   "wed",
+   "thu",
+   "fri"
+  ]
+ }
+}

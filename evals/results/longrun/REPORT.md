@@ -148,3 +148,46 @@ re-emits items to close them in polls.
 2. Build the date-derived effective priority in the dashboard.
 3. Next test: a blind second labeler over the realistic world, then several
    runs per setup to put error bars on these numbers.
+
+## Follow-up (2026-10-21): priority computed from the due date
+
+The "priority goes stale" finding is fixed in the dashboard. `graph.effective_priority`
+keeps the stored priority as a floor and applies rule H1 on read: overdue or due within
+3 calendar days is high. A priority the user set by hand is never overridden. The
+to-do ranking, the task board, Daily Priorities and the deadline labels all use it.
+
+Scoring: C1 is scored against the hand labels as before, plus effective priority. C2
+had no priority labels, so they are derived mechanically: H1 at the C2 date, otherwise
+the C1 label when the due date is unchanged. Every saved run was re-scored. The old
+numbers are unchanged and the rebuilt graphs are identical.
+
+| run | C1 dev pass, stored → effective | C1 test | priority right at C1 (dev+test), stored → effective | C2 priority (effective) |
+|---|---|---|---|---|
+| lrr-v3 (default) | 41 → 41 /42 | 40 → 40 /40 | 49 → 49 /50 | 40/40 |
+| lr-v3-haiku (easy) | 14 → 17 /24 | 11 → 15 /23 | 9 → 17 /22 | 13/13 |
+| lr-v2-haiku (easy) | 13 → 15 /24 | 13 → 16 /23 | 11 → 16 /19 | 10/11 |
+| lrr-v3-haiku (realistic) | 22 → 23 /42 | 20 → 21 /40 | 18 → 18 /25 | 19/20 |
+| lrr-v1-haiku (realistic) | 16 → 18 /42 | 16 → 16 /40 | 0 → 2 /5 | 8/8 |
+
+It fixes most of Haiku's date-math priority errors on the easy world (wrong
+priorities fall from 13 to 5 in lr-v3-haiku, and from 8 to 3 in lr-v2-haiku). On the realistic world Haiku's problem is that it
+misses tasks, not their priority, so passes barely move.
+
+### Large-model crawl, Haiku polls (one run, `lrr-v3-mixed-haikupolls-r1`)
+
+The first crawl reuses lrr-v3's saved C1 (default model); the four weekly polls ran on
+Haiku 4.5 (`replay.py --crawl-from`).
+
+| setup | C2 dev | C2 test | cost of the 4 polls |
+|---|---|---|---|
+| default model throughout (lrr-v3) | 43/43 | 43/43 | $1.25 |
+| default crawl + Haiku polls | 42/43 | 38/43 | $0.99 |
+| Haiku throughout (lrr-v3-haiku) | 26/43 | 24/43 | $1.04 |
+
+Haiku polls cost about a fifth less and lose 6 arcs. What it got wrong is all poll
+work: a moved deadline left at the old date (D04), two items that should have closed
+left open (T04, T08), a new recurring ask and a mandatory @channel missed (HT11,
+HT14), and an auto-reply taken as an answer (HT12). Its last poll returned no records
+at all. On this evidence the cheap-model polls are not worth it: the saving is small
+(a Haiku poll takes more turns) and it drops the updates polls exist for. One run;
+the repeats in the next section put error bars on it.

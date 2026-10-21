@@ -1,0 +1,20 @@
+{
+ "/approve": "Demo mode: nothing was sent. In the real app, approving runs exactly the tool call shown on the card (for a Slack or Gmail message it creates a draft for you to send), logs it to the audit trail, and archives the card.",
+ "/reject": "Demo mode: rejected (nothing changes here). In the real app a rejection with a reason becomes a correction the system learns from; see Self-learning.",
+ "/revise": "Demo mode: in the real app the drafter rewrites the card using your note and puts the new version back in the queue for approval. Nothing is ever sent from a revise.",
+ "/save-edit": "Demo mode: your edit would replace the drafted text on the card. It still waits for your approval.",
+ "/mark-handled": "Demo mode: marked handled. In the real app this archives the card and closes the task.",
+ "/add-task": "Demo mode: in the real app this goes to the inbox and the next poll turns it into a task.",
+ "/chat": {
+  "default": "Demo mode: this is a saved reply, not a live model. In the real app the chief of staff answers from your knowledge graph and connectors (read-only), and anything it wants to do outside goes to the approval queue first.",
+  "urgent": "Saved reply, computed from the graph: across all workspaces 18 tasks are overdue and 1 due today. Due today: Write API v1 deprecation notice text for Tomas. Most overdue: Write postmortem for INC-212 queue outage (PLAT-301); Send Kestrel data retention policy to Alex Brennan (Northwind); Draft the retry-policy RFC. Drafts for several of these are in the approval queue; nothing is sent until you approve.",
+  "missed": "Saved reply: In the real app this starts the correction loop. It looks for the item you say was missed, works out why the crawl missed it (a connector not searched, a rule that dropped it, a stale status), changes the cause, re-runs, and records the lesson. Three past corrections are shown under Self-learning.",
+  "waiting": "Saved reply, computed from the graph: 3 tasks are waiting on someone else: Awaiting IT access to analytics replica (RTA-90) (on Kestrel IT); Awaiting Legal review of Northwind MSA redlines (LEG-55) (on Kestrel Legal); Awaiting Priya's renewal quote for the 50-seat Stratus plan (on Priya (Stratus Monitoring))."
+ },
+ "/entry-chat": {
+  "default": "Saved reply: In the real app you can discuss any task or draft here. The assistant reads the sources behind it and can change its notes, priority or status for you; it cannot send anything from this box."
+ },
+ "/action-update": "Demo mode: in the real app this updates the task (title, notes, priority or done) and records the change.",
+ "/poll-now": "Demo mode: no polls run here. In the real app this checks each connected account for new items since the last poll.",
+ "/start-research": "Demo mode: the research crawl already ran on this fictional world; this page shows its recorded result."
+}

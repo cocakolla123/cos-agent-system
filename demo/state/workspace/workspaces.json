@@ -1,0 +1,47 @@
+{
+ "active": "kestrel",
+ "workspaces": [
+  {
+   "id": "kestrel",
+   "kind": "employer",
+   "label": "Kestrel Labs",
+   "connectors": [
+    "gmail-work",
+    "slack",
+    "jira",
+    "github",
+    "calendar",
+    "drive"
+   ],
+   "isolation": "strict"
+  },
+  {
+   "id": "job-search",
+   "kind": "job-search",
+   "label": "Job search",
+   "connectors": [
+    "gmail-personal"
+   ],
+   "isolation": "strict"
+  },
+  {
+   "id": "personal",
+   "kind": "personal",
+   "label": "Personal",
+   "connectors": [
+    "gmail-personal",
+    "calendar"
+   ],
+   "isolation": "strict"
+  },
+  {
+   "id": "oss",
+   "kind": "personal",
+   "label": "Open source",
+   "connectors": [
+    "github"
+   ],
+   "isolation": "strict"
+  }
+ ]
+}

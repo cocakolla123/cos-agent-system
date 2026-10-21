@@ -569,7 +569,7 @@ def render_calendar(g, ws=None, today=None):
         return ""
     import calendar as _cal
     import datetime as _dtm
-    t = _dtm.date.fromisoformat(today) if today else _dtm.date.today()
+    t = _dtm.date.fromisoformat(today) if today else _graph._utcnow().astimezone().date()
     marks = {}
     for n in g.query(type_="Meeting", workspace=ws):
         when = str((n.get("attrs", {}) or {}).get("when", ""))[:10]
@@ -613,7 +613,7 @@ def render_today_brief(g, active=None, today=None):
     if g is None or not g.nodes:
         return ""
     import datetime as _dtm
-    today = today or _dtm.date.today().isoformat()
+    today = today or _graph._utcnow().astimezone().date().isoformat()
     todos = next_actions(g, active, limit=50)
     overdue = [t for t in todos if t.get("overdue")]
     due_today = [t for t in todos if t.get("due_days") is not None

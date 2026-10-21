@@ -451,3 +451,15 @@ class TestEffectivePriority(unittest.TestCase):
     def test_user_set_priority_is_never_overridden(self):
         n = self._n(priority="low", priority_source="user", due="2026-10-14")
         self.assertEqual(graph.effective_priority(n, now=self.NOW), "low")
+
+
+class TestDateOnlyDue(unittest.TestCase):
+    def test_date_only_deadline_is_due_today_until_the_day_ends(self):
+        n = {"type": "Action", "attrs": {"due": "2026-10-13"}}
+        afternoon = graph._parse_iso("2026-10-13T16:00:00Z").astimezone()
+        days = graph.due_days(n, now=afternoon)
+        self.assertGreaterEqual(days, 0)
+        self.assertLess(days, 1)
+        self.assertFalse(graph.is_overdue(n, now=afternoon))
+        next_day = afternoon + __import__("datetime").timedelta(days=1)
+        self.assertTrue(graph.is_overdue(n, now=next_day))

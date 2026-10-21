@@ -126,6 +126,13 @@ def _norm_status(status):
 def _utcnow(now=None):
     """Return a timezone-aware UTC datetime; accept an injected ``now``."""
     if now is None:
+        # The public demo freezes the clock at its world's "today" so a
+        # fictional October reads the same whenever someone opens it.
+        fixed = os.environ.get("COS_FIXED_NOW")
+        if fixed:
+            parsed = _parse_iso(fixed)
+            if parsed is not None:
+                return parsed
         return _dt.datetime.now(_dt.timezone.utc)
     if now.tzinfo is None:
         return now.replace(tzinfo=_dt.timezone.utc)
@@ -157,6 +164,7 @@ def _parse_iso(s):
 
 
 _SLUG_RE = re.compile(r"[^a-z0-9]+")
+_DATE_ONLY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def slug(value):
@@ -580,9 +588,15 @@ def due_days(node, now=None):
     # 'due_on' is what the tracker connectors already emit (Asana, and the
     # shape most issue trackers expose), so accept it rather than making every
     # module rewrite a field it already has right.
-    due = _parse_iso(attrs.get("due") or attrs.get("due_on"))
+    raw = attrs.get("due") or attrs.get("due_on")
+    due = _parse_iso(raw)
     if due is None:
         return None
+    if isinstance(raw, str) and _DATE_ONLY_RE.match(raw.strip()):
+        # "due 2026-10-13" means by the end of that day, local time; read as
+        # midnight UTC it showed as overdue on the morning it was due
+        day = _dt.date.fromisoformat(raw.strip())
+        due = _dt.datetime.combine(day + _dt.timedelta(days=1), _dt.time()).astimezone()
     return (due - _utcnow(now)).total_seconds() / 86400.0
 
 

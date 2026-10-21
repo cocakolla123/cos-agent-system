@@ -137,7 +137,58 @@ def load_config(path):
 CONFIG_PATH = _arg_after("--config") or CONFIG_PATH_DEFAULT
 CONFIG = load_config(CONFIG_PATH)
 COS_DIR = _arg_after("--workspace") or CONFIG["workspace_dir"]
+
+# Demo mode: a read-only showcase over fictional data (see demo/README.md).
+# Every POST answers from saved responses and nothing runs: no model calls,
+# no connectors, no files written. Any Host may read it, since there is
+# nothing private behind it.
+DEMO = bool(CONFIG.get("demo"))
+DEMO_TODAY = CONFIG.get("demo_today") if DEMO else None
+if DEMO and not os.path.isabs(COS_DIR):
+    COS_DIR = os.path.join(os.path.dirname(os.path.abspath(CONFIG_PATH)), COS_DIR)
+if DEMO_TODAY:
+    os.environ.setdefault("COS_FIXED_NOW", DEMO_TODAY + "T16:00:00Z")
+
+
+def _load_demo_responses():
+    path = CONFIG.get("demo_responses")
+    if not (DEMO and path):
+        return {}
+    try:
+        with open(os.path.join(os.path.dirname(CONFIG_PATH), path)) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+DEMO_RESPONSES = _load_demo_responses()
+DEMO_DEFAULT_REPLY = ("Demo mode: nothing was sent or changed. In the real app this "
+                      "runs only on your machine, against your own connected accounts.")
+
+
+def demo_reply(path, data):
+    """The saved answer for a POST in demo mode. A route maps to one string,
+    or to {"default": ..., "<keyword>": ...} matched against the message or
+    entry id, so the chat and per-task chat can show realistic replies."""
+    r = DEMO_RESPONSES.get(path)
+    if isinstance(r, str):
+        return r
+    if isinstance(r, dict):
+        probe = " ".join(str(data.get(k, "")) for k in ("message", "id", "text")).lower()
+        for key, reply in r.items():
+            if key != "default" and key.lower() in probe:
+                return reply
+        return r.get("default", DEMO_DEFAULT_REPLY)
+    return DEMO_DEFAULT_REPLY
+
+
+def demo_today():
+    return DEMO_TODAY or datetime.date.today().isoformat()
 DASHBOARD_DIR = TEMPLATE_DASHBOARD_DIR
+if DEMO:
+    # State files (chat log, account status, poll config) come from the demo
+    # folder, never from the real dashboard folder beside this file.
+    DASHBOARD_DIR = os.path.dirname(os.path.abspath(CONFIG_PATH))
 # V2 (M7): optional live refresh — off by default, so V1 behavior is unchanged.
 LIVE_REFRESH = bool(CONFIG.get("live_refresh", False))
 LIVE_REFRESH_SECONDS = int(CONFIG.get("live_refresh_seconds", 20) or 20)
@@ -228,7 +279,7 @@ def write_json(path, obj):
 
 def latest_daily_log():
     daily_dir = os.path.join(COS_DIR, "daily")
-    today = datetime.date.today().isoformat()
+    today = demo_today()
     today_path = os.path.join(daily_dir, f"{today}.md")
     if os.path.exists(today_path):
         return today, read_file(today_path)
@@ -749,6 +800,7 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .chat-body {{ white-space: pre-wrap; }}
 .chat-input-row {{ display:flex; gap:.5rem; }}
 .chat-input-row textarea {{ flex:1; margin-bottom:0; }}
+.demo-banner {{ background:#eef4ff; border:1px solid #b9cdf5; color:#1d3b72; border-radius:10px; padding:.75rem 1rem; margin:0 0 1rem; line-height:1.45; }}
 .priority-tag {{ display:inline-block; font-size:.75rem; font-weight:600; padding:.15rem .55rem; border-radius:20px; margin-left:.3rem; }}
 .priority-high {{ background:#fde3e3; color:#a3282a; }}
 .priority-medium {{ background:#fff3cd; color:#8a6300; }}
@@ -1503,6 +1555,17 @@ def render_coverage_banner():
         "</div>" % (", ".join(bits), more))
 
 
+def render_demo_banner():
+    return (
+        '<div class="demo-banner">'
+        "<strong>Live demo on fictional data.</strong> This is Dana Kowalski, an engineer "
+        "at Kestrel Labs, a made-up company: about 18,000 Slack messages, mails, Jira "
+        "tickets and calendar events over three months. The task list below is what the "
+        "research engine actually extracted from that world in a recorded run. Nothing here "
+        "talks to a real account or a model: approve, chat and revise answer from saved "
+        "responses. Data as of %s." % html.escape(demo_today()) + "</div>")
+
+
 def render_guardrail_banner():
     """M12: integrity check over the guardrail files (approval surface,
     audit log, learning module). The advisory is_change_allowed() check is
@@ -1938,6 +2001,8 @@ class Handler(BaseHTTPRequestHandler):
         cross-origin caller. Same-origin browser requests and curl to
         127.0.0.1 pass unchanged.
         """
+        if DEMO:
+            return True          # read-only fictional data; POSTs never act
         host = (self.headers.get("Host") or "").rsplit(":", 1)[0].lower()
         if host not in self._ALLOWED_HOSTS:
             return False
@@ -2023,8 +2088,9 @@ class Handler(BaseHTTPRequestHandler):
         cfg = read_json(os.path.join(DASHBOARD_DIR, "poll-config.json"), DEFAULT_POLL_CONFIG)
         selected_by_connector = {c: cfg.get(c, {}).get("days", []) for c in poll_connectors(cfg)}
         page = PAGE_TEMPLATE.format(
-            today=datetime.date.today().isoformat(),
-            last_poll=html.escape(last_poll_line()[0]),
+            today=demo_today(),
+            last_poll=html.escape("recorded crawl of the fictional world, " + demo_today()
+                                  if DEMO else last_poll_line()[0]),
             chat_html=render_chat_log(),
             daily_label=label or "no daily log yet",
             daily=html.escape(daily) or "(empty)",
@@ -2047,8 +2113,8 @@ class Handler(BaseHTTPRequestHandler):
             accounts_html=render_accounts_section(),
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
-            guardrail_banner=render_guardrail_banner(),
-            coverage_banner=render_coverage_banner(),
+            guardrail_banner=(render_demo_banner() if DEMO else render_guardrail_banner()),
+            coverage_banner=("" if DEMO else render_coverage_banner()),
             start_research_html=render_start_research(),
             recent_learnings_html=render_recent_learnings(),
             today_brief=today_brief,
@@ -2066,6 +2132,10 @@ class Handler(BaseHTTPRequestHandler):
             data = json.loads(raw or b"{}")
         except json.JSONDecodeError:
             data = {}
+
+        if DEMO:
+            self._send_json({"message": demo_reply(self.path, data), "demo": True})
+            return
 
         if self.path == "/add-task":
             text = (data.get("text") or "").strip()
@@ -2684,6 +2754,17 @@ def start_poll_ticker():
 
 
 def main():
+    if DEMO:
+        # nothing is written and nothing runs; bind where --host says
+        host = _arg_after("--host") or "127.0.0.1"
+        port = int(_arg_after("--port") or PORT)
+        server = ThreadingHTTPServer((host, port), Handler)
+        print(f"CoS demo (read-only, fictional data) at http://{host}:{port}")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        return
     os.makedirs(DASHBOARD_DIR, exist_ok=True)
     cfg_path = os.path.join(DASHBOARD_DIR, "poll-config.json")
     if not os.path.exists(cfg_path):
