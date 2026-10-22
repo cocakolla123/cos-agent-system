@@ -242,6 +242,11 @@ Emit each obligation as `kind: "Action"` with:
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state
   a stalled item sits in for weeks. Name the party and the date they were last contacted.
+- `attrs.last_activity` — the date (`YYYY-MM-DD`) of the newest message, comment or update about
+  this obligation: the ask, a reminder, a follow-up, a partial reply. Not the crawl date. The
+  dashboard ranks by it: a long-overdue item nobody has mentioned in weeks drops to a "gone quiet,
+  still needed?" group instead of topping the list, and one someone chased yesterday rises. On a
+  poll, re-emit it whenever a new message touches the obligation.
 - `attrs.evidence` — the message id / URL / subject that stated it, so the item is auditable and
   a later run can re-check whether it is still outstanding rather than re-deriving it.
 - `attrs.refs` — the workstream token when the obligation clearly belongs to one, so Step 3

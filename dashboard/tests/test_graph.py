@@ -463,3 +463,45 @@ class TestDateOnlyDue(unittest.TestCase):
         self.assertFalse(graph.is_overdue(n, now=afternoon))
         next_day = afternoon + __import__("datetime").timedelta(days=1)
         self.assertTrue(graph.is_overdue(n, now=next_day))
+
+
+class TestRankKey(unittest.TestCase):
+    """The to-do order weighs deadline, priority and recent activity."""
+    NOW = graph._parse_iso("2026-10-13T16:00:00Z")
+
+    def node(self, name, due=None, act=None, pri="medium", **extra):
+        attrs = dict(priority=pri, **extra)
+        if due:
+            attrs["due"] = due
+        if act:
+            attrs["last_activity"] = act
+        return {"id": name, "type": "Action", "name": name, "attrs": attrs}
+
+    def order(self, nodes):
+        return [n["name"] for n in sorted(nodes, key=lambda n: graph.rank_key(n, now=self.NOW))]
+
+    def test_long_overdue_and_quiet_goes_last(self):
+        old = self.node("postmortem", due="2026-07-31", act="2026-07-21")
+        soon = self.node("reply", due="2026-10-14", act="2026-10-08")
+        later = self.node("plan", due="2026-11-20", act="2026-10-01")
+        self.assertTrue(graph.is_gone_quiet(old, now=self.NOW))
+        self.assertEqual(self.order([old, later, soon]), ["reply", "plan", "postmortem"])
+
+    def test_long_overdue_but_recently_chased_stays_up(self):
+        chased = self.node("rca", due="2026-09-05", act="2026-10-12")
+        self.assertFalse(graph.is_gone_quiet(chased, now=self.NOW))
+        later = self.node("plan", due="2026-11-20")
+        self.assertEqual(self.order([later, chased]), ["rca", "plan"])
+
+    def test_due_today_beats_two_weeks_late(self):
+        today = self.node("today", due="2026-10-13", act="2026-10-08")
+        late = self.node("late", due="2026-09-30", act="2026-09-29")
+        self.assertEqual(self.order([late, today]), ["today", "late"])
+
+    def test_no_activity_date_goes_quiet_only_after_30_days(self):
+        self.assertFalse(graph.is_gone_quiet(self.node("a", due="2026-09-20"), now=self.NOW))
+        self.assertTrue(graph.is_gone_quiet(self.node("b", due="2026-09-01"), now=self.NOW))
+
+    def test_user_priority_keeps_it_out_of_gone_quiet(self):
+        n = self.node("kept", due="2026-07-31", act="2026-07-21", priority_source="user")
+        self.assertFalse(graph.is_gone_quiet(n, now=self.NOW))

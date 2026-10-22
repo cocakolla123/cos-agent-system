@@ -187,6 +187,30 @@ CHAT = """**You** (Oct 13, 08:58): what's most urgent today?
 
 
 NEXT_STEPS = os.path.join(HERE, "next_steps.json")
+WORLD_ITEMS = os.path.join(ROOT, "evals", "longrun", "world_realistic", "items.json")
+
+
+def activity_dates(nodes):
+    """{task id: newest date (YYYY-MM-DD) of a message about it before TODAY}.
+
+    The recorded run predates attrs.last_activity, so the demo fills it the
+    way the instruction defines it: the newest item among the task's evidence
+    and the rest of their threads (same mail thread, ticket or Slack thread)."""
+    if not os.path.exists(WORLD_ITEMS):
+        return {}
+    items = [i for i in json.load(open(WORLD_ITEMS)) if i["date"][:10] < TODAY]
+    by_id = {i["id"]: i for i in items}
+    out = {}
+    for n in nodes:
+        ev = (n.get("attrs") or {}).get("evidence") or []
+        seed = [by_id[e] for e in (ev if isinstance(ev, list) else [ev]) if e in by_id]
+        keys = {(k, i[k]) for i in seed for k in ("threadId", "key", "thread_ts") if i.get(k)}
+        keys |= {("thread_ts", i["ts"]) for i in seed if i.get("ts")}
+        dates = [i["date"][:10] for i in seed] + [
+            i["date"][:10] for i in items if any(i.get(k) == v for k, v in keys)]
+        if dates:
+            out[n["id"]] = max(dates)
+    return out
 
 
 def queue_value(text, keep_lines):
@@ -262,6 +286,9 @@ def build():
     os.environ["COS_FIXED_NOW"] = TODAY + "T16:00:00Z"
     g = graph.Graph.load(os.path.join(WS, "graph"))
     open_ = [n for n in g.nodes.values() if n["type"] == "Action" and graph.is_open_action(n)]
+    for nid, day in activity_dates(open_).items():
+        g.nodes[nid].setdefault("attrs", {})["last_activity"] = day
+    g.save(os.path.join(WS, "graph"))
     queue = queue_entries(g, open_)
     q = QUEUE_HEADER
     for e in queue:

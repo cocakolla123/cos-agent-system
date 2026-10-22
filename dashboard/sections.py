@@ -73,7 +73,7 @@ def _url(n):
 def _item(n, sub=""):
     return {"id": n["id"], "title": n.get("name", n["id"]),
             "type": n.get("type"), "sub": sub, "url": _url(n),
-            "meta": n.get("last_verified", ""), "stale": _graph.is_stale(n),
+            "meta": n.get("last_verified", ""), "stale": _graph.is_gone_quiet(n),
             "dormant": _graph.is_dormant(n), "concluded": _graph.is_concluded(n),
             "overdue": _graph.is_overdue(n), "due_days": _graph.due_days(n)}
 
@@ -129,15 +129,23 @@ def _days_label(n):
 
 
 def _action_rank(n):
-    """Soonest-first, with undated obligations after dated ones by priority.
+    """Most urgent first: see graph.rank_key (deadline, priority and how
+    recently anyone mentioned it; long-overdue quiet items go last)."""
+    return _graph.rank_key(n)
 
-    Overdue items sort to the very top for free: their ``due_days`` is the most
-    negative number in the set, and being late never demotes an obligation.
-    """
-    days = _graph.due_days(n)
-    if days is None:
-        return (1, _pri(n), n.get("name", n["id"]))
-    return (0, days, n.get("name", n["id"]))
+
+def _quiet_label(n):
+    """' · quiet since Jul 21 · still needed?' for a task that has gone quiet."""
+    if not _graph.is_gone_quiet(n):
+        return ""
+    raw = str((n.get("attrs") or {}).get("last_activity") or "")[:10]
+    try:
+        import datetime as _d
+        day = _d.date.fromisoformat(raw)
+        since = " since %s %d" % (day.strftime("%b"), day.day)
+    except ValueError:
+        since = ""
+    return " · quiet%s · still needed?" % since
 
 
 def next_actions(g, ws=None, limit=10):
@@ -165,7 +173,7 @@ def next_actions(g, ws=None, limit=10):
         if _graph.due_days(n) is not None:
             out.append(n)
     out.sort(key=_action_rank)
-    return [_item(n, _days_label(n)) for n in out[:limit]]
+    return [_item(n, _days_label(n) + _quiet_label(n)) for n in out[:limit]]
 
 
 def daily_priorities(g, ws=None, limit=8):
@@ -396,7 +404,8 @@ def _todo_row_data(g, n):
         "due": str(a.get("due", "")),
         "ws": n.get("workspace", ""),
         "url": _url(n),
-        "duelabel": _days_label(n),
+        "duelabel": _days_label(n) + _quiet_label(n),
+        "stale": "1" if _graph.is_gone_quiet(n) else "",
         "overdue": "1" if _graph.is_overdue(n) else "",
     }
 
@@ -426,8 +435,14 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
         return ""
     rows = []
     cards = []
+    divided = False
     for i, n in enumerate(nodes[:limit]):
         d = _todo_row_data(g, n)
+        if d["stale"] and not divided:
+            divided = True
+            rows.append('<div class="todo-divider">Gone quiet: long overdue and nobody has '
+                        'mentioned them in weeks. Still needed? Mark done or drop them, or '
+                        'bump the priority to bring one back up.</div>')
         mine = attached.get(n["id"]) or []
         if mine:
             d["q"] = str(i)
@@ -442,14 +457,16 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
                        for c in mine[:1])
         pri = d["priority"]
         badge = {"high": "🔺", "medium": "▪️", "low": "▫️"}.get(pri, "▪️")
-        late = ' <span class="todo-late">%s</span>' % _esc(d["duelabel"]) \
+        late = ' <span class="todo-quiet">%s</span>' % _esc(d["duelabel"]) if d["stale"] else \
+            ' <span class="todo-late">%s</span>' % _esc(d["duelabel"]) \
             if d["overdue"] else (
                 ' <span class="sec-sub">%s</span>' % _esc(d["duelabel"])
                 if d["duelabel"] else "")
         rows.append(
-            '<div class="todo-row todo-%s" %s onclick="todoOpen(this)">'
+            '<div class="todo-row todo-%s%s" %s onclick="todoOpen(this)">'
             '<span class="todo-badge">%s</span> %s%s%s</div>' % (
-                _esc(pri), data, badge, _esc(d["title"]), late, chip))
+                _esc(pri), " todo-stale" if d["stale"] else "", data, badge,
+                _esc(d["title"]), late, chip))
     # LinkedIn-Jobs pattern: compact card list on the left, the selected task
     # expanded big in a sticky detail pane beside it; first task auto-opens.
     detail = """
@@ -590,7 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>"""
     return ('<section class="graph-section" id="%s"><h3>To-Do / Next Actions '
             '<span class="sec-count">%d</span></h3>'
-            '<div class="quick-line">critical &amp; overdue on top — click a task to open it</div>'
+            '<div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div>'
             '<div class="todo-board"><div class="todo-list">%s</div>%s</div>%s</section>' % (
                 _slug_anchor("To-Do / Next Actions"), len(nodes),
                 "".join(rows), detail, "".join(cards)))

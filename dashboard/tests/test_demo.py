@@ -38,8 +38,17 @@ class TestDemo(unittest.TestCase):
         self.assertFalse(cfg["self_modify_code"])
 
     def test_graph_is_the_recorded_run(self):
-        src = open(os.path.join(build_demo.SOURCE_GRAPH, "nodes.jsonl")).read()
-        dst = open(os.path.join(self.state, "workspace", "graph", "nodes.jsonl")).read()
+        # identical except attrs.last_activity, which the demo adds from the
+        # world's own item dates (the recorded run predates that field)
+        def load(d):
+            out = {}
+            for line in open(os.path.join(d, "nodes.jsonl")):
+                n = json.loads(line)
+                (n.get("attrs") or {}).pop("last_activity", None)
+                out[n["id"]] = n
+            return out
+        src = load(build_demo.SOURCE_GRAPH)
+        dst = load(os.path.join(self.state, "workspace", "graph"))
         self.assertEqual(src, dst)
 
     def test_saved_chat_replies_come_from_the_graph(self):
