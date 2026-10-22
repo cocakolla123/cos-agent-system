@@ -48,10 +48,16 @@ The full narrow check:
   - otherwise a `self_do` entry whose `proposed_tool_call` is the drafted work itself: an
     outline with real headings for a document, the steps for a booking or a form, the text
     to paste.
+  A task in the dashboard's "gone quiet" group (more than 14 days overdue, no activity for 14
+  days) gets a short "is this still needed?" check-in to the person who asked instead of the
+  full work, so a dropped item gets closed rather than done.
   Ground every draft in the task's own sources; never invent dates, numbers, names or
   outcomes. Leave a fact you do not have as a bracketed blank (`[date]`). A task that is
   waiting on someone else gets a short follow-up draft to that person only if the wait is
   past its due date; otherwise skip it.
+- **Activity dates.** When a new message touches an open task (a reminder, a follow-up, a
+  partial answer), re-emit the task with `attrs.last_activity` set to that message's date. That
+  is what keeps a chased task near the top and lets an abandoned one sink.
 - **Priority reassessment.** For each still-`pending` entry, look at its `created` date and
   current `priority`. If it's old (roughly 30+ days with no update, and especially 6+ months)
   and still sitting at `medium`/`high` with no fresh signal, check whether it's actually tied

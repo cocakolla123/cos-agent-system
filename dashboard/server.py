@@ -879,6 +879,9 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
 .tm-next .card {{ margin:0; box-shadow:none; border:none; padding:0; background:transparent; }}
 .tm-plan {{ white-space:pre-wrap; font-size:.9rem; }}
 .draft-text {{ background:#fff; border:1px solid #e2e2e7; border-radius:8px; padding:.5rem .7rem; margin:.4rem 0; }}
+.todo-divider {{ margin:.8rem 0 .4rem; padding-top:.5rem; border-top:1px dashed #c9c9d0; font-size:.8rem; color:#6b6b73; }}
+.todo-stale {{ opacity:.72; }}
+.todo-quiet {{ color:#6b6b73; font-size:.82rem; }}
 .todo-late {{ color:#b8144f; font-weight:600; font-size:.82rem; }}
 .todo-detail {{ position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }}
 .td-empty {{ color:#8a8a90; text-align:center; padding:3rem 0; }}

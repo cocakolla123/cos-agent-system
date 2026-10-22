@@ -308,13 +308,24 @@ class TestNextActions(unittest.TestCase):
                       name="Job Applications Tracker", now=self.NOW)
         return g
 
-    def test_overdue_first_then_soonest_due_then_undated(self):
+    def test_soonest_due_then_undated_then_gone_quiet(self):
         titles = [i["title"] for i in sections.next_actions(self._g())]
         self.assertEqual(titles, [
-            "Pay a payments app negative balance ($205.60)",      # overdue
             "Take the Vendor-A coding assessment",     # due in 6 days
-            "Renew the lapsed certification",   # undated
+            "Renew the lapsed certification",   # undated, high
+            # over 30 days late with no activity on record: still listed,
+            # in the "gone quiet, still needed?" group at the end
+            "Pay a payments app negative balance ($205.60)",
         ])
+
+    def test_recently_late_stays_on_top(self):
+        g = self._g()
+        late = (dt.datetime.now(dt.timezone.utc)
+                - dt.timedelta(days=2)).strftime("%Y-%m-%d")
+        g.upsert_node("Action", "personal", "fresh-late", name="Reply to the landlord",
+                      attrs={"due": late, "priority": "medium"}, now=self.NOW)
+        titles = [i["title"] for i in sections.next_actions(g)]
+        self.assertEqual(titles[0], "Reply to the landlord")
 
     def test_satisfied_obligation_is_off_the_list(self):
         ids = [i["id"] for i in sections.next_actions(self._g())]

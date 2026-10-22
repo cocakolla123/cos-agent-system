@@ -17,7 +17,11 @@ approval, or (when no connected tool can do it) a draft for Dana to finish
 herself. Four are hand-written; the rest come from `draft_next_steps.py`, which
 runs the poll's "a next step for every open task" rule once over the world
 (each task's own sources only, $0.60) and saves `next_steps.json`. Bracketed
-parts are facts the sources do not give, left for the user to fill in. The three corrections are the long-run test's actual dev
+parts are facts the sources do not give, left for the user to fill in. The
+recorded run predates `attrs.last_activity`, so the build fills it from the
+world's own item dates (the newest message in each task's threads); the list
+ranks on it, and long-overdue tasks nobody has mentioned in weeks sit in a
+"gone quiet, still needed?" group with a check-in drafted instead of the work. The three corrections are the long-run test's actual dev
 failures and the rule changes that fixed them. Saved chat replies that state
 counts are computed from the graph at build time.
 

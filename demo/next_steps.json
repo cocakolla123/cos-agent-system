@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-21",
+ "generated": "2026-10-22",
  "graph": "evals/results/longrun/lrr-v3/graph/c1",
  "entries": [
   {
@@ -89,8 +89,9 @@
   {
    "task": "kestrel:action:northwind-data-retention-policy",
    "action_type": "message_send",
-   "short_summary": "Email to Alex Brennan: send overdue data retention policy",
-   "proposed_tool_call": "gmail-work.send to Alex Brennan, re \"RE: Data retention policy\", with text: \"Hi Alex, apologies for the delay past the Aug 28 date. Attached is Kestrel's data retention policy for your compliance audit. [attach policy]. Let me know if the audit needs anything else. Thanks, Dana\""
+   "short_summary": "Email to Alex Brennan: check whether Northwind still needs the data retention policy and by when",
+   "proposed_tool_call": "gmail-work.send to Alex Brennan, re \"RE: Data retention policy\", with text: \"Hi Alex, I promised to send Kestrel's data retention policy by Aug 28 and it has slipped past that date. Sorry about that. Do you still need it for your compliance audit? If so, what date works for you? I will get it to you by then. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:northwind-msa-redlines-legal-review",
@@ -118,9 +119,10 @@
   },
   {
    "task": "kestrel:action:plat-301-postmortem-inc-212",
-   "action_type": "self_do",
-   "short_summary": "Outline for the INC-212 queue outage postmortem (PLAT-301, overdue)",
-   "proposed_tool_call": "Postmortem: INC-212 queue outage (Jul 18)\n1. Summary: what broke, who was affected, duration [start time] to [end time]\n2. Impact: [affected systems and users]\n3. Timeline: detection, escalation, mitigation, resolution [times]\n4. Root cause: [root cause]\n5. What went well / what went poorly\n6. Action items: [item], owner [name], due [date]\n7. Lessons learned\nWhen done, attach to PLAT-301 and tell Ines Moreau it is ready."
+   "action_type": "message_send",
+   "short_summary": "Slack reply to Ines: is the INC-212 postmortem (PLAT-301) still needed, and by when",
+   "proposed_tool_call": "slack.send_message in #platform, thread of Jul 21, with text: \"@Ines Moreau the INC-212 postmortem (PLAT-301) was due Jul 31 and is still open on my side. Do you still need it? If so, what date should I aim for? If not, I will close the ticket.\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:plat-322-cron-migration-scheduler-v2",
@@ -173,10 +175,10 @@
   },
   {
    "task": "kestrel:action:q4-capacity-numbers",
-   "action_type": "self_do",
-   "short_summary": "Outline for the Q4 capacity numbers, promised in #platform and now overdue",
-   "proposed_tool_call": "Q4 Capacity Numbers\n1. Current usage baseline: [metric, value, source]\n2. Q4 demand forecast and growth assumptions: [assumptions]\n3. Capacity per service: [current capacity vs projected peak]\n4. Gaps and headroom: [where we fall short]\n5. Recommended actions and cost: [actions, cost]\nOnce done, post the summary and doc link in the #platform thread from Sep 21, noting the delay and the new delivery date [date].",
-   "action_note": ""
+   "action_type": "message_send",
+   "short_summary": "Slack follow-up in #platform: are the Q4 capacity numbers still needed, and by when",
+   "proposed_tool_call": "slack.send_message in #platform, thread of Sep 21, with text: \"I said I would put together the Q4 capacity numbers by Thursday and that did not happen. Does anyone still need them? If so, by when? I will plan around that date. If not, I will drop it.\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:q4-growth-goals",
@@ -208,10 +210,10 @@
   },
   {
    "task": "kestrel:action:retry-policy-rfc",
-   "action_type": "self_do",
-   "short_summary": "Outline for the retry-policy RFC, overdue since Sep 4",
-   "proposed_tool_call": "RFC: Retry Policy\n1. Summary\n2. Motivation: [current retry problems]\n3. Goals and non-goals\n4. Proposal: [backoff, max attempts, jitter, idempotency]\n5. Interaction with queue sizing: [notes from the Aug 18 sync]\n6. Alternatives considered\n7. Rollout and migration: [plan]\n8. Metrics to watch: [metrics]\n9. Open questions\nShare the draft with Ines, Alex, Raj and Sam for review by [date].",
-   "action_note": ""
+   "action_type": "message_send",
+   "short_summary": "Email to Ines: is the retry-policy RFC still needed, and by when",
+   "proposed_tool_call": "gmail-work.send to Ines Moreau, re \"Retry-policy RFC\", with text: \"Hi Ines, the retry-policy RFC has been carried over in the platform sync notes since the Sep 4 target and I have not delivered it. Is it still needed? If so, what date should I aim for? If priorities have changed, I will close it out. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:review-iam-policy-diff",
@@ -254,8 +256,9 @@
   {
    "task": "kestrel:action:rta-130-northwind-rca",
    "action_type": "message_send",
-   "short_summary": "Email to Alex Brennan at Northwind: RCA for the Sep 2 outage (past due, blanks to fill)",
-   "proposed_tool_call": "gmail-work.send to Alex Brennan, re \"RE: Outage on Sep 2\", with text: \"Hi Alex, thank you for your patience, and apologies for the delay. Here is our root cause analysis for the Sep 2 outage that left your clinics without scheduling for about two hours.\n\nSummary: [summary]\nRoot cause: [root cause]\nTimeline: [start time, detection, mitigation, resolution]\nImpact: [affected clinics and functions]\nWhat we are doing to prevent a repeat: [remediation and dates]\n\nPlease let me know if you have questions or would like to talk it through. Dana\""
+   "short_summary": "Email to Alex Brennan: apologize for the delay on the Sep 2 RCA and confirm what Northwind still needs and by when",
+   "proposed_tool_call": "gmail-work.send to Alex Brennan, re \"RE: Outage on Sep 2\", with text: \"Hi Alex, I am sorry the RCA for the Sep 2 outage has taken this long. Do you still need it from us? If so, what date works for you? I will send it by then. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:scheduler-v2-architecture-review-design-doc",
@@ -271,15 +274,17 @@
   },
   {
    "task": "kestrel:action:security-awareness-training",
-   "action_type": "self_do",
-   "short_summary": "Steps to finish the overdue annual security awareness training",
-   "proposed_tool_call": "1. Open the training link from the People Team's Aug 17 email, or ask people@kestrel.example for it: [training link].\n2. Block the time the course needs: [duration].\n3. Complete all modules and the final quiz.\n4. Save the completion certificate or confirmation.\n5. Confirm the completion shows in the People Team's records, since their Sep 21 email says it was overdue. If it does not, reply to that thread with the certificate."
+   "action_type": "message_send",
+   "short_summary": "Email to People Team: confirm the overdue security training is still open and agree a completion date",
+   "proposed_tool_call": "gmail-work.send to Kestrel People Team, re \"RE: Overdue: security awareness training\", with text: \"Hi, my annual security awareness training was due Sep 15 and is still incomplete. Is it still open for me to finish, and what is the latest date I can complete it by? I will do it by [date]. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:soc2-backup-restore-evidence",
    "action_type": "message_send",
-   "short_summary": "Email to Ines: backup restore test evidence for SOC 2 (item 2, past due)",
-   "proposed_tool_call": "gmail-work.send to Ines Moreau, re \"RE: SOC 2 evidence\", with text: \"Hi Ines, sorry for the delay on the second item. Attached is the backup restore test evidence for the SOC 2 audit.\n\nTest date: [date]\nSystem restored: [system]\nBackup used: [backup identifier]\nResult: [result]\nPerformed by: [name]\n\nTell me if the auditor needs anything else, such as screenshots or logs. Dana\""
+   "short_summary": "Email to Ines: apologize for the late backup restore evidence and confirm the date the SOC 2 audit needs it",
+   "proposed_tool_call": "gmail-work.send to Ines Moreau, re \"RE: SOC 2 evidence\", with text: \"Hi Ines, I am sorry the backup restore test evidence is late. The Sep 25 date has passed. Do you still need it for the SOC 2 audit, and what is the latest date you can use? I will send it by then: [date]. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:stratus-renewal-quote",
@@ -289,9 +294,10 @@
   },
   {
    "task": "kestrel:action:v1-migration-guide",
-   "action_type": "self_do",
-   "short_summary": "Outline for the v1 to v2 customer migration guide (overdue since Sep 10)",
-   "proposed_tool_call": "Outline for \"Migrating from API v1 to v2\":\n1. Overview: who this is for, v1 end-of-support date [date]\n2. What changed in v2: [list of breaking changes]\n3. Endpoint mapping: v1 endpoint -> v2 endpoint, with /v2/shifts first (link the merged reference docs, PR #440)\n4. Auth and request/response changes: [details]\n5. Step-by-step migration checklist\n6. Before/after code examples [examples]\n7. Testing your migration\n8. Timeline and deprecation schedule [dates]\n9. Getting help: [support contact]\nThen send the draft to Tomas for review and tell him the new date: [date]."
+   "action_type": "message_send",
+   "short_summary": "Email to Tomas: is the v1 customer migration guide still needed, and by when",
+   "proposed_tool_call": "gmail-work.send to Tomas Reyes, re \"RE: Before launch\", with text: \"Hi Tomas, the /v2/shifts API reference is merged, but the v1 migration guide was due Sep 10 and is still open. Do you still need it? If so, what date works? I will write it for then: [date]. Thanks, Dana\"",
+   "gone_quiet": true
   },
   {
    "task": "kestrel:action:warehouse-cutover-plan-infra",

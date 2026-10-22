@@ -639,6 +639,62 @@ def effective_priority(node, now=None):
     return stored
 
 
+# Ranking: how urgent a task is today, not just how late it is. A task 74
+# days overdue that nobody has mentioned since July is not today's top item;
+# one due tomorrow, or one someone chased yesterday, is.
+STALE_OVERDUE_DAYS = 14     # this late, and
+STALE_QUIET_DAYS = 14       # nothing heard for this long: gone quiet
+STALE_UNKNOWN_DAYS = 30     # with no activity date, this late is gone quiet
+RECENT_ACTIVITY_DAYS = 2    # mentioned this recently: surfaces near the top
+
+
+def is_gone_quiet(node, now=None):
+    """Long overdue and gone quiet: probably dropped, worth one "still
+    needed?" check rather than the top of the list. A priority the user set
+    by hand keeps a task out of this group."""
+    attrs = node.get("attrs", {}) or {}
+    if attrs.get("priority_source") == "user":
+        return False
+    days = due_days(node, now=now)
+    if days is None or days >= -STALE_OVERDUE_DAYS:
+        return False
+    quiet = activity_days(node, now=now)
+    if quiet is None:
+        return days < -STALE_UNKNOWN_DAYS
+    return quiet > STALE_QUIET_DAYS
+
+
+def rank_key(node, now=None):
+    """Sort key for the to-do list, most urgent first.
+
+    0. Now: due within HIGH_WITHIN_DAYS or recently late (not gone quiet), or
+       anything mentioned in the last RECENT_ACTIVITY_DAYS. Higher priority
+       first, then closest to its deadline on either side, with a fresh
+       mention counting as three days closer.
+    1. Coming up: due within two weeks, or undated and high.
+    2. Later: everything else open, by deadline then priority.
+    3. Gone quiet: long overdue with no recent activity, most recently
+       active first.
+    """
+    pri = PRIORITY_LEVELS.index(effective_priority(node, now=now))
+    days = days_until_due(node, now=now)     # calendar days, as rule H1 counts
+    quiet = activity_days(node, now=now)
+    name = node.get("name", node.get("id", ""))
+    if is_gone_quiet(node, now=now):
+        return (3, quiet if quiet is not None else 1e9, pri, name)
+    recent = quiet is not None and quiet <= RECENT_ACTIVITY_DAYS
+    if (days is not None and days <= HIGH_WITHIN_DAYS) or recent:
+        # nearest to its deadline first, whichever side of it: due today and
+        # just missed outrank two weeks late; a fresh mention counts as 3 days
+        closeness = abs(days) if days is not None else HIGH_WITHIN_DAYS
+        if recent:
+            closeness -= HIGH_WITHIN_DAYS
+        return (0, pri, closeness, days if days is not None else 1e6, name)
+    if (days is not None and days <= 14) or (days is None and pri == 0):
+        return (1, days if days is not None else 1e6, pri, name)
+    return (2, days if days is not None else 1e6, pri, name)
+
+
 def is_overdue(node, now=None):
     """True if this obligation had a deadline and it has passed."""
     days = due_days(node, now=now)

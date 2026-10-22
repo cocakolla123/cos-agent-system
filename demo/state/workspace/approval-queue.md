@@ -217,8 +217,8 @@ posted or changed without that click.
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Email to Alex Brennan: send overdue data retention policy
-- proposed_tool_call: gmail-work.send to Alex Brennan, re "RE: Data retention policy", with text: "Hi Alex, apologies for the delay past the Aug 28 date. Attached is Kestrel's data retention policy for your compliance audit. [attach policy]. Let me know if the audit needs anything else. Thanks, Dana"
+- short_summary: Email to Alex Brennan: check whether Northwind still needs the data retention policy and by when
+- proposed_tool_call: gmail-work.send to Alex Brennan, re "RE: Data retention policy", with text: "Hi Alex, I promised to send Kestrel's data retention policy by Aug 28 and it has slipped past that date. Sorry about that. Do you still need it for your compliance audit? If so, what date works for you? I will get it to you by then. Thanks, Dana"
 - task: kestrel:action:northwind-data-retention-policy
 - context: Task: Send Kestrel data retention policy to Alex Brennan (Northwind). Sources: em-0656, em-0657.
 
@@ -276,20 +276,12 @@ posted or changed without that click.
 
 ### q-1013-plat-301-postmortem-inc-212
 - status: pending
-- action_type: self_do
+- action_type: message_send
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Outline for the INC-212 queue outage postmortem (PLAT-301, overdue)
-- proposed_tool_call: Postmortem: INC-212 queue outage (Jul 18)
-  * 1. Summary: what broke, who was affected, duration [start time] to [end time]
-  * 2. Impact: [affected systems and users]
-  * 3. Timeline: detection, escalation, mitigation, resolution [times]
-  * 4. Root cause: [root cause]
-  * 5. What went well / what went poorly
-  * 6. Action items: [item], owner [name], due [date]
-  * 7. Lessons learned
-  * When done, attach to PLAT-301 and tell Ines Moreau it is ready.
+- short_summary: Slack reply to Ines: is the INC-212 postmortem (PLAT-301) still needed, and by when
+- proposed_tool_call: slack.send_message in #platform, thread of Jul 21, with text: "@Ines Moreau the INC-212 postmortem (PLAT-301) was due Jul 31 and is still open on my side. Do you still need it? If so, what date should I aim for? If not, I will close the ticket."
 - task: kestrel:action:plat-301-postmortem-inc-212
 - context: Task: Write postmortem for INC-212 queue outage (PLAT-301). Sources: jr-0538, jr-0539, sl-17317.
 
@@ -417,18 +409,12 @@ posted or changed without that click.
 
 ### q-1013-q4-capacity-numbers
 - status: pending
-- action_type: self_do
+- action_type: message_send
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Outline for the Q4 capacity numbers, promised in #platform and now overdue
-- proposed_tool_call: Q4 Capacity Numbers
-  * 1. Current usage baseline: [metric, value, source]
-  * 2. Q4 demand forecast and growth assumptions: [assumptions]
-  * 3. Capacity per service: [current capacity vs projected peak]
-  * 4. Gaps and headroom: [where we fall short]
-  * 5. Recommended actions and cost: [actions, cost]
-  * Once done, post the summary and doc link in the #platform thread from Sep 21, noting the delay and the new delivery date [date].
+- short_summary: Slack follow-up in #platform: are the Q4 capacity numbers still needed, and by when
+- proposed_tool_call: slack.send_message in #platform, thread of Sep 21, with text: "I said I would put together the Q4 capacity numbers by Thursday and that did not happen. Does anyone still need them? If so, by when? I will plan around that date. If not, I will drop it."
 - task: kestrel:action:q4-capacity-numbers
 - context: Task: Put together the Q4 capacity numbers. Sources: sl-17332.
 
@@ -504,22 +490,12 @@ posted or changed without that click.
 
 ### q-1013-retry-policy-rfc
 - status: pending
-- action_type: self_do
+- action_type: message_send
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Outline for the retry-policy RFC, overdue since Sep 4
-- proposed_tool_call: RFC: Retry Policy
-  * 1. Summary
-  * 2. Motivation: [current retry problems]
-  * 3. Goals and non-goals
-  * 4. Proposal: [backoff, max attempts, jitter, idempotency]
-  * 5. Interaction with queue sizing: [notes from the Aug 18 sync]
-  * 6. Alternatives considered
-  * 7. Rollout and migration: [plan]
-  * 8. Metrics to watch: [metrics]
-  * 9. Open questions
-  * Share the draft with Ines, Alex, Raj and Sam for review by [date].
+- short_summary: Email to Ines: is the retry-policy RFC still needed, and by when
+- proposed_tool_call: gmail-work.send to Ines Moreau, re "Retry-policy RFC", with text: "Hi Ines, the retry-policy RFC has been carried over in the platform sync notes since the Sep 4 target and I have not delivered it. Is it still needed? If so, what date should I aim for? If priorities have changed, I will close it out. Thanks, Dana"
 - task: kestrel:action:retry-policy-rfc
 - context: Task: Draft the retry-policy RFC. Sources: doc-0011, doc-0012.
 
@@ -625,8 +601,8 @@ posted or changed without that click.
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Email to Alex Brennan at Northwind: RCA for the Sep 2 outage (past due, blanks to fill)
-- proposed_tool_call: gmail-work.send to Alex Brennan, re "RE: Outage on Sep 2", with text: "Hi Alex, thank you for your patience, and apologies for the delay. Here is our root cause analysis for the Sep 2 outage that left your clinics without scheduling for about two hours. Summary: [summary] Root cause: [root cause] Timeline: [start time, detection, mitigation, resolution] Impact: [affected clinics and functions] What we are doing to prevent a repeat: [remediation and dates] Please let me know if you have questions or would like to talk it through. Dana"
+- short_summary: Email to Alex Brennan: apologize for the delay on the Sep 2 RCA and confirm what Northwind still needs and by when
+- proposed_tool_call: gmail-work.send to Alex Brennan, re "RE: Outage on Sep 2", with text: "Hi Alex, I am sorry the RCA for the Sep 2 outage has taken this long. Do you still need it from us? If so, what date works for you? I will send it by then. Thanks, Dana"
 - task: kestrel:action:rta-130-northwind-rca
 - context: Task: Send Northwind RCA for the Sep 2 outage (RTA-130). Sources: jr-0551, em-0670, sl-17338.
 
@@ -661,16 +637,12 @@ posted or changed without that click.
 
 ### q-1013-security-awareness-training
 - status: pending
-- action_type: self_do
+- action_type: message_send
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Steps to finish the overdue annual security awareness training
-- proposed_tool_call: 1. Open the training link from the People Team's Aug 17 email, or ask people@kestrel.example for it: [training link].
-  * 2. Block the time the course needs: [duration].
-  * 3. Complete all modules and the final quiz.
-  * 4. Save the completion certificate or confirmation.
-  * 5. Confirm the completion shows in the People Team's records, since their Sep 21 email says it was overdue. If it does not, reply to that thread with the certificate.
+- short_summary: Email to People Team: confirm the overdue security training is still open and agree a completion date
+- proposed_tool_call: gmail-work.send to Kestrel People Team, re "RE: Overdue: security awareness training", with text: "Hi, my annual security awareness training was due Sep 15 and is still incomplete. Is it still open for me to finish, and what is the latest date I can complete it by? I will do it by [date]. Thanks, Dana"
 - task: kestrel:action:security-awareness-training
 - context: Task: Complete annual security awareness training. Sources: em-0673, em-0674, em-0675.
 
@@ -680,8 +652,8 @@ posted or changed without that click.
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Email to Ines: backup restore test evidence for SOC 2 (item 2, past due)
-- proposed_tool_call: gmail-work.send to Ines Moreau, re "RE: SOC 2 evidence", with text: "Hi Ines, sorry for the delay on the second item. Attached is the backup restore test evidence for the SOC 2 audit. Test date: [date] System restored: [system] Backup used: [backup identifier] Result: [result] Performed by: [name] Tell me if the auditor needs anything else, such as screenshots or logs. Dana"
+- short_summary: Email to Ines: apologize for the late backup restore evidence and confirm the date the SOC 2 audit needs it
+- proposed_tool_call: gmail-work.send to Ines Moreau, re "RE: SOC 2 evidence", with text: "Hi Ines, I am sorry the backup restore test evidence is late. The Sep 25 date has passed. Do you still need it for the SOC 2 audit, and what is the latest date you can use? I will send it by then: [date]. Thanks, Dana"
 - task: kestrel:action:soc2-backup-restore-evidence
 - context: Task: Send SOC 2 backup restore test evidence to Ines. Sources: em-0695, em-0696, em-0697.
 
@@ -698,22 +670,12 @@ posted or changed without that click.
 
 ### q-1013-v1-migration-guide
 - status: pending
-- action_type: self_do
+- action_type: message_send
 - priority: high
 - drafted_by: cos-poll
 - created: 2026-10-13T08:50:00-07:00
-- short_summary: Outline for the v1 to v2 customer migration guide (overdue since Sep 10)
-- proposed_tool_call: Outline for "Migrating from API v1 to v2":
-  * 1. Overview: who this is for, v1 end-of-support date [date]
-  * 2. What changed in v2: [list of breaking changes]
-  * 3. Endpoint mapping: v1 endpoint -> v2 endpoint, with /v2/shifts first (link the merged reference docs, PR #440)
-  * 4. Auth and request/response changes: [details]
-  * 5. Step-by-step migration checklist
-  * 6. Before/after code examples [examples]
-  * 7. Testing your migration
-  * 8. Timeline and deprecation schedule [dates]
-  * 9. Getting help: [support contact]
-  * Then send the draft to Tomas for review and tell him the new date: [date].
+- short_summary: Email to Tomas: is the v1 customer migration guide still needed, and by when
+- proposed_tool_call: gmail-work.send to Tomas Reyes, re "RE: Before launch", with text: "Hi Tomas, the /v2/shifts API reference is merged, but the v1 migration guide was due Sep 10 and is still open. Do you still need it? If so, what date works? I will write it for then: [date]. Thanks, Dana"
 - task: kestrel:action:v1-migration-guide
 - context: Task: Write v1 customer migration guide (API v2 launch). Sources: em-0691, sl-17351, gh-0042.
 
