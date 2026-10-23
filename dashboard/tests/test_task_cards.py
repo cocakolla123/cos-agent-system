@@ -27,10 +27,10 @@ class TestBoard(unittest.TestCase):
         g = make_graph()
         used = set()
         out = sections.render_todo_board(g, attached={"w:action:tomas": [
-            {"html": "<div class='card'>APPROVE-ME</div>", "label": "✉️ draft ready"}]},
+            {"html": "<div class='card'>APPROVE-ME</div>", "label": "Draft ready"}]},
             used=used)
         self.assertEqual(used, {"w:action:tomas"})
-        self.assertIn("✉️ draft ready", out)
+        self.assertIn("Draft ready", out)
         self.assertIn('<template id="tdq-', out)
         self.assertIn("APPROVE-ME", out)
         # a task with no card shows its written next step instead
@@ -104,7 +104,7 @@ class TestServer(unittest.TestCase):
     def test_page_puts_tied_cards_on_tasks_only(self):
         attached = self.server.attach_to_tasks(self.server.parse_approval_queue(), self.g)
         self.assertEqual(set(attached), {"w:action:tomas", "w:action:pm"})
-        self.assertEqual(attached["w:action:pm"][0]["label"], "📝 drafted for you")
+        self.assertEqual(attached["w:action:pm"][0]["label"], "Drafted for you")
 
 
 if __name__ == "__main__":

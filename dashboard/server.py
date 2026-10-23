@@ -319,7 +319,7 @@ def action_label(action_type):
         return meta["label"]
     return action_type.replace("_", " ").title()
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
-PRIORITY_LABELS = {"high": "🔴 High", "medium": "🟡 Medium", "low": "⚪ Low"}
+PRIORITY_LABELS = {"high": "High", "medium": "Medium", "low": "Low"}
 
 WEEKDAYS = ["mon", "tue", "wed", "thu", "fri"]
 # Connectors are whatever keys exist in poll-config.json (written by /setup), not a fixed
@@ -836,7 +836,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <script>try {{ const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
 <style>{theme_css}</style></head><body>
 <nav class="nav" aria-label="Sections">
-  <div class="brand"><span class="brand-mark">C</span><div>{app_name}<small>your chief of staff</small></div></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div>{app_name}</div></div>
   <div class="nav-group">Work</div>
   <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">{nav_open}</span></a>
   <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">{nav_meetings}</span></a>
@@ -847,7 +847,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
-  <div class="nav-foot"><button class="small ghost" onclick="toggleTheme()" title="Switch light / dark">◐ Theme</button></div>
+  <div class="nav-foot"><button class="small ghost" onclick="toggleTheme()" title="Switch light / dark">Appearance</button></div>
 </nav>
 <div class="main">
 <header class="topbar">
@@ -926,7 +926,7 @@ its window it skips.</p>
 </div>{side_panel}</div>
 </div>
 
-<div id="chatBubble" class="chat-bubble" onclick="toggleChat()" title="Chat">💬</div>
+<div id="chatBubble" class="chat-bubble" onclick="toggleChat()" title="Chat" aria-label="Chat"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" fill="#fff"/></svg></div>
 <div id="chatPanel" class="chat-box chat-panel-hidden">
   <div class="chat-panel-header">Chat <span class="chat-close" onclick="toggleChat()">✕</span></div>
   <div class="chat-log" id="chatLog">{chat_html}</div>
@@ -954,7 +954,9 @@ window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
 document.addEventListener("DOMContentLoaded", () => showView(location.hash.slice(1)));
 function toggleTheme() {{
   const root = document.documentElement;
-  const next = root.dataset.theme === "light" ? "dark" : "light";
+  const cur = root.dataset.theme ||
+    (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = cur === "dark" ? "light" : "dark";
   root.dataset.theme = next;
   try {{ localStorage.setItem("cos-theme", next); }} catch (e) {{}}
 }}
@@ -1273,7 +1275,7 @@ def render_entry(e):
 
     return f"""
 <div class="card {status}">
-  <span class="badge {status}">{icon} {html.escape(status)}</span>{priority_tag}{tags_html}
+  <span class="badge {status}">{html.escape(status.title())}</span>{priority_tag}{tags_html}
   <div class="card-title">{title}</div>
   <div class="meta">{html.escape(action_type)} · drafted by {html.escape(e.get('drafted_by',''))} · <code>{safe_id}</code></div>
   {priority_note_html}
@@ -2091,8 +2093,8 @@ def update_graph_node(node_id, name=None, note=None, priority=None, status=None)
 
 _TASK_IN_CONTEXT = re.compile(r"Task:\s*(.+?)\s*(?:\(due|\(was due|\.\s|$)")
 
-CHIP_LABELS = {"message_send": "✉️ draft ready", "code_fix": "🛠️ fix ready",
-               "self_do": "📝 drafted for you"}
+CHIP_LABELS = {"message_send": "Draft ready", "code_fix": "Fix ready",
+               "self_do": "Drafted for you"}
 
 
 def entry_task_id(e, g):
@@ -2124,7 +2126,7 @@ def attach_to_tasks(pending, g):
         if tid:
             out.setdefault(tid, []).append({
                 "id": e.get("id"), "html": render_entry(e),
-                "label": CHIP_LABELS.get(e.get("action_type", ""), "⏳ needs approval")})
+                "label": CHIP_LABELS.get(e.get("action_type", ""), "Needs approval")})
     return out
 
 
