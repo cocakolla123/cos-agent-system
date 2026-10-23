@@ -129,6 +129,24 @@ def _days_label(n):
     return "due in %d day%s" % (n_days, "" if n_days == 1 else "s")
 
 
+def _when_label(n):
+    """Short ledger-column date: "Today", "−3d", "Thu", "Oct 23" or "—"."""
+    days = _graph.days_until_due(n)
+    if days is None:
+        return "—"
+    if days == 0:
+        return "Today"
+    if days < 0:
+        return "\u2212%dd" % (-days)
+    if days == 1:
+        return "Tmrw"
+    import datetime as _d
+    due = _graph._utcnow().astimezone().date() + _d.timedelta(days=days)
+    if days < 7:
+        return due.strftime("%a")
+    return "%s %d" % (due.strftime("%b"), due.day)
+
+
 def _action_rank(n):
     """Most urgent first: see graph.rank_key (deadline, priority and how
     recently anyone mentioned it; long-overdue quiet items go last)."""
@@ -454,20 +472,23 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
         else:
             d["nextstep"] = str((n.get("attrs") or {}).get("next_step", ""))
         data = " ".join('data-%s="%s"' % (k, _esc(v)) for k, v in d.items())
-        chip = "".join(' <span class="todo-draft">%s</span>' % _esc(c["label"])
+        chip = "".join('<span class="todo-draft">%s</span>' % _esc(c["label"])
                        for c in mine[:1])
         pri = d["priority"]
-        badge = {"high": "🔺", "medium": "▪️", "low": "▫️"}.get(pri, "▪️")
-        late = ' <span class="todo-quiet">%s</span>' % _esc(d["duelabel"]) if d["stale"] else \
-            ' <span class="todo-late">%s</span>' % _esc(d["duelabel"]) \
-            if d["overdue"] else (
-                ' <span class="sec-sub">%s</span>' % _esc(d["duelabel"])
-                if d["duelabel"] else "")
+        cls = "todo-quiet" if d["stale"] else "todo-late" if d["overdue"] else "sec-sub"
+        # the date column already says when; the line under the title only
+        # adds what it cannot (how long a gone-quiet task has been silent)
+        late = ('<span class="%s">%s</span>' % (cls, _esc(d["duelabel"]))
+                if d["stale"] and d["duelabel"] else "")
+        when = _when_label(n)
         rows.append(
-            '<div class="todo-row todo-%s%s" %s onclick="todoOpen(this)">'
-            '<span class="todo-badge">%s</span> %s%s%s</div>' % (
-                _esc(pri), " todo-stale" if d["stale"] else "", data, badge,
-                _esc(d["title"]), late, chip))
+            '<div class="todo-row todo-%s%s%s" %s onclick="todoOpen(this)" tabindex="-1">'
+            '<span class="todo-when">%s</span>'
+            '<span class="todo-main"><span class="todo-title">%s</span>'
+            '<span class="todo-sub">%s%s</span></span></div>' % (
+                _esc(pri), " todo-stale" if d["stale"] else "",
+                " todo-overdue" if d["overdue"] and not d["stale"] else "", data,
+                _esc(when), _esc(d["title"]), late, chip))
     # LinkedIn-Jobs pattern: compact card list on the left, the selected task
     # expanded big in a sticky detail pane beside it; first task auto-opens.
     detail = """

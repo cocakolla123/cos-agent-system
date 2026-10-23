@@ -836,7 +836,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <script>try {{ const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
 <style>{theme_css}</style></head><body>
 <nav class="nav" aria-label="Sections">
-  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div>{app_name}</div></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>{app_name}</div></div>
   <div class="nav-group">Work</div>
   <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">{nav_open}</span></a>
   <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">{nav_meetings}</span></a>
@@ -847,13 +847,20 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
-  <div class="nav-foot"><button class="small ghost" onclick="toggleTheme()" title="Switch light / dark">Appearance</button></div>
+  <div class="nav-foot">
+    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views</div>
+    <button class="small ghost" onclick="toggleTheme()" title="Switch paper / night">Paper / night</button>
+  </div>
 </nav>
 <div class="main">
 <header class="topbar">
-  <span class="topbar-title" id="viewTitle">Today</span>
-  <span class="status"><span class="status-dot"></span>{today} · last checked {last_poll}</span>
+  <div class="topbar-head">
+    <span class="topbar-title" id="viewTitle">Today</span>
+    <span class="status"><span class="status-dot"></span>{today} · last checked {last_poll}</span>
+  </div>
+  <span id="wsSlot"></span>
   <div class="topbar-actions">
+    <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
     <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
     <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
   </div>
@@ -937,6 +944,14 @@ its window it skips.</p>
   <div class="result" id="chatResult"></div>
 </div>
 
+<div class="palette" id="palette" hidden onclick="if (event.target === this) paletteClose()">
+  <div class="palette-box" role="dialog" aria-label="Jump to">
+    <input id="paletteInput" class="palette-input" placeholder="Jump to a task or a view…" autocomplete="off" />
+    <div class="palette-list" id="paletteList"></div>
+    <div class="palette-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> choose</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
 {auth_modal_html}
 
 {context_modal_html}
@@ -951,7 +966,92 @@ function showView(name) {{
   document.getElementById("viewTitle").textContent = v ? v.dataset.title.replace("&amp;", "&") : "";
 }}
 window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
-document.addEventListener("DOMContentLoaded", () => showView(location.hash.slice(1)));
+document.addEventListener("DOMContentLoaded", () => {{
+  showView(location.hash.slice(1));
+  // the workspace filter lives in the top bar, so it works from every view
+  const ws = document.querySelector(".graph-command-center .ws-switcher");
+  if (ws) {{
+    document.getElementById("wsSlot").appendChild(ws);
+    ws.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {{ a.href = a.getAttribute("href").split("#")[0] + location.hash; }}));
+  }}
+}});
+
+// ---- jump palette (⌘K / Ctrl+K / "/") ----
+let _palItems = [], _palIdx = 0;
+function palSource() {{
+  const out = [];
+  document.querySelectorAll(".nav-link").forEach(a => out.push({{kind: "View", text: a.childNodes[0].textContent.trim(),
+    when: "", run: () => {{ location.hash = a.dataset.view; }} }}));
+  document.querySelectorAll(".todo-row").forEach(r => out.push({{kind: "Tasks", text: r.dataset.title,
+    when: (r.querySelector(".todo-when") || {{}}).textContent || "", hint: r.dataset.ws,
+    run: () => {{ location.hash = "today"; showView("today"); todoOpen(r); r.scrollIntoView({{block: "nearest"}}); }} }}));
+  return out;
+}}
+function palRender() {{
+  const q = document.getElementById("paletteInput").value.trim().toLowerCase();
+  const all = palSource();
+  _palItems = (q ? all.filter(i => i.text.toLowerCase().includes(q)) : all.filter(i => i.kind === "View").concat(all.filter(i => i.kind === "Tasks").slice(0, 8))).slice(0, 40);
+  _palIdx = Math.min(_palIdx, Math.max(0, _palItems.length - 1));
+  const list = document.getElementById("paletteList");
+  list.innerHTML = "";
+  if (!_palItems.length) {{ list.innerHTML = "<div class='palette-empty'>Nothing matches.</div>"; return; }}
+  let group = "";
+  _palItems.forEach((it, i) => {{
+    if (it.kind !== group) {{ group = it.kind; const g = document.createElement("div"); g.className = "palette-group"; g.textContent = group === "View" ? "Views" : "Tasks"; list.appendChild(g); }}
+    const el = document.createElement("div");
+    el.className = "palette-item" + (i === _palIdx ? " active" : "");
+    const w = document.createElement("span"); w.className = "pi-when"; w.textContent = it.when;
+    const tx = document.createElement("span"); tx.className = "pi-text"; tx.textContent = it.text;
+    const h = document.createElement("span"); h.className = "pi-hint"; h.textContent = it.hint || "";
+    el.append(w, tx, h);
+    el.onmouseenter = () => {{ _palIdx = i; palHighlight(); }};
+    el.onclick = () => palRun(i);
+    list.appendChild(el);
+  }});
+}}
+function palHighlight() {{
+  document.querySelectorAll(".palette-item").forEach((el, i) => el.classList.toggle("active", i === _palIdx));
+  const a = document.querySelector(".palette-item.active"); if (a) a.scrollIntoView({{block: "nearest"}});
+}}
+function palRun(i) {{ const it = _palItems[i]; paletteClose(); if (it) it.run(); }}
+function paletteOpen() {{
+  const p = document.getElementById("palette"); p.hidden = false; _palIdx = 0;
+  const inp = document.getElementById("paletteInput"); inp.value = ""; palRender(); inp.focus();
+}}
+function paletteClose() {{ document.getElementById("palette").hidden = true; document.getElementById("paletteInput").blur(); }}
+document.addEventListener("DOMContentLoaded", () => {{
+  const inp = document.getElementById("paletteInput");
+  inp.addEventListener("input", () => {{ _palIdx = 0; palRender(); }});
+  inp.addEventListener("keydown", e => {{
+    if (e.key === "ArrowDown") {{ _palIdx = Math.min(_palIdx + 1, _palItems.length - 1); palHighlight(); e.preventDefault(); }}
+    else if (e.key === "ArrowUp") {{ _palIdx = Math.max(_palIdx - 1, 0); palHighlight(); e.preventDefault(); }}
+    else if (e.key === "Enter") {{ palRun(_palIdx); e.preventDefault(); }}
+    else if (e.key === "Escape") {{ paletteClose(); }}
+  }});
+}});
+
+// ---- keyboard: J/K through tasks, G then a letter for views ----
+let _gPending = false;
+document.addEventListener("keydown", e => {{
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {{}}).tagName || "") || (e.target && e.target.isContentEditable);
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {{ e.preventDefault(); paletteOpen(); return; }}
+  if (typing || e.metaKey || e.ctrlKey || e.altKey || !document.getElementById("palette").hidden) return;
+  if (e.key === "/") {{ e.preventDefault(); paletteOpen(); return; }}
+  if (_gPending) {{
+    _gPending = false;
+    const map = {{t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", p: "polling", l: "learning", c: "accounts"}};
+    if (map[e.key.toLowerCase()]) {{ location.hash = map[e.key.toLowerCase()]; e.preventDefault(); }}
+    return;
+  }}
+  if (e.key.toLowerCase() === "g") {{ _gPending = true; setTimeout(() => {{ _gPending = false; }}, 1200); return; }}
+  if (e.key === "j" || e.key === "k") {{
+    const rows = [...document.querySelectorAll("#v-today:not([hidden]) .todo-row")];
+    if (!rows.length) return;
+    const cur = rows.findIndex(r => r.classList.contains("todo-selected"));
+    const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === "j" ? 1 : -1)))];
+    todoOpen(next); next.scrollIntoView({{block: "nearest"}}); e.preventDefault();
+  }}
+}});
 function toggleTheme() {{
   const root = document.documentElement;
   const cur = root.dataset.theme ||
