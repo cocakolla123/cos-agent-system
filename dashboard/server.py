@@ -228,6 +228,10 @@ try:
     import models as _models
 except Exception:  # pragma: no cover
     _models = None
+try:
+    import theme as _theme
+except Exception:  # pragma: no cover
+    _theme = None
 
 
 def model_args(job):
@@ -827,206 +831,102 @@ def render_linked_domain(e):
 
 
 PAGE_TEMPLATE = """<!doctype html>
-<html><head><meta charset="utf-8"><title>CoS Dashboard</title>
-<style>
-:root {{ color-scheme: light; }}
-* {{ box-sizing: border-box; }}
-body {{
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-  max-width: 880px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem;
-  color: #1d1d1f; background: #fbfbfd; line-height: 1.55; font-size: 15px;
-}}
-h1 {{ font-size: 1.6rem; margin-bottom: .25rem; }}
-.subtitle {{ color: #6e6e73; font-size: .9rem; margin-bottom: 2rem; }}
-h2 {{ font-size: 1.15rem; margin: 2.5rem 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid #e5e5e7; display:flex; align-items:center; justify-content:space-between; }}
-h3 {{ font-size: .95rem; color: #444; margin: 1.2rem 0 .6rem; }}
-pre {{ white-space: pre-wrap; background: #f5f5f7; padding: 1rem; border-radius: 10px; font-size: .85rem; line-height: 1.5; max-height: 320px; overflow-y: auto; }}
-.card {{ border: 1px solid #e5e5e7; border-radius: 12px; padding: 1.25rem 1.4rem; margin-bottom: 1rem; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }}
-.card.stale, .card.approved, .card.rejected, .card.superseded {{ opacity: .5; }}
-.card-title {{ font-size: 1.02rem; font-weight: 600; margin: .1rem 0 .5rem; }}
-.badge {{ display:inline-flex; align-items:center; gap:.3rem; font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .02em; padding: .2rem .6rem; border-radius: 20px; background:#f0f0f0; color:#555; margin-right:.5rem; }}
-.badge.pending {{ background:#fff4d6; color:#8a6300; }}
-.badge.approved {{ background:#dcf5e3; color:#137333; }}
-.badge.rejected, .badge.stale, .badge.superseded {{ background:#fde8e8; color:#a3282a; }}
-.badge.failed {{ background:#ffe0b2; color:#8a4b00; }}
-.card.failed {{ border-color:#f0b429; opacity:1; }}
-.badge.drafted {{ background:#d6e9ff; color:#0b4a8f; }}
-.card.drafted {{ border-color:#7ab8f5; opacity:1; }}
-.button-link {{ display:inline-block; padding:.5rem 1rem; border-radius:8px; background:#0071e3; color:#fff; text-decoration:none; font-size:.85rem; font-weight:500; margin:.5rem 0; }}
-.meta {{ color: #86868b; font-size: .82rem; margin-bottom: .75rem; }}
-.tabs {{ display:flex; gap: .4rem; margin-bottom: .75rem; }}
-.tab-btn {{ font-size: .8rem; padding: .3rem .8rem; border-radius: 8px; border: 1px solid #d7d7db; background:#f5f5f7; cursor:pointer; color:#444; }}
-.tab-btn.active {{ background:#1d1d1f; color:#fff; border-color:#1d1d1f; }}
-.tab-panel {{ display:none; }}
-.tab-panel.active {{ display:block; }}
-.quick-line {{ font-size: .92rem; color:#333; margin-bottom: .5rem; }}
-button {{ padding: .5rem 1rem; border-radius: 8px; border: 1px solid #c7c7cc; background:#fff; cursor:pointer; margin-right:.5rem; font-size: .85rem; font-weight: 500; }}
-button:hover {{ background:#f5f5f7; }}
-button.primary {{ background:#0071e3; color:#fff; border-color:#0071e3; }}
-button.primary:hover {{ background:#0060c0; }}
-button.small {{ padding: .35rem .7rem; font-size: .78rem; }}
-textarea {{ width: 100%; padding:.6rem; font-family:inherit; font-size:.88rem; border-radius:8px; border:1px solid #d7d7db; margin-bottom:.5rem; resize: vertical; }}
-input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; border:1px solid #d7d7db; font-size:.85rem; }}
-.actions {{ display:flex; align-items:center; gap:.5rem; flex-wrap: wrap; margin-top:.5rem; }}
-.result {{ font-size:.82rem; margin-top:.5rem; white-space:pre-wrap; color:#137333; }}
-.empty {{ color:#86868b; font-size:.9rem; padding: .5rem 0; }}
-.pill-row {{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.75rem; }}
-.day-pill {{ font-size:.78rem; padding:.25rem .6rem; border-radius:14px; border:1px solid #d7d7db; background:#f5f5f7; cursor:pointer; }}
-.day-pill.on {{ background:#0071e3; color:#fff; border-color:#0071e3; }}
-.poll-status {{ font-size:.85rem; color:#6e6e73; }}
-.inbox-item {{ font-size:.88rem; padding:.35rem 0; border-bottom:1px solid #f0f0f0; }}
-.chat-bubble {{ position:fixed; bottom:1.5rem; right:1.5rem; width:56px; height:56px; border-radius:50%; background:#0071e3; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.25); z-index:1000; }}
-.chat-box {{ border: 1px solid #e5e5e7; border-radius: 12px; background:#fff; padding: 1rem; }}
-.chat-panel-hidden {{ display:none; }}
-#chatPanel {{ position:fixed; bottom:1.5rem; right:1.5rem; width:min(380px, 90vw); z-index:1000; box-shadow:0 8px 30px rgba(0,0,0,0.2); }}
-.chat-panel-header {{ display:flex; justify-content:space-between; align-items:center; font-weight:600; margin-bottom:.5rem; }}
-.chat-close {{ cursor:pointer; color:#86868b; font-weight:400; }}
-#chatPanel .chat-log {{ max-height: 320px; }}
-.chat-log {{ max-height: 420px; overflow-y: auto; margin-bottom: .75rem; display:flex; flex-direction:column; gap:.6rem; }}
-.chat-msg {{ padding:.65rem .9rem; border-radius: 12px; max-width: 85%; font-size:.9rem; }}
-.chat-you {{ background:#0071e3; color:#fff; align-self:flex-end; }}
-.chat-assistant {{ background:#f0f0f2; color:#1d1d1f; align-self:flex-start; }}
-.chat-role {{ font-size:.72rem; opacity:.75; margin-bottom:.2rem; }}
-.chat-you .meta {{ color:#d8ecff; }}
-.chat-body {{ white-space: pre-wrap; }}
-.chat-input-row {{ display:flex; gap:.5rem; }}
-.chat-input-row textarea {{ flex:1; margin-bottom:0; }}
-.demo-banner {{ background:#eef4ff; border:1px solid #b9cdf5; color:#1d3b72; border-radius:10px; padding:.75rem 1rem; margin:0 0 1rem; line-height:1.45; }}
-.priority-tag {{ display:inline-block; font-size:.75rem; font-weight:600; padding:.15rem .55rem; border-radius:20px; margin-left:.3rem; }}
-.priority-high {{ background:#fde3e3; color:#a3282a; }}
-.priority-medium {{ background:#fff3cd; color:#8a6300; }}
-.priority-low {{ background:#f0f0f0; color:#666; }}
-.priority-note {{ font-style: italic; margin-top:-.3rem; margin-bottom:.5rem; }}
-.tag-pill {{ display:inline-block; font-size:.72rem; font-weight:600; padding:.15rem .55rem; border-radius:20px; margin-left:.3rem; background:#eee; color:#555; }}
-.tag-ticket {{ background:#e3ecfd; color:#1451b8; }}
-.tag-message {{ background:#e9e3fd; color:#4a2fb3; }}
-.tag-calendar {{ background:#e3fdf0; color:#0e7d4f; }}
-.tag-domain {{ background:#fde3e9; color:#b8144f; }}
-.tag-meeting {{ background:#e3f2fd; color:#0d5aa7; }}
-.graph-command-center {{ margin:1rem 0 1.5rem; padding:1rem 1.1rem; background:#f7fbff; border:1px solid #d6e6f5; border-radius:12px; }}
-.graph-command-center > h2 {{ margin:.1rem 0 .6rem; }}
-.cc-sub {{ font-weight:400; font-size:.8rem; color:#5b6b7a; }}
-.graph-section {{ margin:.5rem 0 .9rem; }}
-.graph-section h3 {{ margin:.3rem 0 .35rem; font-size:.95rem; }}
-.graph-section ul {{ margin:.1rem 0; padding-left:1.1rem; }}
-.graph-section li {{ margin:.12rem 0; font-size:.9rem; }}
-.sec-count {{ display:inline-block; min-width:1.2rem; padding:0 .4rem; background:#e3eefb; color:#0d5aa7; border-radius:8px; font-size:.72rem; }}
-.sec-type {{ color:#5b6b7a; font-size:.76rem; text-transform:uppercase; letter-spacing:.02em; }}
-.sec-sub {{ color:#5b6b7a; font-size:.82rem; }}
-.ws-switcher a {{ margin:0 .15rem; text-decoration:none; color:#0d5aa7; }}
-.ws-switcher a.ws-active {{ font-weight:700; text-decoration:underline; }}
-.objective-card {{ margin:.35rem 0; padding:.5rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; }}
-.obj-title {{ font-weight:600; font-size:.9rem; }}
-.obj-timeline {{ font-size:.82rem; color:#3a4a58; margin-top:.2rem; }}
-.tl-step {{ white-space:nowrap; }}
-.acct-row {{ margin:.3rem 0; padding:.45rem .7rem; background:#fff; border:1px solid #e2e2e7; border-radius:9px; font-size:.9rem; }}
-.acct-dot {{ font-weight:700; margin-right:.2rem; }}
-.acct-id {{ color:#3a4a58; margin:0 .35rem; }}
-.ws-chip {{ display:inline-block; padding:0 .5rem; background:#e3eefb; color:#0d5aa7; border-radius:9px; font-size:.75rem; }}
-.acct-meta {{ color:#8a8a90; font-size:.78rem; margin-left:.35rem; }}
-.acct-fix {{ color:#b8144f; font-size:.8rem; margin-top:.25rem; }}
-.auth-overlay {{ position:fixed; inset:0; background:rgba(20,20,30,.55); z-index:1000; display:flex; align-items:center; justify-content:center; }}
-.auth-box {{ background:#fff; border-radius:14px; padding:1.3rem 1.5rem; max-width:440px; box-shadow:0 12px 40px rgba(0,0,0,.25); }}
-.auth-box h3 {{ margin:.1rem 0 .6rem; }}
-.auth-reason {{ color:#3a4a58; }}
-.auth-note {{ color:#8a8a90; font-size:.8rem; }}
-.auth-buttons {{ margin-top:.8rem; display:flex; gap:.5rem; }}
-.auth-refuse {{ color:#b8144f; }}
-.guardrail-alert {{ margin:.6rem 0; padding:.7rem 1rem; background:#fff2f4; border:2px solid #e0526f; border-radius:10px; font-size:.9rem; }}
-.coverage-note {{ margin:.6rem 0; padding:.6rem 1rem; background:#fffaf0; border:1px solid #e0b25c; border-radius:10px; font-size:.85rem; color:#6b4e1f; }}
-.start-research-card {{ margin:1rem 0; padding:1rem 1.2rem; background:#f2fff5; border:1px solid #bfe5bf; border-radius:12px; }}
-.start-research-card h2 {{ margin:.1rem 0 .4rem; }}
-.today-brief {{ margin:.4rem 0 .8rem; padding:.8rem 1rem; background:#fffbe9; border:1px solid #efdc9e; border-radius:10px; font-size:.95rem; }}
-.tb-line {{ margin:.25rem 0; }}
-.tb-overdue {{ color:#b8144f; }}
-.today-brief a {{ color:#0d5aa7; }}
-.obj-next {{ font-size:.88rem; margin:.25rem 0; }}
-.obj-next a {{ color:#0d5aa7; text-decoration:none; }}
-.obj-next-none {{ color:#8a8a90; }}
-.obj-details summary {{ font-size:.78rem; color:#5b6b7a; cursor:pointer; margin-top:.2rem; }}
-.graph-section a {{ color:inherit; text-decoration:underline dotted; }}
-/* M13: LinkedIn-Jobs-style task board — compact list left, big detail right */
-.todo-board {{ display:grid; grid-template-columns: minmax(280px, 340px) 1fr; gap:14px; align-items:start; }}
-@media (max-width: 979px) {{ .todo-board {{ grid-template-columns: 1fr; }} }}
-.todo-list {{ max-height:560px; overflow-y:auto; padding-right:2px; }}
-.todo-row {{ background:#fff; border:1px solid #e2e2e7; border-radius:10px; padding:.6rem .8rem; margin-bottom:.5rem; cursor:pointer; font-size:.9rem; box-shadow:0 1px 2px rgba(0,0,0,.06); }}
-.todo-row:hover {{ box-shadow:0 2px 6px rgba(0,0,0,.12); }}
-.todo-selected {{ border-color:#0d5aa7; box-shadow:inset 3px 0 0 #0d5aa7, 0 2px 6px rgba(0,0,0,.10); }}
-.todo-high {{ border-left:4px solid #e0526f; }}
-.todo-medium {{ border-left:4px solid #e8b93c; }}
-.todo-low {{ border-left:4px solid #c9c9d0; }}
-.todo-badge {{ margin-right:.25rem; }}
-.todo-draft {{ display:inline-block; margin-left:.3rem; padding:.05rem .45rem; border-radius:999px; background:#e3eefb; color:#0d5aa7; font-size:.74rem; font-weight:600; white-space:nowrap; }}
-.tm-next {{ border:1px solid #e2e2e7; border-radius:10px; padding:.5rem .7rem; margin:.5rem 0; background:#fafbfd; }}
-.tm-next-head {{ font-weight:700; margin-bottom:.3rem; }}
-.tm-next .card {{ margin:0; box-shadow:none; border:none; padding:0; background:transparent; }}
-.tm-plan {{ white-space:pre-wrap; font-size:.9rem; }}
-.draft-text {{ background:#fff; border:1px solid #e2e2e7; border-radius:8px; padding:.5rem .7rem; margin:.4rem 0; }}
-.todo-divider {{ margin:.8rem 0 .4rem; padding-top:.5rem; border-top:1px dashed #c9c9d0; font-size:.8rem; color:#6b6b73; }}
-.todo-stale {{ opacity:.72; }}
-.todo-quiet {{ color:#6b6b73; font-size:.82rem; }}
-.mdl-row {{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.55rem 0; border-bottom:1px solid #eee; }}
-.mdl-tier {{ flex:1 1 220px; min-width:0; }}
-.mdl-model {{ flex:1 1 200px; min-width:0; }}
-.mdl-key {{ display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.3rem 0; }}
-.mdl-key-name {{ flex:0 0 240px; }}
-.mdl-keys {{ margin:.6rem 0; }}
-.todo-late {{ color:#b8144f; font-weight:600; font-size:.82rem; }}
-.todo-detail {{ position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }}
-.td-empty {{ color:#8a8a90; text-align:center; padding:3rem 0; }}
-.tm-title {{ width:100%; font-size:1.1rem; font-weight:700; border:1px solid transparent; border-radius:8px; padding:.35rem .5rem; }}
-.tm-title:hover, .tm-title:focus {{ border-color:#e2e2e7; }}
-.tm-meta {{ margin:.4rem 0; display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }}
-#tmNote {{ width:100%; margin-top:.3rem; }}
-.tm-evidence {{ margin:.2rem 0 .5rem; }}
-.tm-controls {{ display:flex; gap:.5rem; align-items:center; margin:.5rem 0; flex-wrap:wrap; }}
-.tm-chat {{ border-top:1px solid #eee; margin-top:.6rem; padding-top:.5rem; }}
-.tm-chat-log {{ max-height:200px; overflow-y:auto; font-size:.88rem; }}
-.tm-msg {{ background:#f4f4f6; border-radius:8px; padding:.35rem .6rem; margin:.25rem 0; white-space:pre-wrap; }}
-.tm-you {{ background:#e3eefb; }}
-.tm-thinking {{ color:#8a8a90; }}
-.side-panel {{ display:none; }}
-@media (min-width: 1280px) {{
-  .side-panel {{ display:block; position:fixed; top:16px; right:16px; width:300px; max-height:92vh; overflow-y:auto; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding: .8rem 1rem; z-index:50; }}
-  /* Center the content column within the space LEFT of the fixed sidebar —
-     a bare margin-right here leaves body's auto left margin to swallow all
-     the slack and shoves the page off-center (first-run feedback). */
-  body {{ max-width: 980px;
-         margin-left: max(1.5rem, calc((100vw - 348px - 980px) / 2));
-         margin-right: 348px; }}
-  .side-panel h3 {{ margin:.2rem 0 .5rem; }}
-  .side-panel .today-brief {{ margin:.2rem 0 .6rem; }}
-}}
-.cal-box {{ margin-top:.6rem; }}
-.cal-head {{ font-weight:700; font-size:.9rem; margin-bottom:.3rem; }}
-.cal {{ width:100%; border-collapse:collapse; font-size:.78rem; text-align:center; }}
-.cal th {{ color:#8a8a90; font-weight:500; padding:.15rem; }}
-.cal td {{ padding:.22rem .1rem; border-radius:6px; }}
-.cal-out {{ color:#c9c9d0; }}
-.cal-today {{ background:#0d5aa7; color:#fff; font-weight:700; }}
-.cal-marked {{ background:#e3eefb; }}
-.cal-today.cal-marked {{ background:#0d5aa7; }}
-.cal-dot {{ color:#e0526f; font-size:.7rem; vertical-align:top; }}
-.linked-domain {{ margin-top:1rem; padding:.9rem 1rem; background:#fff5f7; border:1px solid #f3c6d3; border-radius:10px; }}
-.linked-domain-title {{ font-weight:700; font-size:1rem; color:#b8144f; margin-bottom:.5rem; }}
-.linked-domain pre {{ background:#fff; color:#1d1d1f; font-size:.88rem; }}
-.lite-markdown ul {{ margin:.2rem 0 .5rem; padding-left:1.2rem; }}
-.lite-markdown li {{ margin-bottom:.35rem; font-size:.88rem; line-height:1.5; }}
-.lite-markdown p {{ margin:.3rem 0; font-size:.88rem; line-height:1.5; }}
-.archived-item {{ opacity:.7; padding:.75rem 1rem; }}
-.slack-preview-label, .extra-notes-label {{ font-size:.75rem; color:#6e6e73; margin-top:.5rem; margin-bottom:.25rem; }}
-.slack-preview {{ background:#f8f8fa; border:1px solid #e5e5e7; border-radius:8px; padding:.7rem .9rem; font-size:.9rem; min-height:1.5em; margin-bottom:.4rem; }}
-.slack-preview code {{ background:#e8e8ea; padding:.1rem .3rem; border-radius:4px; font-family:ui-monospace,monospace; }}
-</style></head><body>
-{side_panel}
-<h1>CoS Dashboard</h1>
-<div class="subtitle">{today} · last checked: {last_poll}
-  <button class="small" onclick="pollNow()" title="Full sweep: checks every configured connector (messages, email, tickets, calendar, ...) plus the general re-check">Poll now</button>
-  <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">➕ Add context</button>
-</div>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{app_name}</title>
+<script>try {{ const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
+<style>{theme_css}</style></head><body>
+<nav class="nav" aria-label="Sections">
+  <div class="brand"><span class="brand-mark">C</span><div>{app_name}<small>your chief of staff</small></div></div>
+  <div class="nav-group">Work</div>
+  <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">{nav_open}</span></a>
+  <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">{nav_meetings}</span></a>
+  <a class="nav-link" href="#inbox" data-view="inbox">Inbox &amp; questions</a>
+  <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">{archived_count}</span></a>
+  <div class="nav-group">Settings</div>
+  <a class="nav-link" href="#models" data-view="models">Models</a>
+  <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
+  <a class="nav-link" href="#polling" data-view="polling">Polling</a>
+  <a class="nav-link" href="#learning" data-view="learning">Learning</a>
+  <div class="nav-foot"><button class="small ghost" onclick="toggleTheme()" title="Switch light / dark">◐ Theme</button></div>
+</nav>
+<div class="main">
+<header class="topbar">
+  <span class="topbar-title" id="viewTitle">Today</span>
+  <span class="status"><span class="status-dot"></span>{today} · last checked {last_poll}</span>
+  <div class="topbar-actions">
+    <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
+    <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
+  </div>
+</header>
+<div class="content-grid"><div class="content">
 <div id="pollResult" class="result"></div>
+{guardrail_banner}
+{coverage_banner}
 
-<div id="chatBubble" class="chat-bubble" onclick="toggleChat()">💬</div>
+<section class="view" id="v-today" data-title="Today">
+{start_research_html}
+{stat_strip}
+<details class="briefing"><summary>Today's briefing ({daily_label})</summary><pre>{daily}</pre></details>
+{command_center}
+{loose_queue}
+{drafted_section}
+{failed_section}
+</section>
+
+<section class="view" id="v-meetings" data-title="Meetings" hidden>
+<h2>Recent meeting summaries</h2>
+{meetings_html}
+</section>
+
+<section class="view" id="v-inbox" data-title="Inbox &amp; questions" hidden>
+<h2>New task</h2>
+<p class="view-intro">Hand the agents something to look into. It lands in the inbox and the next poll picks it up.</p>
+<form id="taskForm">
+<textarea name="text" rows="3" placeholder="Describe what you want the agents to look at..."></textarea>
+<button class="primary" type="submit">Add to inbox</button>
+</form>
+<div id="taskResult" class="result"></div>
+<h3>Inbox</h3>
+{inbox_html}
+<h2>Open questions</h2>
+<pre>{open_questions}</pre>
+</section>
+
+<section class="view" id="v-archive" data-title="Archive" hidden>
+<h2>Archive <span class="sec-count">{archived_count}</span></h2>
+<p class="view-intro">Handled, rejected and resolved items, never deleted. "Clear archive" moves them into
+a separate archive file to keep this page lean; it never touches SHARED_CONTEXT.md, decisions.md,
+projects/ or any agent memory, which keep everything learned from this work.</p>
+{archived_html}
+<button class="small" onclick="clearArchive()">Clear archive (move to archive file)</button>
+<div id="archiveResult" class="result"></div>
+</section>
+
+<section class="view" id="v-models" data-title="Models" hidden>
+{models_html}
+</section>
+
+<section class="view" id="v-accounts" data-title="Accounts" hidden>
+{accounts_html}
+</section>
+
+<section class="view" id="v-polling" data-title="Polling" hidden>
+<h2>Autonomous polling</h2>
+<p class="view-intro">A free 60-second tick checks whether any connector below is due before spending
+anything, so most ticks cost nothing. Each connector has its own interval and active window; outside
+its window it skips.</p>
+{schedule_html}
+</section>
+
+<section class="view" id="v-learning" data-title="Learning" hidden>
+{self_learning_html}
+{recent_learnings_html}
+</section>
+
+</div>{side_panel}</div>
+</div>
+
+<div id="chatBubble" class="chat-bubble" onclick="toggleChat()" title="Chat">💬</div>
 <div id="chatPanel" class="chat-box chat-panel-hidden">
   <div class="chat-panel-header">Chat <span class="chat-close" onclick="toggleChat()">✕</span></div>
   <div class="chat-log" id="chatLog">{chat_html}</div>
@@ -1037,68 +937,28 @@ input[type=text], input[type=time] {{ padding:.4rem .6rem; border-radius:8px; bo
   <div class="result" id="chatResult"></div>
 </div>
 
-{guardrail_banner}
-{coverage_banner}
-
-<h2>Today <span></span></h2>
-{today_brief}
-<pre>{daily}</pre>
-
-{start_research_html}
-
-{command_center}
-
-<h2>Approval queue — not tied to a task ({pending_count})</h2>
-{queue_html}
-
-{drafted_section}
-
-{failed_section}
-
-<h2 onclick="toggleArchive()" style="cursor:pointer">📦 Archive ({archived_count}) <span id="archiveToggle">▸</span></h2>
-<div id="archiveSection" style="display:none">
-  <div class="quick-line">Handled/rejected/resolved items — never deleted. "Clear archive"
-  moves these into a separate archive file to keep this page lean; it never touches
-  SHARED_CONTEXT.md, decisions.md, projects/, or any agent memory — those are completely
-  separate and keep everything learned from this work permanently.</div>
-  {archived_html}
-  <button class="small" onclick="clearArchive()">Clear archive (move to archive file)</button>
-  <div id="archiveResult" class="result"></div>
-</div>
-
-<h2>Recent meeting summaries</h2>
-{meetings_html}
-
-{models_html}
-
-{accounts_html}
-
-<h2>Autonomous polling</h2>
-<div class="quick-line" style="margin-bottom:1rem">A free 60-second tick checks whether any
-connector below is actually due before spending anything — most ticks cost nothing. Each
-connector has its own interval and active window; outside its window it just skips.</div>
-{schedule_html}
-
-{self_learning_html}
-
-{recent_learnings_html}
-
 {auth_modal_html}
 
 {context_modal_html}
 
-<h2>New task</h2>
-<form id="taskForm">
-<textarea name="text" rows="2" placeholder="Describe what you want the agents to look at..."></textarea>
-<button class="primary" type="submit">Add to inbox</button>
-</form>
-<div id="taskResult" class="result"></div>
-<h3>Inbox</h3>
-{inbox_html}
-
-<h2>Open questions</h2>
-<pre>{open_questions}</pre>
-
+<script>
+const VIEWS = ["today", "meetings", "inbox", "archive", "models", "accounts", "polling", "learning"];
+function showView(name) {{
+  if (!VIEWS.includes(name)) name = "today";
+  document.querySelectorAll(".view").forEach(v => {{ v.hidden = v.id !== "v-" + name; }});
+  document.querySelectorAll(".nav-link").forEach(a => a.classList.toggle("active", a.dataset.view === name));
+  const v = document.getElementById("v-" + name);
+  document.getElementById("viewTitle").textContent = v ? v.dataset.title.replace("&amp;", "&") : "";
+}}
+window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
+document.addEventListener("DOMContentLoaded", () => showView(location.hash.slice(1)));
+function toggleTheme() {{
+  const root = document.documentElement;
+  const next = root.dataset.theme === "light" ? "dark" : "light";
+  root.dataset.theme = next;
+  try {{ localStorage.setItem("cos-theme", next); }} catch (e) {{}}
+}}
+</script>
 <script>
 async function post(url, body) {{
   const r = await fetch(url, {{method: "POST", headers: {{"Content-Type":"application/json"}}, body: JSON.stringify(body)}});
@@ -1762,7 +1622,7 @@ def render_start_research():
         return ""
     return (
         '<div class="start-research-card">'
-        "<h2>🚀 Ready when you are</h2>"
+        "<h2>Ready when you are</h2>"
         '<div class="quick-line">Nothing researched yet. I can crawl your connected accounts '
         "(read-only), build your knowledge graph, discover your workspaces, and propose your "
         "agents — using any context you added above as the highest-confidence source.</div>"
@@ -1927,7 +1787,7 @@ def render_models_section():
   <span class="meta">{pill}</span>
 </div>""")
     return f"""
-<h2>🧠 Models</h2>
+<h2>Models</h2>
 <div class="quick-line">Pick which model does which kind of work. Light jobs are frequent and
 simple, deep jobs are rare and hard. Your Claude subscription works with no key; add API keys
 to use Anthropic, OpenAI, Gemini, OpenRouter or a local Ollama model. Keys are stored only on
@@ -2032,7 +1892,7 @@ def render_accounts_section():
             "detects new instances, probes who each is logged in as, and binds them "
             "to workspaces automatically.</div>")
     return (
-        "<h2>🔌 Accounts &amp; connections <button class=\"small\" "
+        "<h2>Accounts &amp; connections <button class=\"small\" "
         "onclick=\"probeAccounts()\">Check now</button> "
         "<button class=\"small\" onclick=\"connectAccount()\">➕ Connect an account</button></h2>"
         "<div id=\"connectForm\" style=\"display:none;margin:.4rem 0\">"
@@ -2154,7 +2014,7 @@ def render_self_learning_section():
         pass
     pending_note = (" · %d correction(s) pending" % n_pending) if n_pending else ""
     return f"""
-<h2>🧠 Self-learning</h2>
+<h2>Self-learning</h2>
 <div class="quick-line" style="margin-bottom:.6rem">When you tell the chat something was missed
 or wrong, the system fetches it, reasons about <em>why</em> it was missed, fixes the cause
 (config, instructions, or its own code — gated by its test suite with automatic rollback), and
@@ -2165,7 +2025,7 @@ records the lesson. It never touches anything external; approval gating is untou
   &nbsp;&nbsp;
   <label><input type="checkbox" id="slCode" {"checked" if code_on else ""} {"" if on else "disabled"}
     onchange="setSelfLearning()"> May fix its own code (otherwise drafts fixes as tasks)</label>
-  <span style="color:#5b6b7a">{pending_note}</span>
+  <span class="meta">{pending_note}</span>
 </div>
 <div id="slResult" class="result"></div>
 <script>
@@ -2266,6 +2126,37 @@ def attach_to_tasks(pending, g):
                 "id": e.get("id"), "html": render_entry(e),
                 "label": CHIP_LABELS.get(e.get("action_type", ""), "⏳ needs approval")})
     return out
+
+
+def render_stat_strip(requested_ws, pending):
+    """The four numbers at the top of Today. Returns (html, open_count)."""
+    overdue = today = quiet = total = 0
+    if _sections is not None:
+        try:
+            g, _reg, act = _sections.load_for_dashboard(COS_DIR, requested_ws)
+            if g is not None:
+                import graph as _g
+                for it in _sections.next_actions(g, act, limit=100000):
+                    total += 1
+                    n = g.nodes.get(it["id"])
+                    if n is not None and _g.is_gone_quiet(n):
+                        quiet += 1
+                    elif it.get("overdue"):
+                        overdue += 1
+                    elif it.get("due_days") is not None and it["due_days"] < 1:
+                        today += 1
+        except Exception:
+            pass
+    tiles = [
+        ("stat-danger" if overdue else "", overdue, "overdue, still live"),
+        ("", today, "due today"),
+        ("stat-accent" if pending else "", len(pending), "drafts waiting for you"),
+        ("", quiet, "gone quiet, still needed?"),
+    ]
+    html_ = '<div class="stats">%s</div>' % "".join(
+        '<div class="stat %s"><div class="stat-num">%d</div><div class="stat-label">%s</div></div>'
+        % (cls, num, label) for cls, num, label in tiles)
+    return html_, total
 
 
 def render_command_center(requested_ws=None, pending=None, used=None):
@@ -2402,15 +2293,20 @@ class Handler(BaseHTTPRequestHandler):
         loose = [e for e in pending if not tied[e.get("id")]]
         on_board = sum(1 for e in pending if tied[e.get("id")] in shown_on_tasks)
         elsewhere = len(pending) - len(loose) - on_board
-        queue_html = "".join(render_entry(e) for e in loose) or "<div class='empty'>Nothing else pending.</div>"
+        queue_html = "".join(render_entry(e) for e in loose)
         notes = []
         if on_board:
             notes.append("%d waiting for approval on their tasks in the Command Center above "
                          "(look for the draft chip)" % on_board)
         if elsewhere:
             notes.append("%d on tasks in other workspace views" % elsewhere)
-        if notes:
-            queue_html = "<div class='quick-line'>%s.</div>" % "; ".join(notes) + queue_html
+        loose_queue = ""
+        if loose:
+            loose_queue = ("<h2>Waiting for approval, not tied to a task "
+                           "<span class='sec-count'>%d</span></h2>" % len(loose)
+                           + ("<div class='quick-line'>%s.</div>" % "; ".join(notes) if notes else "")
+                           + queue_html)
+        stat_strip, open_count = render_stat_strip(requested_ws, pending)
         failed = [e for e in entries if e.get("status") == "failed"]
         failed_html = "".join(render_failed_entry(e) for e in failed)
         drafted = [e for e in entries if e.get("status") == "drafted"]
@@ -2432,6 +2328,12 @@ class Handler(BaseHTTPRequestHandler):
             daily_label=label or "no daily log yet",
             daily=html.escape(daily) or "(empty)",
             pending_count=len(loose),
+            loose_queue=loose_queue,
+            stat_strip=stat_strip,
+            nav_open=open_count,
+            nav_meetings=len(meetings),
+            app_name=html.escape(CONFIG.get("app_name") or "Chief of Staff"),
+            theme_css=(_theme.CSS if _theme is not None else ""),
             queue_html=queue_html,
             failed_section=(f"<h2>⚠️ Failed attempts ({len(failed)})</h2>{failed_html}" if failed else ""),
             drafted_section=(f"<h2>📝 Drafted — waiting for you to send ({len(drafted)})</h2>{drafted_html}" if drafted else ""),
