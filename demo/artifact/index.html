@@ -377,6 +377,11 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .mdl-tier { flex: 0 1 200px; min-width: 0; } .mdl-tier b { font-family: var(--serif); font-size: 17px; font-weight: 600; } .mdl-tier .meta { margin: 2px 0 0; }
 .mdl-prov { flex: 0 1 240px; min-width: 0; }
 .mdl-model { flex: 1 1 170px; min-width: 0; }
+.mdl-effort { flex: 0 0 auto; }
+.usage-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 4px 0 10px; }
+.usage-table th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: 12.5px; padding: 6px 4px; border-bottom: 1px solid var(--rule-strong); }
+.usage-table td { padding: 9px 4px; border-bottom: 1px solid var(--rule); }
+.usage-table .num { text-align: right; font-variant-numeric: tabular-nums; }
 .mdl-key { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; }
 .mdl-key-name { flex: 0 0 240px; }
 .mdl-keys { margin: 16px 0; } .mdl-keys summary { cursor: pointer; color: var(--ink-2); }
@@ -408,6 +413,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
   <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">2</span></a>
   <div class="nav-group">Settings</div>
   <a class="nav-link" href="#models" data-view="models">Models</a>
+  <a class="nav-link" href="#usage" data-view="usage">Usage <span class="nav-count">$0.00</span></a>
   <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
@@ -2388,6 +2394,7 @@ this machine (<code>secrets.json</code>, readable by you alone) and sent only to
   <input class="mdl-model" list="mdl-list-light" value=""
          placeholder="default model" />
   <datalist id="mdl-list-light"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
   <button class="small" onclick="mdlList(this)">List models</button>
   <button class="small" onclick="mdlTest(this)">Test</button>
   <span class="mdl-result meta"></span>
@@ -2399,6 +2406,7 @@ this machine (<code>secrets.json</code>, readable by you alone) and sent only to
   <input class="mdl-model" list="mdl-list-standard" value=""
          placeholder="default model" />
   <datalist id="mdl-list-standard"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
   <button class="small" onclick="mdlList(this)">List models</button>
   <button class="small" onclick="mdlTest(this)">Test</button>
   <span class="mdl-result meta"></span>
@@ -2410,6 +2418,7 @@ this machine (<code>secrets.json</code>, readable by you alone) and sent only to
   <input class="mdl-model" list="mdl-list-deep" value=""
          placeholder="default model" />
   <datalist id="mdl-list-deep"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
   <button class="small" onclick="mdlList(this)">List models</button>
   <button class="small" onclick="mdlTest(this)">Test</button>
   <span class="mdl-result meta"></span>
@@ -2451,7 +2460,8 @@ function mdlTiers() {
   const out = {};
   document.querySelectorAll(".mdl-row").forEach(r => {
     out[r.dataset.tier] = {provider: r.querySelector(".mdl-prov").value,
-                           model: r.querySelector(".mdl-model").value.trim()};
+                           model: r.querySelector(".mdl-model").value.trim(),
+                           effort: r.querySelector(".mdl-effort").value};
   });
   return out;
 }
@@ -2489,6 +2499,38 @@ async function mdlSaveKey(btn) {
   const r = await post("/models-key", {provider: row.dataset.provider, key: inp.value});
   inp.value = "";
   row.querySelector(".meta").textContent = r.message;
+}
+</script>
+</section>
+
+<section class="view" id="v-usage" data-title="Usage" hidden>
+
+<h2>Usage</h2>
+<p class="view-intro">What the model calls cost, from each call's own report. Every call sends only the
+tools its job may use and has a spending ceiling of its own; quiet connectors are checked less often.
+On a Claude subscription these are what the calls would cost on the API, a measure of how much of
+your plan they use.</p>
+<div class="stats">
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">today</div></div>
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">last 7 days</div></div>
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">last 30 days</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">calls in 30 days</div></div>
+</div>
+<h3>Daily budget</h3>
+<div class="quick-line">When today's spend reaches it, scheduled polls and new model jobs wait until
+tomorrow. Actions you approve still go through. Now: no daily budget set.</div>
+<div class="actions"><input id="budgetInput" type="number" min="0" step="0.5" placeholder="e.g. 5" value="" style="width:120px" />
+<button class="small primary" onclick="saveBudget()">Save budget</button>
+<button class="small" onclick="document.getElementById('budgetInput').value=''; saveBudget()">No budget</button>
+<span id="budgetResult" class="meta"></span></div>
+<h3>By job, last 30 days</h3>
+<div class='empty'>No model calls recorded yet.</div>
+<div class="meta"></div>
+<script>
+async function saveBudget() {
+  const v = document.getElementById("budgetInput").value;
+  const r = await post("/usage-budget", {daily_usd: v ? parseFloat(v) : null});
+  document.getElementById("budgetResult").textContent = r.message;
 }
 </script>
 </section>
@@ -2678,7 +2720,7 @@ async function ctxSave() {
 
 
 <script>
-const VIEWS = ["today", "meetings", "inbox", "archive", "models", "accounts", "polling", "learning"];
+const VIEWS = ["today", "meetings", "inbox", "archive", "models", "usage", "accounts", "polling", "learning"];
 function showView(name) {
   if (!VIEWS.includes(name)) name = "today";
   document.querySelectorAll(".view").forEach(v => { v.hidden = v.id !== "v-" + name; });
@@ -2760,7 +2802,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "/") { e.preventDefault(); paletteOpen(); return; }
   if (_gPending) {
     _gPending = false;
-    const map = {t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", p: "polling", l: "learning", c: "accounts"};
+    const map = {t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"};
     if (map[e.key.toLowerCase()]) { location.hash = map[e.key.toLowerCase()]; e.preventDefault(); }
     return;
   }

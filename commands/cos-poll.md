@@ -26,7 +26,10 @@ check-in, not the full sweep): run a lightweight "anything new since last check"
 that connector's read/search tool, narrow time window since the last successful run for that
 connector (check `dashboard/poll-log.md` for the timestamp). If nothing looks like it needs
 real attention (routine chatter, already-closed threads), log `<connector>: nothing new` and
-stop for that connector — don't draft anything for noise.
+stop for that connector — don't draft anything for noise. Also print that exact line on its own
+in your final reply (for example `slack: nothing new`): the scheduler reads it to check a quiet
+connector less often, which is most of what polling costs. Keep these quick checks cheap: search
+the narrow window first and open a message only when its preview looks like it needs the user.
 
 **Escalation**: if something *does* look like it needs attention (a new message that's a
 request, a question directed at the user, anything matching an open approval-queue item's

@@ -111,7 +111,8 @@ def load(config_dir):
     for t in TIERS:
         v = tiers.get(t) or {}
         prov = v.get("provider") if v.get("provider") in PROVIDERS else "claude-code"
-        out[t] = {"provider": prov, "model": str(v.get("model") or "").strip()}
+        eff = v.get("effort") if v.get("effort") in ("low", "medium", "high", "xhigh", "max") else ""
+        out[t] = {"provider": prov, "model": str(v.get("model") or "").strip(), "effort": eff}
     return {"tiers": out}
 
 
@@ -126,10 +127,19 @@ def save(config_dir, tiers):
         model = str(v.get("model") or "").strip()
         if any(c.isspace() for c in model) or len(model) > 200:
             raise ModelError("model names have no spaces: %r" % model)
-        clean[t] = {"provider": prov, "model": model}
+        eff = v.get("effort") or ""
+        if eff and eff not in ("low", "medium", "high", "xhigh", "max"):
+            raise ModelError("unknown effort %r" % eff)
+        clean[t] = {"provider": prov, "model": model, "effort": eff}
     path = os.path.join(config_dir, CONFIG_FILE)
+    try:
+        with open(path) as f:
+            cfg = json.load(f) or {}       # keep other settings (the budget)
+    except (OSError, ValueError):
+        cfg = {}
+    cfg["tiers"] = clean
     with open(path, "w") as f:
-        json.dump({"tiers": clean}, f, indent=1)
+        json.dump(cfg, f, indent=1)
     return {"tiers": clean}
 
 
@@ -201,12 +211,20 @@ def route(config_dir, job):
     return {"provider": t["provider"], "model": t["model"], "tier": tier, "note": ""}
 
 
+EFFORTS = ("low", "medium", "high", "xhigh", "max")
+
+
 def claude_args(config_dir, job):
-    """Extra ``claude`` CLI arguments for a job routed to Claude Code."""
+    """Extra ``claude`` CLI arguments for a job routed to Claude Code: the
+    tier's model and, when set, its effort (how hard the model thinks)."""
     r = route(config_dir, job)
-    if r["provider"] == "claude-code" and r["model"]:
-        return ["--model", r["model"]]
-    return []
+    if r["provider"] != "claude-code" or r["tier"] is None:
+        return []
+    out = ["--model", r["model"]] if r["model"] else []
+    eff = load(config_dir)["tiers"][r["tier"]].get("effort", "")
+    if eff in EFFORTS:
+        out += ["--effort", eff]
+    return out
 
 
 def uses_api(config_dir, job):

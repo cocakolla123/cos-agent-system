@@ -35,3 +35,5 @@ demo/state/server.log
 dashboard/secrets.json
 dashboard/models.json
 dashboard/api-chat-history.json
+dashboard/usage.jsonl
+dashboard/poll-quiet.json

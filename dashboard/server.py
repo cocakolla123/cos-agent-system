@@ -229,6 +229,10 @@ try:
 except Exception:  # pragma: no cover
     _models = None
 try:
+    import usage as _usage
+except Exception:  # pragma: no cover
+    _usage = None
+try:
     import theme as _theme
 except Exception:  # pragma: no cover
     _theme = None
@@ -844,6 +848,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">{archived_count}</span></a>
   <div class="nav-group">Settings</div>
   <a class="nav-link" href="#models" data-view="models">Models</a>
+  <a class="nav-link" href="#usage" data-view="usage">Usage <span class="nav-count">{nav_spend}</span></a>
   <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
@@ -913,6 +918,10 @@ projects/ or any agent memory, which keep everything learned from this work.</p>
 {models_html}
 </section>
 
+<section class="view" id="v-usage" data-title="Usage" hidden>
+{usage_html}
+</section>
+
 <section class="view" id="v-accounts" data-title="Accounts" hidden>
 {accounts_html}
 </section>
@@ -957,7 +966,7 @@ its window it skips.</p>
 {context_modal_html}
 
 <script>
-const VIEWS = ["today", "meetings", "inbox", "archive", "models", "accounts", "polling", "learning"];
+const VIEWS = ["today", "meetings", "inbox", "archive", "models", "usage", "accounts", "polling", "learning"];
 function showView(name) {{
   if (!VIEWS.includes(name)) name = "today";
   document.querySelectorAll(".view").forEach(v => {{ v.hidden = v.id !== "v-" + name; }});
@@ -1039,7 +1048,7 @@ document.addEventListener("keydown", e => {{
   if (e.key === "/") {{ e.preventDefault(); paletteOpen(); return; }}
   if (_gPending) {{
     _gPending = false;
-    const map = {{t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", p: "polling", l: "learning", c: "accounts"}};
+    const map = {{t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"}};
     if (map[e.key.toLowerCase()]) {{ location.hash = map[e.key.toLowerCase()]; e.preventDefault(); }}
     return;
   }}
@@ -1573,10 +1582,23 @@ def render_live_refresh_js():
     )
 
 
-def spawn_background(cmd, logname):
+def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None):
+    """One claude call through usage.run: only the job's tools are sent, the
+    call is capped, its cost is logged, and the daily budget is respected.
+    Same shape as subprocess.run's result, so call sites did not change."""
+    if _usage is None:
+        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+    return _usage.run(cmd, job, DASHBOARD_DIR, cwd=cwd, timeout=timeout)
+
+
+def spawn_background(cmd, logname, job=None):
     """Popen with output appended to a dashboard log file. Closes the parent's
     handle immediately (the child holds its own dup), so repeated spawns don't
-    leak file descriptors."""
+    leak file descriptors. With ``job``, the call runs through usage.py (only
+    the job's tools sent, capped, cost logged, daily budget respected)."""
+    if job and _usage is not None:
+        cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "usage.py"),
+               "run", job, DASHBOARD_DIR, "--", *cmd]
     log = open(os.path.join(DASHBOARD_DIR, logname), "a")
     try:
         return subprocess.Popen(cmd, cwd=ORCHESTRATOR_CWD, stdout=log,
@@ -1609,7 +1631,7 @@ def maybe_start_learn_loop(message):
                     "--permission-mode", "dontAsk",
                     "--allowedTools", LEARN_TOOLS,
                     "--output-format", "text",
-                ], "learn.log")
+                ], "learn.log", job="learn")
             return ("\n\n🧠 Noted as a correction (%s) — investigating in the "
                     "background why this was missed; the fix and reasoning will "
                     "land in lessons-learned." % rec["id"])
@@ -1855,6 +1877,10 @@ def render_models_section():
         '<option value="%s"%s>%s</option>' % (p, " selected" if p == sel else "",
                                               html.escape(m["label"]))
         for p, m in _models.PROVIDERS.items())
+    eff_opts = lambda sel: "".join(
+        '<option value="%s"%s>%s</option>' % (v, " selected" if v == sel else "", lab)
+        for v, lab in (("", "Effort: default"), ("low", "Effort: low"), ("medium", "Effort: medium"),
+                       ("high", "Effort: high")))
     rows = []
     for tier in _models.TIERS:
         c = cfg[tier]
@@ -1870,6 +1896,7 @@ def render_models_section():
   <input class="mdl-model" list="mdl-list-{tier}" value="{html.escape(c['model'])}"
          placeholder="default model" />
   <datalist id="mdl-list-{tier}"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster">{eff_opts(c.get('effort', ''))}</select>
   <button class="small" onclick="mdlList(this)">List models</button>
   <button class="small" onclick="mdlTest(this)">Test</button>
   <span class="mdl-result meta"></span>
@@ -1911,7 +1938,8 @@ function mdlTiers() {{
   const out = {{}};
   document.querySelectorAll(".mdl-row").forEach(r => {{
     out[r.dataset.tier] = {{provider: r.querySelector(".mdl-prov").value,
-                           model: r.querySelector(".mdl-model").value.trim()}};
+                           model: r.querySelector(".mdl-model").value.trim(),
+                           effort: r.querySelector(".mdl-effort").value}};
   }});
   return out;
 }}
@@ -1949,6 +1977,63 @@ async function mdlSaveKey(btn) {{
   const r = await post("/models-key", {{provider: row.dataset.provider, key: inp.value}});
   inp.value = "";
   row.querySelector(".meta").textContent = r.message;
+}}
+</script>"""
+
+
+_JOB_LABELS = {"chat": "Chat", "task_chat": "Task chat", "revise": "Revising drafts",
+               "poll": "Polls", "research": "Research crawls", "learn": "Learning",
+               "accounts_probe": "Account checks", "approve": "Approved actions", "draft": "Drafts"}
+
+
+def render_usage_section():
+    """Settings → Usage: what the model calls cost, and the daily budget."""
+    if _usage is None:
+        return ""
+    try:
+        s = _usage.summary(DASHBOARD_DIR, days=30)
+        b = _usage.budget(DASHBOARD_DIR)
+    except Exception:
+        return ""
+    cap = b["daily_usd"]
+    rows = "".join(
+        "<tr><td>%s</td><td class='num'>%d</td><td class='num'>%s</td><td class='num'>$%.2f</td></tr>" % (
+            html.escape(_JOB_LABELS.get(j, j)), v["calls"],
+            "{:,}".format(v["tokens"]), v["cost"])
+        for j, v in sorted(s["by_job"].items(), key=lambda kv: -kv[1]["cost"]))
+    models_ = ", ".join("%s $%.2f" % (html.escape(m), c)
+                        for m, c in sorted(s["by_model"].items(), key=lambda kv: -kv[1]))
+    table = ("<table class='usage-table'><thead><tr><th>Job</th><th class='num'>Calls</th>"
+             "<th class='num'>Tokens</th><th class='num'>Cost</th></tr></thead><tbody>%s</tbody></table>"
+             % rows) if rows else "<div class='empty'>No model calls recorded yet.</div>"
+    cap_line = ("${:.2f} of ${:.2f} today".format(s["today"], cap) if cap else "no daily budget set")
+    return f"""
+<h2>Usage</h2>
+<p class="view-intro">What the model calls cost, from each call's own report. Every call sends only the
+tools its job may use and has a spending ceiling of its own; quiet connectors are checked less often.
+On a Claude subscription these are what the calls would cost on the API, a measure of how much of
+your plan they use.</p>
+<div class="stats">
+  <div class="stat"><div class="stat-num">${s['today']:.2f}</div><div class="stat-label">today</div></div>
+  <div class="stat"><div class="stat-num">${s['week']:.2f}</div><div class="stat-label">last 7 days</div></div>
+  <div class="stat"><div class="stat-num">${s['period']:.2f}</div><div class="stat-label">last 30 days</div></div>
+  <div class="stat"><div class="stat-num">{s['calls']}</div><div class="stat-label">calls in 30 days</div></div>
+</div>
+<h3>Daily budget</h3>
+<div class="quick-line">When today's spend reaches it, scheduled polls and new model jobs wait until
+tomorrow. Actions you approve still go through. Now: {cap_line}.</div>
+<div class="actions"><input id="budgetInput" type="number" min="0" step="0.5" placeholder="e.g. 5" value="{cap or ''}" style="width:120px" />
+<button class="small primary" onclick="saveBudget()">Save budget</button>
+<button class="small" onclick="document.getElementById('budgetInput').value=''; saveBudget()">No budget</button>
+<span id="budgetResult" class="meta"></span></div>
+<h3>By job, last 30 days</h3>
+{table}
+<div class="meta">{('By model: ' + models_) if models_ else ''}</div>
+<script>
+async function saveBudget() {{
+  const v = document.getElementById("budgetInput").value;
+  const r = await post("/usage-budget", {{daily_usd: v ? parseFloat(v) : null}});
+  document.getElementById("budgetResult").textContent = r.message;
 }}
 </script>"""
 
@@ -2453,6 +2538,8 @@ class Handler(BaseHTTPRequestHandler):
             self_learning_html=render_self_learning_section(),
             accounts_html=render_accounts_section(),
             models_html=render_models_section(),
+            usage_html=render_usage_section(),
+            nav_spend=(("$%.2f" % _usage.spent_today(DASHBOARD_DIR)) if _usage is not None else ""),
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
             guardrail_banner=(render_demo_banner() if DEMO else render_guardrail_banner()),
@@ -2477,6 +2564,18 @@ class Handler(BaseHTTPRequestHandler):
 
         if DEMO:
             self._send_json({"message": demo_reply(self.path, data), "demo": True})
+            return
+
+        if self.path == "/usage-budget":
+            if _usage is None:
+                self._send_json({"message": "usage tracking unavailable"}, 500)
+                return
+            try:
+                _usage.save_budget(DASHBOARD_DIR, data.get("daily_usd"))
+                b = _usage.budget(DASHBOARD_DIR)["daily_usd"]
+                self._send_json({"message": ("Saved: $%.2f a day." % b) if b else "No daily budget."})
+            except (ValueError, TypeError) as exc:
+                self._send_json({"message": "⚠️ %s" % exc}, 400)
             return
 
         if self.path in ("/models-save", "/models-key", "/models-list", "/models-test"):
@@ -2561,7 +2660,7 @@ class Handler(BaseHTTPRequestHandler):
                     "everything except Google's own consent clicks.) User message: " + message)
 
             def _run_chat(flag):
-                return subprocess.run(
+                return claude_run("chat", 
                     [
                         CLAUDE_BIN, "-p", message,
                         *flag, *model_args("chat"),
@@ -2668,7 +2767,7 @@ class Handler(BaseHTTPRequestHandler):
                 "--session-id", sess["session_id"]
             ]
             try:
-                result = subprocess.run(
+                result = claude_run("task_chat", 
                     [
                         CLAUDE_BIN, "-p", message,
                         *session_flag, *model_args("task_chat"),
@@ -2797,7 +2896,7 @@ class Handler(BaseHTTPRequestHandler):
                 # a real deployment, 2026-07). Scoped to only this one subprocess, only the one
                 # tool this specific action needs — get explicit user sign-off before enabling
                 # this in a fresh deployment, since it is a real trade-off (see PLAN.md).
-                result = subprocess.run(
+                result = claude_run("approve", 
                     [
                         CLAUDE_BIN, "-p", f"/global:cos-approve-confirmed {entry_id}",
                         "--permission-mode", "bypassPermissions",
@@ -2891,7 +2990,7 @@ class Handler(BaseHTTPRequestHandler):
                                  else "The model returned the same draft."})
                 return
             try:
-                result = subprocess.run(
+                result = claude_run("revise", 
                     [
                         CLAUDE_BIN, "-p", f"/global:cos-revise {entry_id} {json.dumps(feedback)}",
                         *model_args("revise"),
@@ -2920,7 +3019,7 @@ class Handler(BaseHTTPRequestHandler):
             prompt = ("/global:cos-poll --scope=%s --force" % scopes
                       if scopes else "/global:cos-poll --force")
             try:
-                result = subprocess.run(
+                result = claude_run("poll", 
                     [
                         CLAUDE_BIN, "-p", prompt, *model_args("poll"),
                         "--permission-mode", "dontAsk",
@@ -3047,7 +3146,7 @@ class Handler(BaseHTTPRequestHandler):
                     [CLAUDE_BIN, "-p", "/global:cos-research --full", *model_args("research"),
                      "--permission-mode", "dontAsk",
                      "--allowedTools", RESEARCH_TOOLS,
-                     "--output-format", "text"], "research.log")
+                     "--output-format", "text"], "research.log", job="research")
                 self._send_json({"message": "research started in the background — "
                                             "watch the Command Center fill in "
                                             "(details in research.log)"})
@@ -3088,7 +3187,7 @@ class Handler(BaseHTTPRequestHandler):
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", RESEARCH_TOOLS,
-                         "--output-format", "text"], "accounts.log")
+                         "--output-format", "text"], "accounts.log", job="accounts_probe")
                 except OSError:
                     pass
             self._send_json(st, 200 if st.get("step") != "error" else 400)
@@ -3107,7 +3206,7 @@ class Handler(BaseHTTPRequestHandler):
                         "--permission-mode", "dontAsk",
                         "--allowedTools", RESEARCH_TOOLS,
                         "--output-format", "text",
-                    ], "accounts.log")
+                    ], "accounts.log", job="accounts_probe")
                 self._send_json({"message": "probing all accounts in the background — "
                                             "this page will refresh shortly"})
             except OSError as exc:
@@ -3145,7 +3244,7 @@ class Handler(BaseHTTPRequestHandler):
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", POLL_TOOLS,
-                         "--output-format", "text"], "accounts.log")
+                         "--output-format", "text"], "accounts.log", job="accounts_probe")
                 except OSError:
                     pass
                 msg = "browser opened — finish the login there; re-checking in the background"

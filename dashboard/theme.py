@@ -348,6 +348,11 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .mdl-tier { flex: 0 1 200px; min-width: 0; } .mdl-tier b { font-family: var(--serif); font-size: 17px; font-weight: 600; } .mdl-tier .meta { margin: 2px 0 0; }
 .mdl-prov { flex: 0 1 240px; min-width: 0; }
 .mdl-model { flex: 1 1 170px; min-width: 0; }
+.mdl-effort { flex: 0 0 auto; }
+.usage-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 4px 0 10px; }
+.usage-table th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: 12.5px; padding: 6px 4px; border-bottom: 1px solid var(--rule-strong); }
+.usage-table td { padding: 9px 4px; border-bottom: 1px solid var(--rule); }
+.usage-table .num { text-align: right; font-variant-numeric: tabular-nums; }
 .mdl-key { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; }
 .mdl-key-name { flex: 0 0 240px; }
 .mdl-keys { margin: 16px 0; } .mdl-keys summary { cursor: pointer; color: var(--ink-2); }

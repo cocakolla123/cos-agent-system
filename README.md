@@ -74,6 +74,23 @@ Claude Code's default model, and Settings says so. The evals back the defaults: 
 on the first crawl or on the weekly polls missed tasks the default model caught
 ([long-run report](./evals/results/longrun/REPORT.md)), so keep Standard and Deep strong.
 
+## What it costs
+
+Every model call reports its own cost, and **Settings → Usage** shows it by day, job and
+model. The usage limiter (`dashboard/usage.py`) keeps the cost down:
+
+- **Only the tools a job may use are sent.** Claude Code otherwise sends every built-in
+  tool's definition with each call, about 40k tokens. Measured on the same small job:
+  $0.075 before, $0.042 after; on a bare reply, $0.057 before, $0.007 after.
+- **Every call has a ceiling** (`--max-budget-usd`, per job), so a runaway job stops.
+- **A daily budget** (optional) pauses scheduled polls and new model jobs for the rest of
+  the day. Actions you approve still go through.
+- **Quiet connectors are checked less often:** after 3 polls that found nothing new, a
+  connector waits twice its interval, and after 6, four times. It returns to normal as soon
+  as something turns up. The deep "general" sweep keeps its pace.
+- **Effort per level** (how hard the model thinks) is a setting in Models. It is off by
+  default because its effect on quality has not been measured yet.
+
 ## Architecture
 
 ```mermaid
