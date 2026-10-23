@@ -237,7 +237,7 @@ class TestServerWiring(unittest.TestCase):
         self.assertTrue(self.server.api_route("chat"))
         self.assertFalse(self.server.api_route("research"))   # needs connectors
         html_ = self.server.render_models_section()
-        self.assertIn("🧠 Models", html_)
+        self.assertIn("<h2>Models</h2>", html_)
         self.assertIn('value="m-small"', html_)
         self.assertIn("still run on Claude Code", html_)
 

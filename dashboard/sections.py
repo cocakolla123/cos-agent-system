@@ -73,9 +73,10 @@ def _url(n):
 def _item(n, sub=""):
     return {"id": n["id"], "title": n.get("name", n["id"]),
             "type": n.get("type"), "sub": sub, "url": _url(n),
-            "meta": n.get("last_verified", ""), "stale": _graph.is_gone_quiet(n),
+            "meta": n.get("last_verified", ""), "stale": _graph.is_stale(n),
             "dormant": _graph.is_dormant(n), "concluded": _graph.is_concluded(n),
-            "overdue": _graph.is_overdue(n), "due_days": _graph.due_days(n)}
+            "overdue": _graph.is_overdue(n), "due_days": _graph.due_days(n),
+            "quiet": _graph.is_gone_quiet(n)}
 
 
 def _current(nodes):
@@ -314,8 +315,8 @@ def render_workspace_switcher(registry, active):
         label = _esc(w.get("label", wsid))
         cls = ' class="ws-active"' if active == wsid else ""
         opts.append('<a href="?workspace=%s"%s>%s</a>' % (_esc(wsid), cls, label))
-    return ('<div class="ws-switcher" style="margin:8px 0;font-size:13px">'
-            'Workspace: ' + " · ".join(opts) + "</div>")
+    return ('<div class="ws-switcher" role="navigation" aria-label="Workspace">'
+            + "".join(opts) + "</div>")
 
 
 def _slug_anchor(label):
@@ -666,24 +667,26 @@ def render_today_brief(g, active=None, today=None):
     import datetime as _dtm
     today = today or _graph._utcnow().astimezone().date().isoformat()
     todos = next_actions(g, active, limit=50)
-    overdue = [t for t in todos if t.get("overdue")]
+    # gone-quiet items are not today's news; they sit in their own group
+    overdue = [t for t in todos if t.get("overdue") and not t.get("quiet")]
     due_today = [t for t in todos if t.get("due_days") is not None
                  and 0 <= t["due_days"] < 1]
     meetings_today = [m for m in meetings(g, active, limit=20)
                       if str(m.get("sub", "")).startswith(today)]
-    top = [t for t in todos if t not in overdue and t not in due_today][:3]
+    top = [t for t in todos if t not in overdue and t not in due_today
+           and not t.get("quiet")][:3]
     parts = []
     if overdue:
-        parts.append('<div class="tb-line tb-overdue">🔴 <strong>%d overdue:</strong> %s</div>' % (
+        parts.append('<div class="tb-line tb-overdue"><strong>%d overdue:</strong> %s</div>' % (
             len(overdue), " · ".join(_render_title(t) for t in overdue[:4])))
     if due_today:
-        parts.append('<div class="tb-line">⏰ <strong>Due today:</strong> %s</div>' % (
+        parts.append('<div class="tb-line"><strong>Due today:</strong> %s</div>' % (
             " · ".join(_render_title(t) for t in due_today[:4])))
     if meetings_today:
-        parts.append('<div class="tb-line">📅 <strong>Meetings:</strong> %s</div>' % (
+        parts.append('<div class="tb-line"><strong>Meetings:</strong> %s</div>' % (
             " · ".join(_render_title(m) for m in meetings_today[:4])))
     if top:
-        parts.append('<div class="tb-line">▶ <strong>Next up:</strong> %s</div>' % (
+        parts.append('<div class="tb-line"><strong>Next up:</strong> %s</div>' % (
             " · ".join(_render_title(t) for t in top)))
     if not parts:
         parts.append('<div class="tb-line">Nothing due or scheduled today — '

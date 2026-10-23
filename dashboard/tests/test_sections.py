@@ -126,7 +126,7 @@ class TestRender(unittest.TestCase):
         reg.upsert("employer", kind="employer")
         self.assertEqual(sections.render_workspace_switcher(reg, "employer"), "")
         reg.upsert("personal", kind="personal")
-        self.assertIn("Workspace:",
+        self.assertIn('aria-label="Workspace"',
                       sections.render_workspace_switcher(reg, "employer"))
 
     def test_objective_card_rendered(self):
@@ -416,3 +416,14 @@ class TestCoverageReport(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestItemStaleMeansFreshness(unittest.TestCase):
+    """item['stale'] is crawl freshness (graph.is_stale), not 'gone quiet'."""
+    def test_long_overdue_but_freshly_seen_is_not_stale(self):
+        g = graph.Graph()
+        n = g.upsert_node("Action", "w", "old", name="Old ask",
+                          attrs={"due": "2020-01-01"})
+        it = sections._item(n)
+        self.assertFalse(it["stale"])
+        self.assertTrue(graph.is_gone_quiet(n))
