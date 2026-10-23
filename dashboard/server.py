@@ -1045,7 +1045,7 @@ document.addEventListener("keydown", e => {{
   }}
   if (e.key.toLowerCase() === "g") {{ _gPending = true; setTimeout(() => {{ _gPending = false; }}, 1200); return; }}
   if (e.key === "j" || e.key === "k") {{
-    const rows = [...document.querySelectorAll("#v-today:not([hidden]) .todo-row")];
+    const rows = [...document.querySelectorAll("#v-today:not([hidden]) .todo-row:not([hidden])")];
     if (!rows.length) return;
     const cur = rows.findIndex(r => r.classList.contains("todo-selected"));
     const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === "j" ? 1 : -1)))];

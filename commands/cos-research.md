@@ -242,6 +242,17 @@ Emit each obligation as `kind: "Action"` with:
   support reply, an extension request, a re-issued link). Record it rather than dropping the
   item: an obligation waiting on a third party is still the user's to chase, and it is the state
   a stalled item sits in for weeks. Name the party and the date they were last contacted.
+- `attrs.importance` — how much the obligation matters **apart from its date** (`high`, `medium`
+  or `low`), with `attrs.importance_reason` in a few words. The dashboard shows this as the task's
+  priority; urgency already comes from the due date, so do not raise importance because something
+  is overdue or due soon. `high` only when missing it would really hurt: a client or customer is
+  waiting on it, it is security work (a leaked credential, an access review, a certificate), it is
+  audit or contract evidence, it blocks a launch or other people's work, or someone explicitly said
+  "ASAP"/"urgent". Being asked by the manager is normal work, not by itself high. Expect `high` on
+  about one task in five; if most tasks look high, the bar is too low. `low` for quick replies with
+  no stakes, optional asks, housekeeping, and soft wording ("no rush", "when you get a chance").
+  Otherwise `medium`. Reason examples: "client waiting", "security", "audit evidence", "blocks
+  launch", "said urgent", "optional".
 - `attrs.last_activity` — the date (`YYYY-MM-DD`) of the newest message, comment or update about
   this obligation: the ask, a reminder, a follow-up, a partial reply. Not the crawl date. The
   dashboard ranks by it: a long-overdue item nobody has mentioned in weeks drops to a "gone quiet,

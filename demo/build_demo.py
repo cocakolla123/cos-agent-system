@@ -288,6 +288,13 @@ def build():
     open_ = [n for n in g.nodes.values() if n["type"] == "Action" and graph.is_open_action(n)]
     for nid, day in activity_dates(open_).items():
         g.nodes[nid].setdefault("attrs", {})["last_activity"] = day
+    # importance apart from the date (demo/classify_importance.py, saved)
+    imp_path = os.path.join(HERE, "importance.json")
+    if os.path.exists(imp_path):
+        for nid, v in json.load(open(imp_path))["tasks"].items():
+            if nid in g.nodes:
+                g.nodes[nid].setdefault("attrs", {}).update(
+                    importance=v["importance"], importance_reason=v["reason"])
     g.save(os.path.join(WS, "graph"))
     queue = queue_entries(g, open_)
     q = QUEUE_HEADER

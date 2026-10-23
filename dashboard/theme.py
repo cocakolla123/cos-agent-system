@@ -243,6 +243,18 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .todo-draft { height: auto; padding: 0; background: transparent; color: var(--ink-2); font-size: 12.5px; margin: 0; display: inline-flex; align-items: center; gap: 6px; }
 .todo-draft::before { content: ""; width: 12px; height: 2px; background: var(--pen); border-radius: 2px; }
 .todo-badge { display: none; }
+.todo-row[hidden], .todo-divider[hidden], .todo-none[hidden] { display: none !important; }
+.todo-none { padding: 28px 0; color: var(--ink-3); font-style: italic; font-family: var(--serif); text-align: center; }
+.todo-pri { font-size: 12px; color: var(--ink-3); }
+.todo-pri.pri-high { color: var(--pen-text); font-weight: 600; }
+.todo-pri.pri-low { color: var(--ink-3); opacity: .8; }
+.todo-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; }
+.tf-chip { height: 30px; padding: 0 12px; border-radius: 999px; background: transparent; border: 1px solid var(--rule-strong); color: var(--ink-2); font-size: 13px; }
+.tf-chip:hover { border-color: var(--ink-3); color: var(--ink); background: transparent; }
+.tf-chip.tf-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tf-n { margin-left: 4px; font-variant-numeric: tabular-nums; opacity: .65; }
+.tf-search { margin-left: auto; height: 30px; width: 200px; max-width: 100%; padding: 0 12px; font-size: 13px; border-radius: 999px; }
+@media (max-width: 699px) { .tf-search { margin-left: 0; width: 100%; } }
 .todo-divider { padding: 28px 0 10px 68px; font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--ink-3); border-bottom: 1px solid var(--rule); }
 .todo-stale { opacity: .6; } .todo-stale:hover, .todo-stale.todo-selected { opacity: 1; }
 .todo-detail { position: sticky; top: 96px; padding: 28px 30px 26px; min-height: 340px; box-shadow: var(--lift); }

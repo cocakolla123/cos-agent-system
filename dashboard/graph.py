@@ -676,7 +676,8 @@ def rank_key(node, now=None):
     3. Gone quiet: long overdue with no recent activity, most recently
        active first.
     """
-    pri = PRIORITY_LEVELS.index(effective_priority(node, now=now))
+    # within an urgency group, what matters (importance) comes first
+    pri = PRIORITY_LEVELS.index(importance(node, now=now))
     days = days_until_due(node, now=now)     # calendar days, as rule H1 counts
     quiet = activity_days(node, now=now)
     name = node.get("name", node.get("id", ""))
@@ -693,6 +694,44 @@ def rank_key(node, now=None):
     if (days is not None and days <= 14) or (days is None and pri == 0):
         return (1, days if days is not None else 1e6, pri, name)
     return (2, days if days is not None else 1e6, pri, name)
+
+
+def importance(node, now=None):
+    """The priority to *show*: how much a task matters, apart from when it is due.
+
+    The research rules mark anything overdue or due within HIGH_WITHIN_DAYS
+    as high (rule H1), so a stored "high" is often only the due date said
+    twice, and on a busy list nearly everything turns high. The date column
+    and the ranking already carry urgency, so the label carries importance:
+
+    - a priority the user set by hand is shown as set;
+    - a stored "high" counts only when the deadline was more than
+      HIGH_WITHIN_DAYS away when it was recorded (or there was none), so
+      the date cannot have been the reason: a manager or a client asked,
+      security work, "ASAP";
+    - a date-driven "high" shows as "medium"; medium and low show as stored.
+
+    When research recorded ``attrs.importance`` (with a reason), that wins
+    over the stored-priority inference. ``effective_priority`` (stored + H1)
+    stays what ranking and the evals use.
+    """
+    attrs = node.get("attrs", {}) or {}
+    stored = str(attrs.get("priority") or "").strip().lower()
+    if stored not in PRIORITY_LEVELS:
+        stored = "medium"
+    if attrs.get("priority_source") == "user":
+        return stored
+    # research records importance itself when it can (attrs.importance)
+    imp = str(attrs.get("importance") or "").strip().lower()
+    if imp in PRIORITY_LEVELS:
+        return imp
+    if stored != "high":
+        return stored
+    due = _parse_iso(attrs.get("due") or attrs.get("due_on"))
+    if due is None:
+        return "high"
+    seen = _parse_iso(node.get("last_seen") or node.get("first_seen")) or _utcnow(now)
+    return "high" if (due.date() - seen.date()).days > HIGH_WITHIN_DAYS else "medium"
 
 
 def is_overdue(node, now=None):

@@ -119,7 +119,7 @@ def _days_label(n):
     """Human deadline phrase for an obligation, or its priority if undated."""
     days = _graph.due_days(n)
     if days is None:
-        return _graph.effective_priority(n)
+        return _graph.importance(n)
     if days < 0:
         n_days = int(-days) + 1          # any part of a day late reads as a day
         return "overdue by %d day%s" % (n_days, "" if n_days == 1 else "s")
@@ -419,14 +419,35 @@ def _todo_row_data(g, n):
         "title": n.get("name", n["id"]),
         "note": str(a.get("note", "")),
         "evidence": str(a.get("evidence", "")),
-        "priority": _graph.effective_priority(n),
+        "priority": _graph.importance(n),
         "due": str(a.get("due", "")),
         "ws": n.get("workspace", ""),
         "url": _url(n),
         "duelabel": _days_label(n) + _quiet_label(n),
         "stale": "1" if _graph.is_gone_quiet(n) else "",
         "overdue": "1" if _graph.is_overdue(n) else "",
+        "days": "" if _graph.days_until_due(n) is None else str(_graph.days_until_due(n)),
+        "reason": str(a.get("importance_reason", "")),
+        "waiting": "1" if a.get("blocked_on") else "",
     }
+
+
+_FILTERS = (("all", "All"), ("overdue", "Overdue"), ("week", "This week"),
+            ("important", "Important"), ("draft", "Draft ready"),
+            ("waiting", "Waiting on someone"), ("quiet", "Gone quiet"))
+
+
+def _filter_bar(counts):
+    chips = "".join(
+        '<button type="button" class="tf-chip%s" data-filter="%s" onclick="todoFilter(this.dataset.filter)">'
+        '%s <span class="tf-n">%d</span></button>' % (" tf-on" if key == "all" else "", key, label,
+                                                       counts.get(key, 0))
+        # a chip that would match everything (or nothing) filters nothing
+        for key, label in _FILTERS
+        if key == "all" or 0 < counts.get(key, 0) < counts.get("all", 0))
+    return ('<div class="todo-filters" role="toolbar" aria-label="Filter tasks">%s'
+            '<input id="todoSearch" class="tf-search" placeholder="Filter by words…" '
+            'oninput="todoFilter()" aria-label="Filter tasks by words"/></div>' % chips)
 
 
 def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
@@ -455,8 +476,16 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
     rows = []
     cards = []
     divided = False
+    counts = {"all": 0, "overdue": 0, "week": 0, "important": 0, "draft": 0,
+              "waiting": 0, "quiet": 0}
     for i, n in enumerate(nodes[:limit]):
         d = _todo_row_data(g, n)
+        d["draft"] = "1" if attached.get(n["id"]) else ""
+        for key, hit in (("all", True), ("overdue", d["overdue"] and not d["stale"]),
+                         ("week", d["days"] != "" and 0 <= int(d["days"]) <= 7),
+                         ("important", d["priority"] == "high"), ("draft", d["draft"]),
+                         ("waiting", d["waiting"]), ("quiet", d["stale"])):
+            counts[key] += 1 if hit else 0
         if d["stale"] and not divided:
             divided = True
             rows.append('<div class="todo-divider">Gone quiet: long overdue and nobody has '
@@ -481,14 +510,17 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
         late = ('<span class="%s">%s</span>' % (cls, _esc(d["duelabel"]))
                 if d["stale"] and d["duelabel"] else "")
         when = _when_label(n)
+        tag = '<span class="todo-pri pri-%s">%s%s</span>' % (
+            _esc(pri), {"high": "High", "medium": "Medium", "low": "Low"}.get(pri, "Medium"),
+            (" · " + _esc(d["reason"])) if d["reason"] and pri != "medium" else "")
         rows.append(
             '<div class="todo-row todo-%s%s%s" %s onclick="todoOpen(this)" tabindex="-1">'
             '<span class="todo-when">%s</span>'
             '<span class="todo-main"><span class="todo-title">%s</span>'
-            '<span class="todo-sub">%s%s</span></span></div>' % (
+            '<span class="todo-sub">%s%s%s</span></span></div>' % (
                 _esc(pri), " todo-stale" if d["stale"] else "",
                 " todo-overdue" if d["overdue"] and not d["stale"] else "", data,
-                _esc(when), _esc(d["title"]), late, chip))
+                _esc(when), _esc(d["title"]), tag, late, chip))
     # LinkedIn-Jobs pattern: compact card list on the left, the selected task
     # expanded big in a sticky detail pane beside it; first task auto-opens.
     detail = """
@@ -624,16 +656,39 @@ async function pollTodoReply(id, prior) {
   }
   return null;
 }
+let _todoFilterKey = "all";
+function todoFilter(key) {
+  if (key) _todoFilterKey = key;
+  try { localStorage.setItem("cos-todo-filter", _todoFilterKey); } catch (e) {}
+  document.querySelectorAll(".tf-chip").forEach(c => c.classList.toggle("tf-on", c.dataset.filter === _todoFilterKey));
+  const q = (document.getElementById("todoSearch") || {value: ""}).value.trim().toLowerCase();
+  const test = {
+    all: d => true, overdue: d => d.overdue && !d.stale,
+    week: d => d.days !== "" && +d.days >= 0 && +d.days <= 7,
+    important: d => d.priority === "high", draft: d => !!d.draft,
+    waiting: d => !!d.waiting, quiet: d => !!d.stale,
+  }[_todoFilterKey] || (() => true);
+  let shown = 0;
+  document.querySelectorAll(".todo-row").forEach(r => {
+    const ok = test(r.dataset) && (!q || (r.dataset.title + " " + r.dataset.ws).toLowerCase().includes(q));
+    r.hidden = !ok; if (ok) shown++;
+  });
+  const div = document.querySelector(".todo-divider");
+  if (div) div.hidden = !document.querySelector(".todo-row.todo-stale:not([hidden])") || _todoFilterKey === "quiet";
+  const none = document.getElementById("todoNone"); if (none) none.hidden = shown > 0;
+}
 document.addEventListener("DOMContentLoaded", () => {
-  const first = document.querySelector(".todo-row");
+  try { const k = localStorage.getItem("cos-todo-filter"); if (k && document.querySelector('.tf-chip[data-filter="' + k + '"]')) todoFilter(k); } catch (e) {}
+  const first = document.querySelector(".todo-row:not([hidden])");
   if (first && window.innerWidth >= 980) todoOpen(first);
 });
 </script>"""
     return ('<section class="graph-section" id="%s"><h3>To-Do / Next Actions '
             '<span class="sec-count">%d</span></h3>'
             '<div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div>'
-            '<div class="todo-board"><div class="todo-list">%s</div>%s</div>%s</section>' % (
-                _slug_anchor("To-Do / Next Actions"), len(nodes),
+            '%s<div class="todo-board"><div class="todo-list" id="todoList">%s'
+            '<div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div>%s</div>%s</section>' % (
+                _slug_anchor("To-Do / Next Actions"), len(nodes), _filter_bar(counts),
                 "".join(rows), detail, "".join(cards)))
 
 
