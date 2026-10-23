@@ -168,6 +168,12 @@ input[type=text], input[type=time] { padding:.4rem .6rem; border-radius:8px; bor
 .todo-divider { margin:.8rem 0 .4rem; padding-top:.5rem; border-top:1px dashed #c9c9d0; font-size:.8rem; color:#6b6b73; }
 .todo-stale { opacity:.72; }
 .todo-quiet { color:#6b6b73; font-size:.82rem; }
+.mdl-row { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.55rem 0; border-bottom:1px solid #eee; }
+.mdl-tier { flex:1 1 220px; min-width:0; }
+.mdl-model { flex:1 1 200px; min-width:0; }
+.mdl-key { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; padding:.3rem 0; }
+.mdl-key-name { flex:0 0 240px; }
+.mdl-keys { margin:.6rem 0; }
 .todo-late { color:#b8144f; font-weight:600; font-size:.82rem; }
 .todo-detail { position:sticky; top:12px; background:#fff; border:1px solid #e2e2e7; border-radius:12px; padding:1rem 1.2rem; min-height:280px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
 .td-empty { color:#8a8a90; text-align:center; padding:3rem 0; }
@@ -484,6 +490,127 @@ Action items:
 None for Dana from the standup itself. Raj separately needs Dana&#x27;s sign-off on the events schema change by Oct 21 (on the task list).</pre>
 </div>
 
+
+
+<h2>🧠 Models</h2>
+<div class="quick-line">Pick which model does which kind of work. Light jobs are frequent and
+simple, deep jobs are rare and hard. Your Claude subscription works with no key; add API keys
+to use Anthropic, OpenAI, Gemini, OpenRouter or a local Ollama model. Keys are stored only on
+this machine (<code>secrets.json</code>, readable by you alone) and sent only to their provider.</div>
+<div class="pill-row" style="margin:.4rem 0">
+  <button class="small" onclick="mdlPreset('subscription')">Preset: Claude subscription (Haiku / Sonnet / Opus)</button>
+  <button class="small" onclick="mdlPreset('anthropic-api')">Preset: Anthropic API</button>
+</div>
+<div class="mdl-box">
+<div class="mdl-row" data-tier="light">
+  <div class="mdl-tier"><b>Light</b><div class="meta">quick chat replies, task chat, account checks</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-light" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-light"></datalist>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div>
+<div class="mdl-row" data-tier="standard">
+  <div class="mdl-tier"><b>Standard</b><div class="meta">drafts, revisions, the regular polls</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-standard" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-standard"></datalist>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div>
+<div class="mdl-row" data-tier="deep">
+  <div class="mdl-tier"><b>Deep</b><div class="meta">the first full research crawl, learning from your corrections</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-deep" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-deep"></datalist>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div></div>
+<button class="primary small" onclick="mdlSave()">Save models</button>
+<span id="mdlSaveResult" class="meta"></span>
+<details class="mdl-keys"><summary>API keys</summary>
+<div class="mdl-key" data-provider="anthropic">
+  <span class="mdl-key-name">Anthropic API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="openai">
+  <span class="mdl-key-name">OpenAI API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="gemini">
+  <span class="mdl-key-name">Google Gemini API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="openrouter">
+  <span class="mdl-key-name">OpenRouter (one key, many models)</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div></details>
+<div class="meta">From our evals: a small model on the first crawl or the weekly polls missed
+tasks the default model caught (evals/results/longrun/REPORT.md), so keep Deep and Standard on
+a strong model.</div>
+<script>
+const MDL_PRESETS = {"subscription": {"light": {"provider": "claude-code", "model": "haiku"}, "standard": {"provider": "claude-code", "model": "sonnet"}, "deep": {"provider": "claude-code", "model": "opus"}}, "anthropic-api": {"light": {"provider": "anthropic", "model": "claude-haiku-5-5"}, "standard": {"provider": "anthropic", "model": "claude-sonnet-5-5"}, "deep": {"provider": "anthropic", "model": "claude-opus-5-5"}}};
+function mdlTiers() {
+  const out = {};
+  document.querySelectorAll(".mdl-row").forEach(r => {
+    out[r.dataset.tier] = {provider: r.querySelector(".mdl-prov").value,
+                           model: r.querySelector(".mdl-model").value.trim()};
+  });
+  return out;
+}
+function mdlProvChanged(sel) { sel.closest(".mdl-row").querySelector(".mdl-model").value = ""; }
+function mdlPreset(name) {
+  const p = MDL_PRESETS[name];
+  document.querySelectorAll(".mdl-row").forEach(r => {
+    const t = p[r.dataset.tier]; if (!t) return;
+    r.querySelector(".mdl-prov").value = t.provider;
+    r.querySelector(".mdl-model").value = t.model;
+  });
+  document.getElementById("mdlSaveResult").textContent = "Preset filled in. Save to keep it.";
+}
+async function mdlSave() {
+  const r = await post("/models-save", {tiers: mdlTiers()});
+  document.getElementById("mdlSaveResult").textContent = r.message;
+}
+async function mdlList(btn) {
+  const row = btn.closest(".mdl-row"), res = row.querySelector(".mdl-result");
+  res.textContent = "asking the provider...";
+  const r = await post("/models-list", {provider: row.querySelector(".mdl-prov").value});
+  const dl = row.querySelector("datalist"); dl.innerHTML = "";
+  (r.models || []).forEach(m => { const o = document.createElement("option"); o.value = m; dl.appendChild(o); });
+  res.textContent = r.models ? (r.models.length + " models available: click the box to pick one") : r.message;
+}
+async function mdlTest(btn) {
+  const row = btn.closest(".mdl-row"), res = row.querySelector(".mdl-result");
+  res.textContent = "testing...";
+  const r = await post("/models-test", {provider: row.querySelector(".mdl-prov").value,
+                                         model: row.querySelector(".mdl-model").value.trim()});
+  res.textContent = r.message;
+}
+async function mdlSaveKey(btn) {
+  const row = btn.closest(".mdl-key"), inp = row.querySelector("input");
+  const r = await post("/models-key", {provider: row.dataset.provider, key: inp.value});
+  inp.value = "";
+  row.querySelector(".meta").textContent = r.message;
+}
+</script>
 
 <h2>🔌 Accounts &amp; connections <button class="small" onclick="probeAccounts()">Check now</button> <button class="small" onclick="connectAccount()">➕ Connect an account</button></h2><div id="connectForm" style="display:none;margin:.4rem 0"><div class="quick-line">First account of a service: connect it in <a href="https://claude.ai/settings/connectors" target="_blank">Claude's connector settings</a>, then hit <strong>Check now</strong>. <strong>Second Gmail account?</strong> The built-in connector only holds one Google login, so extra mailboxes get their own local, read-only server — name it and start below; the dashboard automates every step it can and tells you the moments it needs you.</div><input id="mbName" placeholder="short name, e.g. asu" style="max-width:12rem"> <button class="small" onclick="startMailbox()">Start</button><div id="connectStatus" class="result"></div></div><script>function connectAccount(){const f=document.getElementById('connectForm');f.style.display=f.style.display==='none'?'block':'none';}async function startMailbox(){const name=document.getElementById('mbName').value.trim();const out=document.getElementById('connectStatus');if(!name){out.textContent='give it a short name, e.g. asu';return;}out.textContent='working...';const st=await post('/add-mailbox',{name:name});renderMailboxStep(st,name);}function renderMailboxStep(st,name){const out=document.getElementById('connectStatus');if(st.step==='needs_keys'){out.innerHTML="<strong>One-time setup (once per computer, then never again):</strong><ol>"+"<li><a href='https://console.cloud.google.com/apis/credentials' target='_blank'>Open Google Cloud Console → Credentials</a></li>"+"<li>Enable the <a href='https://console.cloud.google.com/apis/library/gmail.googleapis.com' target='_blank'>Gmail API</a> for the project</li>"+"<li>Create Credentials → OAuth client ID → type <em>Desktop app</em></li>"+"<li>Download the JSON and save it as <code>"+st.keys_path+"</code></li></ol>"+"<button class='small' onclick='startMailbox()'>I saved the key file — continue</button>";}else if(st.step==='auth_started'){out.textContent=st.message+' — waiting for the sign-in to finish...';pollMailbox(name);}else if(st.step==='connected'){out.textContent=st.message;setTimeout(()=>demoReload(),4000);}else{out.textContent=st.message||'error';}}async function pollMailbox(name){for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,3000));try{const r=await fetch('/mailbox-status?name='+encodeURIComponent(name),{cache:'no-store'});const st=await r.json();if(st.authorized){const done=await post('/add-mailbox',{name:name});renderMailboxStep(done,name);return;}}catch(e){}}}</script><div class="quick-line" style="margin-bottom:.4rem">no connector accounts configured</div><div id="accountsResult" class="result"></div><div class="quick-line">No connector accounts configured yet. A second account of the same service (e.g. another Gmail) works two ways: custom/remote connectors can be added again as a separate named instance in Claude's connector settings, but first-party connectors (Gmail, Calendar, Drive) allow one Google account each — cover a second mailbox by auto-forwarding it into the connected one, or add a local MCP server for it (<code>claude mcp add</code>). /cos-accounts (or Check now) then detects new instances, probes who each is logged in as, and binds them to workspaces automatically.</div><script>async function probeAccounts(){document.getElementById('accountsResult').textContent='probing...';const r=await post('/probe-accounts',{});document.getElementById('accountsResult').textContent=r.message;setTimeout(()=>demoReload(),2500);}</script>
 

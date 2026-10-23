@@ -32,7 +32,7 @@ jobs:
           dashboard/sections.py dashboard/audit.py dashboard/validate_config.py
           dashboard/preflight.py dashboard/learning.py dashboard/accounts.py
           dashboard/context_intake.py dashboard/privacy.py dashboard/publish.py
-          dashboard/codefix.py
+          dashboard/codefix.py dashboard/models.py
           evals/schema.py evals/score.py evals/stats.py evals/gen_fixtures.py
           evals/run.py
       - name: Installer syntax

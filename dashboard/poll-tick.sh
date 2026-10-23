@@ -72,7 +72,12 @@ poll_tools=$(jq -r '.poll_tools // "Read,Edit,Agent"' "$MAIN_CFG" 2>/dev/null ||
 COMPLETED="$DASH_DIR/poll-last-completed.json"
 [ -f "$COMPLETED" ] || echo '{}' > "$COMPLETED"
 
-if "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" \
+# the Standard model chosen in Settings → Models (empty = the CLI default)
+model_args=()
+while IFS= read -r a; do [ -n "$a" ] && model_args+=("$a"); done < <(
+  python3 "$SCRIPT_DIR/models.py" claude-args poll "$DASH_DIR" 2>/dev/null)
+
+if "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" ${model_args[@]+"${model_args[@]}"} \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \

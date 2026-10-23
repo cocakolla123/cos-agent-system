@@ -57,6 +57,8 @@ EXCLUDES = [
     "dashboard/style-feedback-queue.md", "dashboard/account-status.json",
     "dashboard/auth-requests.json", "dashboard/accounts.log",
     "dashboard/learn.log", "dashboard/research.log", "dashboard/publish.log",
+    # bring-your-own-model settings: keys and chat history never leave this machine
+    "dashboard/secrets.json", "dashboard/models.json", "dashboard/api-chat-history.json",
     "tasks",
 ]
 

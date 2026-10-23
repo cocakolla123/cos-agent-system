@@ -46,6 +46,34 @@ Or from a checkout: `./install.sh --start`. Requirements: Python ≥ 3.12, the
 install folder, run `/global:setup` once. Dashboard: `http://127.0.0.1:8765`. Remove cleanly
 anytime with `/cos-uninstall`.
 
+## Bring your own model
+
+Every job has a level, and you pick the model for each level in **Settings → Models** on the
+dashboard (stored in `dashboard/models.json`):
+
+| Level | Jobs | Good default |
+|---|---|---|
+| Light | quick chat replies, task chat, account checks | a small fast model (Haiku, GPT mini, Gemini Flash) |
+| Standard | drafts, revisions, the regular polls | a mid model (Sonnet) |
+| Deep | the first full research crawl, learning from corrections | the strongest model you have (Opus, Fable) |
+
+Each level runs on one of:
+- **Your Claude subscription** through Claude Code. This is the default and needs no key; it just
+  passes `--model`.
+- **Your own API key** for Anthropic (`pip install anthropic`), OpenAI or Gemini.
+- **OpenRouter**, one key for many models.
+- **A local Ollama model**, free.
+
+The instructions are the same whichever model runs them. Keys stay on your machine in
+`dashboard/secrets.json` (mode 0600, git-ignored, excluded from publishing, and blocked by the
+privacy scan) and go only to their provider.
+
+Jobs that read your accounts (research, polls, learning, approvals) still run on Claude Code,
+because that is where the connectors live. When their level names another provider they use
+Claude Code's default model, and Settings says so. The evals back the defaults: a small model
+on the first crawl or on the weekly polls missed tasks the default model caught
+([long-run report](./evals/results/longrun/REPORT.md)), so keep Standard and Deep strong.
+
 ## Architecture
 
 ```mermaid
