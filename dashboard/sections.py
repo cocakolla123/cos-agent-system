@@ -474,16 +474,16 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
 <div class="todo-detail" id="todoDetail">
   <div class="td-empty" id="tdEmpty">Select a task</div>
   <div id="tdBody" style="display:none">
-    <input id="tmTitle" class="tm-title" />
+    <textarea id="tmTitle" class="tm-title" rows="1" aria-label="Task title"></textarea>
     <div class="tm-meta"><span id="tmWs" class="ws-chip"></span>
       <span id="tmDue" class="sec-sub"></span>
       <a id="tmLink" target="_blank" rel="noopener" style="display:none">open source ↗</a></div>
     <div class="tm-controls">
       <select id="tmPriority">
-        <option value="high">🔺 high priority</option><option value="medium">▪️ medium</option>
-        <option value="low">▫️ low</option>
+        <option value="high">High priority</option><option value="medium">Medium priority</option>
+        <option value="low">Low priority</option>
       </select>
-      <button class="primary" onclick="todoDone()">✓ Mark done</button>
+      <button class="primary" onclick="todoDone()">Mark done</button>
       <button class="small" onclick="todoSave()">Save changes</button>
     </div>
     <div class="tm-next" id="tmNext">
@@ -512,7 +512,9 @@ function todoOpen(el) {
   _todoId = d.id;
   document.getElementById("tdEmpty").style.display = "none";
   document.getElementById("tdBody").style.display = "block";
-  document.getElementById("tmTitle").value = d.title;
+  const ttl = document.getElementById("tmTitle");
+  ttl.value = d.title;
+  ttl.style.height = "auto"; ttl.style.height = ttl.scrollHeight + "px";
   document.getElementById("tmNote").value = d.note;
   document.getElementById("tmPriority").value = d.priority || "medium";
   document.getElementById("tmWs").textContent = d.ws;
