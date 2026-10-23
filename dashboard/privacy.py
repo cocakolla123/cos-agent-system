@@ -32,6 +32,9 @@ import re
 TOKENS_FILENAME = "privacy-tokens.txt"
 
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+# API keys: Anthropic/OpenAI/OpenRouter ("sk-..."), Google ("AIza...").
+# Long enough that test fixtures like "sk-test-123" do not trip it.
+API_KEY_RE = re.compile(r"\b(?:sk-[A-Za-z0-9_-]{32,}|AIza[0-9A-Za-z_-]{35})\b")
 MONEY_RE = re.compile(r"\$\s?\d{1,3}(?:,\d{3})+(?:\.\d+)?|\$\s?\d{5,}")
 
 REAL_PROVIDERS = {
@@ -75,6 +78,8 @@ def _email_violations(text):
 def scan_text(text, tokens, is_markdown=False):
     """Return [(kind, excerpt), ...] for one file's content."""
     out = _email_violations(text)
+    for m in API_KEY_RE.finditer(text):
+        out.append(("api key", m.group(0)[:8] + "…"))
     low = text.lower()
     for tok in tokens:
         idx = low.find(tok)

@@ -104,3 +104,15 @@ class TestPublishGating(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestApiKeys(unittest.TestCase):
+    def test_api_keys_are_blocked_and_not_echoed(self):
+        import privacy
+        fake = "sk-ant-api03-" + "x" * 40
+        found = privacy.scan_text("key = '%s'" % fake, [])
+        self.assertEqual([k for k, _ in found], ["api key"])
+        self.assertNotIn("x" * 20, found[0][1])
+        google = "AIza" + "B" * 35
+        self.assertTrue(privacy.scan_text(google, []))
+        self.assertEqual(privacy.scan_text("sk-test-123 is a fixture", []), [])

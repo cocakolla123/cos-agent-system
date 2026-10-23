@@ -31,3 +31,7 @@ evals/longrun/world_realistic/items.json
 evals/projects/__pycache__/
 demo/__pycache__/
 demo/state/server.log
+# bring-your-own-model settings (keys, per-user model picks, API chat history)
+dashboard/secrets.json
+dashboard/models.json
+dashboard/api-chat-history.json
