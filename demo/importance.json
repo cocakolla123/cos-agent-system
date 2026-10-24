@@ -1,0 +1,209 @@
+{
+ "graph": "evals/results/longrun/lrr-v3/graph/c1",
+ "tasks": {
+  "job-search:action:corvid-final-round-slot": {
+   "importance": "medium",
+   "reason": "job interview scheduling"
+  },
+  "job-search:action:halcyon-updated-resume": {
+   "importance": "low",
+   "reason": "recruiter request"
+  },
+  "kestrel:action:api-v1-deprecation-notice": {
+   "importance": "medium",
+   "reason": "peer request"
+  },
+  "kestrel:action:churn-report-for-raj": {
+   "importance": "medium",
+   "reason": "promised deliverable"
+  },
+  "kestrel:action:conference-budget-request": {
+   "importance": "medium",
+   "reason": "manager request"
+  },
+  "kestrel:action:confirm-billing-cron-schedule": {
+   "importance": "high",
+   "reason": "blocks cutover"
+  },
+  "kestrel:action:events-schema-change-signoff": {
+   "importance": "medium",
+   "reason": "blocks others"
+  },
+  "kestrel:action:friday-status-update-ines": {
+   "importance": "medium",
+   "reason": "recurring manager ask"
+  },
+  "kestrel:action:inc-240-timeline": {
+   "importance": "medium",
+   "reason": "incident documentation"
+  },
+  "kestrel:action:it-access-analytics-replica": {
+   "importance": "medium",
+   "reason": "blocked on access"
+  },
+  "kestrel:action:laptop-refresh-booking": {
+   "importance": "low",
+   "reason": "housekeeping"
+  },
+  "kestrel:action:lena-api-field-list-settings-screen": {
+   "importance": "medium",
+   "reason": "promised to peer"
+  },
+  "kestrel:action:lena-bulk-edits-api-answer": {
+   "importance": "medium",
+   "reason": "blocks mocks"
+  },
+  "kestrel:action:lena-roster-timezone-names-answer": {
+   "importance": "medium",
+   "reason": "blocks mock"
+  },
+  "kestrel:action:northwind-data-retention-policy": {
+   "importance": "high",
+   "reason": "client waiting"
+  },
+  "kestrel:action:northwind-msa-redlines-legal-review": {
+   "importance": "high",
+   "reason": "client contract"
+  },
+  "kestrel:action:northwind-pen-test-summary": {
+   "importance": "high",
+   "reason": "client waiting"
+  },
+  "kestrel:action:notifications-rfc-comments": {
+   "importance": "medium",
+   "reason": "peer request"
+  },
+  "kestrel:action:pager-config-review": {
+   "importance": "medium",
+   "reason": "peer request"
+  },
+  "kestrel:action:plat-301-postmortem-inc-212": {
+   "importance": "medium",
+   "reason": "manager request"
+  },
+  "kestrel:action:plat-322-cron-migration-scheduler-v2": {
+   "importance": "medium",
+   "reason": "launch migration work"
+  },
+  "kestrel:action:plat-355-oncall-runbook-rewrite": {
+   "importance": "medium",
+   "reason": "assigned runbook work"
+  },
+  "kestrel:action:plat-360-load-test-scheduler-v2": {
+   "importance": "high",
+   "reason": "blocks launch"
+  },
+  "kestrel:action:plat-380-oncall-schedule-export": {
+   "importance": "low",
+   "reason": "deprioritized"
+  },
+  "kestrel:action:plat-390-worker-pool-metrics-endpoint": {
+   "importance": "low",
+   "reason": "not urgent"
+  },
+  "kestrel:action:plat-410-close-gzip-ticket": {
+   "importance": "low",
+   "reason": "housekeeping"
+  },
+  "kestrel:action:plat-420-roster-api-perf-benchmark": {
+   "importance": "medium",
+   "reason": "review input"
+  },
+  "kestrel:action:postgres-18-upgrade-plan": {
+   "importance": "medium",
+   "reason": "manager request"
+  },
+  "kestrel:action:q4-capacity-numbers": {
+   "importance": "medium",
+   "reason": "self commitment"
+  },
+  "kestrel:action:q4-growth-goals": {
+   "importance": "low",
+   "reason": "no rush"
+  },
+  "kestrel:action:q4-headcount-platform-justification": {
+   "importance": "medium",
+   "reason": "manager request"
+  },
+  "kestrel:action:queue-sharding-consumers": {
+   "importance": "medium",
+   "reason": "peer dependency"
+  },
+  "kestrel:action:renew-api-tls-cert": {
+   "importance": "high",
+   "reason": "security"
+  },
+  "kestrel:action:retry-policy-rfc": {
+   "importance": "medium",
+   "reason": "open RFC"
+  },
+  "kestrel:action:review-iam-policy-diff": {
+   "importance": "high",
+   "reason": "security access review"
+  },
+  "kestrel:action:review-rota-api-pr-470": {
+   "importance": "medium",
+   "reason": "peer request"
+  },
+  "kestrel:action:rota-api-issue-430-csv-import": {
+   "importance": "medium",
+   "reason": "assigned regression bug"
+  },
+  "kestrel:action:rotate-leaked-aws-key": {
+   "importance": "high",
+   "reason": "security"
+  },
+  "kestrel:action:rotate-ssh-keys": {
+   "importance": "high",
+   "reason": "security"
+  },
+  "kestrel:action:rta-101-timezone-bug-shift-export": {
+   "importance": "medium",
+   "reason": "reopened bug"
+  },
+  "kestrel:action:rta-130-northwind-rca": {
+   "importance": "high",
+   "reason": "client waiting"
+  },
+  "kestrel:action:scheduler-v2-architecture-review-design-doc": {
+   "importance": "medium",
+   "reason": "presenting review"
+  },
+  "kestrel:action:scheduler-v2-launch-checklist-infra": {
+   "importance": "high",
+   "reason": "blocks launch"
+  },
+  "kestrel:action:security-awareness-training": {
+   "importance": "medium",
+   "reason": "mandatory compliance"
+  },
+  "kestrel:action:soc2-backup-restore-evidence": {
+   "importance": "high",
+   "reason": "audit evidence"
+  },
+  "kestrel:action:stratus-renewal-quote": {
+   "importance": "low",
+   "reason": "awaiting vendor"
+  },
+  "kestrel:action:v1-migration-guide": {
+   "importance": "high",
+   "reason": "customer launch dependency"
+  },
+  "kestrel:action:warehouse-cutover-plan-infra": {
+   "importance": "medium",
+   "reason": "owned deliverable"
+  },
+  "oss:action:tinyq-pr-89-review": {
+   "importance": "low",
+   "reason": "optional"
+  },
+  "personal:action:dental-reschedule": {
+   "importance": "low",
+   "reason": "personal errand"
+  },
+  "personal:action:lease-renewal-sign": {
+   "importance": "medium",
+   "reason": "personal deadline"
+  }
+ }
+}

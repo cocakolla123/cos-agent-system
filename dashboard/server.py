@@ -229,6 +229,10 @@ try:
 except Exception:  # pragma: no cover
     _models = None
 try:
+    import usage as _usage
+except Exception:  # pragma: no cover
+    _usage = None
+try:
     import theme as _theme
 except Exception:  # pragma: no cover
     _theme = None
@@ -833,10 +837,10 @@ def render_linked_domain(e):
 PAGE_TEMPLATE = """<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{app_name}</title>
-<script>try {{ const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
+<script>try {{ const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
 <style>{theme_css}</style></head><body>
 <nav class="nav" aria-label="Sections">
-  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div>{app_name}</div></div>
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>{app_name}</div></div>
   <div class="nav-group">Work</div>
   <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">{nav_open}</span></a>
   <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">{nav_meetings}</span></a>
@@ -844,16 +848,28 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">{archived_count}</span></a>
   <div class="nav-group">Settings</div>
   <a class="nav-link" href="#models" data-view="models">Models</a>
+  <a class="nav-link" href="#usage" data-view="usage">Usage <span class="nav-count">{nav_spend}</span></a>
   <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
-  <div class="nav-foot"><button class="small ghost" onclick="toggleTheme()" title="Switch light / dark">Appearance</button></div>
+  <div class="nav-foot">
+    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views<br><kbd>⇧D</kbd> light / dark</div>
+  </div>
 </nav>
 <div class="main">
 <header class="topbar">
-  <span class="topbar-title" id="viewTitle">Today</span>
-  <span class="status"><span class="status-dot"></span>{today} · last checked {last_poll}</span>
+  <div class="topbar-head">
+    <span class="topbar-title" id="viewTitle">Today</span>
+    <span class="status"><span class="status-dot"></span>{today} · last checked {last_poll}</span>
+  </div>
+  <span id="wsSlot"></span>
   <div class="topbar-actions">
+    <div class="theme-switch" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light" onclick="setTheme('light')" title="Light theme">Light</button>
+      <button type="button" role="radio" data-theme-set="dark" onclick="setTheme('dark')" title="Dark theme">Dark</button>
+      <button type="button" role="radio" data-theme-set="auto" onclick="setTheme('auto')" title="Follow your system setting">Auto</button>
+    </div>
+    <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
     <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
     <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
   </div>
@@ -906,6 +922,10 @@ projects/ or any agent memory, which keep everything learned from this work.</p>
 {models_html}
 </section>
 
+<section class="view" id="v-usage" data-title="Usage" hidden>
+{usage_html}
+</section>
+
 <section class="view" id="v-accounts" data-title="Accounts" hidden>
 {accounts_html}
 </section>
@@ -937,12 +957,20 @@ its window it skips.</p>
   <div class="result" id="chatResult"></div>
 </div>
 
+<div class="palette" id="palette" hidden onclick="if (event.target === this) paletteClose()">
+  <div class="palette-box" role="dialog" aria-label="Jump to">
+    <input id="paletteInput" class="palette-input" placeholder="Jump to a task or a view…" autocomplete="off" />
+    <div class="palette-list" id="paletteList"></div>
+    <div class="palette-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> choose</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
 {auth_modal_html}
 
 {context_modal_html}
 
 <script>
-const VIEWS = ["today", "meetings", "inbox", "archive", "models", "accounts", "polling", "learning"];
+const VIEWS = ["today", "meetings", "inbox", "archive", "models", "usage", "accounts", "polling", "learning"];
 function showView(name) {{
   if (!VIEWS.includes(name)) name = "today";
   document.querySelectorAll(".view").forEach(v => {{ v.hidden = v.id !== "v-" + name; }});
@@ -951,15 +979,110 @@ function showView(name) {{
   document.getElementById("viewTitle").textContent = v ? v.dataset.title.replace("&amp;", "&") : "";
 }}
 window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
-document.addEventListener("DOMContentLoaded", () => showView(location.hash.slice(1)));
-function toggleTheme() {{
-  const root = document.documentElement;
-  const cur = root.dataset.theme ||
-    (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  const next = cur === "dark" ? "light" : "dark";
-  root.dataset.theme = next;
-  try {{ localStorage.setItem("cos-theme", next); }} catch (e) {{}}
+document.addEventListener("DOMContentLoaded", () => {{
+  showView(location.hash.slice(1));
+  // the workspace filter lives in the top bar, so it works from every view
+  const ws = document.querySelector(".graph-command-center .ws-switcher");
+  if (ws) {{
+    document.getElementById("wsSlot").appendChild(ws);
+    ws.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {{ a.href = a.getAttribute("href").split("#")[0] + location.hash; }}));
+  }}
+}});
+
+// ---- jump palette (⌘K / Ctrl+K / "/") ----
+let _palItems = [], _palIdx = 0;
+function palSource() {{
+  const out = [];
+  document.querySelectorAll(".nav-link").forEach(a => out.push({{kind: "View", text: a.childNodes[0].textContent.trim(),
+    when: "", run: () => {{ location.hash = a.dataset.view; }} }}));
+  [["light", "Light theme"], ["dark", "Dark theme"], ["auto", "Auto theme (follow system)"]].forEach(([m, t]) =>
+    out.push({{kind: "View", text: t, when: themeMode() === m ? "on" : "", run: () => setTheme(m)}}));
+  document.querySelectorAll(".todo-row").forEach(r => out.push({{kind: "Tasks", text: r.dataset.title,
+    when: (r.querySelector(".todo-when") || {{}}).textContent || "", hint: r.dataset.ws,
+    run: () => {{ location.hash = "today"; showView("today"); todoOpen(r); r.scrollIntoView({{block: "nearest"}}); }} }}));
+  return out;
 }}
+function palRender() {{
+  const q = document.getElementById("paletteInput").value.trim().toLowerCase();
+  const all = palSource();
+  _palItems = (q ? all.filter(i => i.text.toLowerCase().includes(q)) : all.filter(i => i.kind === "View").concat(all.filter(i => i.kind === "Tasks").slice(0, 8))).slice(0, 40);
+  _palIdx = Math.min(_palIdx, Math.max(0, _palItems.length - 1));
+  const list = document.getElementById("paletteList");
+  list.innerHTML = "";
+  if (!_palItems.length) {{ list.innerHTML = "<div class='palette-empty'>Nothing matches.</div>"; return; }}
+  let group = "";
+  _palItems.forEach((it, i) => {{
+    if (it.kind !== group) {{ group = it.kind; const g = document.createElement("div"); g.className = "palette-group"; g.textContent = group === "View" ? "Views" : "Tasks"; list.appendChild(g); }}
+    const el = document.createElement("div");
+    el.className = "palette-item" + (i === _palIdx ? " active" : "");
+    const w = document.createElement("span"); w.className = "pi-when"; w.textContent = it.when;
+    const tx = document.createElement("span"); tx.className = "pi-text"; tx.textContent = it.text;
+    const h = document.createElement("span"); h.className = "pi-hint"; h.textContent = it.hint || "";
+    el.append(w, tx, h);
+    el.onmouseenter = () => {{ _palIdx = i; palHighlight(); }};
+    el.onclick = () => palRun(i);
+    list.appendChild(el);
+  }});
+}}
+function palHighlight() {{
+  document.querySelectorAll(".palette-item").forEach((el, i) => el.classList.toggle("active", i === _palIdx));
+  const a = document.querySelector(".palette-item.active"); if (a) a.scrollIntoView({{block: "nearest"}});
+}}
+function palRun(i) {{ const it = _palItems[i]; paletteClose(); if (it) it.run(); }}
+function paletteOpen() {{
+  const p = document.getElementById("palette"); p.hidden = false; _palIdx = 0;
+  const inp = document.getElementById("paletteInput"); inp.value = ""; palRender(); inp.focus();
+}}
+function paletteClose() {{ document.getElementById("palette").hidden = true; document.getElementById("paletteInput").blur(); }}
+document.addEventListener("DOMContentLoaded", () => {{
+  const inp = document.getElementById("paletteInput");
+  inp.addEventListener("input", () => {{ _palIdx = 0; palRender(); }});
+  inp.addEventListener("keydown", e => {{
+    if (e.key === "ArrowDown") {{ _palIdx = Math.min(_palIdx + 1, _palItems.length - 1); palHighlight(); e.preventDefault(); }}
+    else if (e.key === "ArrowUp") {{ _palIdx = Math.max(_palIdx - 1, 0); palHighlight(); e.preventDefault(); }}
+    else if (e.key === "Enter") {{ palRun(_palIdx); e.preventDefault(); }}
+    else if (e.key === "Escape") {{ paletteClose(); }}
+  }});
+}});
+
+// ---- keyboard: J/K through tasks, G then a letter for views ----
+let _gPending = false;
+document.addEventListener("keydown", e => {{
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {{}}).tagName || "") || (e.target && e.target.isContentEditable);
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {{ e.preventDefault(); paletteOpen(); return; }}
+  if (typing || e.metaKey || e.ctrlKey || e.altKey || !document.getElementById("palette").hidden) return;
+  if (e.key === "/") {{ e.preventDefault(); paletteOpen(); return; }}
+  if (e.key === "D" && e.shiftKey) {{ e.preventDefault(); toggleTheme(); return; }}
+  if (_gPending) {{
+    _gPending = false;
+    const map = {{t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"}};
+    if (map[e.key.toLowerCase()]) {{ location.hash = map[e.key.toLowerCase()]; e.preventDefault(); }}
+    return;
+  }}
+  if (e.key.toLowerCase() === "g") {{ _gPending = true; setTimeout(() => {{ _gPending = false; }}, 1200); return; }}
+  if (e.key === "j" || e.key === "k") {{
+    const rows = [...document.querySelectorAll("#v-today:not([hidden]) .todo-row:not([hidden])")];
+    if (!rows.length) return;
+    const cur = rows.findIndex(r => r.classList.contains("todo-selected"));
+    const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === "j" ? 1 : -1)))];
+    todoOpen(next); next.scrollIntoView({{block: "nearest"}}); e.preventDefault();
+  }}
+}});
+// ---- theme: light, dark, or auto (follow the system) ----
+function themeMode() {{ return document.documentElement.dataset.theme || "auto"; }}
+function themeShown() {{
+  const m = themeMode();
+  if (m !== "auto") return m;
+  return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}}
+function setTheme(mode) {{
+  const root = document.documentElement;
+  if (mode === "light" || mode === "dark") root.dataset.theme = mode; else {{ delete root.dataset.theme; mode = "auto"; }}
+  try {{ localStorage.setItem("cos-theme", mode); }} catch (e) {{}}
+  document.querySelectorAll("[data-theme-set]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.themeSet === mode)));
+}}
+function toggleTheme() {{ setTheme(themeShown() === "dark" ? "light" : "dark"); }}
+setTheme(themeMode());
 </script>
 <script>
 async function post(url, body) {{
@@ -1473,10 +1596,23 @@ def render_live_refresh_js():
     )
 
 
-def spawn_background(cmd, logname):
+def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None):
+    """One claude call through usage.run: only the job's tools are sent, the
+    call is capped, its cost is logged, and the daily budget is respected.
+    Same shape as subprocess.run's result, so call sites did not change."""
+    if _usage is None:
+        return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
+    return _usage.run(cmd, job, DASHBOARD_DIR, cwd=cwd, timeout=timeout)
+
+
+def spawn_background(cmd, logname, job=None):
     """Popen with output appended to a dashboard log file. Closes the parent's
     handle immediately (the child holds its own dup), so repeated spawns don't
-    leak file descriptors."""
+    leak file descriptors. With ``job``, the call runs through usage.py (only
+    the job's tools sent, capped, cost logged, daily budget respected)."""
+    if job and _usage is not None:
+        cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "usage.py"),
+               "run", job, DASHBOARD_DIR, "--", *cmd]
     log = open(os.path.join(DASHBOARD_DIR, logname), "a")
     try:
         return subprocess.Popen(cmd, cwd=ORCHESTRATOR_CWD, stdout=log,
@@ -1509,7 +1645,7 @@ def maybe_start_learn_loop(message):
                     "--permission-mode", "dontAsk",
                     "--allowedTools", LEARN_TOOLS,
                     "--output-format", "text",
-                ], "learn.log")
+                ], "learn.log", job="learn")
             return ("\n\n🧠 Noted as a correction (%s) — investigating in the "
                     "background why this was missed; the fix and reasoning will "
                     "land in lessons-learned." % rec["id"])
@@ -1755,6 +1891,10 @@ def render_models_section():
         '<option value="%s"%s>%s</option>' % (p, " selected" if p == sel else "",
                                               html.escape(m["label"]))
         for p, m in _models.PROVIDERS.items())
+    eff_opts = lambda sel: "".join(
+        '<option value="%s"%s>%s</option>' % (v, " selected" if v == sel else "", lab)
+        for v, lab in (("", "Effort: default"), ("low", "Effort: low"), ("medium", "Effort: medium"),
+                       ("high", "Effort: high")))
     rows = []
     for tier in _models.TIERS:
         c = cfg[tier]
@@ -1770,6 +1910,7 @@ def render_models_section():
   <input class="mdl-model" list="mdl-list-{tier}" value="{html.escape(c['model'])}"
          placeholder="default model" />
   <datalist id="mdl-list-{tier}"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster">{eff_opts(c.get('effort', ''))}</select>
   <button class="small" onclick="mdlList(this)">List models</button>
   <button class="small" onclick="mdlTest(this)">Test</button>
   <span class="mdl-result meta"></span>
@@ -1811,7 +1952,8 @@ function mdlTiers() {{
   const out = {{}};
   document.querySelectorAll(".mdl-row").forEach(r => {{
     out[r.dataset.tier] = {{provider: r.querySelector(".mdl-prov").value,
-                           model: r.querySelector(".mdl-model").value.trim()}};
+                           model: r.querySelector(".mdl-model").value.trim(),
+                           effort: r.querySelector(".mdl-effort").value}};
   }});
   return out;
 }}
@@ -1849,6 +1991,63 @@ async function mdlSaveKey(btn) {{
   const r = await post("/models-key", {{provider: row.dataset.provider, key: inp.value}});
   inp.value = "";
   row.querySelector(".meta").textContent = r.message;
+}}
+</script>"""
+
+
+_JOB_LABELS = {"chat": "Chat", "task_chat": "Task chat", "revise": "Revising drafts",
+               "poll": "Polls", "research": "Research crawls", "learn": "Learning",
+               "accounts_probe": "Account checks", "approve": "Approved actions", "draft": "Drafts"}
+
+
+def render_usage_section():
+    """Settings → Usage: what the model calls cost, and the daily budget."""
+    if _usage is None:
+        return ""
+    try:
+        s = _usage.summary(DASHBOARD_DIR, days=30)
+        b = _usage.budget(DASHBOARD_DIR)
+    except Exception:
+        return ""
+    cap = b["daily_usd"]
+    rows = "".join(
+        "<tr><td>%s</td><td class='num'>%d</td><td class='num'>%s</td><td class='num'>$%.2f</td></tr>" % (
+            html.escape(_JOB_LABELS.get(j, j)), v["calls"],
+            "{:,}".format(v["tokens"]), v["cost"])
+        for j, v in sorted(s["by_job"].items(), key=lambda kv: -kv[1]["cost"]))
+    models_ = ", ".join("%s $%.2f" % (html.escape(m), c)
+                        for m, c in sorted(s["by_model"].items(), key=lambda kv: -kv[1]))
+    table = ("<table class='usage-table'><thead><tr><th>Job</th><th class='num'>Calls</th>"
+             "<th class='num'>Tokens</th><th class='num'>Cost</th></tr></thead><tbody>%s</tbody></table>"
+             % rows) if rows else "<div class='empty'>No model calls recorded yet.</div>"
+    cap_line = ("${:.2f} of ${:.2f} today".format(s["today"], cap) if cap else "no daily budget set")
+    return f"""
+<h2>Usage</h2>
+<p class="view-intro">What the model calls cost, from each call's own report. Every call sends only the
+tools its job may use and has a spending ceiling of its own; quiet connectors are checked less often.
+On a Claude subscription these are what the calls would cost on the API, a measure of how much of
+your plan they use.</p>
+<div class="stats">
+  <div class="stat"><div class="stat-num">${s['today']:.2f}</div><div class="stat-label">today</div></div>
+  <div class="stat"><div class="stat-num">${s['week']:.2f}</div><div class="stat-label">last 7 days</div></div>
+  <div class="stat"><div class="stat-num">${s['period']:.2f}</div><div class="stat-label">last 30 days</div></div>
+  <div class="stat"><div class="stat-num">{s['calls']}</div><div class="stat-label">calls in 30 days</div></div>
+</div>
+<h3>Daily budget</h3>
+<div class="quick-line">When today's spend reaches it, scheduled polls and new model jobs wait until
+tomorrow. Actions you approve still go through. Now: {cap_line}.</div>
+<div class="actions"><input id="budgetInput" type="number" min="0" step="0.5" placeholder="e.g. 5" value="{cap or ''}" style="width:120px" />
+<button class="small primary" onclick="saveBudget()">Save budget</button>
+<button class="small" onclick="document.getElementById('budgetInput').value=''; saveBudget()">No budget</button>
+<span id="budgetResult" class="meta"></span></div>
+<h3>By job, last 30 days</h3>
+{table}
+<div class="meta">{('By model: ' + models_) if models_ else ''}</div>
+<script>
+async function saveBudget() {{
+  const v = document.getElementById("budgetInput").value;
+  const r = await post("/usage-budget", {{daily_usd: v ? parseFloat(v) : null}});
+  document.getElementById("budgetResult").textContent = r.message;
 }}
 </script>"""
 
@@ -2353,6 +2552,8 @@ class Handler(BaseHTTPRequestHandler):
             self_learning_html=render_self_learning_section(),
             accounts_html=render_accounts_section(),
             models_html=render_models_section(),
+            usage_html=render_usage_section(),
+            nav_spend=(("$%.2f" % _usage.spent_today(DASHBOARD_DIR)) if _usage is not None else ""),
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
             guardrail_banner=(render_demo_banner() if DEMO else render_guardrail_banner()),
@@ -2377,6 +2578,18 @@ class Handler(BaseHTTPRequestHandler):
 
         if DEMO:
             self._send_json({"message": demo_reply(self.path, data), "demo": True})
+            return
+
+        if self.path == "/usage-budget":
+            if _usage is None:
+                self._send_json({"message": "usage tracking unavailable"}, 500)
+                return
+            try:
+                _usage.save_budget(DASHBOARD_DIR, data.get("daily_usd"))
+                b = _usage.budget(DASHBOARD_DIR)["daily_usd"]
+                self._send_json({"message": ("Saved: $%.2f a day." % b) if b else "No daily budget."})
+            except (ValueError, TypeError) as exc:
+                self._send_json({"message": "⚠️ %s" % exc}, 400)
             return
 
         if self.path in ("/models-save", "/models-key", "/models-list", "/models-test"):
@@ -2461,7 +2674,7 @@ class Handler(BaseHTTPRequestHandler):
                     "everything except Google's own consent clicks.) User message: " + message)
 
             def _run_chat(flag):
-                return subprocess.run(
+                return claude_run("chat", 
                     [
                         CLAUDE_BIN, "-p", message,
                         *flag, *model_args("chat"),
@@ -2568,7 +2781,7 @@ class Handler(BaseHTTPRequestHandler):
                 "--session-id", sess["session_id"]
             ]
             try:
-                result = subprocess.run(
+                result = claude_run("task_chat", 
                     [
                         CLAUDE_BIN, "-p", message,
                         *session_flag, *model_args("task_chat"),
@@ -2697,7 +2910,7 @@ class Handler(BaseHTTPRequestHandler):
                 # a real deployment, 2026-07). Scoped to only this one subprocess, only the one
                 # tool this specific action needs — get explicit user sign-off before enabling
                 # this in a fresh deployment, since it is a real trade-off (see PLAN.md).
-                result = subprocess.run(
+                result = claude_run("approve", 
                     [
                         CLAUDE_BIN, "-p", f"/global:cos-approve-confirmed {entry_id}",
                         "--permission-mode", "bypassPermissions",
@@ -2791,7 +3004,7 @@ class Handler(BaseHTTPRequestHandler):
                                  else "The model returned the same draft."})
                 return
             try:
-                result = subprocess.run(
+                result = claude_run("revise", 
                     [
                         CLAUDE_BIN, "-p", f"/global:cos-revise {entry_id} {json.dumps(feedback)}",
                         *model_args("revise"),
@@ -2820,7 +3033,7 @@ class Handler(BaseHTTPRequestHandler):
             prompt = ("/global:cos-poll --scope=%s --force" % scopes
                       if scopes else "/global:cos-poll --force")
             try:
-                result = subprocess.run(
+                result = claude_run("poll", 
                     [
                         CLAUDE_BIN, "-p", prompt, *model_args("poll"),
                         "--permission-mode", "dontAsk",
@@ -2947,7 +3160,7 @@ class Handler(BaseHTTPRequestHandler):
                     [CLAUDE_BIN, "-p", "/global:cos-research --full", *model_args("research"),
                      "--permission-mode", "dontAsk",
                      "--allowedTools", RESEARCH_TOOLS,
-                     "--output-format", "text"], "research.log")
+                     "--output-format", "text"], "research.log", job="research")
                 self._send_json({"message": "research started in the background — "
                                             "watch the Command Center fill in "
                                             "(details in research.log)"})
@@ -2988,7 +3201,7 @@ class Handler(BaseHTTPRequestHandler):
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", RESEARCH_TOOLS,
-                         "--output-format", "text"], "accounts.log")
+                         "--output-format", "text"], "accounts.log", job="accounts_probe")
                 except OSError:
                     pass
             self._send_json(st, 200 if st.get("step") != "error" else 400)
@@ -3007,7 +3220,7 @@ class Handler(BaseHTTPRequestHandler):
                         "--permission-mode", "dontAsk",
                         "--allowedTools", RESEARCH_TOOLS,
                         "--output-format", "text",
-                    ], "accounts.log")
+                    ], "accounts.log", job="accounts_probe")
                 self._send_json({"message": "probing all accounts in the background — "
                                             "this page will refresh shortly"})
             except OSError as exc:
@@ -3045,7 +3258,7 @@ class Handler(BaseHTTPRequestHandler):
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", POLL_TOOLS,
-                         "--output-format", "text"], "accounts.log")
+                         "--output-format", "text"], "accounts.log", job="accounts_probe")
                 except OSError:
                     pass
                 msg = "browser opened — finish the login there; re-checking in the background"

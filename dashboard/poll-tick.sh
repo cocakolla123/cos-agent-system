@@ -24,6 +24,15 @@ CLAUDE_BIN="${CLAUDE_BIN:-claude}"
 
 [ -f "$CFG" ] || exit 0   # no poll config yet (e.g. /setup hasn't run) — nothing to do
 [ -f "$LAST_RUN" ] || echo '{}' > "$LAST_RUN"
+# Quiet streaks: a connector whose last checks found nothing new is checked
+# less often (2x, then 4x its interval) until something turns up again.
+QUIET="$DASH_DIR/poll-quiet.json"
+[ -f "$QUIET" ] || echo '{}' > "$QUIET"
+
+# Today's model budget (Settings → Usage) is a hard stop for scheduled work.
+if python3 "$SCRIPT_DIR/usage.py" over-budget "$DASH_DIR" >> "$DASH_DIR/launchd-poll.log" 2>/dev/null; then
+  exit 0
+fi
 
 TZ_NAME=$(jq -r '.timezone // "America/Los_Angeles"' "$CFG")
 now_epoch=$(TZ="$TZ_NAME" date +%s)
@@ -47,6 +56,12 @@ while IFS= read -r connector; do
 
   last=$(jq -r --arg c "$connector" '.[$c] // 0' "$LAST_RUN")
   elapsed_min=$(( (now_epoch - last) / 60 ))
+  streak=$(jq -r --arg c "$connector" '.[$c] // 0' "$QUIET")
+  # "general" is the deep sweep that also re-checks open items; it keeps its pace
+  if [ "$connector" != "general" ]; then
+    if [ "$streak" -ge 6 ]; then interval_min=$(( interval_min * 4 ));
+    elif [ "$streak" -ge 3 ]; then interval_min=$(( interval_min * 2 )); fi
+  fi
   if [ "$elapsed_min" -ge "$interval_min" ]; then
     due+=("$connector")
   fi
@@ -77,11 +92,25 @@ model_args=()
 while IFS= read -r a; do [ -n "$a" ] && model_args+=("$a"); done < <(
   python3 "$SCRIPT_DIR/models.py" claude-args poll "$DASH_DIR" 2>/dev/null)
 
-if "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" ${model_args[@]+"${model_args[@]}"} \
+# usage.py sends only the poll's tools, caps the call and logs its cost
+out_file=$(mktemp)
+if python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
+  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" ${model_args[@]+"${model_args[@]}"} \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \
-  >> "$DASH_DIR/launchd-poll.log" 2>> "$DASH_DIR/launchd-poll.err"; then
+  > "$out_file" 2>> "$DASH_DIR/launchd-poll.err"; then
+  cat "$out_file" >> "$DASH_DIR/launchd-poll.log"
+  for connector in "${due[@]}"; do
+    tmp=$(mktemp)
+    if grep -qiE "^[-* ]*$connector: nothing new" "$out_file"; then
+      jq --arg c "$connector" '.[$c] = ((.[$c] // 0) + 1)' "$QUIET" > "$tmp"
+    else
+      jq --arg c "$connector" '.[$c] = 0' "$QUIET" > "$tmp"
+    fi
+    mv "$tmp" "$QUIET"
+  done
+  rm -f "$out_file"
   done_epoch=$(TZ="$TZ_NAME" date +%s)
   for connector in "${due[@]}"; do
     tmp=$(mktemp)
@@ -89,5 +118,6 @@ if "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" ${model_args[@]+"${model_a
     mv "$tmp" "$COMPLETED"
   done
 else
+  cat "$out_file" >> "$DASH_DIR/launchd-poll.log"; rm -f "$out_file"
   echo "$(date '+%Y-%m-%dT%H:%M:%S') poll FAILED (scope=$scope, exit=$?)" >> "$DASH_DIR/launchd-poll.err"
 fi

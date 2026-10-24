@@ -505,3 +505,27 @@ class TestRankKey(unittest.TestCase):
     def test_user_priority_keeps_it_out_of_gone_quiet(self):
         n = self.node("kept", due="2026-07-31", act="2026-07-21", priority_source="user")
         self.assertFalse(graph.is_gone_quiet(n, now=self.NOW))
+
+
+class TestImportance(unittest.TestCase):
+    """The shown priority is importance apart from the date."""
+    NOW = graph._parse_iso("2026-10-13T16:00:00Z")
+
+    def node(self, **attrs):
+        return {"id": "a", "type": "Action", "name": "a", "attrs": attrs,
+                "last_seen": "2026-10-13T00:00:00Z"}
+
+    def test_date_driven_high_shows_medium(self):
+        n = self.node(priority="high", due="2026-10-14")
+        self.assertEqual(graph.effective_priority(n, now=self.NOW), "high")
+        self.assertEqual(graph.importance(n, now=self.NOW), "medium")
+
+    def test_high_far_from_its_date_stays_high(self):
+        self.assertEqual(graph.importance(self.node(priority="high", due="2026-11-30"), now=self.NOW), "high")
+        self.assertEqual(graph.importance(self.node(priority="high"), now=self.NOW), "high")
+
+    def test_recorded_importance_and_user_choice_win(self):
+        self.assertEqual(graph.importance(self.node(priority="high", due="2026-10-14",
+                                                    importance="high"), now=self.NOW), "high")
+        self.assertEqual(graph.importance(self.node(priority="low", importance="high",
+                                                    priority_source="user"), now=self.NOW), "low")
