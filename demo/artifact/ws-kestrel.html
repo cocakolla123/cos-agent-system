@@ -34,376 +34,386 @@ window.fetch = async function (url, opts) {
 <title>Kestrel Labs Chief of Staff</title>
 <script>try { const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>:root {
-  --bg: #f7f4ee; --rail: #f1ede5; --sheet: #fffdf9; --sheet-2: #f3efe7;
-  --rule: #e6e0d4; --rule-strong: #d6cfbf; --fill: rgba(60,45,20,.06); --fill-2: rgba(60,45,20,.10);
-  --ink: #1b1a17; --ink-2: #5d584f; --ink-3: #857f73;
-  --pen: #d9442b; --pen-hover: #c43a22; --pen-soft: rgba(217,68,43,.09); --pen-text: #c13a22;
-  --on-pen: #fffdf9;
-  --amber: #9a6200; --amber-soft: rgba(196,128,0,.12);
-  --sage: #3f7a4f; --sage-soft: rgba(63,122,79,.11);
-  --slate: #3d5a80; --slate-soft: rgba(61,90,128,.10);
-  --plum: #7a4b7a; --plum-soft: rgba(122,75,122,.10);
-  --lift: 0 1px 0 rgba(60,45,20,.04), 0 8px 24px -12px rgba(60,45,20,.18);
-  --lift-lg: 0 24px 64px -16px rgba(30,20,5,.35);
+  --bg: #ffffff; --panel: #f3f3f1; --panel-2: #e9e9e6; --line: #dcdcd8; --line-strong: #0d0d0d;
+  --ink: #0d0d0d; --ink-2: #4a4a48; --ink-3: #74746f;
+  --cobalt: #1b3bff; --cobalt-hover: #0026e6; --cobalt-soft: rgba(27,59,255,.08); --on-cobalt: #ffffff;
+  --red: #e4002b; --red-soft: rgba(228,0,43,.08);
+  --amber: #a55d00; --amber-soft: rgba(255,170,0,.14);
+  --green: #00804a; --green-soft: rgba(0,128,74,.10);
+  --violet: #6b2bd6; --violet-soft: rgba(107,43,214,.09);
+  --row-hover: #f7f7f5; --row-sel: #eef1ff;
   color-scheme: light;
 
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, "Helvetica Neue", system-ui, sans-serif;
-  --serif: "Iowan Old Style", "Charter", "Bitstream Charter", "Sitka Text", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+  --sans: "Helvetica Neue", Helvetica, "Inter", "Segoe UI", "Arial Nova", Arial, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #15130f; --rail: #1b1914; --sheet: #201d18; --sheet-2: #29261f;
-  --rule: #34302a; --rule-strong: #46413a; --fill: rgba(255,245,225,.05); --fill-2: rgba(255,245,225,.09);
-  --ink: #efe9de; --ink-2: #b4ac9e; --ink-3: #8f887b;
-  --pen: #ff6a4d; --pen-hover: #ff7f66; --pen-soft: rgba(255,106,77,.13); --pen-text: #ff8269;
-  --on-pen: #15130f;
-  --amber: #e0a33a; --amber-soft: rgba(224,163,58,.14);
-  --sage: #7cc191; --sage-soft: rgba(124,193,145,.13);
-  --slate: #8fb0d8; --slate-soft: rgba(143,176,216,.13);
-  --plum: #cf9bcf; --plum-soft: rgba(207,155,207,.13);
-  --lift: 0 0 0 1px rgba(0,0,0,.2);
-  --lift-lg: 0 24px 64px -12px rgba(0,0,0,.7);
+  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
+  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
+  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
+  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
+  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
+  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
+  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
+  --row-hover: #0c0c0d; --row-sel: #0d1233;
   color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-  --bg: #15130f; --rail: #1b1914; --sheet: #201d18; --sheet-2: #29261f;
-  --rule: #34302a; --rule-strong: #46413a; --fill: rgba(255,245,225,.05); --fill-2: rgba(255,245,225,.09);
-  --ink: #efe9de; --ink-2: #b4ac9e; --ink-3: #8f887b;
-  --pen: #ff6a4d; --pen-hover: #ff7f66; --pen-soft: rgba(255,106,77,.13); --pen-text: #ff8269;
-  --on-pen: #15130f;
-  --amber: #e0a33a; --amber-soft: rgba(224,163,58,.14);
-  --sage: #7cc191; --sage-soft: rgba(124,193,145,.13);
-  --slate: #8fb0d8; --slate-soft: rgba(143,176,216,.13);
-  --plum: #cf9bcf; --plum-soft: rgba(207,155,207,.13);
-  --lift: 0 0 0 1px rgba(0,0,0,.2);
-  --lift-lg: 0 24px 64px -12px rgba(0,0,0,.7);
+  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
+  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
+  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
+  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
+  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
+  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
+  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
+  --row-hover: #0c0c0d; --row-sel: #0d1233;
   color-scheme: dark;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; border-radius: 0; }
 html { background: var(--bg); }
-body { margin: 0; font-family: var(--sans); font-size: 15px; line-height: 1.5; color: var(--ink); background: var(--bg);
-  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-a { color: var(--pen-text); text-decoration: none; }
-a:hover { text-decoration: underline; text-underline-offset: 3px; }
-::selection { background: var(--pen-soft); }
-h1, h2, .topbar-title, .stat-num, .todo-detail .tm-title, .card-title, .graph-section > h3, .side-panel h3, .cal-head {
-  font-family: var(--serif); }
+body { margin: 0; font-family: var(--sans); font-size: 14.5px; line-height: 1.45; color: var(--ink); background: var(--bg);
+  -webkit-font-smoothing: antialiased; letter-spacing: -.003em; counter-reset: navsec; }
+a { color: var(--cobalt); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+::selection { background: var(--cobalt); color: var(--on-cobalt); }
 
 /* ---------- shell ---------- */
-.nav { position: fixed; inset: 0 auto 0 0; width: 236px; padding: 24px 14px 16px; z-index: 60;
-  display: flex; flex-direction: column; gap: 1px; background: var(--rail); border-right: 1px solid var(--rule); }
-.brand { display: flex; align-items: center; gap: 10px; padding: 0 10px 26px; }
-.brand-mark { width: 9px; height: 9px; border-radius: 2px; background: var(--pen); transform: rotate(45deg); flex: none; }
+.nav { position: fixed; inset: 0 auto 0 0; width: 220px; padding: 22px 0 16px; z-index: 60;
+  display: flex; flex-direction: column; background: var(--bg); border-right: 1px solid var(--line-strong); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 20px 22px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.brand-mark { width: 14px; height: 14px; background: var(--cobalt); flex: none; }
 .brand-mark svg { display: none; }
-.brand > div { font-family: var(--serif); font-size: 19px; font-weight: 600; letter-spacing: -.01em; }
-.nav-group { margin: 18px 10px 6px; font-size: 13px; color: var(--ink-3); font-style: italic; font-family: var(--serif); }
-.nav a.nav-link { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 6px 10px 6px 12px; border-radius: 6px; color: var(--ink-2); font-size: 14px; }
-.nav a.nav-link:hover { background: var(--fill); color: var(--ink); text-decoration: none; }
-.nav a.nav-link.active { color: var(--ink); font-weight: 600; background: var(--sheet); box-shadow: var(--lift); }
-.nav a.nav-link.active::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; border-radius: 2px; background: var(--pen); }
-.nav-count { font-size: 12.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
-.nav a.active .nav-count { color: var(--pen-text); }
-.nav-foot { margin-top: auto; padding: 12px 6px 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; border-top: 1px solid var(--rule); }
-.nav-hint { font-size: 12px; color: var(--ink-3); padding: 0 4px; line-height: 1.9; }
-.main { margin-left: 236px; min-height: 100vh; }
-.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-  padding: 18px 44px 16px; background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule); }
-.topbar-title { font-size: 28px; line-height: 1.1; font-weight: 600; letter-spacing: -.015em; }
-.topbar-head { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1 1 200px; }
-.status { display: block; color: var(--ink-3); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.status-dot { display: inline-block; vertical-align: 1px; margin-right: 6px; }
-.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+.brand > div { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.nav-group { margin: 18px 20px 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.nav a.nav-link { position: relative; display: grid; grid-template-columns: 26px 1fr auto; align-items: baseline;
+  padding: 7px 20px; color: var(--ink); font-size: 14px; font-weight: 500; }
+.nav a.nav-link::before { counter-increment: navsec; content: counter(navsec, decimal-leading-zero);
+  font-size: 11px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.nav a.nav-link:hover { background: var(--panel); text-decoration: none; }
+.nav a.nav-link.active { background: var(--ink); color: var(--bg); }
+.nav a.nav-link.active::before { color: var(--bg); opacity: .7; }
+.nav-count { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.nav a.active .nav-count { color: var(--bg); }
+.nav-foot { margin-top: auto; padding: 12px 20px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.nav-hint { font-size: 11.5px; color: var(--ink-3); line-height: 2; }
+.main { margin-left: 220px; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 14px 36px; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+@media (min-width: 1100px) { .topbar { flex-wrap: nowrap; } }
+.topbar-head { display: flex; align-items: baseline; gap: 14px; min-width: 0; flex: 1 1 200px; }
+.topbar-title { font-size: 26px; line-height: 1; font-weight: 700; letter-spacing: -.035em; white-space: nowrap; }
+.status { display: block; color: var(--ink-3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-dot { display: inline-block; width: 7px; height: 7px; background: var(--green); margin-right: 6px; vertical-align: 0; }
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-.search-btn { display: inline-flex; align-items: center; gap: 10px; min-width: 190px; justify-content: space-between;
-  height: 34px; padding: 0 8px 0 12px; border-radius: 8px; background: var(--sheet); color: var(--ink-3);
-  border: 1px solid var(--rule); font-size: 13.5px; }
-.search-btn:hover { border-color: var(--rule-strong); color: var(--ink-2); background: var(--sheet); }
-kbd { font-family: var(--mono); font-size: 11px; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--rule-strong);
-  background: var(--sheet-2); color: var(--ink-2); line-height: 1.5; }
-.content-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; padding: 28px 44px 96px; max-width: 1480px; }
+.search-btn { display: inline-flex; align-items: center; gap: 12px; min-width: 200px; justify-content: space-between;
+  height: 34px; padding: 0 8px 0 12px; background: var(--panel); color: var(--ink-3); border: 1px solid transparent; font-size: 13px; }
+.search-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--panel); }
+kbd { font-family: var(--sans); font-size: 10.5px; font-weight: 600; padding: 1px 5px; border: 1px solid var(--line); background: var(--bg); color: var(--ink-2); }
+.content-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 28px 36px 96px; max-width: 1560px; }
 .content { min-width: 0; }
 .view[hidden] { display: none !important; }
-@media (min-width: 1440px) { .content-grid { grid-template-columns: minmax(0, 1fr) 292px; } }
-@media (min-width: 1100px) { .topbar { flex-wrap: nowrap; } }
+@media (min-width: 1480px) { .content-grid { grid-template-columns: minmax(0, 1fr) 280px; } }
 @media (max-width: 899px) {
   .nav { position: sticky; top: 0; inset: auto; width: auto; flex-direction: row; align-items: center; overflow-x: auto;
-    padding: 10px 12px; border-right: 0; border-bottom: 1px solid var(--rule); gap: 2px; }
-  .brand { padding: 0 8px 0 4px; } .brand > div, .nav-group, .nav-count, .nav-hint { display: none; }
-  .nav a.nav-link { white-space: nowrap; }
-  .nav a.nav-link.active::before { left: 10px; right: 10px; top: auto; bottom: 1px; width: auto; height: 2px; }
-  .nav-foot { margin: 0 0 0 4px; padding: 0; border: 0; flex-direction: row; }
+    padding: 0; border-right: 0; border-bottom: 1px solid var(--line-strong); }
+  .brand { padding: 12px 14px; margin: 0; border: 0; border-right: 1px solid var(--line); }
+  .brand > div, .nav-group, .nav-count, .nav-hint { display: none; }
+  .nav a.nav-link { display: flex; gap: 6px; white-space: nowrap; padding: 12px 14px; }
+  .nav-foot { margin: 0; padding: 0 8px; border: 0; flex-direction: row; }
   .main { margin-left: 0; }
-  .topbar { position: static; padding: 16px; gap: 10px; }
-  .topbar-title { font-size: 24px; }
+  .topbar { position: static; padding: 14px 16px; gap: 10px; }
+  .topbar-head { flex-direction: column; gap: 4px; max-width: 100%; }
+  .status { max-width: 100%; }
+  #wsSlot { max-width: 100%; overflow-x: auto; }
+  #wsSlot .ws-switcher { flex-wrap: nowrap; }
+  #wsSlot .ws-switcher a { white-space: nowrap; }
   .topbar-actions { margin-left: 0; flex-wrap: wrap; }
   .search-btn { min-width: 0; }
   .content-grid { padding: 18px 16px 96px; }
 }
 
 /* ---------- type ---------- */
-h1 { font-size: 30px; font-weight: 600; margin: 0 0 4px; }
-h2 { font-size: 23px; font-weight: 600; letter-spacing: -.01em; margin: 40px 0 14px; padding: 0; border: 0;
-  display: flex; align-items: baseline; gap: 10px; justify-content: flex-start; }
-.view > h2:first-child { margin-top: 4px; }
-h3 { font-size: 13px; font-weight: 600; color: var(--ink-2); margin: 24px 0 8px; }
+h1 { font-size: 34px; font-weight: 700; letter-spacing: -.04em; margin: 0 0 4px; }
+h2 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 44px 0 14px; padding: 0 0 10px; border: 0;
+  border-bottom: 1px solid var(--line-strong); display: flex; align-items: baseline; gap: 10px; justify-content: flex-start; }
+.view > h2:first-child { margin-top: 0; }
+h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin: 26px 0 10px; }
 .meta, .sec-sub, .poll-status, .acct-meta, .auth-note, .cc-sub, .td-empty, .empty, .obj-next-none, .tm-thinking { color: var(--ink-3); }
-.meta { font-size: 13px; margin-bottom: 10px; }
-.quick-line { font-size: 15px; color: var(--ink-2); margin-bottom: 10px; }
-.view-intro { color: var(--ink-2); font-size: 15px; margin: -4px 0 22px; max-width: 66ch; }
-pre { white-space: pre-wrap; font-family: var(--sans); font-size: 14.5px; line-height: 1.6; color: var(--ink-2);
-  background: var(--sheet); border: 1px solid var(--rule); border-radius: 10px; padding: 18px 20px; max-height: 360px; overflow-y: auto; }
-code { font-family: var(--mono); font-size: .85em; background: var(--fill); padding: .1em .35em; border-radius: 4px; }
+.meta { font-size: 12.5px; margin-bottom: 10px; }
+.quick-line { font-size: 14px; color: var(--ink-2); margin-bottom: 10px; }
+.view-intro { color: var(--ink-2); font-size: 14.5px; margin: -2px 0 22px; max-width: 70ch; }
+pre { white-space: pre-wrap; font-family: var(--sans); font-size: 14px; line-height: 1.55; color: var(--ink-2);
+  background: var(--panel); border: 0; padding: 18px 20px; max-height: 360px; overflow-y: auto; }
+code { font-family: var(--mono); font-size: .86em; background: var(--panel-2); padding: .1em .35em; }
 
 /* ---------- controls ---------- */
-button { height: 32px; padding: 0 14px; border-radius: 8px; border: 1px solid var(--rule-strong); background: var(--sheet); color: var(--ink);
-  font: inherit; font-size: 13.5px; font-weight: 500; cursor: pointer; white-space: nowrap; margin: 0;
-  transition: background .12s, border-color .12s, transform .06s; }
-button:hover { border-color: var(--ink-3); background: var(--sheet); }
-button:active { transform: translateY(1px); }
-button.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-button.primary:hover { background: var(--ink-2); border-color: var(--ink-2); }
-button.small { height: 28px; padding: 0 12px; font-size: 13px; }
-button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding: 0 8px; }
-button.ghost:hover { background: var(--fill); border-color: transparent; }
-.card button.primary, .tm-next button.primary { background: var(--pen); border-color: var(--pen); color: var(--on-pen); }
-.card button.primary:hover, .tm-next button.primary:hover { background: var(--pen-hover); border-color: var(--pen-hover); }
+button { height: 32px; padding: 0 14px; border: 1px solid var(--ink); background: var(--bg); color: var(--ink);
+  font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; margin: 0; transition: background .1s, color .1s; }
+button:hover { background: var(--ink); color: var(--bg); }
+button.primary { background: var(--cobalt); color: var(--on-cobalt); border-color: var(--cobalt); }
+button.primary:hover { background: var(--cobalt-hover); border-color: var(--cobalt-hover); color: var(--on-cobalt); }
+button.small { height: 28px; padding: 0 11px; font-size: 12.5px; }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding: 0; height: auto; font-weight: 500; }
+button.ghost:hover { color: var(--cobalt); background: transparent; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .todo-row:focus-visible {
-  outline: 2px solid var(--pen); outline-offset: 2px; }
+  outline: 2px solid var(--cobalt); outline-offset: 1px; }
 textarea, input[type=text], input[type=password], input[type=time], input[type=number], input:not([type]), select {
-  font: inherit; font-size: 14.5px; color: var(--ink); background: var(--sheet); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 8px 11px; }
-textarea:focus, input:focus, select:focus { border-color: var(--ink-3); outline: 0; }
+  font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); padding: 7px 10px; }
+textarea:hover, input:hover, select:hover { border-color: var(--ink-3); }
+textarea:focus, input:focus, select:focus { border-color: var(--ink); outline: 0; }
 textarea { width: 100%; resize: vertical; margin-bottom: 10px; }
 select { height: 32px; padding: 0 8px; }
 input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
-.result { font-size: 13px; margin-top: 8px; white-space: pre-wrap; color: var(--sage); }
-.pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.day-pill { height: 28px; padding: 0 11px; font-size: 13px; }
-.day-pill.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.result { font-size: 12.5px; margin-top: 8px; white-space: pre-wrap; color: var(--green); }
+.pill-row { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 12px; }
+.day-pill { height: 28px; padding: 0 12px; font-size: 12.5px; margin-left: -1px; }
+.day-pill.on { background: var(--ink); color: var(--bg); }
 
-/* ---------- sheets ---------- */
+/* ---------- surfaces ---------- */
 .card, .objective-card, .acct-row, .start-research-card, .chat-box, .todo-detail, .side-panel, .auth-box, .mdl-box {
-  background: var(--sheet); border: 1px solid var(--rule); border-radius: 12px; }
-.card { padding: 20px 22px; margin-bottom: 14px; }
-.card.stale, .card.approved, .card.rejected, .card.superseded { opacity: .6; }
+  background: var(--bg); border: 1px solid var(--line); }
+.card { padding: 18px 20px; margin-bottom: 12px; }
+.card.stale, .card.approved, .card.rejected, .card.superseded { opacity: .55; }
 .card.failed { border-color: var(--amber); }
-.card.drafted { border-color: var(--slate); }
-.card-title { font-size: 19px; font-weight: 600; line-height: 1.3; margin: 10px 0 4px; }
+.card.drafted { border-color: var(--cobalt); }
+.card-title { font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; margin: 10px 0 4px; }
 .badge, .priority-tag, .tag-pill, .todo-draft, .ws-chip, .sec-count {
-  display: inline-flex; align-items: center; height: 21px; padding: 0 8px; border-radius: 4px; border: 0;
-  font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: 0; white-space: nowrap;
-  background: var(--fill); color: var(--ink-2); margin: 0 4px 0 0; }
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border: 0;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+  background: var(--panel-2); color: var(--ink-2); margin: 0 4px 0 0; }
 .badge.pending { background: var(--amber-soft); color: var(--amber); }
-.badge.approved { background: var(--sage-soft); color: var(--sage); }
-.badge.rejected, .badge.stale, .badge.superseded { background: var(--pen-soft); color: var(--pen-text); }
+.badge.approved { background: var(--green-soft); color: var(--green); }
+.badge.rejected, .badge.stale, .badge.superseded { background: var(--red-soft); color: var(--red); }
 .badge.failed { background: var(--amber-soft); color: var(--amber); }
-.badge.drafted { background: var(--slate-soft); color: var(--slate); }
-.priority-high { background: var(--pen-soft); color: var(--pen-text); }
-.priority-medium { background: var(--amber-soft); color: var(--amber); }
-.priority-low { background: var(--fill); color: var(--ink-3); }
-.tag-ticket, .tag-meeting { background: var(--slate-soft); color: var(--slate); }
-.tag-message { background: var(--plum-soft); color: var(--plum); }
-.tag-calendar { background: var(--sage-soft); color: var(--sage); }
-.tag-domain { background: var(--pen-soft); color: var(--pen-text); }
-.sec-count { background: transparent; color: var(--ink-3); padding: 0; font-family: var(--sans); font-size: 14px; font-weight: 400; }
-.priority-note { font-style: italic; color: var(--ink-2); }
-.tabs { display: inline-flex; gap: 18px; margin: 14px 0 12px; border-bottom: 1px solid var(--rule); }
-.tab-btn { height: 30px; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--ink-3); font-size: 13.5px; margin-bottom: -1px; }
-.tab-btn:hover { color: var(--ink); background: transparent; }
-.tab-btn.active { color: var(--ink); box-shadow: inset 0 -2px 0 var(--pen); font-weight: 600; }
+.badge.drafted { background: var(--cobalt-soft); color: var(--cobalt); }
+.priority-high { background: var(--red); color: #fff; }
+.priority-medium { background: var(--panel-2); color: var(--ink); }
+.priority-low { background: var(--panel); color: var(--ink-3); }
+.tag-ticket, .tag-meeting { background: var(--cobalt-soft); color: var(--cobalt); }
+.tag-message { background: var(--violet-soft); color: var(--violet); }
+.tag-calendar { background: var(--green-soft); color: var(--green); }
+.tag-domain { background: var(--red-soft); color: var(--red); }
+.sec-count { background: transparent; color: var(--ink-3); padding: 0; font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.priority-note { color: var(--ink-2); }
+.tabs { display: inline-flex; margin: 14px 0 12px; border: 1px solid var(--ink); }
+.tab-btn { height: 28px; padding: 0 14px; border: 0; background: transparent; color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.tab-btn + .tab-btn { border-left: 1px solid var(--ink); }
+.tab-btn:hover { background: var(--panel); color: var(--ink); }
+.tab-btn.active { background: var(--ink); color: var(--bg); }
 .tab-panel { display: none; } .tab-panel.active { display: block; }
-.demo-banner { background: transparent; color: var(--ink-2); border: 1px dashed var(--rule-strong); border-radius: 10px;
-  padding: 12px 16px; margin: 0 0 24px; font-size: 13.5px; }
+.demo-banner { background: var(--panel); color: var(--ink-2); border: 0; border-left: 4px solid var(--cobalt); padding: 12px 16px; margin: 0 0 26px; font-size: 13px; }
 .demo-banner b { color: var(--ink); }
-.guardrail-alert { margin: 0 0 18px; padding: 14px 18px; background: var(--pen-soft); border: 1px solid var(--pen); border-radius: 10px; font-size: 14px; }
-.coverage-note { margin: 0 0 18px; padding: 12px 16px; background: var(--amber-soft); border-radius: 10px; font-size: 14px; color: var(--ink); border: 0; }
-.start-research-card { padding: 20px 22px; margin: 0 0 18px; }
-.start-research-card h2 { margin: 0 0 6px; }
+.guardrail-alert { margin: 0 0 18px; padding: 14px 18px; background: var(--red-soft); border: 0; border-left: 4px solid var(--red); font-size: 14px; }
+.coverage-note { margin: 0 0 18px; padding: 12px 16px; background: var(--amber-soft); border: 0; border-left: 4px solid var(--amber); font-size: 13.5px; color: var(--ink); }
+.start-research-card { padding: 20px 22px; margin: 0 0 18px; border-color: var(--ink); }
+.start-research-card h2 { margin: 0 0 8px; border: 0; padding: 0; }
 
-/* ---------- masthead figures ---------- */
-.stats { display: flex; flex-wrap: wrap; margin: 0 0 6px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-.stat { flex: 1 1 150px; padding: 16px 20px 16px 0; }
-.stat + .stat { padding-left: 20px; border-left: 1px solid var(--rule); }
-.stat-num { font-size: 42px; font-weight: 500; line-height: 1; letter-spacing: -.02em; font-variant-numeric: lining-nums tabular-nums; }
-.stat-label { color: var(--ink-2); font-size: 13px; margin-top: 6px; }
-.stat-danger .stat-num { color: var(--pen-text); }
-@media (max-width: 699px) { .stat { flex-basis: 40%; } .stat:nth-child(3) { border-left: 0; padding-left: 0; } }
-.briefing { margin: 0 0 30px; }
-.briefing summary { cursor: pointer; color: var(--ink-3); font-size: 13.5px; list-style: none; padding: 8px 0; }
+/* ---------- figures ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 8px; border-top: 4px solid var(--ink); }
+.stat { padding: 14px 18px 18px 0; }
+.stat + .stat { padding-left: 18px; border-left: 1px solid var(--line); }
+.stat-num { font-size: 64px; font-weight: 700; line-height: .95; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.stat-label { color: var(--ink-2); font-size: 12px; font-weight: 600; margin-top: 8px; letter-spacing: .01em; }
+.stat-danger .stat-num { color: var(--red); }
+.stat-accent .stat-num { color: var(--cobalt); }
+@media (max-width: 699px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .stat-num { font-size: 48px; }
+}
+.briefing { margin: 0 0 32px; border-bottom: 1px solid var(--line); }
+.briefing summary { cursor: pointer; color: var(--ink-2); font-size: 12.5px; font-weight: 600; list-style: none; padding: 10px 0; }
 .briefing summary::-webkit-details-marker { display: none; }
-.briefing summary::before { content: "+ "; color: var(--pen-text); }
-.briefing[open] summary::before { content: "\2212 "; }
-.briefing pre { margin-top: 4px; }
+.briefing summary::before { content: "+  "; color: var(--cobalt); font-weight: 700; }
+.briefing[open] summary::before { content: "\2212  "; }
+.briefing pre { margin: 0 0 14px; }
 
-/* ---------- the ledger ---------- */
+/* ---------- task table ---------- */
 .graph-command-center { margin: 0 0 26px; padding: 0; background: transparent; border: 0; }
 .graph-command-center > h2 { display: none; }
-.ws-switcher { display: inline-flex; flex-wrap: wrap; gap: 4px; margin: 0 0 20px; }
-.ws-switcher a { display: inline-flex; align-items: center; height: 28px; padding: 0 11px; border-radius: 999px; color: var(--ink-2); font-size: 13px; }
-.ws-switcher a:hover { background: var(--fill); text-decoration: none; color: var(--ink); }
+.ws-switcher { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--ink); }
+.ws-switcher a { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.ws-switcher a + a { border-left: 1px solid var(--ink); }
+.ws-switcher a:hover { background: var(--panel); text-decoration: none; }
 .ws-switcher a.ws-active { background: var(--ink); color: var(--bg); }
-.topbar .ws-switcher { margin: 0; }
-.graph-section { margin: 0 0 30px; }
-.graph-section > h3 { font-size: 23px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); margin: 0 0 2px; display: flex; align-items: baseline; gap: 10px; }
-.graph-section > .quick-line { font-size: 13.5px; color: var(--ink-3); margin: 0 0 16px; }
-.graph-section ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); }
-.graph-section li { margin: 0; padding: 11px 2px; font-size: 14.5px; color: var(--ink); border-bottom: 1px solid var(--rule); }
+.graph-section { margin: 0 0 34px; }
+.graph-section > h3 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; text-transform: none; color: var(--ink); margin: 0 0 4px; display: flex; align-items: baseline; gap: 10px; }
+.graph-section > .quick-line { font-size: 13px; color: var(--ink-3); margin: 0 0 16px; }
+.graph-section ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-strong); }
+.graph-section li { margin: 0; padding: 10px 0; font-size: 14px; color: var(--ink); border-bottom: 1px solid var(--line); }
 .graph-section a { color: inherit; }
-.sec-type { color: var(--ink-3); font-size: 12.5px; font-style: italic; font-family: var(--serif); margin-right: 6px; }
-.todo-board { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 28px; align-items: start; }
-@media (max-width: 1099px) { .todo-board { grid-template-columns: minmax(0, 1fr); } }
-.todo-list { max-height: 76vh; overflow-y: auto; border-top: 1px solid var(--rule); scrollbar-width: thin; }
-.todo-row { display: grid; grid-template-columns: 54px minmax(0, 1fr); gap: 14px; align-items: baseline; position: relative;
-  padding: 12px 10px 12px 0; border-bottom: 1px solid var(--rule); cursor: pointer; color: var(--ink); background: transparent;
-  border-radius: 0; margin: 0; transition: background .1s; outline: 0; }
-.todo-row:hover { background: var(--fill); }
-.todo-row::before { content: ""; position: absolute; left: 0; top: -1px; bottom: -1px; width: 2px; background: transparent; }
-.todo-selected { background: var(--sheet) !important; }
-.todo-selected::before { background: var(--ink); }
-.todo-when { font-family: var(--serif); font-size: 14px; color: var(--ink-3); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.todo-overdue .todo-when { color: var(--pen-text); font-weight: 600; }
-.todo-high .todo-title { font-weight: 600; }
+.sec-type { color: var(--ink-3); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-right: 6px; }
+.todo-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.tf-chips { display: flex; flex-wrap: wrap; }
+.tf-chip { height: 30px; padding: 0 12px; border: 1px solid var(--ink); margin-left: -1px; background: var(--bg); color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.tf-chip:first-child { margin-left: 0; }
+.tf-chip:hover { background: var(--panel); color: var(--ink); }
+.tf-chip.tf-on { background: var(--ink); color: var(--bg); }
+.tf-n { margin-left: 6px; font-weight: 500; opacity: .6; font-variant-numeric: tabular-nums; }
+.tf-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tf-sel { display: inline-flex; align-items: center; border: 1px solid var(--line); height: 30px; }
+.tf-sel span { padding: 0 8px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-right: 1px solid var(--line); height: 100%; display: inline-flex; align-items: center; }
+.tf-sel select { border: 0; height: 28px; font-size: 13px; background: transparent; }
+.tf-search { height: 30px; width: 180px; padding: 0 10px; font-size: 13px; }
+.todo-board { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(340px, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 1199px) { .todo-board { grid-template-columns: minmax(0, 1fr); } }
+.todo-table { border-top: 4px solid var(--ink); min-width: 0; }
+.todo-head, .todo-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 96px 78px; gap: 14px; align-items: baseline; }
+.todo-head { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line-strong); }
+.todo-head > * { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); text-align: left; }
+.todo-head > :first-child { text-align: right; }
+.todo-head button { height: auto; padding: 0; border: 0; background: none; cursor: pointer; }
+.todo-head button:hover { color: var(--cobalt); background: none; }
+.todo-list { max-height: 72vh; overflow-y: auto; scrollbar-width: thin; }
+.todo-row { position: relative; padding: 11px 10px 11px 0; border-bottom: 1px solid var(--line); cursor: pointer; color: var(--ink); background: transparent; margin: 0; outline: 0; }
+.todo-row:hover { background: var(--row-hover); }
+.todo-selected { background: var(--row-sel) !important; box-shadow: inset 4px 0 0 var(--cobalt); }
+.todo-when { font-size: 13px; font-weight: 600; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.todo-overdue .todo-when { color: var(--red); }
 .todo-main { min-width: 0; }
-.todo-title { display: block; font-size: 14.5px; line-height: 1.4; }
-.todo-sub { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 3px; font-size: 12.5px; }
+.todo-title { display: block; font-size: 14.5px; line-height: 1.35; font-weight: 500; }
+.todo-high .todo-title { font-weight: 700; }
+.todo-sub { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 3px; font-size: 12px; }
 .todo-sub:empty { display: none; }
-.todo-sub .sec-sub, .todo-late, .todo-quiet { color: var(--ink-3); font-size: 12.5px; }
-.todo-late { color: var(--pen-text); }
-.todo-draft { height: auto; padding: 0; background: transparent; color: var(--ink-2); font-size: 12.5px; margin: 0; display: inline-flex; align-items: center; gap: 6px; }
-.todo-draft::before { content: ""; width: 12px; height: 2px; background: var(--pen); border-radius: 2px; }
+.todo-why { color: var(--ink-3); }
+.todo-sub .sec-sub, .todo-late, .todo-quiet { color: var(--ink-3); font-size: 12px; }
+.todo-late { color: var(--red); }
+.todo-draft { height: auto; padding: 0; background: transparent; color: var(--cobalt); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; margin: 0; }
+.todo-draft::before { content: "\2192\00a0"; }
+.todo-kind { font-size: 12px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.todo-pcell { white-space: nowrap; }
+.todo-pri { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.pri-bars { display: inline-block; height: 11px; }
+.todo-pri .pri-bars { background:
+    linear-gradient(var(--c1), var(--c1)) 0 100% / 3px 5px no-repeat,
+    linear-gradient(var(--c2), var(--c2)) 5px 100% / 3px 8px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) 10px 100% / 3px 11px no-repeat; width: 13px; }
+.pri-high { color: var(--red); --c1: var(--red); --c2: var(--red); --c3: var(--red); }
+.pri-medium { --c1: var(--ink); --c2: var(--ink); --c3: var(--line); }
+.pri-low { color: var(--ink-3); --c1: var(--ink-3); --c2: var(--line); --c3: var(--line); }
+@media (max-width: 699px) {
+  .todo-head, .todo-row { grid-template-columns: 48px minmax(0, 1fr) 62px; }
+  .todo-kind, .todo-head > :nth-child(3) { display: none; }
+}
 .todo-badge { display: none; }
 .todo-row[hidden], .todo-divider[hidden], .todo-none[hidden] { display: none !important; }
-.todo-none { padding: 28px 0; color: var(--ink-3); font-style: italic; font-family: var(--serif); text-align: center; }
-.todo-pri { font-size: 12px; color: var(--ink-3); }
-.todo-pri.pri-high { color: var(--pen-text); font-weight: 600; }
-.todo-pri.pri-low { color: var(--ink-3); opacity: .8; }
-.todo-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 14px; }
-.tf-chip { height: 30px; padding: 0 12px; border-radius: 999px; background: transparent; border: 1px solid var(--rule-strong); color: var(--ink-2); font-size: 13px; }
-.tf-chip:hover { border-color: var(--ink-3); color: var(--ink); background: transparent; }
-.tf-chip.tf-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-.tf-n { margin-left: 4px; font-variant-numeric: tabular-nums; opacity: .65; }
-.tf-search { margin-left: auto; height: 30px; width: 200px; max-width: 100%; padding: 0 12px; font-size: 13px; border-radius: 999px; }
-@media (max-width: 699px) { .tf-search { margin-left: 0; width: 100%; } }
-.todo-divider { padding: 28px 0 10px 68px; font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--ink-3); border-bottom: 1px solid var(--rule); }
-.todo-stale { opacity: .6; } .todo-stale:hover, .todo-stale.todo-selected { opacity: 1; }
-.todo-detail { position: sticky; top: 96px; padding: 28px 30px 26px; min-height: 340px; box-shadow: var(--lift); }
-.todo-detail .tm-title { width: 100%; font-size: 27px; font-weight: 600; line-height: 1.2; letter-spacing: -.01em; color: var(--ink);
-  background: transparent; border: 0; border-radius: 6px; padding: 2px 6px; margin: 0 0 0 -6px; resize: none; overflow: hidden; display: block; field-sizing: content; }
-.todo-detail .tm-title:hover, .todo-detail .tm-title:focus { background: var(--fill); }
-.tm-meta { margin: 8px 0 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13.5px; color: var(--ink-2); }
+.todo-none { padding: 28px 0; color: var(--ink-3); text-align: center; }
+.todo-divider { padding: 26px 0 8px 72px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--line-strong); }
+.todo-stale { opacity: .55; } .todo-stale:hover, .todo-stale.todo-selected { opacity: 1; }
+.todo-detail { position: sticky; top: 92px; padding: 24px 26px 24px; min-height: 340px; border: 0; border-top: 4px solid var(--cobalt); background: var(--panel); }
+.todo-detail .tm-title { width: 100%; font-size: 26px; font-weight: 700; line-height: 1.12; letter-spacing: -.035em; color: var(--ink);
+  background: transparent; border: 0; padding: 0; margin: 0; resize: none; overflow: hidden; display: block; field-sizing: content; }
+.todo-detail .tm-title:hover, .todo-detail .tm-title:focus { background: var(--bg); }
+.tm-meta { margin: 10px 0 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
 .tm-controls { display: flex; gap: 8px; align-items: center; margin: 0 0 22px; flex-wrap: wrap; }
-.tm-next { border-top: 2px solid var(--ink); padding: 14px 0 0; margin: 0 0 20px; }
-.tm-next-head { font-family: var(--serif); font-style: italic; font-size: 15px; color: var(--ink-2); margin: 0 0 6px; }
+.tm-next { border-top: 1px solid var(--line-strong); padding: 14px 0 0; margin: 0 0 20px; }
+.tm-next-head { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cobalt); margin: 0 0 8px; }
 .tm-next .card { margin: 0; padding: 0; background: transparent; border: 0; }
-.tm-plan { white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: var(--ink); }
-.draft-text { background: var(--bg); border-left: 2px solid var(--pen); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 12px 0 6px;
-  font-family: var(--serif); font-size: 16px; line-height: 1.6; }
+.tm-plan { white-space: pre-wrap; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+.draft-text { background: var(--bg); border: 0; border-left: 4px solid var(--cobalt); padding: 14px 16px; margin: 12px 0 6px; font-size: 15px; line-height: 1.55; }
 #tmNote { width: 100%; }
-.tm-evidence { margin: 2px 0 12px; font-size: 12.5px; }
-.tm-chat { border-top: 1px solid var(--rule); margin-top: 18px; padding-top: 16px; }
-.tm-chat-log { max-height: 240px; overflow-y: auto; font-size: 14px; display: flex; flex-direction: column; gap: 8px; }
-.tm-msg { background: var(--sheet-2); border-radius: 10px; padding: 8px 12px; margin: 0; white-space: pre-wrap; align-self: flex-start; max-width: 90%; }
+.tm-evidence { margin: 2px 0 12px; font-size: 12px; }
+.tm-chat { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }
+.tm-chat-log { max-height: 240px; overflow-y: auto; font-size: 13.5px; display: flex; flex-direction: column; gap: 6px; }
+.tm-msg { background: var(--bg); padding: 8px 12px; margin: 0; white-space: pre-wrap; align-self: flex-start; max-width: 90%; }
 .tm-you { background: var(--ink); color: var(--bg); align-self: flex-end; }
-.objective-card { margin: 0 0 10px; padding: 16px 18px; }
-.obj-title { font-weight: 600; font-size: 15px; }
-.obj-timeline, .obj-next { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
-.obj-details summary { font-size: 13px; color: var(--ink-3); cursor: pointer; margin-top: 6px; }
+.objective-card { margin: 0 0 10px; padding: 14px 16px; }
+.obj-title { font-weight: 700; font-size: 14.5px; }
+.obj-timeline, .obj-next { font-size: 13.5px; color: var(--ink-2); margin-top: 4px; }
+.obj-details summary { font-size: 12.5px; color: var(--ink-3); cursor: pointer; margin-top: 6px; }
 
-/* ---------- margin column ---------- */
+/* ---------- side column ---------- */
 .side-panel { display: none; }
-@media (min-width: 1440px) {
-  .side-panel { display: block; position: sticky; top: 96px; align-self: start; padding: 4px 0 20px 24px; background: transparent;
-    border: 0; border-left: 1px solid var(--rule); border-radius: 0; max-height: calc(100vh - 120px); overflow-y: auto; }
-  .side-panel h3 { margin: 0 0 12px; color: var(--ink); font-size: 19px; font-weight: 600; }
+@media (min-width: 1480px) {
+  .side-panel { display: block; position: sticky; top: 92px; align-self: start; padding: 0 0 20px; background: transparent;
+    border: 0; border-top: 4px solid var(--ink); max-height: calc(100vh - 116px); overflow-y: auto; }
+  .side-panel h3 { margin: 12px 0 12px; color: var(--ink); }
 }
-.today-brief { margin: 0 0 18px; padding: 0; background: transparent; border: 0; font-size: 14px; color: var(--ink-2); }
-.tb-line { margin: 0 0 12px; } .tb-line strong { color: var(--ink); font-weight: 600; }
-.tb-overdue strong { color: var(--pen-text); } .today-brief a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule-strong); text-underline-offset: 3px; }
-.cal-box { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--rule); }
-.cal-head { font-weight: 600; font-size: 16px; margin-bottom: 8px; }
-.cal { width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: center; font-variant-numeric: tabular-nums; }
-.cal th { color: var(--ink-3); font-weight: 400; padding: 4px; font-size: 11px; }
-.cal td { padding: 0; height: 30px; color: var(--ink-2); position: relative; }
-.cal-out { color: var(--ink-3) !important; opacity: .4; }
-.cal-marked { color: var(--ink); font-weight: 600; }
-.cal-today, .cal-today.cal-marked { color: var(--on-pen) !important; font-weight: 700; background: none; z-index: 0; }
-.cal-today::after { content: ""; position: absolute; left: 50%; top: 50%; width: 26px; height: 26px; transform: translate(-50%, -50%); border-radius: 50%; background: var(--pen); z-index: -1; }
-.cal-dot { color: var(--pen); font-size: 9px; vertical-align: top; }
-.cal-today .cal-dot { color: var(--on-pen); }
+.today-brief { margin: 0 0 18px; padding: 0; background: transparent; border: 0; font-size: 13.5px; color: var(--ink-2); }
+.tb-line { margin: 0 0 12px; } .tb-line strong { color: var(--ink); font-weight: 700; }
+.tb-overdue strong { color: var(--red); } .today-brief a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 2px; }
+.cal-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line-strong); }
+.cal-head { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+.cal { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; font-variant-numeric: tabular-nums; }
+.cal th { color: var(--ink-3); font-weight: 700; padding: 4px; font-size: 10px; letter-spacing: .06em; }
+.cal td { padding: 0; height: 30px; color: var(--ink-2); }
+.cal-out { color: var(--ink-3) !important; opacity: .35; }
+.cal-marked { color: var(--ink); font-weight: 700; box-shadow: inset 0 -2px 0 var(--cobalt); }
+.cal-today, .cal-today.cal-marked { background: var(--ink); color: var(--bg) !important; font-weight: 700; box-shadow: none; }
+.cal-dot { display: none; }
 
-/* ---------- command palette ---------- */
+/* ---------- jump palette ---------- */
 .palette { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: flex-start; justify-content: center;
-  padding: 12vh 16px 16px; background: rgba(20,15,5,.28); backdrop-filter: blur(3px); }
+  padding: 12vh 16px 16px; background: color-mix(in srgb, var(--bg) 70%, transparent); }
 .palette[hidden] { display: none; }
-.palette-box { width: min(620px, 100%); background: var(--sheet); border: 1px solid var(--rule); border-radius: 14px; box-shadow: var(--lift-lg); overflow: hidden; }
-.palette-input { width: 100%; height: 56px; border: 0 !important; border-bottom: 1px solid var(--rule) !important; border-radius: 0 !important; background: transparent !important;
-  padding: 0 20px !important; font-size: 18px !important; font-family: var(--serif) !important; }
-.palette-list { max-height: 52vh; overflow-y: auto; padding: 6px; }
-.palette-group { padding: 10px 14px 4px; font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--ink-3); }
-.palette-item { display: flex; align-items: baseline; gap: 12px; padding: 9px 14px; border-radius: 8px; cursor: pointer; font-size: 14.5px; }
-.palette-item .pi-when { width: 52px; flex: none; text-align: right; font-family: var(--serif); color: var(--ink-3); font-size: 13.5px; }
+.palette-box { width: min(640px, 100%); background: var(--bg); border: 1px solid var(--line-strong); box-shadow: 12px 12px 0 var(--cobalt); overflow: hidden; }
+.palette-input { width: 100%; height: 58px; border: 0 !important; border-bottom: 1px solid var(--line-strong) !important; background: transparent !important;
+  padding: 0 20px !important; font-size: 20px !important; font-weight: 600; letter-spacing: -.02em; }
+.palette-list { max-height: 52vh; overflow-y: auto; }
+.palette-group { padding: 10px 20px 4px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.palette-item { display: flex; align-items: baseline; gap: 14px; padding: 9px 20px; cursor: pointer; font-size: 14.5px; }
+.palette-item .pi-when { width: 50px; flex: none; text-align: right; color: var(--ink-3); font-size: 12.5px; font-weight: 600; }
 .palette-item .pi-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.palette-item .pi-hint { color: var(--ink-3); font-size: 12px; }
-.palette-item.active { background: var(--fill-2); }
-.palette-item.active .pi-when { color: var(--pen-text); }
-.palette-empty { padding: 18px; color: var(--ink-3); font-size: 14px; }
-.palette-foot { display: flex; flex-wrap: wrap; gap: 16px; padding: 10px 16px; border-top: 1px solid var(--rule); font-size: 12px; color: var(--ink-3); }
+.palette-item .pi-hint { color: var(--ink-3); font-size: 11.5px; }
+.palette-item.active { background: var(--cobalt); color: var(--on-cobalt); }
+.palette-item.active .pi-when, .palette-item.active .pi-hint { color: var(--on-cobalt); opacity: .8; }
+.palette-empty { padding: 18px 20px; color: var(--ink-3); font-size: 14px; }
+.palette-foot { display: flex; flex-wrap: wrap; gap: 16px; padding: 10px 20px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-3); }
 
 /* ---------- chat ---------- */
 .chat-bubble { position: fixed; bottom: max(24px, env(safe-area-inset-bottom, 0px)); right: max(24px, env(safe-area-inset-right, 0px));
-  width: 50px; height: 50px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; cursor: pointer;
-  box-shadow: var(--lift-lg); z-index: 1000; transition: transform .15s; }
-.chat-bubble path { fill: var(--bg); }
-.chat-bubble:hover { transform: translateY(-2px); }
+  width: 52px; height: 52px; background: var(--cobalt); display: grid; place-items: center; cursor: pointer; z-index: 1000; }
+.chat-bubble path { fill: var(--on-cobalt); }
+.chat-bubble:hover { background: var(--cobalt-hover); }
 .chat-panel-hidden { display: none; }
-#chatPanel { position: fixed; bottom: 24px; right: 24px; width: min(410px, 92vw); z-index: 1000; padding: 18px; box-shadow: var(--lift-lg); }
-.chat-panel-header { display: flex; justify-content: space-between; align-items: center; font-family: var(--serif); font-weight: 600; font-size: 19px; margin-bottom: 12px; }
-.chat-close { cursor: pointer; color: var(--ink-3); font-family: var(--sans); font-weight: 400; font-size: 15px; }
-.chat-log { max-height: 420px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+#chatPanel { position: fixed; bottom: 24px; right: 24px; width: min(420px, 92vw); z-index: 1000; padding: 16px; border: 1px solid var(--line-strong); box-shadow: 10px 10px 0 var(--cobalt); }
+.chat-panel-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 18px; letter-spacing: -.02em; margin-bottom: 12px; }
+.chat-close { cursor: pointer; color: var(--ink-3); font-weight: 400; font-size: 15px; }
+.chat-log { max-height: 420px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
 #chatPanel .chat-log { max-height: 360px; }
-.chat-msg { padding: 9px 13px; border-radius: 12px; max-width: 88%; font-size: 14.5px; }
+.chat-msg { padding: 9px 12px; max-width: 88%; font-size: 14px; }
 .chat-you { background: var(--ink); color: var(--bg); align-self: flex-end; }
-.chat-assistant { background: var(--sheet-2); color: var(--ink); align-self: flex-start; }
-.chat-role { font-size: 11px; opacity: .65; margin-bottom: 2px; }
+.chat-assistant { background: var(--panel); color: var(--ink); align-self: flex-start; }
+.chat-role { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-bottom: 2px; }
 .chat-you .meta { color: inherit; opacity: .75; }
 .chat-body { white-space: pre-wrap; }
 .chat-input-row { display: flex; gap: 8px; align-items: flex-end; }
 .chat-input-row textarea { flex: 1; margin-bottom: 0; }
 
 /* ---------- settings ---------- */
-.mdl-box { padding: 2px 22px; margin-bottom: 16px; }
-.mdl-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+.mdl-box { padding: 0 20px; margin-bottom: 16px; border-color: var(--line-strong); }
+.mdl-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
 .mdl-row:last-child { border-bottom: 0; }
-.mdl-tier { flex: 0 1 200px; min-width: 0; } .mdl-tier b { font-family: var(--serif); font-size: 17px; font-weight: 600; } .mdl-tier .meta { margin: 2px 0 0; }
+.mdl-tier { flex: 0 1 200px; min-width: 0; } .mdl-tier b { font-size: 16px; font-weight: 700; letter-spacing: -.02em; } .mdl-tier .meta { margin: 2px 0 0; }
 .mdl-prov { flex: 0 1 240px; min-width: 0; }
 .mdl-model { flex: 1 1 170px; min-width: 0; }
 .mdl-effort { flex: 0 0 auto; }
-.usage-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 4px 0 10px; }
-.usage-table th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: 12.5px; padding: 6px 4px; border-bottom: 1px solid var(--rule-strong); }
-.usage-table td { padding: 9px 4px; border-bottom: 1px solid var(--rule); }
+.mdl-key { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.mdl-key-name { flex: 0 0 240px; font-weight: 600; }
+.mdl-keys { margin: 16px 0; } .mdl-keys summary { cursor: pointer; font-weight: 700; }
+.usage-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 4px 0 10px; border-top: 4px solid var(--ink); }
+.usage-table th { text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding: 8px 4px; border-bottom: 1px solid var(--line-strong); }
+.usage-table td { padding: 10px 4px; border-bottom: 1px solid var(--line); }
 .usage-table .num { text-align: right; font-variant-numeric: tabular-nums; }
-.mdl-key { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; }
-.mdl-key-name { flex: 0 0 240px; }
-.mdl-keys { margin: 16px 0; } .mdl-keys summary { cursor: pointer; color: var(--ink-2); }
-.acct-row { margin: 0 0 8px; padding: 14px 18px; font-size: 14.5px; }
+.acct-row { margin: 0 0 -1px; padding: 12px 16px; font-size: 14px; }
 .acct-dot { font-weight: 700; margin-right: 4px; } .acct-id { color: var(--ink-2); margin: 0 6px; }
-.acct-fix { color: var(--pen-text); font-size: 13px; margin-top: 4px; }
-.auth-overlay { position: fixed; inset: 0; background: rgba(20,15,5,.3); backdrop-filter: blur(3px); z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 16px; }
-.auth-box { padding: 24px 26px; max-width: 460px; box-shadow: var(--lift-lg); }
-.auth-box h3 { margin: 0 0 10px; color: var(--ink); font-family: var(--serif); font-size: 21px; font-weight: 600; }
-.auth-reason { color: var(--ink-2); } .auth-buttons { margin-top: 16px; display: flex; gap: 8px; } .auth-refuse { color: var(--pen-text); }
-.inbox-item { font-size: 14.5px; padding: 11px 0; border-bottom: 1px solid var(--rule); color: var(--ink); }
-.linked-domain { margin-top: 16px; padding: 16px 18px; background: var(--pen-soft); border-radius: 10px; border: 0; }
-.linked-domain-title { font-weight: 600; font-size: 15px; color: var(--pen-text); margin-bottom: 8px; }
-.linked-domain pre { background: var(--sheet); color: var(--ink); }
-.lite-markdown ul { margin: 4px 0 8px; padding-left: 20px; } .lite-markdown li, .lite-markdown p { font-size: 14px; margin: 4px 0; }
+.acct-fix { color: var(--red); font-size: 12.5px; margin-top: 4px; }
+.auth-overlay { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 70%, transparent); z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.auth-box { padding: 22px 24px; max-width: 460px; border-color: var(--line-strong); box-shadow: 10px 10px 0 var(--cobalt); }
+.auth-box h3 { margin: 0 0 10px; color: var(--ink); font-size: 18px; letter-spacing: -.02em; text-transform: none; }
+.auth-reason { color: var(--ink-2); } .auth-buttons { margin-top: 16px; display: flex; gap: 8px; } .auth-refuse { color: var(--red); }
+.inbox-item { font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+.linked-domain { margin-top: 16px; padding: 14px 16px; background: var(--red-soft); border: 0; border-left: 4px solid var(--red); }
+.linked-domain-title { font-weight: 700; font-size: 14px; color: var(--red); margin-bottom: 8px; }
+.linked-domain pre { background: var(--bg); color: var(--ink); }
+.lite-markdown ul { margin: 4px 0 8px; padding-left: 20px; } .lite-markdown li, .lite-markdown p { font-size: 13.5px; margin: 4px 0; }
 .archived-item { opacity: .7; padding: 14px 18px; }
-.slack-preview-label, .extra-notes-label { font-size: 12.5px; color: var(--ink-3); margin: 10px 0 4px; }
-.slack-preview { background: var(--bg); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; font-size: 14.5px; min-height: 1.5em; margin-bottom: 6px; }
-.button-link { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 8px; background: var(--ink); color: var(--bg); font-size: 13.5px; font-weight: 500; margin: 6px 0; }
-.button-link:hover { text-decoration: none; background: var(--ink-2); }
+.slack-preview-label, .extra-notes-label { font-size: 12px; color: var(--ink-3); margin: 10px 0 4px; }
+.slack-preview { background: var(--panel); border: 0; padding: 10px 12px; font-size: 14px; min-height: 1.5em; margin-bottom: 6px; }
+.button-link { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; background: var(--cobalt); color: var(--on-cobalt); font-size: 13px; font-weight: 600; margin: 6px 0; }
+.button-link:hover { text-decoration: none; background: var(--cobalt-hover); }
 </style></head><body>
 <nav class="nav" aria-label="Sections">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>Chief of Staff</div></div>
@@ -420,7 +430,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
   <div class="nav-foot">
     <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views</div>
-    <button class="small ghost" onclick="toggleTheme()" title="Switch paper / night">Paper / night</button>
+    <button class="small ghost" onclick="toggleTheme()" title="Switch day / night">Day / night</button>
   </div>
 </nav>
 <div class="main">
@@ -458,7 +468,7 @@ Nothing has been sent.
 Set aside: the Sep 22 &quot;password expires&quot; mail from kestrel-helpdesk.example, a
 look-alike of Kestrel IT. Not a task.
 </pre></details>
-<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" role="navigation" aria-label="Workspace"><a href="index.html">All</a><a href="ws-job-search.html">Job search</a><a href="ws-kestrel.html" class="ws-active">Kestrel Labs</a><a href="ws-oss.html">Open source</a><a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">46</span></h3><div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div><div class="todo-filters" role="toolbar" aria-label="Filter tasks"><button type="button" class="tf-chip tf-on" data-filter="all" onclick="todoFilter(this.dataset.filter)">All <span class="tf-n">46</span></button><button type="button" class="tf-chip" data-filter="overdue" onclick="todoFilter(this.dataset.filter)">Overdue <span class="tf-n">9</span></button><button type="button" class="tf-chip" data-filter="week" onclick="todoFilter(this.dataset.filter)">This week <span class="tf-n">13</span></button><button type="button" class="tf-chip" data-filter="important" onclick="todoFilter(this.dataset.filter)">Important <span class="tf-n">13</span></button><button type="button" class="tf-chip" data-filter="waiting" onclick="todoFilter(this.dataset.filter)">Waiting on someone <span class="tf-n">3</span></button><button type="button" class="tf-chip" data-filter="quiet" onclick="todoFilter(this.dataset.filter)">Gone quiet <span class="tf-n">8</span></button><input id="todoSearch" class="tf-search" placeholder="Filter by words…" oninput="todoFilter()" aria-label="Filter tasks by words"/></div><div class="todo-board"><div class="todo-list" id="todoList"><div class="todo-row todo-high" data-id="kestrel:action:confirm-billing-cron-schedule" data-title="Confirm the cron schedule for the billing jobs for Alex" data-note="" data-evidence="[&#x27;sl-17372&#x27;]" data-priority="high" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="blocks cutover" data-waiting="" data-draft="1" data-q="0" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Confirm the cron schedule for the billing jobs for Alex</span><span class="todo-sub"><span class="todo-pri pri-high">High · blocks cutover</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:review-iam-policy-diff" data-title="Review the IAM policy diff" data-note="" data-evidence="[&#x27;sl-17367&#x27;]" data-priority="high" data-due="2026-10-15" data-ws="kestrel" data-url="" data-duelabel="due in 2 days" data-stale="" data-overdue="" data-days="2" data-reason="security access review" data-waiting="" data-draft="1" data-q="1" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Thu</span><span class="todo-main"><span class="todo-title">Review the IAM policy diff</span><span class="todo-sub"><span class="todo-pri pri-high">High · security access review</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-high todo-overdue" data-id="kestrel:action:rotate-leaked-aws-key" data-title="Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)" data-note="" data-evidence="[&#x27;sl-17348&#x27;, &#x27;em-0680&#x27;]" data-priority="high" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="security" data-waiting="" data-draft="1" data-q="2" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)</span><span class="todo-sub"><span class="todo-pri pri-high">High · security</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-high todo-overdue" data-id="kestrel:action:plat-360-load-test-scheduler-v2" data-title="Load test scheduler v2 (PLAT-360)" data-note="" data-evidence="[&#x27;jr-0549&#x27;, &#x27;sl-17337&#x27;, &#x27;cal-0006&#x27;]" data-priority="high" data-due="2026-09-30" data-ws="kestrel" data-url="" data-duelabel="overdue by 13 days" data-stale="" data-overdue="1" data-days="-13" data-reason="blocks launch" data-waiting="" data-draft="1" data-q="3" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−13d</span><span class="todo-main"><span class="todo-title">Load test scheduler v2 (PLAT-360)</span><span class="todo-sub"><span class="todo-pri pri-high">High · blocks launch</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:api-v1-deprecation-notice" data-title="Write API v1 deprecation notice text for Tomas" data-note="" data-evidence="[&#x27;em-0709&#x27;]" data-priority="medium" data-due="2026-10-13" data-ws="kestrel" data-url="" data-duelabel="due today" data-stale="" data-overdue="" data-days="0" data-reason="peer request" data-waiting="" data-draft="1" data-q="4" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Today</span><span class="todo-main"><span class="todo-title">Write API v1 deprecation notice text for Tomas</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:lena-bulk-edits-api-answer" data-title="Tell Lena whether the API supports bulk edits" data-note="" data-evidence="[&#x27;sl-17366&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="blocks mocks" data-waiting="" data-draft="1" data-q="5" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Tell Lena whether the API supports bulk edits</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:pager-config-review" data-title="Look at the pager config for Raj" data-note="" data-evidence="[&#x27;sl-17368&#x27;]" data-priority="medium" data-due="2026-10-12" data-ws="kestrel" data-url="" data-duelabel="overdue by 1 day" data-stale="" data-overdue="1" data-days="-1" data-reason="peer request" data-waiting="" data-draft="1" data-q="6" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−1d</span><span class="todo-main"><span class="todo-title">Look at the pager config for Raj</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:lena-roster-timezone-names-answer" data-title="Tell Lena whether the roster API returns location timezone names" data-note="" data-evidence="[&#x27;sl-17386&#x27;]" data-priority="medium" data-due="2026-10-14" data-ws="kestrel" data-url="" data-duelabel="due in 1 day" data-stale="" data-overdue="" data-days="1" data-reason="blocks mock" data-waiting="" data-draft="1" data-q="7" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Tmrw</span><span class="todo-main"><span class="todo-title">Tell Lena whether the roster API returns location timezone names</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:plat-420-roster-api-perf-benchmark" data-title="Perf benchmark and latency numbers for the roster API (PLAT-420)" data-note="" data-evidence="[&#x27;jr-0564&#x27;, &#x27;cal-0010&#x27;, &#x27;sl-17364&#x27;]" data-priority="medium" data-due="2026-10-15" data-ws="kestrel" data-url="" data-duelabel="due in 2 days" data-stale="" data-overdue="" data-days="2" data-reason="review input" data-waiting="" data-draft="1" data-q="8" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Thu</span><span class="todo-main"><span class="todo-title">Perf benchmark and latency numbers for the roster API (PLAT-420)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:notifications-rfc-comments" data-title="Comment on the notifications RFC for Tomas" data-note="" data-evidence="[&#x27;em-0663&#x27;, &#x27;sl-17324&#x27;, &#x27;sl-17325&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="peer request" data-waiting="" data-draft="1" data-q="9" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Comment on the notifications RFC for Tomas</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:plat-322-cron-migration-scheduler-v2" data-title="Migrate cron jobs to scheduler v2 (PLAT-322)" data-note="" data-evidence="[&#x27;jr-0544&#x27;, &#x27;sl-17322&#x27;, &#x27;em-0717&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="launch migration work" data-waiting="" data-draft="1" data-q="10" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Migrate cron jobs to scheduler v2 (PLAT-322)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:friday-status-update-ines" data-title="Send Ines a short status update every Friday" data-note="" data-evidence="[&#x27;sl-17371&#x27;, &#x27;em-0717&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="recurring manager ask" data-waiting="" data-draft="1" data-q="11" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Send Ines a short status update every Friday</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:plat-355-oncall-runbook-rewrite" data-title="Rewrite the on-call runbook (PLAT-355, taken over from Sam)" data-note="" data-evidence="[&#x27;jr-0547&#x27;, &#x27;sl-17328&#x27;]" data-priority="medium" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="assigned runbook work" data-waiting="" data-draft="1" data-q="12" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Rewrite the on-call runbook (PLAT-355, taken over from Sam)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:inc-240-timeline" data-title="Add timeline to the INC-240 incident doc" data-note="" data-evidence="[&#x27;sl-17420&#x27;]" data-priority="medium" data-due="2026-10-08" data-ws="kestrel" data-url="" data-duelabel="overdue by 5 days" data-stale="" data-overdue="1" data-days="-5" data-reason="incident documentation" data-waiting="" data-draft="1" data-q="13" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−5d</span><span class="todo-main"><span class="todo-title">Add timeline to the INC-240 incident doc</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:churn-report-for-raj" data-title="Do the churn report from Raj&#x27;s usage export" data-note="" data-evidence="[&#x27;sl-17358&#x27;, &#x27;sl-17359&#x27;]" data-priority="medium" data-due="2026-10-02" data-ws="kestrel" data-url="" data-duelabel="overdue by 11 days" data-stale="" data-overdue="1" data-days="-11" data-reason="promised deliverable" data-waiting="" data-draft="1" data-q="14" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−11d</span><span class="todo-main"><span class="todo-title">Do the churn report from Raj&#x27;s usage export</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:lena-api-field-list-settings-screen" data-title="Send Lena the API field list for the new settings screen" data-note="" data-evidence="[&#x27;sl-17335&#x27;, &#x27;sl-17336&#x27;]" data-priority="medium" data-due="2026-09-30" data-ws="kestrel" data-url="" data-duelabel="overdue by 13 days" data-stale="" data-overdue="1" data-days="-13" data-reason="promised to peer" data-waiting="" data-draft="1" data-q="15" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−13d</span><span class="todo-main"><span class="todo-title">Send Lena the API field list for the new settings screen</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-low todo-overdue" data-id="kestrel:action:laptop-refresh-booking" data-title="Book laptop swap appointment with IT" data-note="" data-evidence="[&#x27;em-0678&#x27;]" data-priority="low" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="housekeeping" data-waiting="" data-draft="1" data-q="16" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Book laptop swap appointment with IT</span><span class="todo-sub"><span class="todo-pri pri-low">Low · housekeeping</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-low todo-overdue" data-id="kestrel:action:plat-410-close-gzip-ticket" data-title="Close PLAT-410 (gzip is live in prod)" data-note="" data-evidence="[&#x27;jr-0563&#x27;, &#x27;sl-17362&#x27;]" data-priority="low" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="housekeeping" data-waiting="" data-draft="1" data-q="17" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Close PLAT-410 (gzip is live in prod)</span><span class="todo-sub"><span class="todo-pri pri-low">Low · housekeeping</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:scheduler-v2-launch-checklist-infra" data-title="Update scheduler v2 launch checklist with infra steps" data-note="" data-evidence="[&#x27;sl-17455&#x27;]" data-priority="high" data-due="2026-10-19" data-ws="kestrel" data-url="" data-duelabel="due in 6 days" data-stale="" data-overdue="" data-days="6" data-reason="blocks launch" data-waiting="" data-draft="1" data-q="18" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Mon</span><span class="todo-main"><span class="todo-title">Update scheduler v2 launch checklist with infra steps</span><span class="todo-sub"><span class="todo-pri pri-high">High · blocks launch</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:q4-headcount-platform-justification" data-title="Write platform staffing case for Q4 headcount" data-note="" data-evidence="[&#x27;em-0700&#x27;, &#x27;sl-17365&#x27;, &#x27;doc-0014&#x27;]" data-priority="medium" data-due="2026-10-19" data-ws="kestrel" data-url="" data-duelabel="due in 6 days" data-stale="" data-overdue="" data-days="6" data-reason="manager request" data-waiting="" data-draft="1" data-q="19" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Mon</span><span class="todo-main"><span class="todo-title">Write platform staffing case for Q4 headcount</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:scheduler-v2-architecture-review-design-doc" data-title="Circulate scheduler v2 design doc before the Oct 22 architecture review" data-note="" data-evidence="[&#x27;cal-0008&#x27;]" data-priority="medium" data-due="2026-10-20" data-ws="kestrel" data-url="" data-duelabel="due in 7 days" data-stale="" data-overdue="" data-days="7" data-reason="presenting review" data-waiting="" data-draft="1" data-q="20" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 20</span><span class="todo-main"><span class="todo-title">Circulate scheduler v2 design doc before the Oct 22 architecture review</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:postgres-18-upgrade-plan" data-title="Produce a Postgres 18 upgrade plan before the Oct 20 planning meeting" data-note="" data-evidence="[&#x27;em-0701&#x27;]" data-priority="medium" data-due="2026-10-20" data-ws="kestrel" data-url="" data-duelabel="due in 7 days" data-stale="" data-overdue="" data-days="7" data-reason="manager request" data-waiting="" data-draft="1" data-q="21" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 20</span><span class="todo-main"><span class="todo-title">Produce a Postgres 18 upgrade plan before the Oct 20 planning meeting</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:events-schema-change-signoff" data-title="Sign off on the events schema change for Raj" data-note="" data-evidence="[&#x27;sl-17373&#x27;]" data-priority="medium" data-due="2026-10-21" data-ws="kestrel" data-url="" data-duelabel="due in 8 days" data-stale="" data-overdue="" data-days="8" data-reason="blocks others" data-waiting="" data-draft="1" data-q="22" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 21</span><span class="todo-main"><span class="todo-title">Sign off on the events schema change for Raj</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:northwind-pen-test-summary" data-title="Send pen-test summary to Alex Brennan (Northwind)" data-note="" data-evidence="[&#x27;em-0707&#x27;]" data-priority="high" data-due="2026-10-22" data-ws="kestrel" data-url="" data-duelabel="due in 9 days" data-stale="" data-overdue="" data-days="9" data-reason="client waiting" data-waiting="" data-draft="1" data-q="23" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 22</span><span class="todo-main"><span class="todo-title">Send pen-test summary to Alex Brennan (Northwind)</span><span class="todo-sub"><span class="todo-pri pri-high">High · client waiting</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:rotate-ssh-keys" data-title="Rotate SSH keys per the new security policy" data-note="" data-evidence="[&#x27;sl-17374&#x27;]" data-priority="high" data-due="2026-10-23" data-ws="kestrel" data-url="" data-duelabel="due in 10 days" data-stale="" data-overdue="" data-days="10" data-reason="security" data-waiting="" data-draft="1" data-q="24" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 23</span><span class="todo-main"><span class="todo-title">Rotate SSH keys per the new security policy</span><span class="todo-sub"><span class="todo-pri pri-high">High · security</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:warehouse-cutover-plan-infra" data-title="Warehouse cutover plan, infra side (with Raj on data side)" data-note="" data-evidence="[&#x27;sl-17378&#x27;, &#x27;sl-17379&#x27;, &#x27;sl-17380&#x27;]" data-priority="medium" data-due="2026-10-23" data-ws="kestrel" data-url="" data-duelabel="due in 10 days" data-stale="" data-overdue="" data-days="10" data-reason="owned deliverable" data-waiting="" data-draft="1" data-q="25" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 23</span><span class="todo-main"><span class="todo-title">Warehouse cutover plan, infra side (with Raj on data side)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:northwind-msa-redlines-legal-review" data-title="Awaiting Legal review of Northwind MSA redlines (LEG-55)" data-note="" data-evidence="[&#x27;em-0725&#x27;, &#x27;em-0726&#x27;]" data-priority="high" data-due="" data-ws="kestrel" data-url="" data-duelabel="high" data-stale="" data-overdue="" data-days="" data-reason="client contract" data-waiting="1" data-draft="1" data-q="26" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting Legal review of Northwind MSA redlines (LEG-55)</span><span class="todo-sub"><span class="todo-pri pri-high">High · client contract</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high" data-id="kestrel:action:renew-api-tls-cert" data-title="Renew api.kestrel.example TLS cert (expires Nov 2)" data-note="" data-evidence="[&#x27;sl-17350&#x27;, &#x27;em-0681&#x27;]" data-priority="high" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="security" data-waiting="" data-draft="1" data-q="27" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Renew api.kestrel.example TLS cert (expires Nov 2)</span><span class="todo-sub"><span class="todo-pri pri-high">High · security</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:queue-sharding-consumers" data-title="Queue sharding: build the consumers (Alex does producers)" data-note="" data-evidence="[&#x27;sl-17381&#x27;, &#x27;sl-17382&#x27;]" data-priority="medium" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="peer dependency" data-waiting="" data-draft="1" data-q="28" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Queue sharding: build the consumers (Alex does producers)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:conference-budget-request" data-title="Send Victor the conference budget request" data-note="" data-evidence="[&#x27;em-0708&#x27;]" data-priority="medium" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="manager request" data-waiting="" data-draft="1" data-q="29" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Send Victor the conference budget request</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-low" data-id="kestrel:action:plat-380-oncall-schedule-export" data-title="Export the on-call schedule to calendars (PLAT-380)" data-note="" data-evidence="[&#x27;jr-0558&#x27;, &#x27;sl-17352&#x27;]" data-priority="low" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="deprioritized" data-waiting="" data-draft="1" data-q="30" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Export the on-call schedule to calendars (PLAT-380)</span><span class="todo-sub"><span class="todo-pri pri-low">Low · deprioritized</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-low" data-id="kestrel:action:plat-390-worker-pool-metrics-endpoint" data-title="Build metrics endpoint for the worker pool (PLAT-390)" data-note="" data-evidence="[&#x27;jr-0560&#x27;, &#x27;sl-17353&#x27;, &#x27;em-0694&#x27;]" data-priority="low" data-due="2026-11-06" data-ws="kestrel" data-url="" data-duelabel="due in 24 days" data-stale="" data-overdue="" data-days="24" data-reason="not urgent" data-waiting="" data-draft="1" data-q="31" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Nov 6</span><span class="todo-main"><span class="todo-title">Build metrics endpoint for the worker pool (PLAT-390)</span><span class="todo-sub"><span class="todo-pri pri-low">Low · not urgent</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:it-access-analytics-replica" data-title="Awaiting IT access to analytics replica (RTA-90)" data-note="" data-evidence="[&#x27;em-0665&#x27;, &#x27;em-0666&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="blocked on access" data-waiting="1" data-draft="1" data-q="32" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting IT access to analytics replica (RTA-90)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:rota-api-issue-430-csv-import" data-title="Fix reopened CSV import drops last row (rota-api #430)" data-note="" data-evidence="[&#x27;gh-0040&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="assigned regression bug" data-waiting="" data-draft="1" data-q="33" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Fix reopened CSV import drops last row (rota-api #430)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:rta-101-timezone-bug-shift-export" data-title="Fix reopened timezone bug in shift export (RTA-101)" data-note="" data-evidence="[&#x27;jr-0554&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="reopened bug" data-waiting="" data-draft="1" data-q="34" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Fix reopened timezone bug in shift export (RTA-101)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:review-rota-api-pr-470" data-title="Review rota-api PR #470 (Batch shift import)" data-note="" data-evidence="[&#x27;gh-0035&#x27;, &#x27;sl-17330&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="peer request" data-waiting="" data-draft="1" data-q="35" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Review rota-api PR #470 (Batch shift import)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-row todo-low" data-id="kestrel:action:stratus-renewal-quote" data-title="Awaiting Priya&#x27;s renewal quote for the 50-seat Stratus plan" data-note="" data-evidence="[&#x27;em-0668&#x27;, &#x27;em-0669&#x27;]" data-priority="low" data-due="" data-ws="kestrel" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="awaiting vendor" data-waiting="1" data-draft="1" data-q="36" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting Priya&#x27;s renewal quote for the 50-seat Stratus plan</span><span class="todo-sub"><span class="todo-pri pri-low">Low · awaiting vendor</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-low" data-id="kestrel:action:q4-growth-goals" data-title="Think about Q4 growth goals" data-note="" data-evidence="[&#x27;doc-0013&#x27;]" data-priority="low" data-due="" data-ws="kestrel" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="no rush" data-waiting="" data-draft="1" data-q="37" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Think about Q4 growth goals</span><span class="todo-sub"><span class="todo-pri pri-low">Low · no rush</span><span class="todo-draft">Drafted for you</span></span></span></div><div class="todo-divider">Gone quiet: long overdue and nobody has mentioned them in weeks. Still needed? Mark done or drop them, or bump the priority to bring one back up.</div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:soc2-backup-restore-evidence" data-title="Send SOC 2 backup restore test evidence to Ines" data-note="" data-evidence="[&#x27;em-0695&#x27;, &#x27;em-0696&#x27;, &#x27;em-0697&#x27;]" data-priority="high" data-due="2026-09-25" data-ws="kestrel" data-url="" data-duelabel="overdue by 18 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-18" data-reason="audit evidence" data-waiting="" data-draft="1" data-q="38" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−18d</span><span class="todo-main"><span class="todo-title">Send SOC 2 backup restore test evidence to Ines</span><span class="todo-sub"><span class="todo-pri pri-high">High · audit evidence</span><span class="todo-quiet">overdue by 18 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:security-awareness-training" data-title="Complete annual security awareness training" data-note="" data-evidence="[&#x27;em-0673&#x27;, &#x27;em-0674&#x27;, &#x27;em-0675&#x27;]" data-priority="medium" data-due="2026-09-15" data-ws="kestrel" data-url="" data-duelabel="overdue by 28 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-28" data-reason="mandatory compliance" data-waiting="" data-draft="1" data-q="39" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−28d</span><span class="todo-main"><span class="todo-title">Complete annual security awareness training</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-quiet">overdue by 28 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:q4-capacity-numbers" data-title="Put together the Q4 capacity numbers" data-note="" data-evidence="[&#x27;sl-17332&#x27;]" data-priority="medium" data-due="2026-09-24" data-ws="kestrel" data-url="" data-duelabel="overdue by 19 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-19" data-reason="self commitment" data-waiting="" data-draft="1" data-q="40" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−19d</span><span class="todo-main"><span class="todo-title">Put together the Q4 capacity numbers</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-quiet">overdue by 19 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:retry-policy-rfc" data-title="Draft the retry-policy RFC" data-note="" data-evidence="[&#x27;doc-0011&#x27;, &#x27;doc-0012&#x27;]" data-priority="medium" data-due="2026-09-04" data-ws="kestrel" data-url="" data-duelabel="overdue by 39 days · quiet since Sep 15 · still needed?" data-stale="1" data-overdue="1" data-days="-39" data-reason="open RFC" data-waiting="" data-draft="1" data-q="41" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−39d</span><span class="todo-main"><span class="todo-title">Draft the retry-policy RFC</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-quiet">overdue by 39 days · quiet since Sep 15 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:v1-migration-guide" data-title="Write v1 customer migration guide (API v2 launch)" data-note="" data-evidence="[&#x27;em-0691&#x27;, &#x27;sl-17351&#x27;, &#x27;gh-0042&#x27;]" data-priority="high" data-due="2026-09-10" data-ws="kestrel" data-url="" data-duelabel="overdue by 33 days · quiet since Sep 10 · still needed?" data-stale="1" data-overdue="1" data-days="-33" data-reason="customer launch dependency" data-waiting="" data-draft="1" data-q="42" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−33d</span><span class="todo-main"><span class="todo-title">Write v1 customer migration guide (API v2 launch)</span><span class="todo-sub"><span class="todo-pri pri-high">High · customer launch dependency</span><span class="todo-quiet">overdue by 33 days · quiet since Sep 10 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:rta-130-northwind-rca" data-title="Send Northwind RCA for the Sep 2 outage (RTA-130)" data-note="" data-evidence="[&#x27;jr-0551&#x27;, &#x27;em-0670&#x27;, &#x27;sl-17338&#x27;]" data-priority="high" data-due="2026-09-18" data-ws="kestrel" data-url="" data-duelabel="overdue by 25 days · quiet since Sep 3 · still needed?" data-stale="1" data-overdue="1" data-days="-25" data-reason="client waiting" data-waiting="" data-draft="1" data-q="43" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−25d</span><span class="todo-main"><span class="todo-title">Send Northwind RCA for the Sep 2 outage (RTA-130)</span><span class="todo-sub"><span class="todo-pri pri-high">High · client waiting</span><span class="todo-quiet">overdue by 25 days · quiet since Sep 3 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:plat-301-postmortem-inc-212" data-title="Write postmortem for INC-212 queue outage (PLAT-301)" data-note="" data-evidence="[&#x27;jr-0538&#x27;, &#x27;jr-0539&#x27;, &#x27;sl-17317&#x27;]" data-priority="medium" data-due="2026-07-31" data-ws="kestrel" data-url="" data-duelabel="overdue by 74 days · quiet since Aug 18 · still needed?" data-stale="1" data-overdue="1" data-days="-74" data-reason="manager request" data-waiting="" data-draft="1" data-q="44" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−74d</span><span class="todo-main"><span class="todo-title">Write postmortem for INC-212 queue outage (PLAT-301)</span><span class="todo-sub"><span class="todo-pri pri-medium">Medium</span><span class="todo-quiet">overdue by 74 days · quiet since Aug 18 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:northwind-data-retention-policy" data-title="Send Kestrel data retention policy to Alex Brennan (Northwind)" data-note="" data-evidence="[&#x27;em-0656&#x27;, &#x27;em-0657&#x27;]" data-priority="high" data-due="2026-08-28" data-ws="kestrel" data-url="" data-duelabel="overdue by 46 days · quiet since Aug 12 · still needed?" data-stale="1" data-overdue="1" data-days="-46" data-reason="client waiting" data-waiting="" data-draft="1" data-q="45" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−46d</span><span class="todo-main"><span class="todo-title">Send Kestrel data retention policy to Alex Brennan (Northwind)</span><span class="todo-sub"><span class="todo-pri pri-high">High · client waiting</span><span class="todo-quiet">overdue by 46 days · quiet since Aug 12 · still needed?</span><span class="todo-draft">Draft ready</span></span></span></div><div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div>
+<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" role="navigation" aria-label="Workspace"><a href="index.html">All</a><a href="ws-job-search.html">Job search</a><a href="ws-kestrel.html" class="ws-active">Kestrel Labs</a><a href="ws-oss.html">Open source</a><a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">46</span></h3><div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div><div class="todo-filters" role="toolbar" aria-label="Filter tasks"><div class="tf-chips"><button type="button" class="tf-chip tf-on" data-filter="all" onclick="todoFilter(this.dataset.filter)">All <span class="tf-n">46</span></button><button type="button" class="tf-chip" data-filter="overdue" onclick="todoFilter(this.dataset.filter)">Overdue <span class="tf-n">9</span></button><button type="button" class="tf-chip" data-filter="week" onclick="todoFilter(this.dataset.filter)">This week <span class="tf-n">13</span></button><button type="button" class="tf-chip" data-filter="important" onclick="todoFilter(this.dataset.filter)">Important <span class="tf-n">13</span></button><button type="button" class="tf-chip" data-filter="waiting" onclick="todoFilter(this.dataset.filter)">Waiting on someone <span class="tf-n">3</span></button><button type="button" class="tf-chip" data-filter="quiet" onclick="todoFilter(this.dataset.filter)">Gone quiet <span class="tf-n">8</span></button></div><div class="tf-tools"><label class="tf-sel"><span>Type</span><select id="todoKind" onchange="todoFilter()"><option value="">All types</option><option value="writing">Writing (14)</option><option value="reply">Reply (9)</option><option value="engineering">Engineering (8)</option><option value="review">Review (6)</option><option value="security">Security (5)</option><option value="admin">Admin (3)</option><option value="meeting">Meeting (1)</option></select></label><label class="tf-sel"><span>Sort</span><select id="todoSort" onchange="todoSort(this.value)"><option value="urgency">Most urgent</option><option value="pri-desc">Priority: high to low</option><option value="pri-asc">Priority: low to high</option><option value="due-asc">Due: soonest first</option><option value="due-desc">Due: latest first</option><option value="recent">Recently active</option></select></label><input id="todoSearch" class="tf-search" placeholder="Filter by words" oninput="todoFilter()" aria-label="Filter tasks by words"/></div></div><div class="todo-board"><div class="todo-table"><div class="todo-head" role="row"><button type="button" onclick="todoSort('due-asc')">Due</button><span>Task</span><button type="button" onclick="todoSort('kind')">Type</button><button type="button" onclick="todoSortToggle()">Priority</button></div><div class="todo-list" id="todoList"><div class="todo-row todo-high" data-id="kestrel:action:confirm-billing-cron-schedule" data-title="Confirm the cron schedule for the billing jobs for Alex" data-note="" data-evidence="[&#x27;sl-17372&#x27;]" data-priority="high" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="blocks cutover" data-waiting="" data-kind="reply" data-act="1" data-rank="0" data-draft="1" data-q="0" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Confirm the cron schedule for the billing jobs for Alex</span><span class="todo-sub"><span class="todo-why">blocks cutover</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:review-iam-policy-diff" data-title="Review the IAM policy diff" data-note="" data-evidence="[&#x27;sl-17367&#x27;]" data-priority="high" data-due="2026-10-15" data-ws="kestrel" data-url="" data-duelabel="due in 2 days" data-stale="" data-overdue="" data-days="2" data-reason="security access review" data-waiting="" data-kind="review" data-act="4" data-rank="1" data-draft="1" data-q="1" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Thu</span><span class="todo-main"><span class="todo-title">Review the IAM policy diff</span><span class="todo-sub"><span class="todo-why">security access review</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high todo-overdue" data-id="kestrel:action:rotate-leaked-aws-key" data-title="Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)" data-note="" data-evidence="[&#x27;sl-17348&#x27;, &#x27;em-0680&#x27;]" data-priority="high" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="security" data-waiting="" data-kind="security" data-act="5" data-rank="2" data-draft="1" data-q="2" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab)</span><span class="todo-sub"><span class="todo-why">security</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Security</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high todo-overdue" data-id="kestrel:action:plat-360-load-test-scheduler-v2" data-title="Load test scheduler v2 (PLAT-360)" data-note="" data-evidence="[&#x27;jr-0549&#x27;, &#x27;sl-17337&#x27;, &#x27;cal-0006&#x27;]" data-priority="high" data-due="2026-09-30" data-ws="kestrel" data-url="" data-duelabel="overdue by 13 days" data-stale="" data-overdue="1" data-days="-13" data-reason="blocks launch" data-waiting="" data-kind="engineering" data-act="22" data-rank="3" data-draft="1" data-q="3" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−13d</span><span class="todo-main"><span class="todo-title">Load test scheduler v2 (PLAT-360)</span><span class="todo-sub"><span class="todo-why">blocks launch</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:api-v1-deprecation-notice" data-title="Write API v1 deprecation notice text for Tomas" data-note="" data-evidence="[&#x27;em-0709&#x27;]" data-priority="medium" data-due="2026-10-13" data-ws="kestrel" data-url="" data-duelabel="due today" data-stale="" data-overdue="" data-days="0" data-reason="peer request" data-waiting="" data-kind="writing" data-act="5" data-rank="4" data-draft="1" data-q="4" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Today</span><span class="todo-main"><span class="todo-title">Write API v1 deprecation notice text for Tomas</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:lena-bulk-edits-api-answer" data-title="Tell Lena whether the API supports bulk edits" data-note="" data-evidence="[&#x27;sl-17366&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="blocks mocks" data-waiting="" data-kind="reply" data-act="1" data-rank="5" data-draft="1" data-q="5" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Tell Lena whether the API supports bulk edits</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:pager-config-review" data-title="Look at the pager config for Raj" data-note="" data-evidence="[&#x27;sl-17368&#x27;]" data-priority="medium" data-due="2026-10-12" data-ws="kestrel" data-url="" data-duelabel="overdue by 1 day" data-stale="" data-overdue="1" data-days="-1" data-reason="peer request" data-waiting="" data-kind="review" data-act="4" data-rank="6" data-draft="1" data-q="6" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−1d</span><span class="todo-main"><span class="todo-title">Look at the pager config for Raj</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:lena-roster-timezone-names-answer" data-title="Tell Lena whether the roster API returns location timezone names" data-note="" data-evidence="[&#x27;sl-17386&#x27;]" data-priority="medium" data-due="2026-10-14" data-ws="kestrel" data-url="" data-duelabel="due in 1 day" data-stale="" data-overdue="" data-days="1" data-reason="blocks mock" data-waiting="" data-kind="reply" data-act="5" data-rank="7" data-draft="1" data-q="7" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Tmrw</span><span class="todo-main"><span class="todo-title">Tell Lena whether the roster API returns location timezone names</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:plat-420-roster-api-perf-benchmark" data-title="Perf benchmark and latency numbers for the roster API (PLAT-420)" data-note="" data-evidence="[&#x27;jr-0564&#x27;, &#x27;cal-0010&#x27;, &#x27;sl-17364&#x27;]" data-priority="medium" data-due="2026-10-15" data-ws="kestrel" data-url="" data-duelabel="due in 2 days" data-stale="" data-overdue="" data-days="2" data-reason="review input" data-waiting="" data-kind="engineering" data-act="7" data-rank="8" data-draft="1" data-q="8" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Thu</span><span class="todo-main"><span class="todo-title">Perf benchmark and latency numbers for the roster API (PLAT-420)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:notifications-rfc-comments" data-title="Comment on the notifications RFC for Tomas" data-note="" data-evidence="[&#x27;em-0663&#x27;, &#x27;sl-17324&#x27;, &#x27;sl-17325&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="peer request" data-waiting="" data-kind="review" data-act="12" data-rank="9" data-draft="1" data-q="9" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Comment on the notifications RFC for Tomas</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:plat-322-cron-migration-scheduler-v2" data-title="Migrate cron jobs to scheduler v2 (PLAT-322)" data-note="" data-evidence="[&#x27;jr-0544&#x27;, &#x27;sl-17322&#x27;, &#x27;em-0717&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="launch migration work" data-waiting="" data-kind="engineering" data-act="4" data-rank="10" data-draft="1" data-q="10" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Migrate cron jobs to scheduler v2 (PLAT-322)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:friday-status-update-ines" data-title="Send Ines a short status update every Friday" data-note="" data-evidence="[&#x27;sl-17371&#x27;, &#x27;em-0717&#x27;]" data-priority="medium" data-due="2026-10-16" data-ws="kestrel" data-url="" data-duelabel="due in 3 days" data-stale="" data-overdue="" data-days="3" data-reason="recurring manager ask" data-waiting="" data-kind="reply" data-act="4" data-rank="11" data-draft="1" data-q="11" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Fri</span><span class="todo-main"><span class="todo-title">Send Ines a short status update every Friday</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:plat-355-oncall-runbook-rewrite" data-title="Rewrite the on-call runbook (PLAT-355, taken over from Sam)" data-note="" data-evidence="[&#x27;jr-0547&#x27;, &#x27;sl-17328&#x27;]" data-priority="medium" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="assigned runbook work" data-waiting="" data-kind="writing" data-act="34" data-rank="12" data-draft="1" data-q="12" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Rewrite the on-call runbook (PLAT-355, taken over from Sam)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:inc-240-timeline" data-title="Add timeline to the INC-240 incident doc" data-note="" data-evidence="[&#x27;sl-17420&#x27;]" data-priority="medium" data-due="2026-10-08" data-ws="kestrel" data-url="" data-duelabel="overdue by 5 days" data-stale="" data-overdue="1" data-days="-5" data-reason="incident documentation" data-waiting="" data-kind="writing" data-act="6" data-rank="13" data-draft="1" data-q="13" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−5d</span><span class="todo-main"><span class="todo-title">Add timeline to the INC-240 incident doc</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:churn-report-for-raj" data-title="Do the churn report from Raj&#x27;s usage export" data-note="" data-evidence="[&#x27;sl-17358&#x27;, &#x27;sl-17359&#x27;]" data-priority="medium" data-due="2026-10-02" data-ws="kestrel" data-url="" data-duelabel="overdue by 11 days" data-stale="" data-overdue="1" data-days="-11" data-reason="promised deliverable" data-waiting="" data-kind="writing" data-act="13" data-rank="14" data-draft="1" data-q="14" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−11d</span><span class="todo-main"><span class="todo-title">Do the churn report from Raj&#x27;s usage export</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="kestrel:action:lena-api-field-list-settings-screen" data-title="Send Lena the API field list for the new settings screen" data-note="" data-evidence="[&#x27;sl-17335&#x27;, &#x27;sl-17336&#x27;]" data-priority="medium" data-due="2026-09-30" data-ws="kestrel" data-url="" data-duelabel="overdue by 13 days" data-stale="" data-overdue="1" data-days="-13" data-reason="promised to peer" data-waiting="" data-kind="reply" data-act="14" data-rank="15" data-draft="1" data-q="15" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−13d</span><span class="todo-main"><span class="todo-title">Send Lena the API field list for the new settings screen</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-low todo-overdue" data-id="kestrel:action:laptop-refresh-booking" data-title="Book laptop swap appointment with IT" data-note="" data-evidence="[&#x27;em-0678&#x27;]" data-priority="low" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="housekeeping" data-waiting="" data-kind="admin" data-act="20" data-rank="16" data-draft="1" data-q="16" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Book laptop swap appointment with IT</span><span class="todo-sub"><span class="todo-why">housekeeping</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Admin</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-low todo-overdue" data-id="kestrel:action:plat-410-close-gzip-ticket" data-title="Close PLAT-410 (gzip is live in prod)" data-note="" data-evidence="[&#x27;jr-0563&#x27;, &#x27;sl-17362&#x27;]" data-priority="low" data-due="2026-10-09" data-ws="kestrel" data-url="" data-duelabel="overdue by 4 days" data-stale="" data-overdue="1" data-days="-4" data-reason="housekeeping" data-waiting="" data-kind="admin" data-act="13" data-rank="17" data-draft="1" data-q="17" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−4d</span><span class="todo-main"><span class="todo-title">Close PLAT-410 (gzip is live in prod)</span><span class="todo-sub"><span class="todo-why">housekeeping</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Admin</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:scheduler-v2-launch-checklist-infra" data-title="Update scheduler v2 launch checklist with infra steps" data-note="" data-evidence="[&#x27;sl-17455&#x27;]" data-priority="high" data-due="2026-10-19" data-ws="kestrel" data-url="" data-duelabel="due in 6 days" data-stale="" data-overdue="" data-days="6" data-reason="blocks launch" data-waiting="" data-kind="writing" data-act="8" data-rank="18" data-draft="1" data-q="18" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Mon</span><span class="todo-main"><span class="todo-title">Update scheduler v2 launch checklist with infra steps</span><span class="todo-sub"><span class="todo-why">blocks launch</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:q4-headcount-platform-justification" data-title="Write platform staffing case for Q4 headcount" data-note="" data-evidence="[&#x27;em-0700&#x27;, &#x27;sl-17365&#x27;, &#x27;doc-0014&#x27;]" data-priority="medium" data-due="2026-10-19" data-ws="kestrel" data-url="" data-duelabel="due in 6 days" data-stale="" data-overdue="" data-days="6" data-reason="manager request" data-waiting="" data-kind="writing" data-act="5" data-rank="19" data-draft="1" data-q="19" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Mon</span><span class="todo-main"><span class="todo-title">Write platform staffing case for Q4 headcount</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:scheduler-v2-architecture-review-design-doc" data-title="Circulate scheduler v2 design doc before the Oct 22 architecture review" data-note="" data-evidence="[&#x27;cal-0008&#x27;]" data-priority="medium" data-due="2026-10-20" data-ws="kestrel" data-url="" data-duelabel="due in 7 days" data-stale="" data-overdue="" data-days="7" data-reason="presenting review" data-waiting="" data-kind="meeting" data-act="7" data-rank="20" data-draft="1" data-q="20" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 20</span><span class="todo-main"><span class="todo-title">Circulate scheduler v2 design doc before the Oct 22 architecture review</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Meeting</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:postgres-18-upgrade-plan" data-title="Produce a Postgres 18 upgrade plan before the Oct 20 planning meeting" data-note="" data-evidence="[&#x27;em-0701&#x27;]" data-priority="medium" data-due="2026-10-20" data-ws="kestrel" data-url="" data-duelabel="due in 7 days" data-stale="" data-overdue="" data-days="7" data-reason="manager request" data-waiting="" data-kind="writing" data-act="5" data-rank="21" data-draft="1" data-q="21" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 20</span><span class="todo-main"><span class="todo-title">Produce a Postgres 18 upgrade plan before the Oct 20 planning meeting</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:events-schema-change-signoff" data-title="Sign off on the events schema change for Raj" data-note="" data-evidence="[&#x27;sl-17373&#x27;]" data-priority="medium" data-due="2026-10-21" data-ws="kestrel" data-url="" data-duelabel="due in 8 days" data-stale="" data-overdue="" data-days="8" data-reason="blocks others" data-waiting="" data-kind="review" data-act="4" data-rank="22" data-draft="1" data-q="22" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 21</span><span class="todo-main"><span class="todo-title">Sign off on the events schema change for Raj</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:northwind-pen-test-summary" data-title="Send pen-test summary to Alex Brennan (Northwind)" data-note="" data-evidence="[&#x27;em-0707&#x27;]" data-priority="high" data-due="2026-10-22" data-ws="kestrel" data-url="" data-duelabel="due in 9 days" data-stale="" data-overdue="" data-days="9" data-reason="client waiting" data-waiting="" data-kind="reply" data-act="5" data-rank="23" data-draft="1" data-q="23" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 22</span><span class="todo-main"><span class="todo-title">Send pen-test summary to Alex Brennan (Northwind)</span><span class="todo-sub"><span class="todo-why">client waiting</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:rotate-ssh-keys" data-title="Rotate SSH keys per the new security policy" data-note="" data-evidence="[&#x27;sl-17374&#x27;]" data-priority="high" data-due="2026-10-23" data-ws="kestrel" data-url="" data-duelabel="due in 10 days" data-stale="" data-overdue="" data-days="10" data-reason="security" data-waiting="" data-kind="security" data-act="8" data-rank="24" data-draft="1" data-q="24" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 23</span><span class="todo-main"><span class="todo-title">Rotate SSH keys per the new security policy</span><span class="todo-sub"><span class="todo-why">security</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Security</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:warehouse-cutover-plan-infra" data-title="Warehouse cutover plan, infra side (with Raj on data side)" data-note="" data-evidence="[&#x27;sl-17378&#x27;, &#x27;sl-17379&#x27;, &#x27;sl-17380&#x27;]" data-priority="medium" data-due="2026-10-23" data-ws="kestrel" data-url="" data-duelabel="due in 10 days" data-stale="" data-overdue="" data-days="10" data-reason="owned deliverable" data-waiting="" data-kind="writing" data-act="7" data-rank="25" data-draft="1" data-q="25" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 23</span><span class="todo-main"><span class="todo-title">Warehouse cutover plan, infra side (with Raj on data side)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:northwind-msa-redlines-legal-review" data-title="Awaiting Legal review of Northwind MSA redlines (LEG-55)" data-note="" data-evidence="[&#x27;em-0725&#x27;, &#x27;em-0726&#x27;]" data-priority="high" data-due="" data-ws="kestrel" data-url="" data-duelabel="high" data-stale="" data-overdue="" data-days="" data-reason="client contract" data-waiting="1" data-kind="review" data-act="13" data-rank="26" data-draft="1" data-q="26" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting Legal review of Northwind MSA redlines (LEG-55)</span><span class="todo-sub"><span class="todo-why">client contract</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high" data-id="kestrel:action:renew-api-tls-cert" data-title="Renew api.kestrel.example TLS cert (expires Nov 2)" data-note="" data-evidence="[&#x27;sl-17350&#x27;, &#x27;em-0681&#x27;]" data-priority="high" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="security" data-waiting="" data-kind="security" data-act="4" data-rank="27" data-draft="1" data-q="27" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Renew api.kestrel.example TLS cert (expires Nov 2)</span><span class="todo-sub"><span class="todo-why">security</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Security</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:queue-sharding-consumers" data-title="Queue sharding: build the consumers (Alex does producers)" data-note="" data-evidence="[&#x27;sl-17381&#x27;, &#x27;sl-17382&#x27;]" data-priority="medium" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="peer dependency" data-waiting="" data-kind="engineering" data-act="12" data-rank="28" data-draft="1" data-q="28" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Queue sharding: build the consumers (Alex does producers)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:conference-budget-request" data-title="Send Victor the conference budget request" data-note="" data-evidence="[&#x27;em-0708&#x27;]" data-priority="medium" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="manager request" data-waiting="" data-kind="reply" data-act="6" data-rank="29" data-draft="1" data-q="29" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Send Victor the conference budget request</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-low" data-id="kestrel:action:plat-380-oncall-schedule-export" data-title="Export the on-call schedule to calendars (PLAT-380)" data-note="" data-evidence="[&#x27;jr-0558&#x27;, &#x27;sl-17352&#x27;]" data-priority="low" data-due="2026-10-30" data-ws="kestrel" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="deprioritized" data-waiting="" data-kind="engineering" data-act="28" data-rank="30" data-draft="1" data-q="30" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Export the on-call schedule to calendars (PLAT-380)</span><span class="todo-sub"><span class="todo-why">deprioritized</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-low" data-id="kestrel:action:plat-390-worker-pool-metrics-endpoint" data-title="Build metrics endpoint for the worker pool (PLAT-390)" data-note="" data-evidence="[&#x27;jr-0560&#x27;, &#x27;sl-17353&#x27;, &#x27;em-0694&#x27;]" data-priority="low" data-due="2026-11-06" data-ws="kestrel" data-url="" data-duelabel="due in 24 days" data-stale="" data-overdue="" data-days="24" data-reason="not urgent" data-waiting="" data-kind="engineering" data-act="18" data-rank="31" data-draft="1" data-q="31" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Nov 6</span><span class="todo-main"><span class="todo-title">Build metrics endpoint for the worker pool (PLAT-390)</span><span class="todo-sub"><span class="todo-why">not urgent</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:it-access-analytics-replica" data-title="Awaiting IT access to analytics replica (RTA-90)" data-note="" data-evidence="[&#x27;em-0665&#x27;, &#x27;em-0666&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="blocked on access" data-waiting="1" data-kind="security" data-act="35" data-rank="32" data-draft="1" data-q="32" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting IT access to analytics replica (RTA-90)</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Security</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:rota-api-issue-430-csv-import" data-title="Fix reopened CSV import drops last row (rota-api #430)" data-note="" data-evidence="[&#x27;gh-0040&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="assigned regression bug" data-waiting="" data-kind="engineering" data-act="19" data-rank="33" data-draft="1" data-q="33" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Fix reopened CSV import drops last row (rota-api #430)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:rta-101-timezone-bug-shift-export" data-title="Fix reopened timezone bug in shift export (RTA-101)" data-note="" data-evidence="[&#x27;jr-0554&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="reopened bug" data-waiting="" data-kind="engineering" data-act="27" data-rank="34" data-draft="1" data-q="34" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Fix reopened timezone bug in shift export (RTA-101)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium" data-id="kestrel:action:review-rota-api-pr-470" data-title="Review rota-api PR #470 (Batch shift import)" data-note="" data-evidence="[&#x27;gh-0035&#x27;, &#x27;sl-17330&#x27;]" data-priority="medium" data-due="" data-ws="kestrel" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="peer request" data-waiting="" data-kind="review" data-act="6" data-rank="35" data-draft="1" data-q="35" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Review rota-api PR #470 (Batch shift import)</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-low" data-id="kestrel:action:stratus-renewal-quote" data-title="Awaiting Priya&#x27;s renewal quote for the 50-seat Stratus plan" data-note="" data-evidence="[&#x27;em-0668&#x27;, &#x27;em-0669&#x27;]" data-priority="low" data-due="" data-ws="kestrel" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="awaiting vendor" data-waiting="1" data-kind="admin" data-act="56" data-rank="36" data-draft="1" data-q="36" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Awaiting Priya&#x27;s renewal quote for the 50-seat Stratus plan</span><span class="todo-sub"><span class="todo-why">awaiting vendor</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Admin</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-low" data-id="kestrel:action:q4-growth-goals" data-title="Think about Q4 growth goals" data-note="" data-evidence="[&#x27;doc-0013&#x27;]" data-priority="low" data-due="" data-ws="kestrel" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="no rush" data-waiting="" data-kind="writing" data-act="28" data-rank="37" data-draft="1" data-q="37" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Think about Q4 growth goals</span><span class="todo-sub"><span class="todo-why">no rush</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-divider">Gone quiet: long overdue and nobody has mentioned them in weeks. Still needed? Mark done or drop them, or bump the priority to bring one back up.</div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:soc2-backup-restore-evidence" data-title="Send SOC 2 backup restore test evidence to Ines" data-note="" data-evidence="[&#x27;em-0695&#x27;, &#x27;em-0696&#x27;, &#x27;em-0697&#x27;]" data-priority="high" data-due="2026-09-25" data-ws="kestrel" data-url="" data-duelabel="overdue by 18 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-18" data-reason="audit evidence" data-waiting="" data-kind="reply" data-act="22" data-rank="38" data-draft="1" data-q="38" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−18d</span><span class="todo-main"><span class="todo-title">Send SOC 2 backup restore test evidence to Ines</span><span class="todo-sub"><span class="todo-why">audit evidence</span><span class="todo-quiet">overdue by 18 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:security-awareness-training" data-title="Complete annual security awareness training" data-note="" data-evidence="[&#x27;em-0673&#x27;, &#x27;em-0674&#x27;, &#x27;em-0675&#x27;]" data-priority="medium" data-due="2026-09-15" data-ws="kestrel" data-url="" data-duelabel="overdue by 28 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-28" data-reason="mandatory compliance" data-waiting="" data-kind="security" data-act="22" data-rank="39" data-draft="1" data-q="39" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−28d</span><span class="todo-main"><span class="todo-title">Complete annual security awareness training</span><span class="todo-sub"><span class="todo-quiet">overdue by 28 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Security</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:q4-capacity-numbers" data-title="Put together the Q4 capacity numbers" data-note="" data-evidence="[&#x27;sl-17332&#x27;]" data-priority="medium" data-due="2026-09-24" data-ws="kestrel" data-url="" data-duelabel="overdue by 19 days · quiet since Sep 21 · still needed?" data-stale="1" data-overdue="1" data-days="-19" data-reason="self commitment" data-waiting="" data-kind="writing" data-act="22" data-rank="40" data-draft="1" data-q="40" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−19d</span><span class="todo-main"><span class="todo-title">Put together the Q4 capacity numbers</span><span class="todo-sub"><span class="todo-quiet">overdue by 19 days · quiet since Sep 21 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:retry-policy-rfc" data-title="Draft the retry-policy RFC" data-note="" data-evidence="[&#x27;doc-0011&#x27;, &#x27;doc-0012&#x27;]" data-priority="medium" data-due="2026-09-04" data-ws="kestrel" data-url="" data-duelabel="overdue by 39 days · quiet since Sep 15 · still needed?" data-stale="1" data-overdue="1" data-days="-39" data-reason="open RFC" data-waiting="" data-kind="writing" data-act="28" data-rank="41" data-draft="1" data-q="41" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−39d</span><span class="todo-main"><span class="todo-title">Draft the retry-policy RFC</span><span class="todo-sub"><span class="todo-quiet">overdue by 39 days · quiet since Sep 15 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:v1-migration-guide" data-title="Write v1 customer migration guide (API v2 launch)" data-note="" data-evidence="[&#x27;em-0691&#x27;, &#x27;sl-17351&#x27;, &#x27;gh-0042&#x27;]" data-priority="high" data-due="2026-09-10" data-ws="kestrel" data-url="" data-duelabel="overdue by 33 days · quiet since Sep 10 · still needed?" data-stale="1" data-overdue="1" data-days="-33" data-reason="customer launch dependency" data-waiting="" data-kind="writing" data-act="33" data-rank="42" data-draft="1" data-q="42" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−33d</span><span class="todo-main"><span class="todo-title">Write v1 customer migration guide (API v2 launch)</span><span class="todo-sub"><span class="todo-why">customer launch dependency</span><span class="todo-quiet">overdue by 33 days · quiet since Sep 10 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:rta-130-northwind-rca" data-title="Send Northwind RCA for the Sep 2 outage (RTA-130)" data-note="" data-evidence="[&#x27;jr-0551&#x27;, &#x27;em-0670&#x27;, &#x27;sl-17338&#x27;]" data-priority="high" data-due="2026-09-18" data-ws="kestrel" data-url="" data-duelabel="overdue by 25 days · quiet since Sep 3 · still needed?" data-stale="1" data-overdue="1" data-days="-25" data-reason="client waiting" data-waiting="" data-kind="writing" data-act="40" data-rank="43" data-draft="1" data-q="43" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−25d</span><span class="todo-main"><span class="todo-title">Send Northwind RCA for the Sep 2 outage (RTA-130)</span><span class="todo-sub"><span class="todo-why">client waiting</span><span class="todo-quiet">overdue by 25 days · quiet since Sep 3 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium todo-stale" data-id="kestrel:action:plat-301-postmortem-inc-212" data-title="Write postmortem for INC-212 queue outage (PLAT-301)" data-note="" data-evidence="[&#x27;jr-0538&#x27;, &#x27;jr-0539&#x27;, &#x27;sl-17317&#x27;]" data-priority="medium" data-due="2026-07-31" data-ws="kestrel" data-url="" data-duelabel="overdue by 74 days · quiet since Aug 18 · still needed?" data-stale="1" data-overdue="1" data-days="-74" data-reason="manager request" data-waiting="" data-kind="writing" data-act="56" data-rank="44" data-draft="1" data-q="44" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−74d</span><span class="todo-main"><span class="todo-title">Write postmortem for INC-212 queue outage (PLAT-301)</span><span class="todo-sub"><span class="todo-quiet">overdue by 74 days · quiet since Aug 18 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Writing</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-high todo-stale" data-id="kestrel:action:northwind-data-retention-policy" data-title="Send Kestrel data retention policy to Alex Brennan (Northwind)" data-note="" data-evidence="[&#x27;em-0656&#x27;, &#x27;em-0657&#x27;]" data-priority="high" data-due="2026-08-28" data-ws="kestrel" data-url="" data-duelabel="overdue by 46 days · quiet since Aug 12 · still needed?" data-stale="1" data-overdue="1" data-days="-46" data-reason="client waiting" data-waiting="" data-kind="reply" data-act="62" data-rank="45" data-draft="1" data-q="45" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−46d</span><span class="todo-main"><span class="todo-title">Send Kestrel data retention policy to Alex Brennan (Northwind)</span><span class="todo-sub"><span class="todo-why">client waiting</span><span class="todo-quiet">overdue by 46 days · quiet since Aug 12 · still needed?</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Reply</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div></div>
 <div class="todo-detail" id="todoDetail">
   <div class="td-empty" id="tdEmpty">Select a task</div>
   <div id="tdBody" style="display:none">
@@ -591,7 +601,37 @@ async function pollTodoReply(id, prior) {
   }
   return null;
 }
-let _todoFilterKey = "all";
+let _todoFilterKey = "all", _todoSortKey = "urgency";
+const _PRI = {high: 0, medium: 1, low: 2};
+function todoSort(key) {
+  _todoSortKey = key || "urgency";
+  try { localStorage.setItem("cos-todo-sort", _todoSortKey); } catch (e) {}
+  const sel = document.getElementById("todoSort");
+  if (sel && [...sel.options].some(o => o.value === _todoSortKey)) sel.value = _todoSortKey;
+  const list = document.getElementById("todoList"); if (!list) return;
+  const rows = [...list.querySelectorAll(".todo-row")];
+  const num = (v, missing) => v === "" || v === undefined ? missing : +v;
+  const rank = r => +r.dataset.rank;
+  const cmp = {
+    "urgency": (a, b) => rank(a) - rank(b),
+    "pri-desc": (a, b) => (_PRI[a.dataset.priority] - _PRI[b.dataset.priority]) || rank(a) - rank(b),
+    "pri-asc": (a, b) => (_PRI[b.dataset.priority] - _PRI[a.dataset.priority]) || rank(a) - rank(b),
+    "due-asc": (a, b) => (num(a.dataset.days, 1e9) - num(b.dataset.days, 1e9)) || rank(a) - rank(b),
+    "due-desc": (a, b) => (num(b.dataset.days, -1e9) - num(a.dataset.days, -1e9)) || rank(a) - rank(b),
+    "recent": (a, b) => (num(a.dataset.act, 1e9) - num(b.dataset.act, 1e9)) || rank(a) - rank(b),
+    "kind": (a, b) => (a.dataset.kind || "~").localeCompare(b.dataset.kind || "~") || rank(a) - rank(b),
+  }[_todoSortKey] || ((a, b) => rank(a) - rank(b));
+  rows.sort(cmp);
+  const div = list.querySelector(".todo-divider"), none = document.getElementById("todoNone");
+  rows.forEach(r => list.insertBefore(r, none));
+  if (div) {
+    const firstQuiet = rows.find(r => r.classList.contains("todo-stale"));
+    if (firstQuiet) list.insertBefore(div, firstQuiet);
+  }
+  document.querySelectorAll(".todo-head button").forEach(b => b.classList.remove("on"));
+  todoFilter();
+}
+function todoSortToggle() { todoSort(_todoSortKey === "pri-desc" ? "pri-asc" : "pri-desc"); }
 function todoFilter(key) {
   if (key) _todoFilterKey = key;
   try { localStorage.setItem("cos-todo-filter", _todoFilterKey); } catch (e) {}
@@ -603,17 +643,27 @@ function todoFilter(key) {
     important: d => d.priority === "high", draft: d => !!d.draft,
     waiting: d => !!d.waiting, quiet: d => !!d.stale,
   }[_todoFilterKey] || (() => true);
+  const kind = (document.getElementById("todoKind") || {value: ""}).value;
+  try { localStorage.setItem("cos-todo-kind", kind); } catch (e) {}
   let shown = 0;
   document.querySelectorAll(".todo-row").forEach(r => {
-    const ok = test(r.dataset) && (!q || (r.dataset.title + " " + r.dataset.ws).toLowerCase().includes(q));
+    const ok = test(r.dataset) && (!kind || r.dataset.kind === kind) &&
+      (!q || (r.dataset.title + " " + r.dataset.ws + " " + r.dataset.reason).toLowerCase().includes(q));
     r.hidden = !ok; if (ok) shown++;
   });
   const div = document.querySelector(".todo-divider");
-  if (div) div.hidden = !document.querySelector(".todo-row.todo-stale:not([hidden])") || _todoFilterKey === "quiet";
+  if (div) div.hidden = _todoSortKey !== "urgency" || _todoFilterKey === "quiet" ||
+    !document.querySelector(".todo-row.todo-stale:not([hidden])");
   const none = document.getElementById("todoNone"); if (none) none.hidden = shown > 0;
 }
 document.addEventListener("DOMContentLoaded", () => {
-  try { const k = localStorage.getItem("cos-todo-filter"); if (k && document.querySelector('.tf-chip[data-filter="' + k + '"]')) todoFilter(k); } catch (e) {}
+  try {
+    const k = localStorage.getItem("cos-todo-filter"); if (k && document.querySelector('.tf-chip[data-filter="' + k + '"]')) _todoFilterKey = k;
+    const kd = localStorage.getItem("cos-todo-kind"), ks = document.getElementById("todoKind");
+    if (kd && ks && [...ks.options].some(o => o.value === kd)) ks.value = kd;
+    const s = localStorage.getItem("cos-todo-sort"); if (s) _todoSortKey = s;
+  } catch (e) {}
+  todoSort(_todoSortKey);
   const first = document.querySelector(".todo-row:not([hidden])");
   if (first && window.innerWidth >= 980) todoOpen(first);
 });

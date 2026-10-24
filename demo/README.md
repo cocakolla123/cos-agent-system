@@ -24,7 +24,8 @@ ranks on it, and long-overdue tasks nobody has mentioned in weeks sit in a
 "gone quiet, still needed?" group with a check-in drafted instead of the work.
 Likewise for `attrs.importance` (how much a task matters apart from its date):
 `classify_importance.py` applied that rule once to each task's sources ($0.24) and
-saved `importance.json`. The three corrections are the long-run test's actual dev
+saved `importance.json`; `classify_kind.py` did the same for `attrs.kind` (the
+task's type, $0.24) into `kinds.json`. The three corrections are the long-run test's actual dev
 failures and the rule changes that fixed them. Saved chat replies that state
 counts are computed from the graph at build time.
 

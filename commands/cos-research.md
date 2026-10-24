@@ -253,6 +253,11 @@ Emit each obligation as `kind: "Action"` with:
   no stakes, optional asks, housekeeping, and soft wording ("no rush", "when you get a chance").
   Otherwise `medium`. Reason examples: "client waiting", "security", "audit evidence", "blocks
   launch", "said urgent", "optional".
+- `attrs.kind` — what sort of work it is, one of: `engineering` (build, fix, migrate, test),
+  `review` (code, docs or a decision someone else made), `writing` (a doc, RFC, report, plan),
+  `reply` (an answer or a message someone is waiting for), `meeting` (scheduling, prep, a call),
+  `security` (credentials, access, certificates, training), `admin` (forms, bookings, tickets,
+  housekeeping), `job-search`, `personal`. The dashboard filters by it.
 - `attrs.last_activity` — the date (`YYYY-MM-DD`) of the newest message, comment or update about
   this obligation: the ask, a reminder, a follow-up, a partial reply. Not the crawl date. The
   dashboard ranks by it: a long-overdue item nobody has mentioned in weeks drops to a "gone quiet,

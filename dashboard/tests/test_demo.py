@@ -44,7 +44,7 @@ class TestDemo(unittest.TestCase):
             out = {}
             for line in open(os.path.join(d, "nodes.jsonl")):
                 n = json.loads(line)
-                for k in ("last_activity", "importance", "importance_reason"):
+                for k in ("last_activity", "importance", "importance_reason", "kind"):
                     (n.get("attrs") or {}).pop(k, None)
                 out[n["id"]] = n
             return out

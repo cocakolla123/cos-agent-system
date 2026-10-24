@@ -854,7 +854,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
   <div class="nav-foot">
     <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views</div>
-    <button class="small ghost" onclick="toggleTheme()" title="Switch paper / night">Paper / night</button>
+    <button class="small ghost" onclick="toggleTheme()" title="Switch day / night">Day / night</button>
   </div>
 </nav>
 <div class="main">

@@ -289,6 +289,11 @@ def build():
     for nid, day in activity_dates(open_).items():
         g.nodes[nid].setdefault("attrs", {})["last_activity"] = day
     # importance apart from the date (demo/classify_importance.py, saved)
+    kind_path = os.path.join(HERE, "kinds.json")      # demo/classify_kind.py, saved
+    if os.path.exists(kind_path):
+        for nid, kind in json.load(open(kind_path))["tasks"].items():
+            if nid in g.nodes:
+                g.nodes[nid].setdefault("attrs", {})["kind"] = kind
     imp_path = os.path.join(HERE, "importance.json")
     if os.path.exists(imp_path):
         for nid, v in json.load(open(imp_path))["tasks"].items():
