@@ -1657,7 +1657,7 @@ def maybe_start_learn_loop(message):
 
 
 _ACCOUNT_STATE_DOTS = {
-    "connected": ("✓", "#0e7d4f"), "needs_auth": ("✗", "#b8144f"),
+    "connected": ("✓", "#2f7655"), "needs_auth": ("✗", "#b0444d"),
     "declined": ("🚫", "#666"), "unknown": ("•", "#999"),
 }
 
