@@ -33,39 +33,39 @@ window.fetch = async function (url, opts) {
 <title>Chief of Staff</title>
 <script>try { const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>:root {
-  --bg: #ffffff; --panel: #f3f3f1; --panel-2: #e9e9e6; --line: #dcdcd8; --line-strong: #0d0d0d;
-  --ink: #0d0d0d; --ink-2: #4a4a48; --ink-3: #74746f;
-  --cobalt: #1b3bff; --cobalt-hover: #0026e6; --cobalt-soft: rgba(27,59,255,.08); --on-cobalt: #ffffff;
-  --red: #e4002b; --red-soft: rgba(228,0,43,.08);
-  --amber: #a55d00; --amber-soft: rgba(255,170,0,.14);
-  --green: #00804a; --green-soft: rgba(0,128,74,.10);
-  --violet: #6b2bd6; --violet-soft: rgba(107,43,214,.09);
-  --row-hover: #f7f7f5; --row-sel: #eef1ff;
+  --bg: #f5f6f7; --panel: #eceef0; --panel-2: #e2e5e8; --line: #d6d9dd; --line-strong: #2b2f35;
+  --ink: #1f2328; --ink-2: #4b5058; --ink-3: #6b7079;
+  --cobalt: #48609e; --cobalt-hover: #3b5089; --cobalt-soft: rgba(72,96,158,.09); --on-cobalt: #f5f6f7;
+  --red: #b0444d; --red-soft: rgba(176,68,77,.08);
+  --amber: #8f6420; --amber-soft: rgba(196,150,60,.13);
+  --green: #2f7655; --green-soft: rgba(47,118,85,.09);
+  --violet: #66549e; --violet-soft: rgba(102,84,158,.09);
+  --row-hover: #eef0f2; --row-sel: #e6eaf2;
   color-scheme: light;
 
   --sans: "Helvetica Neue", Helvetica, "Inter", "Segoe UI", "Arial Nova", Arial, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
-  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
-  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
-  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
-  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
-  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
-  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
-  --row-hover: #0c0c0d; --row-sel: #0d1233;
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
   color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
-  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
-  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
-  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
-  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
-  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
-  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
-  --row-hover: #0c0c0d; --row-sel: #0d1233;
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
   color-scheme: dark;
 }
 * { box-sizing: border-box; border-radius: 0; }
@@ -193,7 +193,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .badge.rejected, .badge.stale, .badge.superseded { background: var(--red-soft); color: var(--red); }
 .badge.failed { background: var(--amber-soft); color: var(--amber); }
 .badge.drafted { background: var(--cobalt-soft); color: var(--cobalt); }
-.priority-high { background: var(--red); color: #fff; }
+.priority-high { background: var(--red); color: var(--bg); }
 .priority-medium { background: var(--panel-2); color: var(--ink); }
 .priority-low { background: var(--panel); color: var(--ink-3); }
 .tag-ticket, .tag-meeting { background: var(--cobalt-soft); color: var(--cobalt); }
