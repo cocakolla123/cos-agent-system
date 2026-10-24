@@ -76,6 +76,13 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .status { display: block; color: var(--ink-3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .status-dot { display: inline-block; width: 7px; height: 7px; background: var(--green); margin-right: 6px; vertical-align: 0; }
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.theme-switch { display: inline-flex; border: 1px solid var(--line-strong); }
+.theme-switch button { font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  padding: 6px 10px; border: 0; background: var(--bg); color: var(--ink-2); cursor: pointer; }
+.theme-switch button + button { border-left: 1px solid var(--line-strong); }
+.theme-switch button:hover { color: var(--ink); background: var(--panel); }
+.theme-switch button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.theme-switch button:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
 .search-btn { display: inline-flex; align-items: center; gap: 12px; min-width: 200px; justify-content: space-between;
   height: 34px; padding: 0 8px 0 12px; background: var(--panel); color: var(--ink-3); border: 1px solid transparent; font-size: 13px; }
 .search-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--panel); }

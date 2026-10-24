@@ -837,7 +837,7 @@ def render_linked_domain(e):
 PAGE_TEMPLATE = """<!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{app_name}</title>
-<script>try {{ const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
+<script>try {{ const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; }} catch (e) {{}}</script>
 <style>{theme_css}</style></head><body>
 <nav class="nav" aria-label="Sections">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>{app_name}</div></div>
@@ -853,8 +853,7 @@ PAGE_TEMPLATE = """<!doctype html>
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
   <div class="nav-foot">
-    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views</div>
-    <button class="small ghost" onclick="toggleTheme()" title="Switch day / night">Day / night</button>
+    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views<br><kbd>⇧D</kbd> light / dark</div>
   </div>
 </nav>
 <div class="main">
@@ -865,6 +864,11 @@ PAGE_TEMPLATE = """<!doctype html>
   </div>
   <span id="wsSlot"></span>
   <div class="topbar-actions">
+    <div class="theme-switch" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light" onclick="setTheme('light')" title="Light theme">Light</button>
+      <button type="button" role="radio" data-theme-set="dark" onclick="setTheme('dark')" title="Dark theme">Dark</button>
+      <button type="button" role="radio" data-theme-set="auto" onclick="setTheme('auto')" title="Follow your system setting">Auto</button>
+    </div>
     <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
     <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
     <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
@@ -991,6 +995,8 @@ function palSource() {{
   const out = [];
   document.querySelectorAll(".nav-link").forEach(a => out.push({{kind: "View", text: a.childNodes[0].textContent.trim(),
     when: "", run: () => {{ location.hash = a.dataset.view; }} }}));
+  [["light", "Light theme"], ["dark", "Dark theme"], ["auto", "Auto theme (follow system)"]].forEach(([m, t]) =>
+    out.push({{kind: "View", text: t, when: themeMode() === m ? "on" : "", run: () => setTheme(m)}}));
   document.querySelectorAll(".todo-row").forEach(r => out.push({{kind: "Tasks", text: r.dataset.title,
     when: (r.querySelector(".todo-when") || {{}}).textContent || "", hint: r.dataset.ws,
     run: () => {{ location.hash = "today"; showView("today"); todoOpen(r); r.scrollIntoView({{block: "nearest"}}); }} }}));
@@ -1046,6 +1052,7 @@ document.addEventListener("keydown", e => {{
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {{ e.preventDefault(); paletteOpen(); return; }}
   if (typing || e.metaKey || e.ctrlKey || e.altKey || !document.getElementById("palette").hidden) return;
   if (e.key === "/") {{ e.preventDefault(); paletteOpen(); return; }}
+  if (e.key === "D" && e.shiftKey) {{ e.preventDefault(); toggleTheme(); return; }}
   if (_gPending) {{
     _gPending = false;
     const map = {{t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"}};
@@ -1061,14 +1068,21 @@ document.addEventListener("keydown", e => {{
     todoOpen(next); next.scrollIntoView({{block: "nearest"}}); e.preventDefault();
   }}
 }});
-function toggleTheme() {{
-  const root = document.documentElement;
-  const cur = root.dataset.theme ||
-    (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  const next = cur === "dark" ? "light" : "dark";
-  root.dataset.theme = next;
-  try {{ localStorage.setItem("cos-theme", next); }} catch (e) {{}}
+// ---- theme: light, dark, or auto (follow the system) ----
+function themeMode() {{ return document.documentElement.dataset.theme || "auto"; }}
+function themeShown() {{
+  const m = themeMode();
+  if (m !== "auto") return m;
+  return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }}
+function setTheme(mode) {{
+  const root = document.documentElement;
+  if (mode === "light" || mode === "dark") root.dataset.theme = mode; else {{ delete root.dataset.theme; mode = "auto"; }}
+  try {{ localStorage.setItem("cos-theme", mode); }} catch (e) {{}}
+  document.querySelectorAll("[data-theme-set]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.themeSet === mode)));
+}}
+function toggleTheme() {{ setTheme(themeShown() === "dark" ? "light" : "dark"); }}
+setTheme(themeMode());
 </script>
 <script>
 async function post(url, body) {{

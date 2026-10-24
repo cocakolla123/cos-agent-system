@@ -32,7 +32,7 @@ window.fetch = async function (url, opts) {
 };
 </script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kestrel Labs Chief of Staff</title>
-<script>try { const t = localStorage.getItem("cos-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<script>try { const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>:root {
   --bg: #ffffff; --panel: #f3f3f1; --panel-2: #e9e9e6; --line: #dcdcd8; --line-strong: #0d0d0d;
   --ink: #0d0d0d; --ink-2: #4a4a48; --ink-3: #74746f;
@@ -105,6 +105,13 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .status { display: block; color: var(--ink-3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .status-dot { display: inline-block; width: 7px; height: 7px; background: var(--green); margin-right: 6px; vertical-align: 0; }
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.theme-switch { display: inline-flex; border: 1px solid var(--line-strong); }
+.theme-switch button { font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  padding: 6px 10px; border: 0; background: var(--bg); color: var(--ink-2); cursor: pointer; }
+.theme-switch button + button { border-left: 1px solid var(--line-strong); }
+.theme-switch button:hover { color: var(--ink); background: var(--panel); }
+.theme-switch button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.theme-switch button:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
 .search-btn { display: inline-flex; align-items: center; gap: 12px; min-width: 200px; justify-content: space-between;
   height: 34px; padding: 0 8px 0 12px; background: var(--panel); color: var(--ink-3); border: 1px solid transparent; font-size: 13px; }
 .search-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--panel); }
@@ -429,8 +436,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
   <a class="nav-link" href="#polling" data-view="polling">Polling</a>
   <a class="nav-link" href="#learning" data-view="learning">Learning</a>
   <div class="nav-foot">
-    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views</div>
-    <button class="small ghost" onclick="toggleTheme()" title="Switch day / night">Day / night</button>
+    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views<br><kbd>⇧D</kbd> light / dark</div>
   </div>
 </nav>
 <div class="main">
@@ -441,6 +447,11 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
   </div>
   <span id="wsSlot"></span>
   <div class="topbar-actions">
+    <div class="theme-switch" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light" onclick="setTheme('light')" title="Light theme">Light</button>
+      <button type="button" role="radio" data-theme-set="dark" onclick="setTheme('dark')" title="Dark theme">Dark</button>
+      <button type="button" role="radio" data-theme-set="auto" onclick="setTheme('auto')" title="Follow your system setting">Auto</button>
+    </div>
     <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
     <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
     <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
@@ -1185,6 +1196,8 @@ function palSource() {
   const out = [];
   document.querySelectorAll(".nav-link").forEach(a => out.push({kind: "View", text: a.childNodes[0].textContent.trim(),
     when: "", run: () => { location.hash = a.dataset.view; } }));
+  [["light", "Light theme"], ["dark", "Dark theme"], ["auto", "Auto theme (follow system)"]].forEach(([m, t]) =>
+    out.push({kind: "View", text: t, when: themeMode() === m ? "on" : "", run: () => setTheme(m)}));
   document.querySelectorAll(".todo-row").forEach(r => out.push({kind: "Tasks", text: r.dataset.title,
     when: (r.querySelector(".todo-when") || {}).textContent || "", hint: r.dataset.ws,
     run: () => { location.hash = "today"; showView("today"); todoOpen(r); r.scrollIntoView({block: "nearest"}); } }));
@@ -1240,6 +1253,7 @@ document.addEventListener("keydown", e => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); paletteOpen(); return; }
   if (typing || e.metaKey || e.ctrlKey || e.altKey || !document.getElementById("palette").hidden) return;
   if (e.key === "/") { e.preventDefault(); paletteOpen(); return; }
+  if (e.key === "D" && e.shiftKey) { e.preventDefault(); toggleTheme(); return; }
   if (_gPending) {
     _gPending = false;
     const map = {t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"};
@@ -1255,14 +1269,21 @@ document.addEventListener("keydown", e => {
     todoOpen(next); next.scrollIntoView({block: "nearest"}); e.preventDefault();
   }
 });
-function toggleTheme() {
-  const root = document.documentElement;
-  const cur = root.dataset.theme ||
-    (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-  const next = cur === "dark" ? "light" : "dark";
-  root.dataset.theme = next;
-  try { localStorage.setItem("cos-theme", next); } catch (e) {}
+// ---- theme: light, dark, or auto (follow the system) ----
+function themeMode() { return document.documentElement.dataset.theme || "auto"; }
+function themeShown() {
+  const m = themeMode();
+  if (m !== "auto") return m;
+  return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
+function setTheme(mode) {
+  const root = document.documentElement;
+  if (mode === "light" || mode === "dark") root.dataset.theme = mode; else { delete root.dataset.theme; mode = "auto"; }
+  try { localStorage.setItem("cos-theme", mode); } catch (e) {}
+  document.querySelectorAll("[data-theme-set]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.themeSet === mode)));
+}
+function toggleTheme() { setTheme(themeShown() === "dark" ? "light" : "dark"); }
+setTheme(themeMode());
 </script>
 <script>
 async function post(url, body) {
