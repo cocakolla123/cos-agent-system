@@ -300,7 +300,7 @@ class TestPollDirect(unittest.TestCase):
         def model(d, prompt, job="poll_direct"):
             calls.append((job, prompt))
             return ('["sl-3"]', 0.001) if job == "triage" else ("[]", 0.01)
-        r = poll_direct.check(self.dir, self.gdir, _fetch=fetch, _model=model)
+        r = poll_direct.check(self.dir, self.gdir, _fetch=fetch, _model=model, triage=True)
         self.assertEqual([c[0] for c in calls], ["triage", "poll_direct"])
         self.assertEqual(r["after_triage"], 2)                       # sl-3 + the PLAT-322 item
         self.assertIn("sl-99", calls[1][1])

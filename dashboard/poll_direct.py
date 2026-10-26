@@ -8,7 +8,9 @@
    tickets, refs to open tasks...), drop the rest without a model.
 3. Nothing kept: print "<source>: nothing new" per source and stop. No model
    call, no cost.
-4. Otherwise one model call on the kept items plus your open tasks, using the
+4. Otherwise one model call on the kept items, one compact line each, plus your
+   open tasks (an optional cheap triage pass first, off by default: on the
+   benchmark it saved 15% and lost a task on each half), using the
    same instructions the benchmark measures (evals/instructions/longrun_v3.md),
    on whatever model Settings gives the poll_direct job: your Claude plan
    (claude -p with no tools) or any API key. The records go into the graph
@@ -204,7 +206,7 @@ def run_model(config_dir, prompt, claude_bin="claude", job="poll_direct"):
     return res.stdout, (res.record or {}).get("cost_usd")
 
 
-def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=None, triage=True):
+def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=None, triage=False):
     """One direct check. Returns a summary dict."""
     import datetime as _dt
     now = now or _dt.datetime.now(_dt.timezone.utc)

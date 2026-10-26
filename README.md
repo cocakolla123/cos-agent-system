@@ -91,7 +91,7 @@ Each check runs in three steps (`dashboard/poll_direct.py`):
 
 1. **Fetch only what is new.** Every connection keeps a bookmark: the last mail UID, the newest Slack message per conversation, "updated since" for Jira and GitHub, and the last change for the calendar.
 2. **Sift without a model** (`dashboard/sift.py`). It keeps what could need you: direct messages, mentions, your threads, your tickets and reviews, mail to everyone that says it is required, platform notices with a person's words in them, anything naming one of your open tasks' tickets, PRs, invoices or domains, and your own files. Newsletters, bots, other people's tickets and channel chatter are dropped and counted. If nothing is left, the check stops there and costs nothing.
-3. **One text-only model call** on what is left, together with your open tasks. It runs on whatever model you chose for Standard: your Claude plan or any API key.
+3. **One text-only model call** on what is left, one compact line per item, together with your open tasks. It runs on whatever model you chose for Standard: your Claude plan or any API key. A one-off call skips prompt caching, which would cost more than it saves.
 
 Measured on the four weekly checks of the 142,555-item benchmark world (`evals/results/longrun/REPORT.md`):
 
@@ -99,7 +99,8 @@ Measured on the four weekly checks of the 142,555-item benchmark world (`evals/r
 |---|---|---|---|---|
 | the agent searches all ~8,200 new items with tools | 44/50 | 48/50 | $3.43 | ~110 s |
 | sifted to ~480 items, the agent searches them | 46/50 | 48/50 | $2.20 | ~40 s |
-| sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.52 | ~15 s |
+| sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.54 | ~17 s |
+| the same, one compact line per item, no caching premium (the default) | 46/50 | 48/50 | $0.52 | ~16 s |
 
 Credentials stay in `connections.json` (mode 0600, git-ignored, excluded from publishing, and Slack, GitHub and Atlassian tokens are blocked by the privacy scan).
 

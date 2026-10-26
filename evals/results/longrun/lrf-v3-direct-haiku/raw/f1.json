@@ -1,0 +1,68 @@
+{
+ "scenario": "f1",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 203696,
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-360-load-test-scheduler-v2\",\n    \"name\": \"Load test scheduler v2 (PLAT-360)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"orbitlabs-api-audit-report\",\n    \"name\": \"Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped)\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"rotate-leaked-aws-key\",\n    \"name\": \"Rotate the leaked AWS key\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"friday-status-update-ines\",\n    \"name\": \"Send Ines the weekly Friday status update\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"scheduler-v2-architecture-review\",\n    \"name\": \"Present the scheduler v2 architecture review on Oct 22; circulate the design doc two days before\",\n    \"attrs\": {\n      \"priority\": \"high\",\n      \"status\": \"done\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"job-search\",\n    \"key\": \"tidewater-offer-sign\",\n    \"name\": \"Review and sign the Tidewater Analytics offer (Senior Data Platform Engineer)\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"high\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"plat-322-cron-migration\",\n    \"name\": \"Migrate cron jobs to scheduler v2 (PLAT-322)\",\n    \"attrs\": {\n      \"due\": \"2026-11-13\",\n      \"priority\": \"high\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Put together the Q4 capacity numbers\",\n    \"attrs\": {\n      \"due\": \"2026-10-22\",\n      \"priority\": \"high\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-maintenance-window-nov15\",\n    \"name\": \"Confirm the Nov 15 maintenance window for Northwind Clinics\",\n    \"attrs\": {\n      \"due\": \"2026-10-30\",\n      \"priority\": \"medium\"\n    }\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire\",\n    \"name\": \"Review the vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"due\": \"2026-10-29\",\n      \"priority\": \"high\"\n    }\n  }\n]\n```",
+  "total_cost_usd": 0.19512300000000002,
+  "duration_ms": 59882,
+  "duration_api_ms": 56446,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 9,
+   "cache_creation_input_tokens": 79322,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 7294,
+   "output_tokens_details": {
+    "thinking_tokens": 6406
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 79322,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 9,
+     "output_tokens": 7294,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 79322,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 79322
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 9,
+    "outputTokens": 7294,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 79322,
+    "webSearchRequests": 0,
+    "costUSD": 0.19512300000000002,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6406,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 506,
+ "attempt": 1
+}

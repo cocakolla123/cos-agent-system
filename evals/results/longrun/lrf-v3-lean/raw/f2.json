@@ -1,0 +1,71 @@
+{
+ "scenario": "f2",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 30135,
+ "sifted": 458,
+ "triage_cost_usd": 0.054889,
+ "after_triage": 23,
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access-request\",\"name\":\"Get read access to the analytics replica (RTA-90)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-111120\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"security-awareness-training\",\"name\":\"Complete the mandatory annual security awareness training\",\"attrs\":{\"due\":\"2026-09-15\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-432975\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-334587\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-226517\",\"doc-340192\"],\"refs\":[\"PLAT-301\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"quillmark-offer-decision\",\"name\":\"Decide on the Quillmark Staff Engineer offer\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-992168\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a Corvid Systems final-round interview slot\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"status\":\"booked\",\"evidence\":[\"em-384580\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-legal\",\"name\":\"Legal review of the Northwind MSA redlines (LEG-55)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-560983\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-send\",\"name\":\"Send the approved MSA redlines to Northwind\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-560983\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-859124\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-1-release\",\"name\":\"Milestone 1 ($1,200) payment still unreleased by Fernhill Goods\",\"attrs\":{\"priority\":\"medium\",\"status\":\"paid\",\"evidence\":[\"em-810099\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-2-low-stock-alerts\",\"name\":\"Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"submitted\",\"evidence\":[\"em-756352\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"orbitlabs-api-audit-report\",\"name\":\"Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped)\",\"attrs\":{\"due\":\"2026-10-15\",\"priority\":\"high\",\"status\":\"paid\",\"evidence\":[\"em-076219\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"oss\",\"key\":\"plantpal-domain-renewal\",\"name\":\"Renew the plantpal.app domain (auto-renew is off)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"low\",\"status\":\"done\",\"evidence\":[\"em-801309\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"october-timesheet\",\"name\":\"Submit the October timesheet\",\"attrs\":{\"due\":\"2026-11-02\",\"priority\":\"medium\",\"evidence\":[\"em-154498\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}\n]",
+  "total_cost_usd": 0.058642,
+  "duration_ms": 17705,
+  "duration_api_ms": 15072,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 15866,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 2691,
+   "output_tokens_details": {
+    "thinking_tokens": 911
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 15866,
+     "output_tokens": 2691,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 15866,
+    "outputTokens": 2691,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.058642,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 911,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 23,
+ "attempt": 1
+}

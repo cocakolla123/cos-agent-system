@@ -1,0 +1,21 @@
+{
+ "run_id": "lrf-v3-compact",
+ "instructions": "instructions/longrun_v3.md",
+ "instructions_sha256": "1cdc647811054234a45a2208686c26a848250b926c435ca2698c35a80915a404",
+ "model": null,
+ "date": "2026-10-26",
+ "cli_version": "2.1.310 (Claude Code)",
+ "world": "full",
+ "tools": "Read,Glob,Grep",
+ "crawl_from": "lrf-v3",
+ "sift": true,
+ "direct": true,
+ "compact": true,
+ "triage_model": null,
+ "no_cache": true,
+ "world_lock": {
+  "gold.json": "959329f8a0c30750548dc22fe42fc37e047ba479588e901341b043c65d08888c",
+  "items.json": "1b8328fce887a6b17530a9557b4b68444f8699fe2598ee4d19366bbb0f7beebc",
+  "meta.json": "7c0dd9ba66ed2c3ffddd6ef54a7f1b01c6b927200cd2c37ad664998d1fad8e0f"
+ }
+}

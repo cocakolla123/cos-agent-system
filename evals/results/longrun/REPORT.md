@@ -334,3 +334,22 @@ It was tuned on DEV arc sources only (0 of 24 DEV answer items lost over the fou
 - **One run each**, so a one-arc difference is within run-to-run noise.
 
 `dashboard/poll_direct.py` is this design in the app. `dashboard/connections.py` fetches only what is new from IMAP, Slack, Jira, GitHub and iCal, using a bookmark per source.
+
+### Then cheaper still: compact items, no caching premium (2026-10-26)
+
+`lrf-v3-direct` spent its money on input: about 93,000 tokens a week of sifted items as raw JSON. The instructions are only about 2,000 tokens. It also paid Claude Code's prompt-cache write, which costs 1.25x on the input and is never read back by a one-off call. Three changes were tried, each measured on its own run:
+
+| weekly checks | run | dev | test | cost of the four |
+|---|---|---|---|---|
+| sifted, items as raw JSON (above) | `lrf-v3-direct` | 46/50 | 48/50 | $1.54 |
+| items as one compact line each, caching off, routine calendar events dropped | `lrf-v3-compact` | 46/50 | 48/50 | $0.52 |
+| the same plus a cheap triage pass (Haiku picks from one-line previews) | `lrf-v3-lean` | 45/50 | 47/50 | $0.44 |
+| sifted raw JSON on Haiku for the whole check (prompt-fix rerun) | `lrf-v3-direct-haiku` | 47/50 | 43/50 | $0.71 |
+
+What this shows:
+- **Compact lines.** The compact format keeps sender, recipients, thread, ticket state and dates in about a third of the characters, and lost nothing.
+- **The new calendar rule.** Recurring or optional events are dropped unless someone wrote about them. It kept 0 of 24 DEV answer items lost, and TEST stayed at 4 of 22 lost.
+- **Triage.** It sends only 11 to 24 items a week to the main model. It saves a further $0.08 over four weeks but costs one arc on each half (D21 DEV, T04 TEST), so it is off by default.
+- **Haiku.** Haiku on its own is cheaper still but loses five TEST arcs.
+
+`lrf-v3-compact` is the shipped default: $0.52 for four weeks of this person's traffic, about $0.13 a week. A check with nothing left after sifting makes no call.
