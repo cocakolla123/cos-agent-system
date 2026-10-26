@@ -19,6 +19,7 @@ SETUPS = {
     "default model, v3": ["lrr-v3"] + ["lrr-v3-r%d" % i for i in range(2, 6)],
     "Haiku 4.5, v3": ["lrr-v3-haiku", "lrr-v3-haiku-r2", "lrr-v3-haiku-r3"],
     "default crawl + Haiku polls, v3": ["lrr-v3-mixed-haikupolls-r%d" % i for i in (1, 2, 3)],
+    "full world (142k items), default model, v3": ["lrf-v3"] + ["lrf-v3-r%d" % i for i in range(2, 6)],
 }
 
 
