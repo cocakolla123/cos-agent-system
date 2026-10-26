@@ -1,0 +1,1546 @@
+<!doctype html>
+<html><head>
+<script>
+/* Demo build: no server behind this page. Every request answers from saved
+   responses; nothing is sent anywhere. */
+window.__DEMO_RESPONSES = {"/approve": "Demo mode: nothing was sent. In the real app, approving runs exactly the tool call shown on the card (for a Slack or Gmail message it creates a draft for you to send), logs it to the audit trail, and archives the card.", "/reject": "Demo mode: rejected (nothing changes here). In the real app a rejection with a reason becomes a correction the system learns from; see Self-learning.", "/revise": "Demo mode: in the real app the drafter rewrites the card using your note and puts the new version back in the queue for approval. Nothing is ever sent from a revise.", "/save-edit": "Demo mode: your edit would replace the drafted text on the card. It still waits for your approval.", "/mark-handled": "Demo mode: marked handled. In the real app this archives the card and closes the task.", "/add-task": "Demo mode: in the real app this goes to the inbox and the next poll turns it into a task.", "/chat": {"default": "Demo mode: this is a saved reply, not a live model. In the real app the chief of staff answers from your knowledge graph and connectors (read-only), and anything it wants to do outside goes to the approval queue first.", "urgent": "Saved reply, computed from the graph: across all workspaces 18 tasks are overdue and 1 due today. Due today: Write API v1 deprecation notice text for Tomas. Most overdue: Rotate the leaked AWS key; Look at the pager config for Raj; Rewrite the on-call runbook (PLAT-355). Drafts for several of these are in the approval queue; nothing is sent until you approve.", "missed": "Saved reply: In the real app this starts the correction loop. It looks for the item you say was missed, works out why the crawl missed it (a connector not searched, a rule that dropped it, a stale status), changes the cause, re-runs, and records the lesson. Three past corrections are shown under Self-learning.", "waiting": "Saved reply, computed from the graph: 6 tasks are waiting on someone else: Milestone 1 ($1,200) payment still unreleased by Fernhill Goods (on Marcus Bell (Fernhill Goods)); Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6) (on Rosa Lin (Lumen Dental)); Get read access to the analytics replica (RTA-90) (on Kestrel IT); Legal review of the Northwind MSA redlines (LEG-55) (on Kestrel Legal)."}, "/entry-chat": {"default": "Saved reply: In the real app you can discuss any task or draft here. The assistant reads the sources behind it and can change its notes, priority or status for you; it cannot send anything from this box."}, "/action-update": "Demo mode: in the real app this updates the task (title, notes, priority or done) and records the change.", "/poll-now": "Demo mode: no polls run here. In the real app this checks each connected account for new items since the last poll.", "/start-research": "Demo mode: the research crawl already ran on this fictional world; this page shows its recorded result."};
+window.__DEMO_DEFAULT = "Demo mode: nothing was sent or changed. In the real app this runs only on your machine, against your own connected accounts.";
+function demoReply(path, body) {
+  const r = window.__DEMO_RESPONSES[path];
+  if (typeof r === "string") return r;
+  if (r && typeof r === "object") {
+    const probe = ["message", "id", "text"].map(k => String((body || {})[k] || "")).join(" ").toLowerCase();
+    for (const k of Object.keys(r)) if (k !== "default" && probe.includes(k.toLowerCase())) return r[k];
+    return r["default"] || window.__DEMO_DEFAULT;
+  }
+  return window.__DEMO_DEFAULT;
+}
+function demoReload() {}
+window.fetch = async function (url, opts) {
+  const path = String(url).split("?")[0];
+  const json = o => new Response(JSON.stringify(o), {headers: {"Content-Type": "application/json"}});
+  if (opts && String(opts.method || "").toUpperCase() === "POST") {
+    let body = {};
+    try { body = JSON.parse(opts.body || "{}"); } catch (e) {}
+    return json({message: demoReply(path, body), demo: true});
+  }
+  if (path === "/entry-chat-log") return json({messages: []});
+  if (path === "/auth-requests") return json({requests: []});
+  if (path === "/graph-version") return json({v: "demo"});
+  return json({message: window.__DEMO_DEFAULT, demo: true});
+};
+</script><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chief of Staff</title>
+<script>try { const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<style>:root {
+  --bg: #f5f6f7; --panel: #eceef0; --panel-2: #e2e5e8; --line: #d6d9dd; --line-strong: #2b2f35;
+  --ink: #1f2328; --ink-2: #4b5058; --ink-3: #6b7079;
+  --cobalt: #48609e; --cobalt-hover: #3b5089; --cobalt-soft: rgba(72,96,158,.09); --on-cobalt: #f5f6f7;
+  --red: #b0444d; --red-soft: rgba(176,68,77,.08);
+  --amber: #8f6420; --amber-soft: rgba(196,150,60,.13);
+  --green: #2f7655; --green-soft: rgba(47,118,85,.09);
+  --violet: #66549e; --violet-soft: rgba(102,84,158,.09);
+  --row-hover: #eef0f2; --row-sel: #e6eaf2;
+  color-scheme: light;
+
+  --sans: "Helvetica Neue", Helvetica, "Inter", "Segoe UI", "Arial Nova", Arial, system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; border-radius: 0; }
+html { background: var(--bg); }
+body { margin: 0; font-family: var(--sans); font-size: 14.5px; line-height: 1.45; color: var(--ink); background: var(--bg);
+  -webkit-font-smoothing: antialiased; letter-spacing: -.003em; counter-reset: navsec; }
+a { color: var(--cobalt); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 2px; }
+::selection { background: var(--cobalt); color: var(--on-cobalt); }
+
+/* ---------- shell ---------- */
+.nav { position: fixed; inset: 0 auto 0 0; width: 220px; padding: 22px 0 16px; z-index: 60;
+  display: flex; flex-direction: column; background: var(--bg); border-right: 1px solid var(--line-strong); }
+.brand { display: flex; align-items: center; gap: 10px; padding: 0 20px 22px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.brand-mark { width: 14px; height: 14px; background: var(--cobalt); flex: none; }
+.brand-mark svg { display: none; }
+.brand > div { font-size: 15px; font-weight: 700; letter-spacing: -.02em; }
+.nav-group { margin: 18px 20px 6px; font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.nav a.nav-link { position: relative; display: grid; grid-template-columns: 26px 1fr auto; align-items: baseline;
+  padding: 7px 20px; color: var(--ink); font-size: 14px; font-weight: 500; }
+.nav a.nav-link::before { counter-increment: navsec; content: counter(navsec, decimal-leading-zero);
+  font-size: 11px; font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.nav a.nav-link:hover { background: var(--panel); text-decoration: none; }
+.nav a.nav-link.active { background: var(--ink); color: var(--bg); }
+.nav a.nav-link.active::before { color: var(--bg); opacity: .7; }
+.nav-count { font-size: 12px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.nav a.active .nav-count { color: var(--bg); }
+.nav-foot { margin-top: auto; padding: 12px 20px 0; border-top: 1px solid var(--line); display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.nav-hint { font-size: 11.5px; color: var(--ink-3); line-height: 2; }
+.main { margin-left: 220px; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  padding: 14px 36px; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+@media (min-width: 1100px) { .topbar { flex-wrap: nowrap; } }
+.topbar-head { display: flex; align-items: baseline; gap: 14px; min-width: 0; flex: 1 1 200px; }
+.topbar-title { font-size: 26px; line-height: 1; font-weight: 700; letter-spacing: -.035em; white-space: nowrap; }
+.status { display: block; color: var(--ink-3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.status-dot { display: inline-block; width: 7px; height: 7px; background: var(--green); margin-right: 6px; vertical-align: 0; }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.theme-switch { display: inline-flex; border: 1px solid var(--line-strong); }
+.theme-switch button { font: inherit; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+  padding: 6px 10px; border: 0; background: var(--bg); color: var(--ink-2); cursor: pointer; }
+.theme-switch button + button { border-left: 1px solid var(--line-strong); }
+.theme-switch button:hover { color: var(--ink); background: var(--panel); }
+.theme-switch button[aria-checked="true"] { background: var(--ink); color: var(--bg); }
+.theme-switch button:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+.search-btn { display: inline-flex; align-items: center; gap: 12px; min-width: 200px; justify-content: space-between;
+  height: 34px; padding: 0 8px 0 12px; background: var(--panel); color: var(--ink-3); border: 1px solid transparent; font-size: 13px; }
+.search-btn:hover { border-color: var(--ink); color: var(--ink); background: var(--panel); }
+kbd { font-family: var(--sans); font-size: 10.5px; font-weight: 600; padding: 1px 5px; border: 1px solid var(--line); background: var(--bg); color: var(--ink-2); }
+.content-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; padding: 28px 36px 96px; max-width: 1560px; }
+.content { min-width: 0; }
+.view[hidden] { display: none !important; }
+@media (min-width: 1480px) { .content-grid { grid-template-columns: minmax(0, 1fr) 280px; } }
+@media (max-width: 899px) {
+  .nav { position: sticky; top: 0; inset: auto; width: auto; flex-direction: row; align-items: center; overflow-x: auto;
+    padding: 0; border-right: 0; border-bottom: 1px solid var(--line-strong); }
+  .brand { padding: 12px 14px; margin: 0; border: 0; border-right: 1px solid var(--line); }
+  .brand > div, .nav-group, .nav-count, .nav-hint { display: none; }
+  .nav a.nav-link { display: flex; gap: 6px; white-space: nowrap; padding: 12px 14px; }
+  .nav-foot { margin: 0; padding: 0 8px; border: 0; flex-direction: row; }
+  .main { margin-left: 0; }
+  .topbar { position: static; padding: 14px 16px; gap: 10px; }
+  .topbar-head { flex-direction: column; gap: 4px; max-width: 100%; }
+  .status { max-width: 100%; }
+  #wsSlot { max-width: 100%; overflow-x: auto; }
+  #wsSlot .ws-switcher { flex-wrap: nowrap; }
+  #wsSlot .ws-switcher a { white-space: nowrap; }
+  .topbar-actions { margin-left: 0; flex-wrap: wrap; }
+  .search-btn { min-width: 0; }
+  .content-grid { padding: 18px 16px 96px; }
+}
+
+/* ---------- type ---------- */
+h1 { font-size: 34px; font-weight: 700; letter-spacing: -.04em; margin: 0 0 4px; }
+h2 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; margin: 44px 0 14px; padding: 0 0 10px; border: 0;
+  border-bottom: 1px solid var(--line-strong); display: flex; align-items: baseline; gap: 10px; justify-content: flex-start; }
+.view > h2:first-child { margin-top: 0; }
+h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-2); margin: 26px 0 10px; }
+.meta, .sec-sub, .poll-status, .acct-meta, .auth-note, .cc-sub, .td-empty, .empty, .obj-next-none, .tm-thinking { color: var(--ink-3); }
+.meta { font-size: 12.5px; margin-bottom: 10px; }
+.quick-line { font-size: 14px; color: var(--ink-2); margin-bottom: 10px; }
+.view-intro { color: var(--ink-2); font-size: 14.5px; margin: -2px 0 22px; max-width: 70ch; }
+pre { white-space: pre-wrap; font-family: var(--sans); font-size: 14px; line-height: 1.55; color: var(--ink-2);
+  background: var(--panel); border: 0; padding: 18px 20px; max-height: 360px; overflow-y: auto; }
+code { font-family: var(--mono); font-size: .86em; background: var(--panel-2); padding: .1em .35em; }
+
+/* ---------- controls ---------- */
+button { height: 32px; padding: 0 14px; border: 1px solid var(--ink); background: var(--bg); color: var(--ink);
+  font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; margin: 0; transition: background .1s, color .1s; }
+button:hover { background: var(--ink); color: var(--bg); }
+button.primary { background: var(--cobalt); color: var(--on-cobalt); border-color: var(--cobalt); }
+button.primary:hover { background: var(--cobalt-hover); border-color: var(--cobalt-hover); color: var(--on-cobalt); }
+button.small { height: 28px; padding: 0 11px; font-size: 12.5px; }
+button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); padding: 0; height: auto; font-weight: 500; }
+button.ghost:hover { color: var(--cobalt); background: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, .todo-row:focus-visible {
+  outline: 2px solid var(--cobalt); outline-offset: 1px; }
+textarea, input[type=text], input[type=password], input[type=time], input[type=number], input:not([type]), select {
+  font: inherit; font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); padding: 7px 10px; }
+textarea:hover, input:hover, select:hover { border-color: var(--ink-3); }
+textarea:focus, input:focus, select:focus { border-color: var(--ink); outline: 0; }
+textarea { width: 100%; resize: vertical; margin-bottom: 10px; }
+select { height: 32px; padding: 0 8px; }
+input::placeholder, textarea::placeholder { color: var(--ink-3); }
+.actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.result { font-size: 12.5px; margin-top: 8px; white-space: pre-wrap; color: var(--green); }
+.pill-row { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 12px; }
+.day-pill { height: 28px; padding: 0 12px; font-size: 12.5px; margin-left: -1px; }
+.day-pill.on { background: var(--ink); color: var(--bg); }
+
+/* ---------- surfaces ---------- */
+.card, .objective-card, .acct-row, .start-research-card, .chat-box, .todo-detail, .side-panel, .auth-box, .mdl-box {
+  background: var(--bg); border: 1px solid var(--line); }
+.card { padding: 18px 20px; margin-bottom: 12px; }
+.card.stale, .card.approved, .card.rejected, .card.superseded { opacity: .55; }
+.card.failed { border-color: var(--amber); }
+.card.drafted { border-color: var(--cobalt); }
+.card-title { font-size: 17px; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; margin: 10px 0 4px; }
+.badge, .priority-tag, .tag-pill, .todo-draft, .ws-chip, .sec-count {
+  display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border: 0;
+  font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap;
+  background: var(--panel-2); color: var(--ink-2); margin: 0 4px 0 0; }
+.badge.pending { background: var(--amber-soft); color: var(--amber); }
+.badge.approved { background: var(--green-soft); color: var(--green); }
+.badge.rejected, .badge.stale, .badge.superseded { background: var(--red-soft); color: var(--red); }
+.badge.failed { background: var(--amber-soft); color: var(--amber); }
+.badge.drafted { background: var(--cobalt-soft); color: var(--cobalt); }
+.priority-high { background: var(--red); color: var(--bg); }
+.priority-medium { background: var(--panel-2); color: var(--ink); }
+.priority-low { background: var(--panel); color: var(--ink-3); }
+.tag-ticket, .tag-meeting { background: var(--cobalt-soft); color: var(--cobalt); }
+.tag-message { background: var(--violet-soft); color: var(--violet); }
+.tag-calendar { background: var(--green-soft); color: var(--green); }
+.tag-domain { background: var(--red-soft); color: var(--red); }
+.sec-count { background: transparent; color: var(--ink-3); padding: 0; font-size: 14px; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.priority-note { color: var(--ink-2); }
+.tabs { display: inline-flex; margin: 14px 0 12px; border: 1px solid var(--ink); }
+.tab-btn { height: 28px; padding: 0 14px; border: 0; background: transparent; color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.tab-btn + .tab-btn { border-left: 1px solid var(--ink); }
+.tab-btn:hover { background: var(--panel); color: var(--ink); }
+.tab-btn.active { background: var(--ink); color: var(--bg); }
+.tab-panel { display: none; } .tab-panel.active { display: block; }
+.demo-banner { background: var(--panel); color: var(--ink-2); border: 0; border-left: 4px solid var(--cobalt); padding: 12px 16px; margin: 0 0 26px; font-size: 13px; }
+.demo-banner b { color: var(--ink); }
+.guardrail-alert { margin: 0 0 18px; padding: 14px 18px; background: var(--red-soft); border: 0; border-left: 4px solid var(--red); font-size: 14px; }
+.coverage-note { margin: 0 0 18px; padding: 12px 16px; background: var(--amber-soft); border: 0; border-left: 4px solid var(--amber); font-size: 13.5px; color: var(--ink); }
+.start-research-card { padding: 20px 22px; margin: 0 0 18px; border-color: var(--ink); }
+.start-research-card h2 { margin: 0 0 8px; border: 0; padding: 0; }
+
+/* ---------- figures ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0 0 8px; border-top: 4px solid var(--ink); }
+.stat { padding: 14px 18px 18px 0; }
+.stat + .stat { padding-left: 18px; border-left: 1px solid var(--line); }
+.stat-num { font-size: 64px; font-weight: 700; line-height: .95; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.stat-label { color: var(--ink-2); font-size: 12px; font-weight: 600; margin-top: 8px; letter-spacing: .01em; }
+.stat-danger .stat-num { color: var(--red); }
+.stat-accent .stat-num { color: var(--cobalt); }
+@media (max-width: 699px) {
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat:nth-child(3) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .stat-num { font-size: 48px; }
+}
+.briefing { margin: 0 0 32px; border-bottom: 1px solid var(--line); }
+.briefing summary { cursor: pointer; color: var(--ink-2); font-size: 12.5px; font-weight: 600; list-style: none; padding: 10px 0; }
+.briefing summary::-webkit-details-marker { display: none; }
+.briefing summary::before { content: "+  "; color: var(--cobalt); font-weight: 700; }
+.briefing[open] summary::before { content: "\2212  "; }
+.briefing pre { margin: 0 0 14px; }
+
+/* ---------- task table ---------- */
+.graph-command-center { margin: 0 0 26px; padding: 0; background: transparent; border: 0; }
+.graph-command-center > h2 { display: none; }
+.ws-switcher { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--ink); }
+.ws-switcher a { display: inline-flex; align-items: center; height: 28px; padding: 0 12px; color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.ws-switcher a + a { border-left: 1px solid var(--ink); }
+.ws-switcher a:hover { background: var(--panel); text-decoration: none; }
+.ws-switcher a.ws-active { background: var(--ink); color: var(--bg); }
+.graph-section { margin: 0 0 34px; }
+.graph-section > h3 { font-size: 22px; font-weight: 700; letter-spacing: -.03em; text-transform: none; color: var(--ink); margin: 0 0 4px; display: flex; align-items: baseline; gap: 10px; }
+.graph-section > .quick-line { font-size: 13px; color: var(--ink-3); margin: 0 0 16px; }
+.graph-section ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line-strong); }
+.graph-section li { margin: 0; padding: 10px 0; font-size: 14px; color: var(--ink); border-bottom: 1px solid var(--line); }
+.graph-section a { color: inherit; }
+.sec-type { color: var(--ink-3); font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-right: 6px; }
+.todo-filters { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.tf-chips { display: flex; flex-wrap: wrap; }
+.tf-chip { height: 30px; padding: 0 12px; border: 1px solid var(--ink); margin-left: -1px; background: var(--bg); color: var(--ink); font-size: 12.5px; font-weight: 600; }
+.tf-chip:first-child { margin-left: 0; }
+.tf-chip:hover { background: var(--panel); color: var(--ink); }
+.tf-chip.tf-on { background: var(--ink); color: var(--bg); }
+.tf-n { margin-left: 6px; font-weight: 500; opacity: .6; font-variant-numeric: tabular-nums; }
+.tf-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.tf-sel { display: inline-flex; align-items: center; border: 1px solid var(--line); height: 30px; }
+.tf-sel span { padding: 0 8px; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); border-right: 1px solid var(--line); height: 100%; display: inline-flex; align-items: center; }
+.tf-sel select { border: 0; height: 28px; font-size: 13px; background: transparent; }
+.tf-search { height: 30px; width: 180px; padding: 0 10px; font-size: 13px; }
+.todo-board { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(340px, 1fr); gap: 28px; align-items: start; }
+@media (max-width: 1199px) { .todo-board { grid-template-columns: minmax(0, 1fr); } }
+.todo-table { border-top: 4px solid var(--ink); min-width: 0; }
+.todo-head, .todo-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) 96px 78px; gap: 14px; align-items: baseline; }
+.todo-head { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--line-strong); }
+.todo-head > * { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); text-align: left; }
+.todo-head > :first-child { text-align: right; }
+.todo-head button { height: auto; padding: 0; border: 0; background: none; cursor: pointer; }
+.todo-head button:hover { color: var(--cobalt); background: none; }
+.todo-list { max-height: 72vh; overflow-y: auto; scrollbar-width: thin; }
+.todo-row { position: relative; padding: 11px 10px 11px 0; border-bottom: 1px solid var(--line); cursor: pointer; color: var(--ink); background: transparent; margin: 0; outline: 0; }
+.todo-row:hover { background: var(--row-hover); }
+.todo-selected { background: var(--row-sel) !important; box-shadow: inset 4px 0 0 var(--cobalt); }
+.todo-when { font-size: 13px; font-weight: 600; color: var(--ink-2); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.todo-overdue .todo-when { color: var(--red); }
+.todo-main { min-width: 0; }
+.todo-title { display: block; font-size: 14.5px; line-height: 1.35; font-weight: 500; }
+.todo-high .todo-title { font-weight: 700; }
+.todo-sub { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 3px; font-size: 12px; }
+.todo-sub:empty { display: none; }
+.todo-why { color: var(--ink-3); }
+.todo-sub .sec-sub, .todo-late, .todo-quiet { color: var(--ink-3); font-size: 12px; }
+.todo-late { color: var(--red); }
+.todo-draft { height: auto; padding: 0; background: transparent; color: var(--cobalt); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; margin: 0; }
+.todo-draft::before { content: "\2192\00a0"; }
+.todo-kind { font-size: 12px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.todo-pcell { white-space: nowrap; }
+.todo-pri { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--ink-2); }
+.pri-bars { display: inline-block; height: 11px; }
+.todo-pri .pri-bars { background:
+    linear-gradient(var(--c1), var(--c1)) 0 100% / 3px 5px no-repeat,
+    linear-gradient(var(--c2), var(--c2)) 5px 100% / 3px 8px no-repeat,
+    linear-gradient(var(--c3), var(--c3)) 10px 100% / 3px 11px no-repeat; width: 13px; }
+.pri-high { color: var(--red); --c1: var(--red); --c2: var(--red); --c3: var(--red); }
+.pri-medium { --c1: var(--ink); --c2: var(--ink); --c3: var(--line); }
+.pri-low { color: var(--ink-3); --c1: var(--ink-3); --c2: var(--line); --c3: var(--line); }
+@media (max-width: 699px) {
+  .todo-head, .todo-row { grid-template-columns: 48px minmax(0, 1fr) 62px; }
+  .todo-kind, .todo-head > :nth-child(3) { display: none; }
+}
+.todo-badge { display: none; }
+.todo-row[hidden], .todo-divider[hidden], .todo-none[hidden] { display: none !important; }
+.todo-none { padding: 28px 0; color: var(--ink-3); text-align: center; }
+.todo-divider { padding: 26px 0 8px 72px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1px solid var(--line-strong); }
+.todo-stale { opacity: .55; } .todo-stale:hover, .todo-stale.todo-selected { opacity: 1; }
+.todo-detail { position: sticky; top: 92px; padding: 24px 26px 24px; min-height: 340px; border: 0; border-top: 4px solid var(--cobalt); background: var(--panel); }
+.todo-detail .tm-title { width: 100%; font-size: 26px; font-weight: 700; line-height: 1.12; letter-spacing: -.035em; color: var(--ink);
+  background: transparent; border: 0; padding: 0; margin: 0; resize: none; overflow: hidden; display: block; field-sizing: content; }
+.todo-detail .tm-title:hover, .todo-detail .tm-title:focus { background: var(--bg); }
+.tm-meta { margin: 10px 0 18px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--ink-2); }
+.tm-controls { display: flex; gap: 8px; align-items: center; margin: 0 0 22px; flex-wrap: wrap; }
+.tm-next { border-top: 1px solid var(--line-strong); padding: 14px 0 0; margin: 0 0 20px; }
+.tm-next-head { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cobalt); margin: 0 0 8px; }
+.tm-next .card { margin: 0; padding: 0; background: transparent; border: 0; }
+.tm-plan { white-space: pre-wrap; font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+.draft-text { background: var(--bg); border: 0; border-left: 4px solid var(--cobalt); padding: 14px 16px; margin: 12px 0 6px; font-size: 15px; line-height: 1.55; }
+#tmNote { width: 100%; }
+.tm-evidence { margin: 2px 0 12px; font-size: 12px; }
+.tm-chat { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 14px; }
+.tm-chat-log { max-height: 240px; overflow-y: auto; font-size: 13.5px; display: flex; flex-direction: column; gap: 6px; }
+.tm-msg { background: var(--bg); padding: 8px 12px; margin: 0; white-space: pre-wrap; align-self: flex-start; max-width: 90%; }
+.tm-you { background: var(--ink); color: var(--bg); align-self: flex-end; }
+.objective-card { margin: 0 0 10px; padding: 14px 16px; }
+.obj-title { font-weight: 700; font-size: 14.5px; }
+.obj-timeline, .obj-next { font-size: 13.5px; color: var(--ink-2); margin-top: 4px; }
+.obj-details summary { font-size: 12.5px; color: var(--ink-3); cursor: pointer; margin-top: 6px; }
+
+/* ---------- side column ---------- */
+.side-panel { display: none; }
+@media (min-width: 1480px) {
+  .side-panel { display: block; position: sticky; top: 92px; align-self: start; padding: 0 0 20px; background: transparent;
+    border: 0; border-top: 4px solid var(--ink); max-height: calc(100vh - 116px); overflow-y: auto; }
+  .side-panel h3 { margin: 12px 0 12px; color: var(--ink); }
+}
+.today-brief { margin: 0 0 18px; padding: 0; background: transparent; border: 0; font-size: 13.5px; color: var(--ink-2); }
+.tb-line { margin: 0 0 12px; } .tb-line strong { color: var(--ink); font-weight: 700; }
+.tb-overdue strong { color: var(--red); } .today-brief a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 2px; }
+.cal-box { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line-strong); }
+.cal-head { font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+.cal { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; font-variant-numeric: tabular-nums; }
+.cal th { color: var(--ink-3); font-weight: 700; padding: 4px; font-size: 10px; letter-spacing: .06em; }
+.cal td { padding: 0; height: 30px; color: var(--ink-2); }
+.cal-out { color: var(--ink-3) !important; opacity: .35; }
+.cal-marked { color: var(--ink); font-weight: 700; box-shadow: inset 0 -2px 0 var(--cobalt); }
+.cal-today, .cal-today.cal-marked { background: var(--ink); color: var(--bg) !important; font-weight: 700; box-shadow: none; }
+.cal-dot { display: none; }
+
+/* ---------- jump palette ---------- */
+.palette { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: flex-start; justify-content: center;
+  padding: 12vh 16px 16px; background: color-mix(in srgb, var(--bg) 70%, transparent); }
+.palette[hidden] { display: none; }
+.palette-box { width: min(640px, 100%); background: var(--bg); border: 1px solid var(--line-strong); box-shadow: 12px 12px 0 var(--cobalt); overflow: hidden; }
+.palette-input { width: 100%; height: 58px; border: 0 !important; border-bottom: 1px solid var(--line-strong) !important; background: transparent !important;
+  padding: 0 20px !important; font-size: 20px !important; font-weight: 600; letter-spacing: -.02em; }
+.palette-list { max-height: 52vh; overflow-y: auto; }
+.palette-group { padding: 10px 20px 4px; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.palette-item { display: flex; align-items: baseline; gap: 14px; padding: 9px 20px; cursor: pointer; font-size: 14.5px; }
+.palette-item .pi-when { width: 50px; flex: none; text-align: right; color: var(--ink-3); font-size: 12.5px; font-weight: 600; }
+.palette-item .pi-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.palette-item .pi-hint { color: var(--ink-3); font-size: 11.5px; }
+.palette-item.active { background: var(--cobalt); color: var(--on-cobalt); }
+.palette-item.active .pi-when, .palette-item.active .pi-hint { color: var(--on-cobalt); opacity: .8; }
+.palette-empty { padding: 18px 20px; color: var(--ink-3); font-size: 14px; }
+.palette-foot { display: flex; flex-wrap: wrap; gap: 16px; padding: 10px 20px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--ink-3); }
+
+/* ---------- chat ---------- */
+.chat-bubble { position: fixed; bottom: max(24px, env(safe-area-inset-bottom, 0px)); right: max(24px, env(safe-area-inset-right, 0px));
+  width: 52px; height: 52px; background: var(--cobalt); display: grid; place-items: center; cursor: pointer; z-index: 1000; }
+.chat-bubble path { fill: var(--on-cobalt); }
+.chat-bubble:hover { background: var(--cobalt-hover); }
+.chat-panel-hidden { display: none; }
+#chatPanel { position: fixed; bottom: 24px; right: 24px; width: min(420px, 92vw); z-index: 1000; padding: 16px; border: 1px solid var(--line-strong); box-shadow: 10px 10px 0 var(--cobalt); }
+.chat-panel-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 18px; letter-spacing: -.02em; margin-bottom: 12px; }
+.chat-close { cursor: pointer; color: var(--ink-3); font-weight: 400; font-size: 15px; }
+.chat-log { max-height: 420px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
+#chatPanel .chat-log { max-height: 360px; }
+.chat-msg { padding: 9px 12px; max-width: 88%; font-size: 14px; }
+.chat-you { background: var(--ink); color: var(--bg); align-self: flex-end; }
+.chat-assistant { background: var(--panel); color: var(--ink); align-self: flex-start; }
+.chat-role { font-size: 10.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-bottom: 2px; }
+.chat-you .meta { color: inherit; opacity: .75; }
+.chat-body { white-space: pre-wrap; }
+.chat-input-row { display: flex; gap: 8px; align-items: flex-end; }
+.chat-input-row textarea { flex: 1; margin-bottom: 0; }
+
+/* ---------- settings ---------- */
+.mdl-box { padding: 0 20px; margin-bottom: 16px; border-color: var(--line-strong); }
+.mdl-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.mdl-row:last-child { border-bottom: 0; }
+.mdl-tier { flex: 0 1 200px; min-width: 0; } .mdl-tier b { font-size: 16px; font-weight: 700; letter-spacing: -.02em; } .mdl-tier .meta { margin: 2px 0 0; }
+.mdl-prov { flex: 0 1 240px; min-width: 0; }
+.mdl-model { flex: 1 1 170px; min-width: 0; }
+.mdl-effort { flex: 0 0 auto; }
+.mdl-key { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.mdl-key-name { flex: 0 0 240px; font-weight: 600; }
+.mdl-keys { margin: 16px 0; } .mdl-keys summary { cursor: pointer; font-weight: 700; }
+.usage-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 4px 0 10px; border-top: 4px solid var(--ink); }
+.usage-table th { text-align: left; font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); padding: 8px 4px; border-bottom: 1px solid var(--line-strong); }
+.usage-table td { padding: 10px 4px; border-bottom: 1px solid var(--line); }
+.usage-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.acct-row { margin: 0 0 -1px; padding: 12px 16px; font-size: 14px; }
+.acct-dot { font-weight: 700; margin-right: 4px; } .acct-id { color: var(--ink-2); margin: 0 6px; }
+.acct-fix { color: var(--red); font-size: 12.5px; margin-top: 4px; }
+.auth-overlay { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 70%, transparent); z-index: 1100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+.auth-box { padding: 22px 24px; max-width: 460px; border-color: var(--line-strong); box-shadow: 10px 10px 0 var(--cobalt); }
+.auth-box h3 { margin: 0 0 10px; color: var(--ink); font-size: 18px; letter-spacing: -.02em; text-transform: none; }
+.auth-reason { color: var(--ink-2); } .auth-buttons { margin-top: 16px; display: flex; gap: 8px; } .auth-refuse { color: var(--red); }
+.inbox-item { font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+.linked-domain { margin-top: 16px; padding: 14px 16px; background: var(--red-soft); border: 0; border-left: 4px solid var(--red); }
+.linked-domain-title { font-weight: 700; font-size: 14px; color: var(--red); margin-bottom: 8px; }
+.linked-domain pre { background: var(--bg); color: var(--ink); }
+.lite-markdown ul { margin: 4px 0 8px; padding-left: 20px; } .lite-markdown li, .lite-markdown p { font-size: 13.5px; margin: 4px 0; }
+.archived-item { opacity: .7; padding: 14px 18px; }
+.slack-preview-label, .extra-notes-label { font-size: 12px; color: var(--ink-3); margin: 10px 0 4px; }
+.slack-preview { background: var(--panel); border: 0; padding: 10px 12px; font-size: 14px; min-height: 1.5em; margin-bottom: 6px; }
+.button-link { display: inline-flex; align-items: center; height: 32px; padding: 0 14px; background: var(--cobalt); color: var(--on-cobalt); font-size: 13px; font-weight: 600; margin: 6px 0; }
+.button-link:hover { text-decoration: none; background: var(--cobalt-hover); }
+</style></head><body>
+<nav class="nav" aria-label="Sections">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>Chief of Staff</div></div>
+  <div class="nav-group">Work</div>
+  <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">5</span></a>
+  <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">2</span></a>
+  <a class="nav-link" href="#inbox" data-view="inbox">Inbox &amp; questions</a>
+  <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">2</span></a>
+  <div class="nav-group">Settings</div>
+  <a class="nav-link" href="#models" data-view="models">Models</a>
+  <a class="nav-link" href="#usage" data-view="usage">Usage <span class="nav-count">$0.00</span></a>
+  <a class="nav-link" href="#accounts" data-view="accounts">Accounts</a>
+  <a class="nav-link" href="#polling" data-view="polling">Polling</a>
+  <a class="nav-link" href="#learning" data-view="learning">Learning</a>
+  <div class="nav-foot">
+    <div class="nav-hint"><kbd>⌘K</kbd> jump anywhere<br><kbd>J</kbd> <kbd>K</kbd> move through tasks<br><kbd>G</kbd> then <kbd>T</kbd> <kbd>M</kbd> <kbd>I</kbd> to switch views<br><kbd>⇧D</kbd> light / dark</div>
+  </div>
+</nav>
+<div class="main">
+<header class="topbar">
+  <div class="topbar-head">
+    <span class="topbar-title" id="viewTitle">Today</span>
+    <span class="status"><span class="status-dot"></span>2026-10-13 · last checked recorded crawl of the fictional world, 2026-10-13</span>
+  </div>
+  <span id="wsSlot"></span>
+  <div class="topbar-actions">
+    <div class="theme-switch" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="light" onclick="setTheme('light')" title="Light theme">Light</button>
+      <button type="button" role="radio" data-theme-set="dark" onclick="setTheme('dark')" title="Dark theme">Dark</button>
+      <button type="button" role="radio" data-theme-set="auto" onclick="setTheme('auto')" title="Follow your system setting">Auto</button>
+    </div>
+    <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
+    <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
+    <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
+  </div>
+</header>
+<div class="content-grid"><div class="content">
+<div id="pollResult" class="result"></div>
+<div class="demo-banner"><strong>Live demo on fictional data.</strong> This is Dana Kowalski, a made-up engineer at Kestrel Labs who also freelances and is job hunting: about 110,000 items over three months (Slack, mail in four inboxes, Jira, GitHub, calendar and files). The task list below is what the research engine actually extracted from that world in a recorded run. Nothing here talks to a real account or a model: approve, chat and revise answer from saved responses. Data as of 2026-10-13.</div>
+
+
+<section class="view" id="v-today" data-title="Today">
+
+<div class="stats"><div class="stat stat-danger"><div class="stat-num">1</div><div class="stat-label">overdue, still live</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">due today</div></div><div class="stat stat-accent"><div class="stat-num">62</div><div class="stat-label">drafts waiting for you</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">gone quiet, still needed?</div></div></div>
+<details class="briefing"><summary>Today's briefing (2026-10-13)</summary><pre>Tuesday, Oct 13
+
+Since Friday: 404 Slack messages, 16 mails and 18 Jira updates across the connected
+accounts. Most of it is noise, asks to other people, or bots.
+
+Open tasks: 62 in total, 36 high priority.
+
+Drafted: a next step for every open task (30 messages waiting for approval,
+32 drafted for you to do yourself). They are on each task in the Command Center.
+Nothing has been sent.
+
+Set aside: the Sep 22 &quot;password expires&quot; mail from kestrel-helpdesk.example, a
+look-alike of Kestrel IT. Not a task.
+</pre></details>
+<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" role="navigation" aria-label="Workspace"><a href="index.html">All</a><a href="ws-freelance.html" class="ws-active">Freelance</a><a href="ws-job-search.html">Job search</a><a href="ws-kestrel.html">Kestrel Labs</a><a href="ws-oss.html">Open source</a><a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">5</span></h3><div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div><div class="todo-filters" role="toolbar" aria-label="Filter tasks"><div class="tf-chips"><button type="button" class="tf-chip tf-on" data-filter="all" onclick="todoFilter(this.dataset.filter)">All <span class="tf-n">5</span></button><button type="button" class="tf-chip" data-filter="overdue" onclick="todoFilter(this.dataset.filter)">Overdue <span class="tf-n">1</span></button><button type="button" class="tf-chip" data-filter="week" onclick="todoFilter(this.dataset.filter)">This week <span class="tf-n">1</span></button><button type="button" class="tf-chip" data-filter="important" onclick="todoFilter(this.dataset.filter)">Important <span class="tf-n">3</span></button><button type="button" class="tf-chip" data-filter="waiting" onclick="todoFilter(this.dataset.filter)">Waiting on someone <span class="tf-n">2</span></button></div><div class="tf-tools"><label class="tf-sel"><span>Type</span><select id="todoKind" onchange="todoFilter()"><option value="">All types</option><option value="freelance">Freelance (5)</option></select></label><label class="tf-sel"><span>Sort</span><select id="todoSort" onchange="todoSort(this.value)"><option value="urgency">Most urgent</option><option value="pri-desc">Priority: high to low</option><option value="pri-asc">Priority: low to high</option><option value="due-asc">Due: soonest first</option><option value="due-desc">Due: latest first</option><option value="recent">Recently active</option></select></label><input id="todoSearch" class="tf-search" placeholder="Filter by words" oninput="todoFilter()" aria-label="Filter tasks by words"/></div></div><div class="todo-board"><div class="todo-table"><div class="todo-head" role="row"><button type="button" onclick="todoSort('due-asc')">Due</button><span>Task</span><button type="button" onclick="todoSort('kind')">Type</button><button type="button" onclick="todoSortToggle()">Priority</button></div><div class="todo-list" id="todoList"><div class="todo-row todo-high" data-id="freelance:action:orbitlabs-api-audit-report" data-title="Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped)" data-note="" data-evidence="[&#x27;em-193877&#x27;, &#x27;em-841372&#x27;, &#x27;em-186865&#x27;, &#x27;em-900736&#x27;]" data-priority="high" data-due="2026-10-15" data-ws="freelance" data-url="" data-duelabel="due in 2 days" data-stale="" data-overdue="" data-days="2" data-reason="client deliverable" data-waiting="" data-kind="freelance" data-act="10" data-rank="0" data-draft="1" data-q="0" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Thu</span><span class="todo-main"><span class="todo-title">Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped)</span><span class="todo-sub"><span class="todo-why">client deliverable</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Freelance</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium todo-overdue" data-id="freelance:action:inv-0042-lumen-dental-payment" data-title="Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)" data-note="" data-evidence="[&#x27;em-815263&#x27;, &#x27;em-914019&#x27;, &#x27;em-819691&#x27;]" data-priority="medium" data-due="2026-09-29" data-ws="freelance" data-url="" data-duelabel="overdue by 14 days" data-stale="" data-overdue="1" data-days="-14" data-reason="invoice collection" data-waiting="1" data-kind="freelance" data-act="7" data-rank="1" data-draft="1" data-q="1" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">−14d</span><span class="todo-main"><span class="todo-title">Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Freelance</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-high" data-id="freelance:action:fernhill-milestone-2-low-stock-alerts" data-title="Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus" data-note="" data-evidence="[&#x27;em-270940&#x27;, &#x27;em-825899&#x27;]" data-priority="high" data-due="2026-10-24" data-ws="freelance" data-url="" data-duelabel="due in 11 days" data-stale="" data-overdue="" data-days="11" data-reason="client waiting" data-waiting="" data-kind="freelance" data-act="11" data-rank="2" data-draft="1" data-q="2" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 24</span><span class="todo-main"><span class="todo-title">Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus</span><span class="todo-sub"><span class="todo-why">client waiting</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Freelance</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-high" data-id="freelance:action:fernhill-milestone-1-release" data-title="Milestone 1 ($1,200) payment still unreleased by Fernhill Goods" data-note="" data-evidence="[&#x27;em-402082&#x27;, &#x27;em-877588&#x27;]" data-priority="high" data-due="" data-ws="freelance" data-url="" data-duelabel="high" data-stale="" data-overdue="" data-days="" data-reason="client payment waiting" data-waiting="1" data-kind="freelance" data-act="19" data-rank="3" data-draft="1" data-q="3" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Milestone 1 ($1,200) payment still unreleased by Fernhill Goods</span><span class="todo-sub"><span class="todo-why">client payment waiting</span><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Freelance</span><span class="todo-pcell"><span class="todo-pri pri-high"><span class="pri-bars" aria-hidden="true"></span>High</span></span></div><div class="todo-row todo-medium" data-id="freelance:action:nimbus-ops-upwork-invite-reply" data-title="Reply to Nimbus Ops on Upwork with start date and rate" data-note="" data-evidence="[&#x27;em-209864&#x27;]" data-priority="medium" data-due="" data-ws="freelance" data-url="" data-duelabel="medium" data-stale="" data-overdue="" data-days="" data-reason="prospective client" data-waiting="" data-kind="freelance" data-act="2" data-rank="4" data-draft="1" data-q="4" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Reply to Nimbus Ops on Upwork with start date and rate</span><span class="todo-sub"><span class="todo-draft">Draft ready</span></span></span><span class="todo-kind">Freelance</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div></div>
+<div class="todo-detail" id="todoDetail">
+  <div class="td-empty" id="tdEmpty">Select a task</div>
+  <div id="tdBody" style="display:none">
+    <textarea id="tmTitle" class="tm-title" rows="1" aria-label="Task title"></textarea>
+    <div class="tm-meta"><span id="tmWs" class="ws-chip"></span>
+      <span id="tmDue" class="sec-sub"></span>
+      <a id="tmLink" target="_blank" rel="noopener" style="display:none">open source ↗</a></div>
+    <div class="tm-controls">
+      <select id="tmPriority">
+        <option value="high">High priority</option><option value="medium">Medium priority</option>
+        <option value="low">Low priority</option>
+      </select>
+      <button class="primary" onclick="todoDone()">Mark done</button>
+      <button class="small" onclick="todoSave()">Save changes</button>
+    </div>
+    <div class="tm-next" id="tmNext">
+      <div class="quick-line tm-next-head">Next step</div>
+      <div id="tmQueue"></div>
+    </div>
+    <textarea id="tmNote" rows="3" placeholder="Description / notes..."></textarea>
+    <div class="tm-evidence sec-sub" id="tmEvidence"></div>
+    <div id="tmResult" class="result"></div>
+    <div class="tm-chat">
+      <div class="quick-line">Chat about this task</div>
+      <div class="tm-chat-log" id="tmChatLog"></div>
+      <div class="chat-input-row">
+        <textarea id="tmChatInput" rows="2" placeholder="Ask about it, plan it, break it down..."></textarea>
+        <button class="small" onclick="todoChat()">Send</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let _todoId = null;
+function todoOpen(el) {
+  document.querySelectorAll(".todo-row").forEach(r => r.classList.remove("todo-selected"));
+  el.classList.add("todo-selected");
+  const d = el.dataset;
+  _todoId = d.id;
+  document.getElementById("tdEmpty").style.display = "none";
+  document.getElementById("tdBody").style.display = "block";
+  const ttl = document.getElementById("tmTitle");
+  ttl.value = d.title;
+  ttl.style.height = "auto"; ttl.style.height = ttl.scrollHeight + "px";
+  document.getElementById("tmNote").value = d.note;
+  document.getElementById("tmPriority").value = d.priority || "medium";
+  document.getElementById("tmWs").textContent = d.ws;
+  document.getElementById("tmDue").textContent = d.duelabel || (d.due ? ("due " + d.due) : "no deadline");
+  document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
+  const link = document.getElementById("tmLink");
+  if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
+  const q = document.getElementById("tmQueue");
+  const tpl = d.q ? document.getElementById("tdq-" + d.q) : null;
+  if (tpl) {
+    q.innerHTML = "";
+    q.appendChild(tpl.content.cloneNode(true));
+  } else if (d.nextstep) {
+    q.innerHTML = "<div class='tm-plan'></div>";
+    q.firstChild.textContent = d.nextstep;
+  } else {
+    q.innerHTML = "<div class='sec-sub'>Nothing drafted for this task yet. The next poll drafts one.</div>";
+  }
+  loadTodoChat(d.id);
+  document.getElementById("tmResult").textContent = "";
+  if (window.innerWidth < 980) {
+    document.getElementById("todoDetail").scrollIntoView({behavior: "smooth"});
+  }
+}
+async function todoSave() {
+  const r = await post("/action-update", {id: _todoId,
+    name: document.getElementById("tmTitle").value,
+    note: document.getElementById("tmNote").value,
+    priority: document.getElementById("tmPriority").value});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => demoReload(), 900);
+}
+async function todoDone() {
+  const r = await post("/action-update", {id: _todoId, status: "done"});
+  document.getElementById("tmResult").textContent = r.message;
+  setTimeout(() => demoReload(), 900);
+}
+function escChat(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
+async function fetchTodoChat(id) {
+  try {
+    const r = await fetch("/entry-chat-log?id=" + encodeURIComponent(id), {cache: "no-store"});
+    return (await r.json()).messages || [];
+  } catch (e) { return null; }
+}
+async function loadTodoChat(id) {
+  const log = document.getElementById("tmChatLog");
+  log.innerHTML = "";
+  const msgs = await fetchTodoChat(id);
+  if (_todoId !== id || !msgs || !msgs.length) return;
+  log.innerHTML = msgs.map(m =>
+    "<div class='tm-msg" + (m.role === "you" ? " tm-you" : "") + "'>" + escChat(m.text) + "</div>"
+  ).join("");
+  log.scrollTop = log.scrollHeight;
+}
+async function todoChat() {
+  const input = document.getElementById("tmChatInput");
+  const log = document.getElementById("tmChatLog");
+  const msg = input.value.trim();
+  if (!msg) return;
+  const id = _todoId;
+  const prior = ((await fetchTodoChat(id)) || []).length;
+  log.innerHTML += "<div class='tm-msg tm-you'>" + escChat(msg) + "</div>";
+  input.value = "";
+  log.innerHTML += "<div class='tm-msg tm-thinking' id='tmThinking'>thinking… (a reply can take a minute)</div>";
+  let reply = null;
+  try {
+    const r = await post("/entry-chat", {id: id, message: msg});
+    reply = r.message;
+  } catch (e) {
+    // Safari aborts fetches at ~60s while the model is still thinking; the
+    // server finishes and persists the reply anyway — poll the log for it.
+    reply = await pollTodoReply(id, prior);
+  }
+  if (_todoId !== id) return;
+  document.getElementById("tmThinking")?.remove();
+  log.innerHTML += "<div class='tm-msg'>" +
+    escChat(reply || "(no reply yet — reopen this task shortly)") + "</div>";
+  log.scrollTop = log.scrollHeight;
+}
+async function pollTodoReply(id, prior) {
+  for (let i = 0; i < 100; i++) {
+    await new Promise(res => setTimeout(res, 3000));
+    const msgs = await fetchTodoChat(id);
+    if (msgs && msgs.length >= prior + 2 && msgs[msgs.length - 1].role === "assistant")
+      return msgs[msgs.length - 1].text;
+  }
+  return null;
+}
+let _todoFilterKey = "all", _todoSortKey = "urgency";
+const _PRI = {high: 0, medium: 1, low: 2};
+function todoSort(key) {
+  _todoSortKey = key || "urgency";
+  try { localStorage.setItem("cos-todo-sort", _todoSortKey); } catch (e) {}
+  const sel = document.getElementById("todoSort");
+  if (sel && [...sel.options].some(o => o.value === _todoSortKey)) sel.value = _todoSortKey;
+  const list = document.getElementById("todoList"); if (!list) return;
+  const rows = [...list.querySelectorAll(".todo-row")];
+  const num = (v, missing) => v === "" || v === undefined ? missing : +v;
+  const rank = r => +r.dataset.rank;
+  const cmp = {
+    "urgency": (a, b) => rank(a) - rank(b),
+    "pri-desc": (a, b) => (_PRI[a.dataset.priority] - _PRI[b.dataset.priority]) || rank(a) - rank(b),
+    "pri-asc": (a, b) => (_PRI[b.dataset.priority] - _PRI[a.dataset.priority]) || rank(a) - rank(b),
+    "due-asc": (a, b) => (num(a.dataset.days, 1e9) - num(b.dataset.days, 1e9)) || rank(a) - rank(b),
+    "due-desc": (a, b) => (num(b.dataset.days, -1e9) - num(a.dataset.days, -1e9)) || rank(a) - rank(b),
+    "recent": (a, b) => (num(a.dataset.act, 1e9) - num(b.dataset.act, 1e9)) || rank(a) - rank(b),
+    "kind": (a, b) => (a.dataset.kind || "~").localeCompare(b.dataset.kind || "~") || rank(a) - rank(b),
+  }[_todoSortKey] || ((a, b) => rank(a) - rank(b));
+  rows.sort(cmp);
+  const div = list.querySelector(".todo-divider"), none = document.getElementById("todoNone");
+  rows.forEach(r => list.insertBefore(r, none));
+  if (div) {
+    const firstQuiet = rows.find(r => r.classList.contains("todo-stale"));
+    if (firstQuiet) list.insertBefore(div, firstQuiet);
+  }
+  document.querySelectorAll(".todo-head button").forEach(b => b.classList.remove("on"));
+  todoFilter();
+}
+function todoSortToggle() { todoSort(_todoSortKey === "pri-desc" ? "pri-asc" : "pri-desc"); }
+function todoFilter(key) {
+  if (key) _todoFilterKey = key;
+  try { localStorage.setItem("cos-todo-filter", _todoFilterKey); } catch (e) {}
+  document.querySelectorAll(".tf-chip").forEach(c => c.classList.toggle("tf-on", c.dataset.filter === _todoFilterKey));
+  const q = (document.getElementById("todoSearch") || {value: ""}).value.trim().toLowerCase();
+  const test = {
+    all: d => true, overdue: d => d.overdue && !d.stale,
+    week: d => d.days !== "" && +d.days >= 0 && +d.days <= 7,
+    important: d => d.priority === "high", draft: d => !!d.draft,
+    waiting: d => !!d.waiting, quiet: d => !!d.stale,
+  }[_todoFilterKey] || (() => true);
+  const kind = (document.getElementById("todoKind") || {value: ""}).value;
+  try { localStorage.setItem("cos-todo-kind", kind); } catch (e) {}
+  let shown = 0;
+  document.querySelectorAll(".todo-row").forEach(r => {
+    const ok = test(r.dataset) && (!kind || r.dataset.kind === kind) &&
+      (!q || (r.dataset.title + " " + r.dataset.ws + " " + r.dataset.reason).toLowerCase().includes(q));
+    r.hidden = !ok; if (ok) shown++;
+  });
+  const div = document.querySelector(".todo-divider");
+  if (div) div.hidden = _todoSortKey !== "urgency" || _todoFilterKey === "quiet" ||
+    !document.querySelector(".todo-row.todo-stale:not([hidden])");
+  const none = document.getElementById("todoNone"); if (none) none.hidden = shown > 0;
+}
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const k = localStorage.getItem("cos-todo-filter"); if (k && document.querySelector('.tf-chip[data-filter="' + k + '"]')) _todoFilterKey = k;
+    const kd = localStorage.getItem("cos-todo-kind"), ks = document.getElementById("todoKind");
+    if (kd && ks && [...ks.options].some(o => o.value === kd)) ks.value = kd;
+    const s = localStorage.getItem("cos-todo-sort"); if (s) _todoSortKey = s;
+  } catch (e) {}
+  todoSort(_todoSortKey);
+  const first = document.querySelector(".todo-row:not([hidden])");
+  if (first && window.innerWidth >= 980) todoOpen(first);
+});
+</script></div><template id="tdq-0">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-high">High</span>
+  <div class="card-title">Outline for the Orbit Labs API security audit report (API only, due Oct 15)</div>
+  <div class="meta">self_do · drafted by cos-poll · <code>q-1013-orbitlabs-api-audit-report</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0-quick" data-entry="cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0" onclick="showTab('q-1013-orbitlabs-api-audit-report','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0-details" data-entry="cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0" onclick="showTab('q-1013-orbitlabs-api-audit-report','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0-quick" data-entry="cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0">
+    
+    <div class='tm-plan draft-text'>Outline for the audit report:
+1. Executive summary: scope, overall risk, top [number] findings
+2. Scope and method: public API only (Terraform review dropped per Priya, Oct 3); [testing dates and approach]
+3. Findings: for each, [title], severity, evidence, impact, fix
+4. Prioritized remediation plan
+5. Appendix: [endpoints reviewed, tools used]
+Then email the report to Priya Raman, referencing the $3,000 fee due on delivery per the SOW.</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0-details" data-entry="cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0">
+    <pre>Outline for the audit report:
+* 1. Executive summary: scope, overall risk, top [number] findings
+* 2. Scope and method: public API only (Terraform review dropped per Priya, Oct 3); [testing dates and approach]
+* 3. Findings: for each, [title], severity, evidence, impact, fix
+* 4. Prioritized remediation plan
+* 5. Appendix: [endpoints reviewed, tools used]
+* Then email the report to Priya Raman, referencing the $3,000 fee due on delivery per the SOW.</pre>
+    
+    <div class="meta">Task: Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped). Sources: em-193877, em-841372, em-186865, em-900736.</div>
+    
+  </div>
+  <div class="actions"><button data-id="q-1013-orbitlabs-api-audit-report" data-copy="Outline for the audit report:
+1. Executive summary: scope, overall risk, top [number] findings
+2. Scope and method: public API only (Terraform review dropped per Priya, Oct 3); [testing dates and approach]
+3. Findings: for each, [title], severity, evidence, impact, fix
+4. Prioritized remediation plan
+5. Appendix: [endpoints reviewed, tools used]
+Then email the report to Priya Raman, referencing the $3,000 fee due on delivery per the SOW." onclick="copyText(this)">Copy text</button><button data-id="q-1013-orbitlabs-api-audit-report" onclick="markHandled(this)">Mark handled</button><span class='meta'>Drafted for you: no connected tool can do this one. Copy the draft, finish it yourself, then mark handled.</span></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-orbitlabs-api-audit-report" onclick="revise(this)">Revise</button></div>
+  <div class="result" id="result-cS0xMDEzLW9yYml0bGFicy1hcGktYXVkaXQtcmVwb3J0"></div>
+</div>
+</template><template id="tdq-1">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-high">High</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Email to Rosa: follow up on overdue INV-0042 ($2,400), reminder of Oct 6 unanswered</div>
+  <div class="meta">message_send · drafted by cos-poll · <code>q-1013-inv-0042-lumen-dental-payment</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50-quick" data-entry="cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50" onclick="showTab('q-1013-inv-0042-lumen-dental-payment','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50-details" data-entry="cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50" onclick="showTab('q-1013-inv-0042-lumen-dental-payment','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50-quick" data-entry="cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50">
+    
+    <div class='tm-plan draft-text'>Hi Rosa, I&#x27;m glad the widget is working well for your patients. INV-0042 ($2,400) was due Sep 29, and I sent a reminder to ap@lumendental.example on Oct 6 without a reply. Could you check with accounts and let me know the payment date? I&#x27;m happy to resend the invoice or fill in any vendor forms they need. Thanks, Dana</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50-details" data-entry="cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50">
+    <pre>gmail-freelance.send to Rosa Lin, re &quot;INV-0042: booking widget, now overdue&quot;, with text: &quot;Hi Rosa, I&#x27;m glad the widget is working well for your patients. INV-0042 ($2,400) was due Sep 29, and I sent a reminder to ap@lumendental.example on Oct 6 without a reply. Could you check with accounts and let me know the payment date? I&#x27;m happy to resend the invoice or fill in any vendor forms they need. Thanks, Dana&quot;</pre>
+    
+    <div class="meta">Task: Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6). Sources: em-815263, em-914019, em-819691.</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-inv-0042-lumen-dental-payment" data-action-type="message_send" data-summary="gmail-freelance.send to Rosa Lin, re &quot;INV-0042: booking widget, now overdue&quot;, with text: &quot;Hi Rosa, I&#x27;m glad the widget is working well for your patients. INV-0042 ($2,400) was due Sep 29, and I sent a reminder to ap@lumendental.example on Oct 6 without a reply. Could you check with accounts and let me know the payment date? I&#x27;m happy to resend the invoice or fill in any ve" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-inv-0042-lumen-dental-payment" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-inv-0042-lumen-dental-payment" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-inv-0042-lumen-dental-payment" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-inv-0042-lumen-dental-payment" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' rows='3' oninput="updateSlackPreview('q-1013-inv-0042-lumen-dental-payment')">Hi Rosa, I&#x27;m glad the widget is working well for your patients. INV-0042 ($2,400) was due Sep 29, and I sent a reminder to ap@lumendental.example on Oct 6 without a reply. Could you check with accounts and let me know the payment date? I&#x27;m happy to resend the invoice or fill in any vendor forms they need. Thanks, Dana</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50'></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-inv-0042-lumen-dental-payment" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-inv-0042-lumen-dental-payment" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLWludi0wMDQyLWx1bWVuLWRlbnRhbC1wYXltZW50"></div>
+</div>
+</template><template id="tdq-2">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-medium">Medium</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Email to Marcus: answer his Oct 2 question on the Oct 24 low-stock alerts</div>
+  <div class="meta">message_send · drafted by cos-poll · <code>q-1013-fernhill-milestone-2-low-stock-alerts</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=-quick" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=" onclick="showTab('q-1013-fernhill-milestone-2-low-stock-alerts','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=-details" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=" onclick="showTab('q-1013-fernhill-milestone-2-low-stock-alerts','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=-quick" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=">
+    
+    <div class='tm-plan draft-text'>Hi Marcus, thanks for checking in. The low-stock alerts are [on track / status] for the Oct 24 due date. [Progress so far and what is left]. I will send the delivery for your review by [date]. Noted that the Slack failed-order notification is off the list, since your intern is handling it. Thanks, Dana</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=-details" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=">
+    <pre>gmail-freelance.send to Marcus Bell, re &quot;Milestone 2: low-stock alerts&quot;, with text: &quot;Hi Marcus, thanks for checking in. The low-stock alerts are [on track / status] for the Oct 24 due date. [Progress so far and what is left]. I will send the delivery for your review by [date]. Noted that the Slack failed-order notification is off the list, since your intern is handling it. Thanks, Dana&quot;</pre>
+    
+    <div class="meta">Task: Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus. Sources: em-270940, em-825899.</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-fernhill-milestone-2-low-stock-alerts" data-action-type="message_send" data-summary="gmail-freelance.send to Marcus Bell, re &quot;Milestone 2: low-stock alerts&quot;, with text: &quot;Hi Marcus, thanks for checking in. The low-stock alerts are [on track / status] for the Oct 24 due date. [Progress so far and what is left]. I will send the delivery for your review by [date]. Noted that the Slack failed-order notification is off the list, since your intern is handling it. Thanks, D" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-fernhill-milestone-2-low-stock-alerts" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-fernhill-milestone-2-low-stock-alerts" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-fernhill-milestone-2-low-stock-alerts" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-fernhill-milestone-2-low-stock-alerts" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' rows='3' oninput="updateSlackPreview('q-1013-fernhill-milestone-2-low-stock-alerts')">Hi Marcus, thanks for checking in. The low-stock alerts are [on track / status] for the Oct 24 due date. [Progress so far and what is left]. I will send the delivery for your review by [date]. Noted that the Slack failed-order notification is off the list, since your intern is handling it. Thanks, Dana</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-fernhill-milestone-2-low-stock-alerts" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM=' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-fernhill-milestone-2-low-stock-alerts" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0yLWxvdy1zdG9jay1hbGVydHM="></div>
+</div>
+</template><template id="tdq-3">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-medium">Medium</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Email to Marcus: ask him to release the $1,200 Milestone 1 payment</div>
+  <div class="meta">message_send · drafted by cos-poll · <code>q-1013-fernhill-milestone-1-release</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=-quick" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=" onclick="showTab('q-1013-fernhill-milestone-1-release','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=-details" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=" onclick="showTab('q-1013-fernhill-milestone-1-release','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=-quick" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=">
+    
+    <div class='tm-plan draft-text'>Hi Marcus, thanks again for the kind words on the sync. I submitted Milestone 1 (Sync MVP, $1,200) on Aug 20, and Upwork still shows it as not approved or released. Could you approve and release it when you get a chance? If anything in the deliverable needs a change first, let me know and I&#x27;ll sort it out. Thanks, Dana</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=-details" data-entry="cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=">
+    <pre>gmail-freelance.send to Marcus Bell, re &quot;Milestone 1 release: Shopify inventory sync&quot;, with text: &quot;Hi Marcus, thanks again for the kind words on the sync. I submitted Milestone 1 (Sync MVP, $1,200) on Aug 20, and Upwork still shows it as not approved or released. Could you approve and release it when you get a chance? If anything in the deliverable needs a change first, let me know and I&#x27;ll sort it out. Thanks, Dana&quot;</pre>
+    
+    <div class="meta">Task: Milestone 1 ($1,200) payment still unreleased by Fernhill Goods. Sources: em-402082, em-877588.</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-fernhill-milestone-1-release" data-action-type="message_send" data-summary="gmail-freelance.send to Marcus Bell, re &quot;Milestone 1 release: Shopify inventory sync&quot;, with text: &quot;Hi Marcus, thanks again for the kind words on the sync. I submitted Milestone 1 (Sync MVP, $1,200) on Aug 20, and Upwork still shows it as not approved or released. Could you approve and release it when you get a chance? If anything in the deliverable needs a change first, let me know " onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-fernhill-milestone-1-release" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-fernhill-milestone-1-release" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-fernhill-milestone-1-release" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-fernhill-milestone-1-release" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=','`')">Code</button></div><textarea id='editbox-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' rows='3' oninput="updateSlackPreview('q-1013-fernhill-milestone-1-release')">Hi Marcus, thanks again for the kind words on the sync. I submitted Milestone 1 (Sync MVP, $1,200) on Aug 20, and Upwork still shows it as not approved or released. Could you approve and release it when you get a chance? If anything in the deliverable needs a change first, let me know and I&#x27;ll sort it out. Thanks, Dana</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-fernhill-milestone-1-release" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U=' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-fernhill-milestone-1-release" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLWZlcm5oaWxsLW1pbGVzdG9uZS0xLXJlbGVhc2U="></div>
+</div>
+</template><template id="tdq-4">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-medium">Medium</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Reply to Nimbus Ops invite: give start date and rate for React ops dashboard</div>
+  <div class="meta">message_send · drafted by cos-poll · <code>q-1013-nimbus-ops-upwork-invite-reply</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==-quick" data-entry="cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==" onclick="showTab('q-1013-nimbus-ops-upwork-invite-reply','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==-details" data-entry="cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==" onclick="showTab('q-1013-nimbus-ops-upwork-invite-reply','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==-quick" data-entry="cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==">
+    
+    <div class='tm-plan draft-text'>Hi, thank you for the invitation, and I&#x27;m glad the Fernhill work stood out. I could start on [start date]. My rate for this project is [rate]. To scope it properly, could you share [details needed, e.g. current stack, timeline, number of dashboards]? Happy to set up a call at your convenience. Thanks, Dana</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==-details" data-entry="cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==">
+    <pre>gmail-freelance.send to Nimbus Ops, re &quot;React ops dashboard&quot;, with text: &quot;Hi, thank you for the invitation, and I&#x27;m glad the Fernhill work stood out. I could start on [start date]. My rate for this project is [rate]. To scope it properly, could you share [details needed, e.g. current stack, timeline, number of dashboards]? Happy to set up a call at your convenience. Thanks, Dana&quot;</pre>
+    
+    <div class="meta">Task: Reply to Nimbus Ops on Upwork with start date and rate. Sources: em-209864.</div>
+    
+  </div>
+  <div class="actions"><button class="primary" data-id="q-1013-nimbus-ops-upwork-invite-reply" data-action-type="message_send" data-summary="gmail-freelance.send to Nimbus Ops, re &quot;React ops dashboard&quot;, with text: &quot;Hi, thank you for the invitation, and I&#x27;m glad the Fernhill work stood out. I could start on [start date]. My rate for this project is [rate]. To scope it properly, could you share [details needed, e.g. current stack, timeline, number of dashboards]? Happy to set up a call at your convenience. Thanks, Dan" onclick="approve(this)">Approve &amp; create draft</button><button data-id="q-1013-nimbus-ops-upwork-invite-reply" onclick="reject(this)">Reject</button></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-nimbus-ops-upwork-invite-reply" onclick="revise(this)">Revise</button><button class='small' data-id="q-1013-nimbus-ops-upwork-invite-reply" onclick="toggleEdit(this)">Edit</button><button class='small' data-id="q-1013-nimbus-ops-upwork-invite-reply" onclick="toggleDiscuss(this)">💬 Discuss</button></div><div id='edit-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' style='display:none; margin-top:.5rem'><div class='pill-row'><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==','*')"><b>B</b></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==','_')"><i>I</i></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==','~')"><s>S</s></button><button type='button' class='small' onclick="wrapSelection('editbox-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==','`')">Code</button></div><textarea id='editbox-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' rows='3' oninput="updateSlackPreview('q-1013-nimbus-ops-upwork-invite-reply')">Hi, thank you for the invitation, and I&#x27;m glad the Fernhill work stood out. I could start on [start date]. My rate for this project is [rate]. To scope it properly, could you share [details needed, e.g. current stack, timeline, number of dashboards]? Happy to set up a call at your convenience. Thanks, Dana</textarea><div class='slack-preview-label'>Preview — how this looks in Slack:</div><div class='slack-preview' id='preview-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ=='></div><div class='extra-notes-label'>Extra notes (e.g. "attach the Q2 report") — Slack's draft API has no attachment field, so this is saved as a reminder for you to add manually when you open the draft, not attached automatically:</div><textarea id='notes-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' rows='1' placeholder='Optional notes for yourself...'></textarea><button class='primary small' data-id="q-1013-nimbus-ops-upwork-invite-reply" data-action-type="message_send" onclick="saveEdit(this)">Save edit</button></div><div id='discuss-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' class='entry-chat' style='display:none'><div class='chat-log' id='discussLog-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' style='max-height:200px'></div><div class='chat-input-row'><textarea id='discussInput-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ==' rows='1' placeholder='Ask about this entry...'></textarea><button class='small' data-id="q-1013-nimbus-ops-upwork-invite-reply" onclick="sendDiscuss(this)">Send</button></div></div>
+  <div class="result" id="result-cS0xMDEzLW5pbWJ1cy1vcHMtdXB3b3JrLWludml0ZS1yZXBseQ=="></div>
+</div>
+</template></section><section class="graph-section" id="sec-blocked-work"><h3>Blocked Work <span class="sec-count">2</span></h3><ul><li><span class="sec-type">Action</span> Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6) <span class="sec-sub">waiting on Rosa Lin (Lumen Dental)</span> <span title="overdue">🔴</span></li><li><span class="sec-type">Action</span> Milestone 1 ($1,200) payment still unreleased by Fernhill Goods <span class="sec-sub">waiting on Marcus Bell (Fernhill Goods)</span></li></ul></section></div>
+
+
+
+</section>
+
+<section class="view" id="v-meetings" data-title="Meetings" hidden>
+<h2>Recent meeting summaries</h2>
+
+<div class="card">
+  <span class="tag-pill tag-meeting">Meeting</span>
+  <div class="card-title">Architecture review: scheduler v2 (Dana presents)</div>
+  <div class="meta">2026-10-22 14:00 UTC, organized by Ines</div>
+  <pre>Upcoming. Dana is the presenter.
+
+Action items:
+The design doc should go out before the review (on the task list).</pre>
+</div>
+
+<div class="card">
+  <span class="tag-pill tag-meeting">Meeting</span>
+  <div class="card-title">Platform standup (Slack)</div>
+  <div class="meta">2026-10-12 09:30</div>
+  <pre>Alex: on-call follow-ups. Raj: schema cleanup. Mei: triage.
+
+Action items:
+None for Dana from the standup itself. Raj separately needs Dana&#x27;s sign-off on the events schema change by Oct 21 (on the task list).</pre>
+</div>
+
+</section>
+
+<section class="view" id="v-inbox" data-title="Inbox &amp; questions" hidden>
+<h2>New task</h2>
+<p class="view-intro">Hand the agents something to look into. It lands in the inbox and the next poll picks it up.</p>
+<form id="taskForm">
+<textarea name="text" rows="3" placeholder="Describe what you want the agents to look at..."></textarea>
+<button class="primary" type="submit">Add to inbox</button>
+</form>
+<div id="taskResult" class="result"></div>
+<h3>Inbox</h3>
+<div class='inbox-item'>✅ remind me to send Victor the conference budget request <span class='meta'>(2026-10-12T18:02)</span></div>
+<h2>Open questions</h2>
+<pre>Open questions for Dana (asked once, only what the crawl could not infer):
+
+1. The &quot;tinyq&quot; repository on GitHub: is it a personal open-source project, or part of
+   Kestrel work? It is filed under Open source until you say otherwise.
+</pre>
+</section>
+
+<section class="view" id="v-archive" data-title="Archive" hidden>
+<h2>Archive <span class="sec-count">2</span></h2>
+<p class="view-intro">Handled, rejected and resolved items, never deleted. "Clear archive" moves them into
+a separate archive file to keep this page lean; it never touches SHARED_CONTEXT.md, decisions.md,
+projects/ or any agent memory, which keep everything learned from this work.</p>
+
+<div class="card archived-item">
+  <span class="badge approved">approved</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Slack: acknowledge Alex&#x27;s cron question (will confirm by Oct 16)</div>
+  <div class="meta">message_send · <code>q-1012-alex-ack</code></div>
+</div>
+
+<div class="card archived-item">
+  <span class="badge rejected">rejected</span><span class="tag-pill tag-message">Message</span>
+  <div class="card-title">Reply to the optional #general @channel about the offsite poll</div>
+  <div class="meta">message_send · <code>q-1010-offsite-replyall</code></div>
+</div>
+
+<button class="small" onclick="clearArchive()">Clear archive (move to archive file)</button>
+<div id="archiveResult" class="result"></div>
+</section>
+
+<section class="view" id="v-models" data-title="Models" hidden>
+
+<h2>Models</h2>
+<div class="quick-line">Pick which model does which kind of work. Light jobs are frequent and
+simple, deep jobs are rare and hard. Your Claude subscription works with no key; add API keys
+to use Anthropic, OpenAI, Gemini, OpenRouter or a local Ollama model. Keys are stored only on
+this machine (<code>secrets.json</code>, readable by you alone) and sent only to their provider.</div>
+<div class="pill-row" style="margin:.4rem 0">
+  <button class="small" onclick="mdlPreset('subscription')">Preset: Claude subscription (Haiku / Sonnet / Opus)</button>
+  <button class="small" onclick="mdlPreset('anthropic-api')">Preset: Anthropic API</button>
+</div>
+<div class="mdl-box">
+<div class="mdl-row" data-tier="light">
+  <div class="mdl-tier"><b>Light</b><div class="meta">quick chat replies, task chat, account checks</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-light" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-light"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div>
+<div class="mdl-row" data-tier="standard">
+  <div class="mdl-tier"><b>Standard</b><div class="meta">drafts, revisions, the regular polls</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-standard" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-standard"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div>
+<div class="mdl-row" data-tier="deep">
+  <div class="mdl-tier"><b>Deep</b><div class="meta">the first full research crawl, learning from your corrections</div></div>
+  <select class="mdl-prov" onchange="mdlProvChanged(this)"><option value="claude-code" selected>Claude subscription (Claude Code)</option><option value="anthropic">Anthropic API</option><option value="openai">OpenAI API</option><option value="gemini">Google Gemini API</option><option value="openrouter">OpenRouter (one key, many models)</option><option value="ollama">Ollama (local, free)</option></select>
+  <input class="mdl-model" list="mdl-list-deep" value=""
+         placeholder="default model" />
+  <datalist id="mdl-list-deep"></datalist>
+  <select class="mdl-effort" title="How hard the model thinks on Claude Code; lower is cheaper and faster"><option value="" selected>Effort: default</option><option value="low">Effort: low</option><option value="medium">Effort: medium</option><option value="high">Effort: high</option></select>
+  <button class="small" onclick="mdlList(this)">List models</button>
+  <button class="small" onclick="mdlTest(this)">Test</button>
+  <span class="mdl-result meta"></span>
+  
+</div></div>
+<button class="primary small" onclick="mdlSave()">Save models</button>
+<span id="mdlSaveResult" class="meta"></span>
+<details class="mdl-keys"><summary>API keys</summary>
+<div class="mdl-key" data-provider="anthropic">
+  <span class="mdl-key-name">Anthropic API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="openai">
+  <span class="mdl-key-name">OpenAI API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="gemini">
+  <span class="mdl-key-name">Google Gemini API</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div>
+<div class="mdl-key" data-provider="openrouter">
+  <span class="mdl-key-name">OpenRouter (one key, many models)</span>
+  <input type="password" class="mdl-key-input" placeholder="paste key" autocomplete="off" />
+  <button class="small" onclick="mdlSaveKey(this)">Save</button>
+  <span class="meta">not set</span>
+</div></details>
+<div class="meta">From our evals: a small model on the first crawl or the weekly polls missed
+tasks the default model caught (evals/results/longrun/REPORT.md), so keep Deep and Standard on
+a strong model.</div>
+<script>
+const MDL_PRESETS = {"subscription": {"light": {"provider": "claude-code", "model": "haiku"}, "standard": {"provider": "claude-code", "model": "sonnet"}, "deep": {"provider": "claude-code", "model": "opus"}}, "anthropic-api": {"light": {"provider": "anthropic", "model": "claude-haiku-5-5"}, "standard": {"provider": "anthropic", "model": "claude-sonnet-5-5"}, "deep": {"provider": "anthropic", "model": "claude-opus-5-5"}}};
+function mdlTiers() {
+  const out = {};
+  document.querySelectorAll(".mdl-row").forEach(r => {
+    out[r.dataset.tier] = {provider: r.querySelector(".mdl-prov").value,
+                           model: r.querySelector(".mdl-model").value.trim(),
+                           effort: r.querySelector(".mdl-effort").value};
+  });
+  return out;
+}
+function mdlProvChanged(sel) { sel.closest(".mdl-row").querySelector(".mdl-model").value = ""; }
+function mdlPreset(name) {
+  const p = MDL_PRESETS[name];
+  document.querySelectorAll(".mdl-row").forEach(r => {
+    const t = p[r.dataset.tier]; if (!t) return;
+    r.querySelector(".mdl-prov").value = t.provider;
+    r.querySelector(".mdl-model").value = t.model;
+  });
+  document.getElementById("mdlSaveResult").textContent = "Preset filled in. Save to keep it.";
+}
+async function mdlSave() {
+  const r = await post("/models-save", {tiers: mdlTiers()});
+  document.getElementById("mdlSaveResult").textContent = r.message;
+}
+async function mdlList(btn) {
+  const row = btn.closest(".mdl-row"), res = row.querySelector(".mdl-result");
+  res.textContent = "asking the provider...";
+  const r = await post("/models-list", {provider: row.querySelector(".mdl-prov").value});
+  const dl = row.querySelector("datalist"); dl.innerHTML = "";
+  (r.models || []).forEach(m => { const o = document.createElement("option"); o.value = m; dl.appendChild(o); });
+  res.textContent = r.models ? (r.models.length + " models available: click the box to pick one") : r.message;
+}
+async function mdlTest(btn) {
+  const row = btn.closest(".mdl-row"), res = row.querySelector(".mdl-result");
+  res.textContent = "testing...";
+  const r = await post("/models-test", {provider: row.querySelector(".mdl-prov").value,
+                                         model: row.querySelector(".mdl-model").value.trim()});
+  res.textContent = r.message;
+}
+async function mdlSaveKey(btn) {
+  const row = btn.closest(".mdl-key"), inp = row.querySelector("input");
+  const r = await post("/models-key", {provider: row.dataset.provider, key: inp.value});
+  inp.value = "";
+  row.querySelector(".meta").textContent = r.message;
+}
+</script>
+</section>
+
+<section class="view" id="v-usage" data-title="Usage" hidden>
+
+<h2>Usage</h2>
+<p class="view-intro">What the model calls cost, from each call's own report. Every call sends only the
+tools its job may use and has a spending ceiling of its own; quiet connectors are checked less often.
+On a Claude subscription these are what the calls would cost on the API, a measure of how much of
+your plan they use.</p>
+<div class="stats">
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">today</div></div>
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">last 7 days</div></div>
+  <div class="stat"><div class="stat-num">$0.00</div><div class="stat-label">last 30 days</div></div>
+  <div class="stat"><div class="stat-num">0</div><div class="stat-label">calls in 30 days</div></div>
+</div>
+<h3>Daily budget</h3>
+<div class="quick-line">When today's spend reaches it, scheduled polls and new model jobs wait until
+tomorrow. Actions you approve still go through. Now: no daily budget set.</div>
+<div class="actions"><input id="budgetInput" type="number" min="0" step="0.5" placeholder="e.g. 5" value="" style="width:120px" />
+<button class="small primary" onclick="saveBudget()">Save budget</button>
+<button class="small" onclick="document.getElementById('budgetInput').value=''; saveBudget()">No budget</button>
+<span id="budgetResult" class="meta"></span></div>
+<h3>By job, last 30 days</h3>
+<div class='empty'>No model calls recorded yet.</div>
+<div class="meta"></div>
+<script>
+async function saveBudget() {
+  const v = document.getElementById("budgetInput").value;
+  const r = await post("/usage-budget", {daily_usd: v ? parseFloat(v) : null});
+  document.getElementById("budgetResult").textContent = r.message;
+}
+</script>
+</section>
+
+<section class="view" id="v-accounts" data-title="Accounts" hidden>
+<h2>Accounts &amp; connections <button class="small" onclick="probeAccounts()">Check now</button> <button class="small" onclick="connectAccount()">➕ Connect an account</button></h2><div id="connectForm" style="display:none;margin:.4rem 0"><div class="quick-line">First account of a service: connect it in <a href="https://claude.ai/settings/connectors" target="_blank">Claude's connector settings</a>, then hit <strong>Check now</strong>. <strong>Second Gmail account?</strong> The built-in connector only holds one Google login, so extra mailboxes get their own local, read-only server — name it and start below; the dashboard automates every step it can and tells you the moments it needs you.</div><input id="mbName" placeholder="short name, e.g. asu" style="max-width:12rem"> <button class="small" onclick="startMailbox()">Start</button><div id="connectStatus" class="result"></div></div><script>function connectAccount(){const f=document.getElementById('connectForm');f.style.display=f.style.display==='none'?'block':'none';}async function startMailbox(){const name=document.getElementById('mbName').value.trim();const out=document.getElementById('connectStatus');if(!name){out.textContent='give it a short name, e.g. asu';return;}out.textContent='working...';const st=await post('/add-mailbox',{name:name});renderMailboxStep(st,name);}function renderMailboxStep(st,name){const out=document.getElementById('connectStatus');if(st.step==='needs_keys'){out.innerHTML="<strong>One-time setup (once per computer, then never again):</strong><ol>"+"<li><a href='https://console.cloud.google.com/apis/credentials' target='_blank'>Open Google Cloud Console → Credentials</a></li>"+"<li>Enable the <a href='https://console.cloud.google.com/apis/library/gmail.googleapis.com' target='_blank'>Gmail API</a> for the project</li>"+"<li>Create Credentials → OAuth client ID → type <em>Desktop app</em></li>"+"<li>Download the JSON and save it as <code>"+st.keys_path+"</code></li></ol>"+"<button class='small' onclick='startMailbox()'>I saved the key file — continue</button>";}else if(st.step==='auth_started'){out.textContent=st.message+' — waiting for the sign-in to finish...';pollMailbox(name);}else if(st.step==='connected'){out.textContent=st.message;setTimeout(()=>demoReload(),4000);}else{out.textContent=st.message||'error';}}async function pollMailbox(name){for(let i=0;i<100;i++){await new Promise(r=>setTimeout(r,3000));try{const r=await fetch('/mailbox-status?name='+encodeURIComponent(name),{cache:'no-store'});const st=await r.json();if(st.authorized){const done=await post('/add-mailbox',{name:name});renderMailboxStep(done,name);return;}}catch(e){}}}</script><div class="quick-line" style="margin-bottom:.4rem">no connector accounts configured</div><div id="accountsResult" class="result"></div><div class="quick-line">No connector accounts configured yet. A second account of the same service (e.g. another Gmail) works two ways: custom/remote connectors can be added again as a separate named instance in Claude's connector settings, but first-party connectors (Gmail, Calendar, Drive) allow one Google account each — cover a second mailbox by auto-forwarding it into the connected one, or add a local MCP server for it (<code>claude mcp add</code>). /cos-accounts (or Check now) then detects new instances, probes who each is logged in as, and binds them to workspaces automatically.</div><script>async function probeAccounts(){document.getElementById('accountsResult').textContent='probing...';const r=await post('/probe-accounts',{});document.getElementById('accountsResult').textContent=r.message;setTimeout(()=>demoReload(),2500);}</script>
+</section>
+
+<section class="view" id="v-polling" data-title="Polling" hidden>
+<h2>Autonomous polling</h2>
+<p class="view-intro">A free 60-second tick checks whether any connector below is due before spending
+anything, so most ticks cost nothing. Each connector has its own interval and active window; outside
+its window it skips.</p>
+
+<div class="card">
+  <div class="card-title">Slack (fast check)</div>
+  <form id="scheduleForm-slack" class="scheduleForm" data-connector="slack">
+    <div class="pill-row"><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','mon')">Mon</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','tue')">Tue</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','wed')">Wed</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','thu')">Thu</span><span class="day-pill on" data-connector="slack" onclick="toggleDay(this,'slack','fri')">Fri</span><span class="day-pill" data-connector="slack" onclick="toggleDay(this,'slack','sat')">Sat</span><span class="day-pill" data-connector="slack" onclick="toggleDay(this,'slack','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('slack')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-slack" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Gmail (fast check)</div>
+  <form id="scheduleForm-gmail" class="scheduleForm" data-connector="gmail">
+    <div class="pill-row"><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','mon')">Mon</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','tue')">Tue</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','wed')">Wed</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','thu')">Thu</span><span class="day-pill on" data-connector="gmail" onclick="toggleDay(this,'gmail','fri')">Fri</span><span class="day-pill" data-connector="gmail" onclick="toggleDay(this,'gmail','sat')">Sat</span><span class="day-pill" data-connector="gmail" onclick="toggleDay(this,'gmail','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('gmail')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-gmail" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Jira (fast check)</div>
+  <form id="scheduleForm-jira" class="scheduleForm" data-connector="jira">
+    <div class="pill-row"><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','mon')">Mon</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','tue')">Tue</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','wed')">Wed</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','thu')">Thu</span><span class="day-pill on" data-connector="jira" onclick="toggleDay(this,'jira','fri')">Fri</span><span class="day-pill" data-connector="jira" onclick="toggleDay(this,'jira','sat')">Sat</span><span class="day-pill" data-connector="jira" onclick="toggleDay(this,'jira','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('jira')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-jira" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Calendar (fast check)</div>
+  <form id="scheduleForm-calendar" class="scheduleForm" data-connector="calendar">
+    <div class="pill-row"><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','mon')">Mon</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','tue')">Tue</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','wed')">Wed</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','thu')">Thu</span><span class="day-pill on" data-connector="calendar" onclick="toggleDay(this,'calendar','fri')">Fri</span><span class="day-pill" data-connector="calendar" onclick="toggleDay(this,'calendar','sat')">Sat</span><span class="day-pill" data-connector="calendar" onclick="toggleDay(this,'calendar','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('calendar')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-calendar" class="result"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">General (deep sweep + meeting detection)</div>
+  <form id="scheduleForm-general" class="scheduleForm" data-connector="general">
+    <div class="pill-row"><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','mon')">Mon</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','tue')">Tue</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','wed')">Wed</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','thu')">Thu</span><span class="day-pill on" data-connector="general" onclick="toggleDay(this,'general','fri')">Fri</span><span class="day-pill" data-connector="general" onclick="toggleDay(this,'general','sat')">Sat</span><span class="day-pill" data-connector="general" onclick="toggleDay(this,'general','sun')">Sun</span></div>
+    Every <input type="text" name="interval" value="15" style="width:3.5rem"> min,
+    from <input type="time" name="start" value="07:00"> to
+    <input type="time" name="end" value="19:00">
+    &nbsp;<button class="small" type="submit">Save</button>
+    &nbsp;<button class="small" type="button" onclick="set247('general')">Switch to 24/7</button>
+  </form>
+  <div id="scheduleResult-general" class="result"></div>
+</div>
+
+</section>
+
+<section class="view" id="v-learning" data-title="Learning" hidden>
+
+<h2>Self-learning</h2>
+<div class="quick-line" style="margin-bottom:.6rem">When you tell the chat something was missed
+or wrong, the system fetches it, reasons about <em>why</em> it was missed, fixes the cause
+(config, instructions, or its own code — gated by its test suite with automatic rollback), and
+records the lesson. It never touches anything external; approval gating is untouchable.</div>
+<div class="quick-line">
+  <label><input type="checkbox" id="slMaster" checked
+    onchange="setSelfLearning()"> Auto self-learning mode</label>
+  &nbsp;&nbsp;
+  <label><input type="checkbox" id="slCode"  
+    onchange="setSelfLearning()"> May fix its own code (otherwise drafts fixes as tasks)</label>
+  <span class="meta"></span>
+</div>
+<div id="slResult" class="result"></div>
+<script>
+async function setSelfLearning() {
+  const master = document.getElementById("slMaster").checked;
+  const code = document.getElementById("slCode").checked;
+  document.getElementById("slCode").disabled = !master;
+  const res = await post("/set-self-learning", {self_learning: master, self_modify_code: code});
+  document.getElementById("slResult").textContent = res.message || "";
+}
+</script>
+
+<div class="quick-line" style="margin-top:.5rem"><strong>Recently learned:</strong><ul><li><strong>&#x27;Benchmark numbers&#x27; and &#x27;latency numbers for the review&#x27; are the same task.</strong> → one piece of work listed twice → <em>Instructions: one piece of work is one task however many places word it differently; merge and cite every source.</em> ✓</li><li><strong>The Corvid final-round slot pick shows as low. Interviews are not personal erran</strong> → job-search read as personal for priority → <em>Instructions: job-search work is not &#x27;personal&#x27; for the low-priority rule.</em> ✓</li><li><strong>Mei said &#x27;on it&#x27; about the dashboard migration last week, why is it still on my </strong> → accepted hand-off kept as delegated → <em>Instructions: when the person a task is handed to accepts (&#x27;on it&#x27;), it leaves your list instead of staying as &#x27;delegate</em> ✓</li></ul></div>
+</section>
+
+</div><aside class="side-panel"><h3>Today</h3><div class="today-brief"><div class="tb-line tb-overdue"><strong>1 overdue:</strong> Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)</div><div class="tb-line"><strong>Next up:</strong> Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped) · Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus · Milestone 1 ($1,200) payment still unreleased by Fernhill Goods</div></div><div class="cal-box"><div class="cal-head">October 2026</div><table class="cal"><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr><tr><td class="cal-out" title="">27</td><td class="cal-out" title="">28</td><td class="cal-out cal-marked" title="⏰ Collect INV-0042 ($2,400) from Lumen Den">29<span class='cal-dot'>•</span></td><td class="cal-out" title="">30</td><td class="" title="">1</td><td class="" title="">2</td><td class="" title="">3</td></tr><tr><td class="" title="">4</td><td class="" title="">5</td><td class="" title="">6</td><td class="" title="">7</td><td class="" title="">8</td><td class="" title="">9</td><td class="" title="">10</td></tr><tr><td class="" title="">11</td><td class="" title="">12</td><td class="cal-today" title="">13</td><td class="" title="">14</td><td class="cal-marked" title="⏰ Deliver the API security audit report to">15<span class='cal-dot'>•</span></td><td class="" title="">16</td><td class="" title="">17</td></tr><tr><td class="" title="">18</td><td class="" title="">19</td><td class="" title="">20</td><td class="" title="">21</td><td class="" title="">22</td><td class="" title="">23</td><td class="cal-marked" title="⏰ Deliver Milestone 2 low-stock alerts for">24<span class='cal-dot'>•</span></td></tr><tr><td class="" title="">25</td><td class="" title="">26</td><td class="" title="">27</td><td class="" title="">28</td><td class="" title="">29</td><td class="" title="">30</td><td class="" title="">31</td></tr></table></div></aside></div>
+</div>
+
+<div id="chatBubble" class="chat-bubble" onclick="toggleChat()" title="Chat" aria-label="Chat"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" fill="#fff"/></svg></div>
+<div id="chatPanel" class="chat-box chat-panel-hidden">
+  <div class="chat-panel-header">Chat <span class="chat-close" onclick="toggleChat()">✕</span></div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-input-row">
+    <textarea id="chatInput" rows="2" placeholder="Just off a call, or want to plan something out loud? Type here..."></textarea>
+    <button class="primary" onclick="sendChat()">Send</button>
+  </div>
+  <div class="result" id="chatResult"></div>
+</div>
+
+<div class="palette" id="palette" hidden onclick="if (event.target === this) paletteClose()">
+  <div class="palette-box" role="dialog" aria-label="Jump to">
+    <input id="paletteInput" class="palette-input" placeholder="Jump to a task or a view…" autocomplete="off" />
+    <div class="palette-list" id="paletteList"></div>
+    <div class="palette-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> choose</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</div>
+
+
+
+
+<div id="contextModal" class="auth-overlay" style="display:none">
+  <div class="auth-box" style="max-width:520px">
+    <h3>📋 Give me some context?</h3>
+    <p class="auth-reason">Before I research your accounts and build your agents, you can give
+    me a head start: paste anything (who you are, what you work on, current projects) or attach
+    files — <strong>.md, .txt, .pdf, .docx</strong> (resume, project doc, team notes). This
+    seeds the knowledge graph as your own highest-confidence facts. Totally optional — skip and
+    I'll figure things out from your connectors instead.</p>
+    <textarea id="ctxText" rows="5" style="width:100%" placeholder="Paste context here — e.g. 'I'm a systems engineer at Acme working on contact-center routing; side project: an iOS app; also job hunting for staff roles.'"></textarea>
+    <input type="file" id="ctxFiles" accept=".md,.txt,.pdf,.docx" multiple style="margin-top:.5rem">
+    <div class="auth-buttons">
+      <button class="primary" onclick="ctxSave()">Save context</button>
+      <button class="small" onclick="ctxSkip()">Close</button>
+    </div>
+    <div id="ctxResult" class="result"></div>
+  </div>
+</div>
+<script>
+function ctxOpen() { document.getElementById("contextModal").style.display = "flex"; }
+async function ctxSkip() {
+  
+  document.getElementById("contextModal").style.display = "none";
+}
+function _readB64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",", 2)[1] || "");
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+async function ctxSave() {
+  const out = document.getElementById("ctxResult");
+  const text = document.getElementById("ctxText").value.trim();
+  const files = document.getElementById("ctxFiles").files;
+  if (!text && !files.length) { out.textContent = "nothing to save — paste text or pick a file"; return; }
+  let msgs = [];
+  if (text) {
+    const r = await post("/context-text", {text: text});
+    msgs.push(r.message);
+  }
+  for (const f of files) {
+    const b64 = await _readB64(f);
+    const r = await post("/context-file", {filename: f.name, data_b64: b64});
+    msgs.push(r.message);
+  }
+  out.textContent = msgs.join(" · ");
+  document.getElementById("ctxText").value = "";
+  setTimeout(() => { document.getElementById("contextModal").style.display = "none"; }, 1800);
+}
+</script>
+
+
+<script>
+const VIEWS = ["today", "meetings", "inbox", "archive", "models", "usage", "accounts", "polling", "learning"];
+function showView(name) {
+  if (!VIEWS.includes(name)) name = "today";
+  document.querySelectorAll(".view").forEach(v => { v.hidden = v.id !== "v-" + name; });
+  document.querySelectorAll(".nav-link").forEach(a => a.classList.toggle("active", a.dataset.view === name));
+  const v = document.getElementById("v-" + name);
+  document.getElementById("viewTitle").textContent = v ? v.dataset.title.replace("&amp;", "&") : "";
+}
+window.addEventListener("hashchange", () => showView(location.hash.slice(1)));
+document.addEventListener("DOMContentLoaded", () => {
+  showView(location.hash.slice(1));
+  // the workspace filter lives in the top bar, so it works from every view
+  const ws = document.querySelector(".graph-command-center .ws-switcher");
+  if (ws) {
+    document.getElementById("wsSlot").appendChild(ws);
+    ws.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { a.href = a.getAttribute("href").split("#")[0] + location.hash; }));
+  }
+});
+
+// ---- jump palette (⌘K / Ctrl+K / "/") ----
+let _palItems = [], _palIdx = 0;
+function palSource() {
+  const out = [];
+  document.querySelectorAll(".nav-link").forEach(a => out.push({kind: "View", text: a.childNodes[0].textContent.trim(),
+    when: "", run: () => { location.hash = a.dataset.view; } }));
+  [["light", "Light theme"], ["dark", "Dark theme"], ["auto", "Auto theme (follow system)"]].forEach(([m, t]) =>
+    out.push({kind: "View", text: t, when: themeMode() === m ? "on" : "", run: () => setTheme(m)}));
+  document.querySelectorAll(".todo-row").forEach(r => out.push({kind: "Tasks", text: r.dataset.title,
+    when: (r.querySelector(".todo-when") || {}).textContent || "", hint: r.dataset.ws,
+    run: () => { location.hash = "today"; showView("today"); todoOpen(r); r.scrollIntoView({block: "nearest"}); } }));
+  return out;
+}
+function palRender() {
+  const q = document.getElementById("paletteInput").value.trim().toLowerCase();
+  const all = palSource();
+  _palItems = (q ? all.filter(i => i.text.toLowerCase().includes(q)) : all.filter(i => i.kind === "View").concat(all.filter(i => i.kind === "Tasks").slice(0, 8))).slice(0, 40);
+  _palIdx = Math.min(_palIdx, Math.max(0, _palItems.length - 1));
+  const list = document.getElementById("paletteList");
+  list.innerHTML = "";
+  if (!_palItems.length) { list.innerHTML = "<div class='palette-empty'>Nothing matches.</div>"; return; }
+  let group = "";
+  _palItems.forEach((it, i) => {
+    if (it.kind !== group) { group = it.kind; const g = document.createElement("div"); g.className = "palette-group"; g.textContent = group === "View" ? "Views" : "Tasks"; list.appendChild(g); }
+    const el = document.createElement("div");
+    el.className = "palette-item" + (i === _palIdx ? " active" : "");
+    const w = document.createElement("span"); w.className = "pi-when"; w.textContent = it.when;
+    const tx = document.createElement("span"); tx.className = "pi-text"; tx.textContent = it.text;
+    const h = document.createElement("span"); h.className = "pi-hint"; h.textContent = it.hint || "";
+    el.append(w, tx, h);
+    el.onmouseenter = () => { _palIdx = i; palHighlight(); };
+    el.onclick = () => palRun(i);
+    list.appendChild(el);
+  });
+}
+function palHighlight() {
+  document.querySelectorAll(".palette-item").forEach((el, i) => el.classList.toggle("active", i === _palIdx));
+  const a = document.querySelector(".palette-item.active"); if (a) a.scrollIntoView({block: "nearest"});
+}
+function palRun(i) { const it = _palItems[i]; paletteClose(); if (it) it.run(); }
+function paletteOpen() {
+  const p = document.getElementById("palette"); p.hidden = false; _palIdx = 0;
+  const inp = document.getElementById("paletteInput"); inp.value = ""; palRender(); inp.focus();
+}
+function paletteClose() { document.getElementById("palette").hidden = true; document.getElementById("paletteInput").blur(); }
+document.addEventListener("DOMContentLoaded", () => {
+  const inp = document.getElementById("paletteInput");
+  inp.addEventListener("input", () => { _palIdx = 0; palRender(); });
+  inp.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") { _palIdx = Math.min(_palIdx + 1, _palItems.length - 1); palHighlight(); e.preventDefault(); }
+    else if (e.key === "ArrowUp") { _palIdx = Math.max(_palIdx - 1, 0); palHighlight(); e.preventDefault(); }
+    else if (e.key === "Enter") { palRun(_palIdx); e.preventDefault(); }
+    else if (e.key === "Escape") { paletteClose(); }
+  });
+});
+
+// ---- keyboard: J/K through tasks, G then a letter for views ----
+let _gPending = false;
+document.addEventListener("keydown", e => {
+  const typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target || {}).tagName || "") || (e.target && e.target.isContentEditable);
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); paletteOpen(); return; }
+  if (typing || e.metaKey || e.ctrlKey || e.altKey || !document.getElementById("palette").hidden) return;
+  if (e.key === "/") { e.preventDefault(); paletteOpen(); return; }
+  if (e.key === "D" && e.shiftKey) { e.preventDefault(); toggleTheme(); return; }
+  if (_gPending) {
+    _gPending = false;
+    const map = {t: "today", m: "meetings", i: "inbox", a: "archive", s: "models", u: "usage", p: "polling", l: "learning", c: "accounts"};
+    if (map[e.key.toLowerCase()]) { location.hash = map[e.key.toLowerCase()]; e.preventDefault(); }
+    return;
+  }
+  if (e.key.toLowerCase() === "g") { _gPending = true; setTimeout(() => { _gPending = false; }, 1200); return; }
+  if (e.key === "j" || e.key === "k") {
+    const rows = [...document.querySelectorAll("#v-today:not([hidden]) .todo-row:not([hidden])")];
+    if (!rows.length) return;
+    const cur = rows.findIndex(r => r.classList.contains("todo-selected"));
+    const next = rows[Math.max(0, Math.min(rows.length - 1, cur + (e.key === "j" ? 1 : -1)))];
+    todoOpen(next); next.scrollIntoView({block: "nearest"}); e.preventDefault();
+  }
+});
+// ---- theme: light, dark, or auto (follow the system) ----
+function themeMode() { return document.documentElement.dataset.theme || "auto"; }
+function themeShown() {
+  const m = themeMode();
+  if (m !== "auto") return m;
+  return window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+function setTheme(mode) {
+  const root = document.documentElement;
+  if (mode === "light" || mode === "dark") root.dataset.theme = mode; else { delete root.dataset.theme; mode = "auto"; }
+  try { localStorage.setItem("cos-theme", mode); } catch (e) {}
+  document.querySelectorAll("[data-theme-set]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.themeSet === mode)));
+}
+function toggleTheme() { setTheme(themeShown() === "dark" ? "light" : "dark"); }
+setTheme(themeMode());
+</script>
+<script>
+async function post(url, body) {
+  const r = await fetch(url, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(body)});
+  return r.json();
+}
+function showTab(entryId, tab) {
+  const b64 = btoa(entryId);
+  document.querySelectorAll(`[data-entry="${b64}"].tab-panel`).forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(`[data-entry="${b64}"].tab-btn`).forEach(el => el.classList.remove("active"));
+  document.getElementById("panel-" + b64 + "-" + tab).classList.add("active");
+  document.getElementById("btn-" + b64 + "-" + tab).classList.add("active");
+}
+document.getElementById("taskForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const text = e.target.text.value.trim();
+  if (!text) return;
+  const res = await post("/add-task", {text});
+  document.getElementById("taskResult").textContent = res.message || "added";
+  setTimeout(() => demoReload(), 600);
+});
+async function approve(btn) {
+  const id = btn.dataset.id, actionType = btn.dataset.actionType, summary = btn.dataset.summary;
+  if (!confirm("Really execute this now?\n\n" + summary)) return;
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Running... (can take a minute or two)";
+  const res = await post("/approve", {id: id, action_type: actionType});
+  el.textContent = res.message;
+  if (res.success) setTimeout(() => demoReload(), 1200);
+}
+async function reject(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Reject this item? (bookkeeping only, nothing was sent)")) return;
+  await post("/reject", {id: id});
+  demoReload();
+}
+async function markHandled(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Mark this as handled by you already?")) return;
+  await post("/mark-handled", {id: id});
+  demoReload();
+}
+async function revise(btn) {
+  const id = btn.dataset.id;
+  const feedback = document.getElementById("feedback-" + btoa(id)).value.trim();
+  if (!feedback) return;
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Revising...";
+  const res = await post("/revise", {id: id, feedback: feedback});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1200);
+}
+function toggleEdit(btn) {
+  const box = document.getElementById("edit-" + btoa(btn.dataset.id));
+  box.style.display = box.style.display === "none" ? "block" : "none";
+  if (box.style.display === "block") updateSlackPreview(btn.dataset.id);
+}
+function wrapSelection(textareaId, marker) {
+  const ta = document.getElementById(textareaId);
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.slice(start, end);
+  ta.value = ta.value.slice(0, start) + marker + selected + marker + ta.value.slice(end);
+  ta.focus();
+  ta.dispatchEvent(new Event("input"));
+}
+function renderSlackMrkdwn(text) {
+  const esc = document.createElement("div");
+  esc.textContent = text;
+  let html = esc.innerHTML;
+  html = html.replace(/\*([^*\n]+)\*/g, "<b>$1</b>");
+  html = html.replace(/_([^_\n]+)_/g, "<i>$1</i>");
+  html = html.replace(/~([^~\n]+)~/g, "<s>$1</s>");
+  html = html.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+  html = html.replace(/\n/g, "<br>");
+  return html;
+}
+function updateSlackPreview(id) {
+  const ta = document.getElementById("editbox-" + btoa(id));
+  const preview = document.getElementById("preview-" + btoa(id));
+  if (ta && preview) preview.innerHTML = renderSlackMrkdwn(ta.value) || "<span class='meta'>(empty)</span>";
+}
+async function saveEdit(btn) {
+  const id = btn.dataset.id, actionType = btn.dataset.actionType;
+  const text = document.getElementById("editbox-" + btoa(id)).value;
+  const notes = document.getElementById("notes-" + btoa(id)).value.trim();
+  const el = document.getElementById("result-" + btoa(id));
+  el.textContent = "Saving...";
+  const res = await post("/save-edit", {id: id, action_type: actionType, text: text, notes: notes});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1000);
+}
+function toggleDiscuss(btn) {
+  const box = document.getElementById("discuss-" + btoa(btn.dataset.id));
+  box.style.display = box.style.display === "none" ? "block" : "none";
+}
+async function sendDiscuss(btn) {
+  const id = btn.dataset.id;
+  const b64 = btoa(id);
+  const input = document.getElementById("discussInput-" + b64);
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  const log = document.getElementById("discussLog-" + b64);
+  log.innerHTML += `<div class="chat-msg chat-you"><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = text;
+  const res = await post("/entry-chat", {id: id, message: text});
+  log.innerHTML += `<div class="chat-msg chat-assistant"><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = res.message || "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+async function pollNow() {
+  const el = document.getElementById("pollResult");
+  el.textContent = "Polling now — this can take a minute or two...";
+  const res = await post("/poll-now", {});
+  el.textContent = res.message;
+  setTimeout(() => demoReload(), 1500);
+}
+let selectedDaysByConnector = {};
+for (const [k, v] of Object.entries({"slack": ["mon", "tue", "wed", "thu", "fri"], "gmail": ["mon", "tue", "wed", "thu", "fri"], "jira": ["mon", "tue", "wed", "thu", "fri"], "calendar": ["mon", "tue", "wed", "thu", "fri"], "general": ["mon", "tue", "wed", "thu", "fri"]})) {
+  selectedDaysByConnector[k] = new Set(v);
+}
+function toggleDay(el, connector, day) {
+  const s = selectedDaysByConnector[connector];
+  if (s.has(day)) { s.delete(day); el.classList.remove("on"); }
+  else { s.add(day); el.classList.add("on"); }
+}
+function set247(connector) {
+  selectedDaysByConnector[connector] = new Set(["mon","tue","wed","thu","fri","sat","sun"]);
+  document.querySelectorAll(`.day-pill[data-connector="${connector}"]`).forEach(el => el.classList.add("on"));
+  const form = document.getElementById("scheduleForm-" + connector);
+  form.start.value = "00:00"; form.end.value = "23:59";
+}
+document.querySelectorAll("form.scheduleForm").forEach(form => {
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const connector = form.dataset.connector;
+    const res = await post("/set-poll-mode", {
+      connector: connector,
+      interval_min: parseInt(form.interval.value, 10) || 15,
+      days: Array.from(selectedDaysByConnector[connector]),
+      start: form.start.value, end: form.end.value
+    });
+    document.getElementById("scheduleResult-" + connector).textContent = res.message;
+    setTimeout(() => demoReload(), 800);
+  });
+});
+async function copyText(btn) {
+  await navigator.clipboard.writeText(btn.dataset.copy);
+  const original = btn.textContent;
+  btn.textContent = "Copied!";
+  setTimeout(() => { btn.textContent = original; }, 1500);
+}
+async function retryFailed(btn) {
+  const id = btn.dataset.id;
+  if (!confirm("Reset this to pending so you can approve it again?")) return;
+  await post("/retry-failed", {id: id});
+  demoReload();
+}
+function toggleArchive() {
+  const sec = document.getElementById("archiveSection");
+  const arrow = document.getElementById("archiveToggle");
+  const hidden = sec.style.display === "none";
+  sec.style.display = hidden ? "block" : "none";
+  arrow.textContent = hidden ? "▾" : "▸";
+}
+async function clearArchive() {
+  if (!confirm("Move all archived items to approval-queue-archive.md? Nothing is deleted, and SHARED_CONTEXT/decisions/memory files are never touched.")) return;
+  const res = await post("/clear-archive", {});
+  document.getElementById("archiveResult").textContent = res.message;
+  setTimeout(() => demoReload(), 1000);
+}
+function toggleChat() {
+  const panel = document.getElementById("chatPanel");
+  const bubble = document.getElementById("chatBubble");
+  const hidden = panel.classList.contains("chat-panel-hidden");
+  panel.classList.toggle("chat-panel-hidden");
+  bubble.style.display = hidden ? "none" : "flex";
+  if (hidden) document.getElementById("chatInput").focus();
+}
+async function sendChat() {
+  const box = document.getElementById("chatInput");
+  const text = box.value.trim();
+  if (!text) return;
+  box.value = "";
+  const log = document.getElementById("chatLog");
+  log.innerHTML += `<div class="chat-msg chat-you"><div class="chat-role">You</div><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = text;
+  log.scrollTop = log.scrollHeight;
+  document.getElementById("chatResult").textContent = "Thinking... (can take a minute or two)";
+  const res = await post("/chat", {message: text});
+  document.getElementById("chatResult").textContent = "";
+  log.innerHTML += `<div class="chat-msg chat-assistant"><div class="chat-role">Assistant</div><div class="chat-body"></div></div>`;
+  log.lastElementChild.querySelector(".chat-body").textContent = res.message || "(no response)";
+  log.scrollTop = log.scrollHeight;
+}
+document.getElementById("chatInput")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendChat(); }
+});
+
+</script>
+</body></html>

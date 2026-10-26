@@ -26,23 +26,25 @@ os.environ.setdefault("COS_FIXED_NOW", "2026-10-13T16:00:00Z")
 import run      # noqa: E402
 import graph    # noqa: E402
 
-GRAPH = os.path.join(ROOT, "evals", "results", "longrun", "lrr-v3", "graph", "c1")
-WORLD = os.path.join(ROOT, "evals", "longrun", "world_realistic")
+GRAPH = os.path.join(ROOT, "evals", "results", "longrun", "lrf-v3", "graph", "c1")
+WORLD = os.path.join(ROOT, "evals", "longrun", "world_full")
 OUT = os.path.join(HERE, "next_steps.json")
 TODAY = "2026-10-13"
 BATCH = 9
 
 RULES = """You are the drafting step of a chief-of-staff assistant for Dana Kowalski
-(dana.k@kestrel.example at work; dana.kowalski@mailbox.example personal). Today is
+(dana.k@kestrel.example at work; dana.kowalski@mailbox.example personal; dana.builds@mailbox.example
+for freelance clients and Upwork). Today is
 Tuesday 2026-10-13. For EACH task below, write exactly one next step Dana can act on.
 
 - If the next move is a message or reply that a connected tool can send (email or Slack),
   write it as action_type "message_send". proposed_tool_call must look like one of:
     gmail-work.send to <Name>, re "<subject>", with text: "<message>"
     gmail-personal.send to <Name>, re "<subject>", with text: "<message>"
+    gmail-freelance.send to <Name>, re "<subject>", with text: "<message>"
     slack.send_message in <#channel>, thread of <Mon D>, with text: "<message>"
-  Use the work account for Kestrel work and the personal one for job search and personal
-  mail, answering in the thread or channel the ask came from.
+  Use the work account for Kestrel work, the freelance one for freelance clients and Upwork,
+  and the personal one for job search and personal mail, answering in the thread or channel the ask came from.
 - Otherwise (write a document, review a PR, book on a web page, do a training, fill a form)
   write action_type "self_do", and proposed_tool_call is the drafted work itself: an outline
   with real section headings for a document, numbered steps for a booking or form, or the

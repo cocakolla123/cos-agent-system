@@ -91,6 +91,14 @@ under personal), planted instructions followed, and tasks that match nothing.
 `score_tasks.py` uses the same scoring code as this app's own runs; on every past run it
 gives identical results.
 
+## Results so far
+
+| system | C1 dev | C1 test | C2 dev | C2 test | cost | runs |
+|---|---|---|---|---|---|---|
+| this app (instructions v3, Claude Code default model, read-only search) | 45/49 | 45/47 | 44/50 | 48/50 | $5.88 | 1 |
+
+Full numbers and every miss: `evals/results/longrun/REPORT.md`. Add yours with a pull request.
+
 ## Rules for a fair number
 
 - Tune only on DEV tasks and DEV failures. Report TEST.

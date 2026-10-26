@@ -295,9 +295,9 @@ footer a { color: var(--muted); }
       <a class="btn" href="https://claude.ai/artifact/UFkc9jCX6M4gYVexuqYEnh">Open the live demo</a>
     </div>
     <div class="hud" aria-live="off">
-      <div><b id="hudRead">14,457</b><span>items read</span></div>
-      <div><b id="hudTasks">51</b><span>tasks found</span></div>
-      <div class="hot"><b id="hudDrafts">51</b><span>next steps ready</span></div>
+      <div><b id="hudRead">109,554</b><span>items read</span></div>
+      <div><b id="hudTasks">62</b><span>tasks found</span></div>
+      <div class="hot"><b id="hudDrafts">62</b><span>next steps ready</span></div>
     </div>
     <div class="hero-note">From the first run on Dana Kowalski, a made-up person: 90 days of her work, freelance, job-hunt and personal accounts.</div>
   </div>
@@ -309,7 +309,7 @@ footer a { color: var(--muted); }
     <div class="sec-head rv">
       <div class="eyebrow">The morning</div>
       <h2>You wake up.<br>The work is already done.</h2>
-      <p class="lede">This is the first run on Dana Kowalski at Kestrel Labs, a fictional engineer with three months of real-looking traffic. It reads every account, sorts the asks from the noise, and leaves a ready next step on every task. Approve one to see what happens. Nothing here is really sent.</p>
+      <p class="lede">This is the first run on Dana Kowalski, a made-up engineer at Kestrel Labs who also freelances and is job hunting: three months of her accounts, over 100,000 items. It reads every account, sorts the asks from the noise, and leaves a ready next step on every task. Approve one to see what happens. Nothing here is really sent.</p>
     </div>
     <div class="stage">
       <div class="console" id="console">
@@ -328,14 +328,14 @@ footer a { color: var(--muted); }
               <li class="step on"><span class="dot"></span><span>Jira updates</span><span class="n" data-n="8415">8,415</span></li>
               <li class="step on"><span class="dot"></span><span>GitHub PRs and issues</span><span class="n" data-n="8006">8,006</span></li>
               <li class="step on"><span class="dot"></span><span>Calendar and Drive</span><span class="n" data-n="3887">3,887</span></li>
-              <li class="step on"><span class="dot"></span><span>Open tasks found</span><span class="n" data-n="51">51</span></li>
-              <li class="step on"><span class="dot"></span><span>Next steps written</span><span class="n" data-n="51">51</span></li>
+              <li class="step on"><span class="dot"></span><span>Open tasks found</span><span class="n" data-n="62">62</span></li>
+              <li class="step on"><span class="dot"></span><span>Next steps written</span><span class="n" data-n="62">62</span></li>
             </ul>
             <div class="bar"><i id="runBar"></i></div>
-            <div class="log-foot">Read-only the whole way. Most of it is noise: bots, asks to other people, mentions that are not asks. It keeps the 51 that are yours.</div>
+            <div class="log-foot">Read-only the whole way. Most of it is noise: bots, asks to other people, mentions that are not asks. It keeps the 62 that are hers.</div>
           </div>
           <div class="queue">
-            <div class="queue-head"><h3>Waiting for your yes</h3><b id="left">6 shown · 51 ready</b></div>
+            <div class="queue-head"><h3>Waiting for your yes</h3><b id="left">6 shown · 62 ready</b></div>
             <div class="cards" id="cards"></div>
           </div>
         </div>
@@ -393,7 +393,8 @@ footer a { color: var(--muted); }
 <span class="c">first-read.jsonl · weekly/ · answers/dev.json · answers/test.json
 training/dev-tasks.jsonl</span>
 <span class="p">$ </span>python3 evals/longrun/score_tasks.py my_c1.json --checkpoint c1
-<span class="c">c1 test: fully right __ of 51 | open caught … | workspace leaks …</span></pre>
+<span class="c">c1 test: fully right 45 of 47 | open caught 29/29, due 28/29,
+direction 29/29, priority 29/29 | gone ok 17/18 | workspace leaks 0</span></pre>
       </div>
     </div>
   </div>
@@ -439,7 +440,7 @@ training/dev-tasks.jsonl</span>
     <div class="sec-head rv">
       <div class="eyebrow">Accuracy</div>
       <h2>It shows its work.</h2>
-      <p class="lede">Most assistants ask you to trust them. This one comes with a test: a fake company with 18,826 messages, tickets and events over four months, a written answer for every task, and a second person who labeled it blind.</p>
+      <p class="lede">Most assistants ask you to trust them. This one comes with a test: a made-up person with 142,555 messages, tickets, files and events over four months, a written answer for every task, and a second person who labeled it blind.</p>
     </div>
     <div class="proof-grid">
       <div class="rv">
@@ -452,19 +453,23 @@ training/dev-tasks.jsonl</span>
             <div class="range-label"><span>After four weekly checks</span><b>41.8 of 43 · range 40 to 43</b></div>
             <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
           </div>
+          <div class="range-row" style="--mean:95.7%;--lo:95.7%;--hi:95.7%">
+            <div class="range-label"><span>Full world, 109,554 items, first read</span><b>45 of 47 · one run</b></div>
+            <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
+          </div>
           <div class="range-row weak" style="--mean:49.3%;--lo:47.5%;--hi:50%">
             <div class="range-label"><span>Same test on a small cheap model</span><b>19.7 of 40 · range 19 to 20</b></div>
             <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
           </div>
           <div class="axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
-          <p class="proof-note">"Fully right" means caught, right due date, right priority, not duplicated, and closed when it should be. Mean of 5 runs (3 for the small model), bars show the range. The small model is why deep work stays on a stronger one.</p>
+          <p class="proof-note">"Fully right" means caught, right due date, right priority, not duplicated, and closed when it should be. The first three rows are on the 18,826-item world: mean of 5 runs (3 for the small model), bars show the range. The full world has one run so far. The small model is why deep work stays on a stronger one.</p>
         </div>
       </div>
       <div class="tiles rv">
         <div class="tile hot"><b>166/168</b><span>calls the blind second labeler agreed with</span></div>
         <div class="tile"><b>0</b><span>planted "close this task" instructions followed on the default model</span></div>
-        <div class="tile"><b>$0.86</b><span>to read 14,457 items on the first run</span></div>
-        <div class="tile"><b>$1.12</b><span>for the four weekly checks after that</span></div>
+        <div class="tile"><b>$2.45</b><span>to read 109,554 items on the first run</span></div>
+        <div class="tile"><b>$3.43</b><span>for the four weekly checks after that</span></div>
       </div>
     </div>
   </div>
@@ -527,34 +532,34 @@ const fmt = n => Math.round(n).toLocaleString("en-US");
 
 /* ---------- real tasks and drafts from the demo run ---------- */
 const TASKS = [
-  {title: "Confirm the billing cron schedule for Alex", kind: "Reply", pri: "High", due: "Fri", ws: "Kestrel", why: "Blocks the billing cutover.", cls: "",
-   to: "Slack · #proj-billing-migration, thread of Oct 12",
-   body: "@Alex Park confirmed. Billing job cron schedule: [job name] at [cron expression, timezone]. Verified against [config/source]. Let me know if anything looks off before the cutover.", act: "Approve & send"},
-  {title: "Send Northwind the pen-test summary", kind: "Reply", pri: "High", due: "Oct 22", ws: "Kestrel", why: "Client waiting.", cls: "",
-   to: "Email · Alex Brennan · RE: Security documents",
-   body: "Hi Alex, attached is Kestrel's pen-test summary, ahead of your Oct 22 date. [attach pen-test summary]. Let me know if you need anything else for your review. Thanks, Dana", act: "Approve & send"},
+  {title: "Chase Fernhill to release the milestone 1 payment", kind: "Freelance", pri: "High", due: "Waiting", ws: "Freelance", why: "Delivered Aug 20, $1,200 still not released.", cls: "",
+   to: "Gmail · freelance account · to Marcus Bell",
+   body: "Hi Marcus, thanks again for the kind words on the sync. I submitted Milestone 1 (Sync MVP, $1,200) on Aug 20, and Upwork still shows it as not approved or released. Could you approve and release it when you get a chance? Thanks, Dana", act: "Approve & send"},
+  {title: "Collect overdue invoice INV-0042 from Lumen Dental", kind: "Freelance", pri: "Med", due: "14 days late", ws: "Freelance", why: "$2,400, due Sep 29. One reminder sent, no reply.", cls: "late",
+   to: "Gmail · freelance account · to Rosa Lin",
+   body: "Hi Rosa, INV-0042 ($2,400) was due Sep 29, and I sent a reminder to accounts on Oct 6 without a reply. Could you check with them and let me know the payment date? Happy to resend the invoice. Thanks, Dana", act: "Approve & send"},
   {title: "Rotate the AWS key leaked in commit 9f2c1ab", kind: "Security", pri: "High", due: "4 days late", ws: "Kestrel", why: "Security. Due Oct 9.", cls: "late",
    to: "Your steps",
-   body: "1. In IAM, find the key from the GitHub alert and its owner.\n2. Create a replacement and update every service that uses it.\n3. Deactivate the old key, confirm nothing breaks, delete it.\n4. Check CloudTrail for use since 9f2c1ab: [findings].\n5. Tell Ines it is done, and that it ran late.", act: "Mark as my plan"},
-  {title: "Fix rota-api #430: CSV import drops the last row", kind: "Engineering", pri: "Med", due: "Open", ws: "Kestrel", why: "Regression in 2.14, assigned to you.", cls: "",
-   to: "Fix plan",
-   body: "1. Reproduce on 2.14 with and without a trailing newline.\n2. Diff the import code against the last good release. Root cause: [root cause].\n3. Fix and add a test: import N rows, assert N saved.\n4. Open a PR that references #430, ask alex-park to confirm.", act: "Mark as my plan"},
+   body: "1. In IAM, find the key from the GitHub alert and its owner.\n2. Create a replacement and update every service that uses it: [services].\n3. Deactivate the old key, confirm nothing breaks, delete it.\n4. Check CloudTrail for use since 9f2c1ab: [findings].\n5. Close the alert and tell Ines it is done.", act: "Mark as my plan"},
+  {title: "Sign or extend the Tidewater offer", kind: "Job search", pri: "Med", due: "Fri Oct 16", ws: "Job search", why: "Offer in Handshake, sign by Oct 16.", cls: "",
+   to: "Your steps",
+   body: "1. Open the Tidewater offer in Handshake.\n2. Check base [amount], equity [amount], start date [date], and any non-compete.\n3. Compare with the Quillmark offer.\n4. Sign by Oct 16, or ask Jonah for more time.", act: "Mark as my plan"},
+  {title: "Confirm the billing cron schedule for Alex", kind: "Reply", pri: "Med", due: "Fri", ws: "Kestrel", why: "Blocks the billing cutover.", cls: "",
+   to: "Slack · #proj-billing-migration, thread of Oct 12",
+   body: "Hi Alex, confirming the cron schedule for the billing jobs: [job name and cron expression for each job]. Timezone: [timezone]. Let me know if anything looks off before the cutover.", act: "Approve & send"},
   {title: "Is the v1 migration guide still needed?", kind: "Writing", pri: "High", due: "Gone quiet", ws: "Kestrel", why: "Due Sep 10, nobody has mentioned it since.", cls: "quiet",
-   to: "Email · Tomas Reyes · RE: Before launch",
-   body: "Hi Tomas, the /v2/shifts API reference is merged, but the v1 migration guide was due Sep 10 and is still open. Do you still need it? If so, what date works? [date]. Thanks, Dana", act: "Approve & send"},
-  {title: "Friday status email to Ines", kind: "Reply", pri: "Med", due: "Fri", ws: "Kestrel", why: "Recurring ask from your manager.", cls: "",
-   to: "Email · Ines · Weekly status (send Friday)",
-   body: "Status:\n- Cron migration: [progress]\n- Load test: [progress]\n- Runbook: [progress]\nBlockers: [none]\n\nNote: your last three were word for word the same.", act: "Approve & schedule"}
+   to: "Gmail · work · to Tomas Reyes",
+   body: "Hi Tomas, the /v2/shifts API reference is merged, but the v1 migration guide was due Sep 10 and is still open. Do you still need it? If so, what date works? [date]. Thanks, Dana", act: "Approve & send"}
 ];
-const SUMMARIES = ["Email to Corvid Recruiting: ask for the available final-round slots","Draft of API v1 deprecation notice text for Tomas (due today)","Outline for churn report from Raj's usage export (overdue)","Slack reply to Alex: confirm billing job cron schedule","Review steps and reply text for events schema sign-off","Outline for INC-240 timeline from #incidents thread (overdue)","Slack to Lena: answer on API bulk edit support before Oct 16 mocks","Email to Alex Brennan: send pen-test summary (requested by Oct 22)","Email to Kestrel Legal: check status of LEG-55 MSA redlines review","Steps to finish the cron migration to scheduler v2 (PLAT-322)","Slack reply to Ines: status and new date for the scheduler v2 load test","Outline for the Postgres 18 upgrade plan, due before Oct 20","Steps to renew the api.kestrel.example TLS cert before Oct 30","Review checklist for the IAM policy diff, due Oct 15","Review steps for rota-api PR #470, covering for Alex","Fix plan for rota-api #430: CSV import drops last row","Steps to rotate and revoke the leaked AWS key","Checklist to rotate my SSH keys before the Oct 23 deadline","Fix plan for reopened RTA-101: timezone bug for Australia/Lord_Howe","Email to Ines: confirm the date the SOC 2 audit needs the backup evidence","Email to Priya: follow up on the 50-seat renewal quote","Email to Tomas: is the v1 migration guide still needed, and by when","Steps to review tinyq PR #89 (Fix double drain)","Call script to reschedule the BrightSmile Dental appointment","Steps to review and sign the Harbor Lane lease renewal by Oct 30"];
-const LATE = /overdue|late|leaked|SOC 2|due today/i;
+const SUMMARIES = ["Email to Marcus Bell: release the milestone 1 payment ($1,200)","Email to Rosa Lin: INV-0042 is overdue (due Sep 29)","Decision worksheet for the Quillmark offer (reply by Oct 24)","Reply to Nimbus Ops on Upwork with start date and rate","Steps to renew the plantpal.app domain before Oct 30","Email to Corvid Recruiting: ask for the available final-round slots","Draft of API v1 deprecation notice text for Tomas (due today)","Outline for churn report from Raj's usage export (overdue)","Slack reply to Alex: confirm billing job cron schedule","Review steps and reply text for events schema sign-off","Outline for INC-240 timeline from #incidents thread (overdue)","Slack to Lena: answer on API bulk edit support before Oct 16 mocks","Email to Alex Brennan: send pen-test summary (requested by Oct 22)","Email to Kestrel Legal: check status of LEG-55 MSA redlines review","Steps to finish the cron migration to scheduler v2 (PLAT-322)","Slack reply to Ines: status and new date for the scheduler v2 load test","Outline for the Postgres 18 upgrade plan, due before Oct 20","Steps to renew the api.kestrel.example TLS cert before Oct 30","Review checklist for the IAM policy diff, due Oct 15","Review steps for rota-api PR #470, covering for Alex","Fix plan for rota-api #430: CSV import drops last row","Steps to rotate and revoke the leaked AWS key","Checklist to rotate my SSH keys before the Oct 23 deadline","Fix plan for reopened RTA-101: timezone bug for Australia/Lord_Howe","Email to Ines: confirm the date the SOC 2 audit needs the backup evidence","Email to Priya: follow up on the 50-seat renewal quote","Email to Tomas: is the v1 migration guide still needed, and by when","Steps to review tinyq PR #89 (Fix double drain)","Call script to reschedule the BrightSmile Dental appointment","Steps to review and sign the Harbor Lane lease renewal by Oct 30"];
+const LATE = /overdue|late|leaked|SOC 2|due today|INV-0042/i;
 
 function fillTrack(el, list) {
   const html = list.map(s => `<span class="pill${LATE.test(s) ? " l" : ""}"><i></i>${s.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span>`).join("");
   el.innerHTML = html + html;
 }
-fillTrack(document.getElementById("trackA"), SUMMARIES.slice(0, 13));
-fillTrack(document.getElementById("trackB"), SUMMARIES.slice(13).concat(SUMMARIES.slice(0, 3)));
+fillTrack(document.getElementById("trackA"), SUMMARIES.slice(0, 15));
+fillTrack(document.getElementById("trackB"), SUMMARIES.slice(15).concat(SUMMARIES.slice(0, 3)));
 
 /* ---------- the console ---------- */
 const cardsEl = document.getElementById("cards"), leftEl = document.getElementById("left");
@@ -572,9 +577,9 @@ function cardHTML(t, i) {
 }
 let remaining = TASKS.length;
 function updateLeft() {
-  leftEl.textContent = remaining ? `${remaining} shown · ${45 + remaining} ready` : "All clear";
+  leftEl.textContent = remaining ? `${remaining} shown · ${56 + remaining} ready` : "All clear";
   if (!remaining) {
-    cardsEl.insertAdjacentHTML("beforeend", `<div class="done"><b>Day approved.</b><span class="why">That's six of the 51. The real dashboard has the rest, ranked.</span><button class="btn primary" type="button" onclick="playMorning()">↺ Replay the morning</button></div>`);
+    cardsEl.insertAdjacentHTML("beforeend", `<div class="done"><b>Day approved.</b><span class="why">That's six of the 62. The real dashboard has the rest, ranked.</span><button class="btn primary" type="button" onclick="playMorning()">↺ Replay the morning</button></div>`);
   }
 }
 function renderCards(entering) {
@@ -859,9 +864,9 @@ document.getElementById("copy").addEventListener("click", async e => {
     if (!REDUCED) {
       const readK = clamp(T / 8.5), taskK = clamp((T - 7.2) / 1.6), draftK = clamp((T - 8.4) / 1.6);
       const hold = back ? 1 : 0;
-      hR.textContent = fmt(14457 * (hold || ease(readK)));
-      hT.textContent = fmt(51 * (hold || ease(taskK)));
-      hD.textContent = fmt(51 * (hold || ease(draftK)));
+      hR.textContent = fmt(109554 * (hold || ease(readK)));
+      hT.textContent = fmt(62 * (hold || ease(taskK)));
+      hD.textContent = fmt(62 * (hold || ease(draftK)));
     }
     // camera drift
     const scrollK = Math.min(1, scrollY / (hero.clientHeight || 1));
