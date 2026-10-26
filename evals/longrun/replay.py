@@ -71,10 +71,23 @@ def week_start(date_str):
     return (d - datetime.timedelta(days=d.weekday())).isoformat()
 
 
-def steps(meta):
-    weeks = meta["future_weeks"] + [meta["c2"]]
+def steps(meta, daily=False):
+    """c1, then one poll per future week, or with ``daily`` one per day
+    (d01..d28, weekends included) as the app's daily check would run."""
     out = [{"name": "c1", "lo": "0000", "hi": meta["today"], "today": meta["today"],
             "incremental": False}]
+    if daily:
+        d = datetime.date.fromisoformat(meta["today"])
+        end = datetime.date.fromisoformat(meta["c2"])
+        k = 0
+        while d < end:
+            k += 1
+            nxt = d + datetime.timedelta(days=1)
+            out.append({"name": "d%02d" % k, "lo": d.isoformat(), "hi": nxt.isoformat(),
+                        "today": nxt.isoformat(), "incremental": True})
+            d = nxt
+        return out
+    weeks = meta["future_weeks"] + [meta["c2"]]
     for i in range(len(meta["future_weeks"])):
         out.append({"name": "f%d" % (i + 1), "lo": weeks[i], "hi": weeks[i + 1],
                     "today": weeks[i + 1], "incremental": True})
@@ -170,6 +183,10 @@ def run_direct(items, st, meta, g, instr, model, timeout, compact=False, triage_
     sifter = sift.Sifter(meta["user"], meta.get("slack_channels"), tasks, known)
     kept, _ = sifter.sift(sel)
     extra = {"sifted": len(kept)}
+    if not kept:        # a quiet check makes no call, as in the app
+        return {"scenario": st["name"], "direct": True, "quiet": True, "prompt_chars": 0,
+                "envelope": {"result": "[]", "total_cost_usd": 0.0, "duration_ms": 0,
+                             "modelUsage": {}}}, 0
     if triage_model and len(kept) > 25:
         always = [i["id"] for i in kept if sifter.reasons.get(i["id"]) in ("task_ref", "task_thread")]
         tp = _claude_text(poll_direct.triage_prompt(meta["user"], kept, tasks), triage_model, timeout, no_cache)
@@ -226,6 +243,7 @@ def main():
     ap.add_argument("--direct", action="store_true",
                     help="weekly polls run like dashboard/poll_direct.py: sifted items "
                          "inline, no tools")
+    ap.add_argument("--daily", action="store_true", help="one poll per day instead of per week")
     ap.add_argument("--compact", action="store_true", help="--direct: one compact line per item")
     ap.add_argument("--triage-model", default=None, help="--direct: cheap first pass on this model")
     ap.add_argument("--no-cache", action="store_true", help="--direct: switch off prompt caching")
@@ -250,12 +268,16 @@ def main():
                 "world": args.world, "tools": tools, "crawl_from": args.crawl_from,
                 "sift": bool(args.sift or args.direct), "direct": bool(args.direct),
                 "compact": bool(args.compact), "triage_model": args.triage_model,
+                "daily": bool(args.daily),
                 "no_cache": bool(args.no_cache),
                 "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
     log = []
-    for st in steps(meta):
+    daily = args.daily
+    if args.rescore and os.path.exists(os.path.join(out, "meta.json")):
+        daily = json.load(open(os.path.join(out, "meta.json"))).get("daily", False)
+    for st in steps(meta, daily):
         raw_path = os.path.join(raw_dir, st["name"] + ".json")
         if not args.rescore and args.crawl_from and st["name"] == "c1":
             src = os.path.join(RESULTS, args.crawl_from, "raw", "c1.json")
