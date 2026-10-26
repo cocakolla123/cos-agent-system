@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-26T11:39:45.300243+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"inv-0042-lumen-dental-payment\",\"name\":\"Collect payment for INV-0042 ($2,400) from Lumen Dental\",\"attrs\":{\"due\":\"2026-09-29\",\"priority\":\"high\",\"status\":\"paid\",\"evidence\":[\"em-815263\",\"em-914019\",\"em-819691\",\"em-799508\"],\"refs\":[\"INV-0042\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Kestrel's data retention policy to Alex Brennan (Northwind)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"em-304459\",\"em-457894\",\"em-689914\"],\"refs\":[\"Northwind\"]},\"source\":\"eval-fixture\",\"confidence\":0.93,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-128555\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.93,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Get the 50-seat renewal quote from Priya at Stratus Monitoring\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-801289\",\"em-661530\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rta-101-timezone-bug-shift-export\",\"name\":\"Timezone bug in shift export, reopened (RTA-101)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"jr-611362\",\"jr-776795\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"oss\",\"key\":\"tinyq-docs-hosting-plan-migration\",\"name\":\"Move tinyq-docs to a current Hostlane plan to bring the site back online\",\"attrs\":{\"priority\":\"low\",\"evidence\":[\"em-731021\"],\"refs\":[\"tinyq-docs\"]},\"source\":\"eval-fixture\",\"confidence\":0.7,\"edges\":[]}\n]",
+  "total_cost_usd": 1.1215443999999999,
+  "duration_ms": 89747,
+  "duration_api_ms": 85176,
+  "num_turns": 36,
+  "usage": {
+   "input_tokens": 60,
+   "cache_creation_input_tokens": 169478,
+   "cache_read_input_tokens": 3429224,
+   "output_tokens": 10059,
+   "output_tokens_details": {
+    "thinking_tokens": 2646
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 169478,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1161,
+     "cache_read_input_tokens": 197819,
+     "cache_creation_input_tokens": 241,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 241
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 60,
+    "outputTokens": 10059,
+    "cacheReadInputTokens": 3429224,
+    "cacheCreationInputTokens": 169478,
+    "webSearchRequests": 0,
+    "costUSD": 1.1215443999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 2646,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8372,
+ "attempt": 1
+}

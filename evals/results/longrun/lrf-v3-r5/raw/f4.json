@@ -1,0 +1,67 @@
+{
+ "scenario": "f4",
+ "started": "2026-10-26T11:43:11.752599+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "Everything in the new items is noise except Dana's Nov 6 status email to Ines, which moves the weekly-status obligation to the next Friday.\n\n```json\n[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-to-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"high\",\"evidence\":[\"sl-714506\",\"em-198452\",\"em-552213\",\"em-444581\",\"em-760957\",\"em-919687\"],\"note\":\"Nov 6 status sent (em-919687); next one due Friday Nov 13\"},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[{\"to_kind\":\"Person\",\"to_key\":\"ines\",\"type\":\"blocked_on\"}]}]\n```",
+  "total_cost_usd": 0.6393338000000001,
+  "duration_ms": 60161,
+  "duration_api_ms": 56385,
+  "num_turns": 29,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 97766,
+   "cache_read_input_tokens": 1808458,
+   "output_tokens": 6734,
+   "output_tokens_details": {
+    "thinking_tokens": 1596
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 97766,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 253,
+     "cache_read_input_tokens": 124801,
+     "cache_creation_input_tokens": 5496,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 5496
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 42,
+    "outputTokens": 6734,
+    "cacheReadInputTokens": 1808458,
+    "cacheCreationInputTokens": 97766,
+    "webSearchRequests": 0,
+    "costUSD": 0.6393338000000001,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 1596,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8318,
+ "attempt": 1
+}

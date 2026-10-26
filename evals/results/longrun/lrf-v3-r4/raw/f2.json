@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-26T11:39:16.738007+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-low-stock-alerts-milestone\",\"name\":\"Deliver Milestone 2, low-stock alerts, for Fernhill Goods ($900), and reply to Marcus\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"submitted\",\"evidence\":[\"em-270940\",\"em-825899\",\"em-756352\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a final-round interview slot with Corvid Systems\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-155575\",\"em-384580\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"quillmark-offer-decision\",\"name\":\"Decide on the Quillmark Staff Engineer offer\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-881423\",\"em-992168\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access\",\"name\":\"Waiting on IT for read access to the analytics replica (RTA-90)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-414920\",\"em-890897\",\"em-111120\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"security-awareness-training\",\"name\":\"Complete the annual security awareness training\",\"attrs\":{\"due\":\"2026-09-15\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-914960\",\"em-432975\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-review\",\"name\":\"Waiting on Legal to review the Northwind MSA redlines\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-079608\",\"em-560983\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"send-northwind-msa-redlines\",\"name\":\"Send the Legal-approved MSA redlines to Northwind\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-560983\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"notifications-rfc-comments\",\"name\":\"Add comments on the notifications RFC (review meeting Oct 19)\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"em-612857\",\"sl-019082\",\"sl-842606\",\"sl-749057\",\"sl-576362\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-inc-212-postmortem\",\"name\":\"Postmortem: INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-631212\",\"sl-572837\",\"sl-301137\",\"jr-226517\",\"sl-098922\"],\"refs\":[\"PLAT-301\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-511559\",\"sl-310094\",\"jr-859124\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-334587\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"october-timesheet\",\"name\":\"Submit the October timesheet\",\"attrs\":{\"due\":\"2026-11-02\",\"priority\":\"medium\",\"evidence\":[\"em-154498\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"oss\",\"key\":\"plantpal-domain-renewal\",\"name\":\"Renew plantpal.app (auto-renew is off)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"low\",\"status\":\"done\",\"evidence\":[\"em-677051\",\"em-801309\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]}\n]\n```",
+  "total_cost_usd": 1.0482550999999998,
+  "duration_ms": 97646,
+  "duration_api_ms": 90180,
+  "num_turns": 35,
+  "usage": {
+   "input_tokens": 56,
+   "cache_creation_input_tokens": 150810,
+   "cache_read_input_tokens": 3342231,
+   "output_tokens": 11068,
+   "output_tokens_details": {
+    "thinking_tokens": 2947
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 150810,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2241,
+     "cache_read_input_tokens": 176109,
+     "cache_creation_input_tokens": 7232,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 7232
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 56,
+    "outputTokens": 11068,
+    "cacheReadInputTokens": 3342231,
+    "cacheCreationInputTokens": 150810,
+    "webSearchRequests": 0,
+    "costUSD": 1.0482550999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 2947,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8121,
+ "attempt": 1
+}
