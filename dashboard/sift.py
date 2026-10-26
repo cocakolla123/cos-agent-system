@@ -9,8 +9,8 @@ when one of these is true and drops it otherwise:
               user's own sent mail and messages
   mention     the user's handle, full name, an address, or a greeting by
               first name ("Hi Dana")
-  thread      it belongs to a thread, ticket, PR, doc or event the user is in,
-              or that an open task already came from
+  thread      it belongs to a thread, ticket, PR, doc or event the user is in
+  task_thread ... or that an open task already came from
   assigned    a ticket or PR assigned to, reported by, or requesting review
               from the user; anything in the user's own repos
   broadcast   an @channel / @here, or mail to everyone that says it is
@@ -50,6 +50,7 @@ ROLE = {"alerts", "alert", "service", "billing", "receipts", "orders", "order", 
         "hello", "info", "team", "events", "members", "renewals", "notify", "notifications",
         "notification", "news", "newsletter", "marketing", "calendar", "updates", "account",
         "accounts-noreply", "statements", "security", "verify", "help", "contact", "store", "shop"}
+ROUTINE = re.compile(r"\b(recurring|optional)\b", re.I)
 KEY_RE = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{1,6}\b")
 NUM_RE = re.compile(r"(?<![\w-])#\d{2,6}\b|\bINV-\d+\b", re.I)
 DOMAIN_RE = re.compile(r"\b[a-z0-9][a-z0-9-]{1,40}\.(?:app|com|io|dev|blog|net|org|co|ai|example)\b", re.I)
@@ -155,9 +156,9 @@ class Sifter:
             return "direct"
         if self.mention_re.search(text):
             return "mention"
-        if tk in self.threads:
-            return "thread"
         if tk in self.task_threads:
+            return "task_thread"
+        if tk in self.threads:
             return "thread"
         refs = ({k.upper() for k in KEY_RE.findall(text)} | {k.upper() for k in NUM_RE.findall(text)}
                 | {d.upper() for d in DOMAIN_RE.findall(text)})
@@ -199,7 +200,13 @@ class Sifter:
             return None
         if c == "calendar":
             blob = json.dumps([i.get("organizer"), i.get("attendees")]).lower()
-            return "direct" if any(e in blob for e in self.emails) else None
+            if not any(e in blob for e in self.emails):
+                return None
+            # routine events (recurring, or marked optional) only matter when someone
+            # wrote about them, which the mention and thread rules above already catch
+            if i.get("recurrence") or ROUTINE.search(i.get("description") or ""):
+                return None
+            return "direct"
         if c == "drive":
             if any((o or "").lower() in self.emails for o in i.get("owners") or []):
                 return "own_file"
@@ -208,10 +215,12 @@ class Sifter:
 
     def sift(self, items):
         kept, dropped = [], {}
+        self.reasons = {}
         for i in items:
             r = self.reason(i)
             if r:
                 kept.append(i)
+                self.reasons[i.get("id")] = r
                 self.threads.add(thread_key(i))
             else:
                 k = i.get("connector", "?")

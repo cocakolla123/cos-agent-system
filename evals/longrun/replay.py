@@ -147,22 +147,43 @@ def prompt(instructions, meta, step):
             + json.dumps(frame, indent=1, sort_keys=True) + "\n```\n\n" + tail)
 
 
-def run_direct(items, st, meta, g, instr, model, timeout):
-    """The dashboard's direct check (dashboard/poll_direct.py) on one poll:
-    sift the window, then one call with the kept items inline and no tools."""
-    import poll_direct
-    sel = [i for i in items if st["lo"] <= i["date"] < st["hi"]]
-    kept, _ = sift_window(items, sel, st, meta, g)
-    tasks = poll_direct.open_tasks(g, graphlib._parse_iso(st["today"]))
-    frame = {"user": meta["user"], "workspaces": meta["workspaces"], "today": st["today"]}
-    text = poll_direct.build_prompt(instr, frame, kept, tasks)
+def _claude_text(text, model, timeout, no_cache):
     cmd = [run.CLAUDE, "-p", "--output-format", "json", "--permission-mode", "dontAsk",
            "--tools", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}']
     if model:
         cmd += ["--model", model]
-    proc = subprocess.run(cmd, input=text, capture_output=True, text=True, timeout=timeout)
+    env = dict(os.environ, DISABLE_PROMPT_CACHING="1") if no_cache else None
+    return subprocess.run(cmd, input=text, capture_output=True, text=True, timeout=timeout, env=env)
+
+
+def run_direct(items, st, meta, g, instr, model, timeout, compact=False, triage_model=None,
+               no_cache=False):
+    """The dashboard's direct check (dashboard/poll_direct.py) on one poll:
+    sift the window, optionally triage it on a cheap model, then one call with
+    the kept items inline and no tools."""
+    import poll_direct
+    import sift
+    sel = [i for i in items if st["lo"] <= i["date"] < st["hi"]]
+    now = graphlib._parse_iso(st["today"])
+    tasks = poll_direct.open_tasks(g, now)
+    known = [i for i in items if i["date"] < st["lo"]]
+    sifter = sift.Sifter(meta["user"], meta.get("slack_channels"), tasks, known)
+    kept, _ = sifter.sift(sel)
+    extra = {"sifted": len(kept)}
+    if triage_model and len(kept) > 25:
+        always = [i["id"] for i in kept if sifter.reasons.get(i["id"]) in ("task_ref", "task_thread")]
+        tp = _claude_text(poll_direct.triage_prompt(meta["user"], kept, tasks), triage_model, timeout, no_cache)
+        try:
+            tenv = json.loads(tp.stdout)
+            kept = poll_direct.apply_triage(kept, tenv.get("result") or "", always)
+            extra.update({"triage_cost_usd": tenv.get("total_cost_usd"), "after_triage": len(kept)})
+        except ValueError:
+            extra["triage_error"] = "non-json stdout"
+    frame = {"user": meta["user"], "workspaces": meta["workspaces"], "today": st["today"]}
+    text = poll_direct.build_prompt(instr, frame, kept, tasks, compact=compact)
+    proc = _claude_text(text, model, timeout, no_cache)
     raw = {"scenario": st["name"], "returncode": proc.returncode, "stderr": proc.stderr[-2000:],
-           "direct": True, "prompt_chars": len(text)}
+           "direct": True, "prompt_chars": len(text), **extra}
     try:
         env = json.loads(proc.stdout)
     except ValueError:
@@ -205,6 +226,9 @@ def main():
     ap.add_argument("--direct", action="store_true",
                     help="weekly polls run like dashboard/poll_direct.py: sifted items "
                          "inline, no tools")
+    ap.add_argument("--compact", action="store_true", help="--direct: one compact line per item")
+    ap.add_argument("--triage-model", default=None, help="--direct: cheap first pass on this model")
+    ap.add_argument("--no-cache", action="store_true", help="--direct: switch off prompt caching")
     ap.add_argument("--tools", default=None,
                     help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
@@ -225,6 +249,8 @@ def main():
                                               capture_output=True, text=True).stdout.strip(),
                 "world": args.world, "tools": tools, "crawl_from": args.crawl_from,
                 "sift": bool(args.sift or args.direct), "direct": bool(args.direct),
+                "compact": bool(args.compact), "triage_model": args.triage_model,
+                "no_cache": bool(args.no_cache),
                 "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
@@ -241,7 +267,9 @@ def main():
                 with tempfile.TemporaryDirectory() as d:
                     try:
                         if args.direct and st["incremental"]:
-                            raw, n = run_direct(items, st, meta, g, instr, args.model, args.timeout)
+                            raw, n = run_direct(items, st, meta, g, instr, args.model, args.timeout,
+                                                compact=args.compact, triage_model=args.triage_model,
+                                                no_cache=args.no_cache)
                         else:
                             n = materialize(d, items, st, meta, g, use_sift=args.sift)
                             raw = run.run_scenario({"id": st["name"]}, d,
@@ -261,7 +289,9 @@ def main():
         env = raw.get("envelope") or {}
         res.update({"step": st["name"], "today": st["today"],
                     "items": raw.get("items_in_window"),
-                    "cost_usd": env.get("total_cost_usd"),
+                    "cost_usd": (env.get("total_cost_usd") or 0) + (raw.get("triage_cost_usd") or 0)
+                    if env.get("total_cost_usd") is not None else None,
+                    "after_triage": raw.get("after_triage"),
                     "duration_ms": env.get("duration_ms"),
                     "models": sorted((env.get("modelUsage") or {}).keys())})
         log.append(res)

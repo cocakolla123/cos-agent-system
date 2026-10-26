@@ -259,7 +259,7 @@ class TestPollDirect(unittest.TestCase):
         def fetch(d):
             return {"items": [slack(1, "#random", "zoe", "cat pics")], "per_source": {"slack": {"ok": True, "count": 1}}}
 
-        def model(d, p):
+        def model(d, p, job="poll_direct"):
             raise AssertionError("no model call when nothing is kept")
         r = poll_direct.check(self.dir, self.gdir, _fetch=fetch, _model=model)
         self.assertEqual((r["kept"], r["quiet"]), (0, ["slack"]))
@@ -272,7 +272,7 @@ class TestPollDirect(unittest.TestCase):
                               slack(2, "#platform", "ci-bot", "build passed")],
                     "per_source": {"slack": {"ok": True, "count": 2}}}
 
-        def model(d, prompt):
+        def model(d, prompt, job="poll_direct"):
             seen["prompt"] = prompt
             return json.dumps([{"kind": "Action", "workspace": "default", "key": "q4-numbers",
                                 "name": "Send Ines the Q4 numbers", "confidence": 0.9, "edges": [],
@@ -282,8 +282,30 @@ class TestPollDirect(unittest.TestCase):
         self.assertIn("can you send the Q4 numbers", seen["prompt"])
         self.assertNotIn("build passed", seen["prompt"])
         self.assertIn("no files and no tools", seen["prompt"])
+        self.assertIn("sl-1 · 2026-10-13 10:00 · slack #platform · @ines", seen["prompt"])
         g = graph.Graph.load(self.gdir)
         self.assertTrue(any(n.get("name") == "Send Ines the Q4 numbers" for n in g.nodes.values()))
+
+    def test_triage_keeps_its_picks_and_items_citing_open_tasks(self):
+        msgs = [slack(k, "#platform", "ines", "@dana.k fyi %d" % k) for k in range(40)]
+        msgs.append(slack(99, "#platform", "raj", "PLAT-322 can slip to Nov 13"))
+        g = graph.Graph()
+        g.upsert_node("Action", "default", "plat-322", name="Finish PLAT-322 migration", attrs={"evidence": []})
+        g.save(self.gdir)
+        calls = []
+
+        def fetch(d):
+            return {"items": msgs, "per_source": {"slack": {"ok": True, "count": len(msgs)}}}
+
+        def model(d, prompt, job="poll_direct"):
+            calls.append((job, prompt))
+            return ('["sl-3"]', 0.001) if job == "triage" else ("[]", 0.01)
+        r = poll_direct.check(self.dir, self.gdir, _fetch=fetch, _model=model)
+        self.assertEqual([c[0] for c in calls], ["triage", "poll_direct"])
+        self.assertEqual(r["after_triage"], 2)                       # sl-3 + the PLAT-322 item
+        self.assertIn("sl-99", calls[1][1])
+        self.assertNotIn("sl-4 ", calls[1][1])
+        self.assertAlmostEqual(r["cost_usd"], 0.011)
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ _BUILTIN = {"Read", "Edit", "Write", "Glob", "Grep", "Bash", "Agent", "Task", "T
 
 DEFAULT_CALL_CAPS = {"research": 15.0, "learn": 3.0, "poll": 1.5, "approve": 1.0,
                      "revise": 0.75, "chat": 0.5, "task_chat": 0.5, "accounts_probe": 0.5,
-                     "draft": 1.0, "poll_direct": 1.0}
+                     "draft": 1.0, "poll_direct": 1.0, "triage": 0.25}
 
 
 def _now():

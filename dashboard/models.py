@@ -47,6 +47,8 @@ JOBS = {
     # the direct check: items are fetched by connections.py and sifted, so the
     # model only reads text and any provider can run it
     "poll_direct": ("standard", False),
+    # the cheap first pass of a direct check: which sifted items could matter
+    "triage": ("light", False),
     "accounts_probe": ("light", True),
     "research": ("deep", True),
     "learn": ("deep", True),
