@@ -86,10 +86,12 @@ on the first crawl or on the weekly polls missed tasks the default model caught
 | Jira Cloud | an API token |
 | GitHub | a personal access token |
 | calendar | its private iCal link |
+| folders on this computer | nothing: pick the folders (Zoom's Documents/Zoom, Downloads, a project) |
+| Zoom cloud recordings | a Server-to-Server OAuth app with read-only recording access |
 
 Each check runs in three steps (`dashboard/poll_direct.py`):
 
-1. **Fetch only what is new.** Every connection keeps a bookmark: the last mail UID, the newest Slack message per conversation, "updated since" for Jira and GitHub, and the last change for the calendar.
+1. **Fetch only what is new.** Every connection keeps a bookmark: the last mail UID, the newest Slack message per conversation, "updated since" for Jira and GitHub, the last change for the calendar, each file's modified time in a watched folder, and the Zoom meetings already read. A meeting transcript (Zoom, Teams, Meet, Otter; .vtt, .srt, .txt or .docx) is cleaned to who said what without a model, which roughly halves it.
 2. **Sift without a model** (`dashboard/sift.py`). It keeps what could need you: direct messages, mentions, your threads, your tickets and reviews, mail to everyone that says it is required, platform notices with a person's words in them, anything naming one of your open tasks' tickets, PRs, invoices or domains, and your own files. Newsletters, bots, other people's tickets and channel chatter are dropped and counted. If nothing is left, the check stops there and costs nothing.
 3. **One text-only model call** on what is left, one compact line per item, together with your open tasks. It runs on whatever model you chose for Standard: your Claude plan or any API key. A one-off call skips prompt caching, which would cost more than it saves.
 
@@ -102,7 +104,11 @@ Measured on the four weekly checks of the 142,555-item benchmark world (`evals/r
 | sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.54 | ~17 s |
 | the same, one compact line per item, no caching premium (the default) | 46/50 | 48/50 | $0.52 | ~16 s |
 
-By default it checks three times a day (about 8am, noon and 4pm, every day); every call has a fixed cost, so checking more often costs more without finding more. Measured daily for four weeks on the same world: dev 46/50, test 47/50, $1.15 for 28 checks. Change the schedule under Polling, or press Check now.
+4. **A drafted next step for each new task** (one more text-only call, only when there are new tasks): the reply to the person who asked, or the work itself (an outline with the points from the meeting, the steps). They wait in the approval queue; nothing is sent until you approve it.
+
+**Always on, and free until something matters.** Steps 1 and 2 run every 5 minutes, all day, across every connection: mail, Slack, Jira, GitHub, calendar, your folders and Zoom. They cost nothing. What the sift keeps waits on a list (`pending.jsonl`) and is read in one batch three times a day (about 8am, noon and 4pm), because every call has a fixed cost however few items it carries. Something urgent skips the wait and is read at once: a meeting transcript, a security alert, or a message to you that asks for something today. Measured daily for four weeks on the benchmark world: dev 46/50, test 47/50, $1.15 for 28 batches. Change the hours under Polling, or press Check now to read everything waiting.
+
+Example, run live: a 22-turn Zoom call saved to Documents/Zoom was picked up by the next scan and read at once (urgent). It produced the meeting and three tasks for the user with the dates said aloud (final pricing copy by Wednesday, a webinar deck by Monday, an email to a customer today), left out what a colleague took on, and queued three drafts: the customer email, the deck outline with the four topics from the call, and the steps to finish the copy. Two calls, 24 seconds, $0.05. A scan with nothing new took 0.09 seconds and made no call.
 
 Credentials stay in `connections.json` (mode 0600, git-ignored, excluded from publishing, and Slack, GitHub and Atlassian tokens are blocked by the privacy scan).
 

@@ -273,6 +273,8 @@ class TestPollDirect(unittest.TestCase):
                     "per_source": {"slack": {"ok": True, "count": 2}}}
 
         def model(d, prompt, job="poll_direct"):
+            if job == "draft_direct":
+                return "[]", 0.0
             seen["prompt"] = prompt
             return json.dumps([{"kind": "Action", "workspace": "default", "key": "q4-numbers",
                                 "name": "Send Ines the Q4 numbers", "confidence": 0.9, "edges": [],

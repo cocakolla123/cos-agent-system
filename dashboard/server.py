@@ -2068,6 +2068,11 @@ _CONN_HELP = {
                ("workspace", "Workspace", "")],
     "ical": [("id", "Name", "calendar"), ("url", "Private iCal link", "https://calendar.google.com/...basic.ics"),
              ("workspace", "Workspace", "")],
+    "folder": [("id", "Name", "zoom-folder"), ("path", "Folders, comma separated", "~/Documents/Zoom, ~/Downloads"),
+               ("keep", "Keep every new file? (all, or blank for only transcripts and files that mention you)", ""),
+               ("workspace", "Workspace", "")],
+    "zoom": [("id", "Name", "zoom"), ("account_id", "Account ID", ""), ("client_id", "Client ID", ""),
+             ("client_secret", "Client secret", ""), ("workspace", "Workspace", "")],
 }
 _CONN_HOWTO = {
     "imap": "Gmail: turn on 2-step verification, then create an app password (Google Account, Security, App passwords). Read-only: the app only selects folders read-only.",
@@ -2075,6 +2080,8 @@ _CONN_HOWTO = {
     "jira": "Create an API token at id.atlassian.com, Security, API tokens.",
     "github": "Create a fine-grained token with read-only access to issues and pull requests.",
     "ical": "Google Calendar: Settings, your calendar, Integrate calendar, Secret address in iCal format.",
+    "folder": "Read on this computer, no account needed. Zoom saves local recordings and transcripts in Documents/Zoom; Teams and Meet transcripts you download land in Downloads. Meeting transcripts are always read; other files only when they mention you or an open task, unless you set keep to all.",
+    "zoom": "For transcripts of cloud recordings: at marketplace.zoom.us, Develop, Build App, Server-to-Server OAuth, add the scope cloud_recording:read:list_user_recordings (read-only), activate it, and copy the Account ID, Client ID and Client secret. Turn on audio transcripts under Settings, Recording.",
 }
 
 
@@ -2098,10 +2105,11 @@ def render_connections_section():
                     for k, v in _connections.KINDS.items())
     return f"""
 <h2 id="connections">Direct connections</h2>
-<div class="quick-line">Read your accounts without Claude Code. Each check fetches only what is new
-since the last one, drops noise without a model (newsletters, bots, other people's tickets), and
-sends what is left to the model you chose for Standard work, which can be an API key. A quiet check
-costs nothing. Credentials stay on this machine in <code>connections.json</code>, readable by you
+<div class="quick-line">Read your accounts and folders without Claude Code. Every 5 minutes a free
+scan fetches only what is new since the last one and drops noise without a model (newsletters, bots,
+other people's tickets). What is left waits for the next batch, a few times a day, or goes to the
+model at once when it is urgent: a meeting transcript, a security alert, a message that needs you
+today. New tasks get a drafted next step in the approval queue. A scan that finds nothing costs nothing. Credentials stay on this machine in <code>connections.json</code>, readable by you
 alone, and every connection is read-only.</div>
 <div class="conn-me">
   <b>You</b>
@@ -2709,14 +2717,17 @@ class Handler(BaseHTTPRequestHandler):
                     cfg = read_json(cfg_path, dict(DEFAULT_POLL_CONFIG))
                     if "direct" not in cfg:     # first connection: schedule the direct check
                         cfg["timezone"] = cfg.get("timezone", "America/Los_Angeles")
-                        # three checks a day (about 8am, noon, 4pm): every call has a
-                        # fixed cost, so a 15-minute pace would cost far more for the same items
-                        cfg["direct"] = {"interval_min": 240,
+                        # a free scan every 5 minutes, all day; the model reads what it kept
+                        # three times a day (about 8am, noon, 4pm), or at once when it is
+                        # urgent (a meeting transcript, a message that needs you today)
+                        cfg["direct"] = {"interval_min": 5,
                                          "days": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
-                                         "start": "08:00", "end": "16:30"}
+                                         "start": "00:00", "end": "23:59",
+                                         "flush_min": 240, "flush_start": "08:00", "flush_end": "16:30"}
                         write_json(cfg_path, cfg)
-                    self._send_json({"ok": True, "message": "Saved %s. It checks three times a day (about 8am, noon and 4pm); 'Check now' runs one any time, "
-                                     "and Polling changes the schedule." % sid})
+                    self._send_json({"ok": True, "message": "Saved %s. It is scanned every 5 minutes for free; what needs you is read three times a day "
+                                     "(about 8am, noon and 4pm), or right away when it is urgent, like a meeting transcript. "
+                                     "'Check now' reads everything waiting." % sid})
                 elif self.path == "/connections-remove":
                     _connections.remove_source(DASHBOARD_DIR, data.get("id", ""))
                     self._send_json({"ok": True, "message": "Removed."})

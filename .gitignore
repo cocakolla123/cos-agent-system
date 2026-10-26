@@ -42,3 +42,5 @@ __pycache__/
 dashboard/connections.json
 dashboard/fetch-state.json
 dashboard/inbox/
+dashboard/pending.jsonl
+dashboard/scan-state.json

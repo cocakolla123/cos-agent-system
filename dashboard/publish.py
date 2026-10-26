@@ -62,6 +62,7 @@ EXCLUDES = [
     "dashboard/usage.jsonl", "dashboard/poll-quiet.json",
     # direct connections: account secrets, bookmarks and fetched items stay local
     "dashboard/connections.json", "dashboard/fetch-state.json", "dashboard/inbox",
+    "dashboard/pending.jsonl", "dashboard/scan-state.json",
     "tasks",
 ]
 

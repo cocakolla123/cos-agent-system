@@ -49,6 +49,8 @@ JOBS = {
     "poll_direct": ("standard", False),
     # the cheap first pass of a direct check: which sifted items could matter
     "triage": ("light", False),
+    # drafting the next step for tasks a direct check just found (text only)
+    "draft_direct": ("standard", False),
     "accounts_probe": ("light", True),
     "research": ("deep", True),
     "learn": ("deep", True),

@@ -14,6 +14,12 @@ what arrived since the last one:
            bookmark: the newest "updated_at"
   ical     a calendar's private iCal link (Google Calendar: "Secret address in iCal format")
            bookmark: the newest LAST-MODIFIED
+  folder   folders on this computer (Zoom's local recordings, Downloads, a project...)
+           bookmark: each file's modified time; meeting transcripts come out
+           as their own kind, cleaned to who said what (transcripts.py)
+  zoom     Zoom cloud recordings through a Server-to-Server OAuth app (read-only
+           recording scope): each new meeting's transcript
+           bookmark: the meetings already read
 
 Items come out in the same shape as the benchmark's connectors
 (evals/longrun/BENCHMARK.md), so dashboard/sift.py and the extraction step
@@ -39,7 +45,10 @@ import os
 import re
 import stat
 import urllib.parse
+import sys
 import urllib.request
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 CONFIG_FILE = "connections.json"
 STATE_FILE = "fetch-state.json"
@@ -57,7 +66,12 @@ KINDS = {
                "connector": "github"},
     "ical": {"label": "Calendar (iCal link)", "fields": ["url", "workspace"], "secret": ["url"],
              "connector": "calendar"},
+    "folder": {"label": "Folders on this computer", "fields": ["path", "keep", "workspace"], "secret": [],
+               "connector": "file"},
+    "zoom": {"label": "Zoom cloud recordings", "fields": ["account_id", "client_id", "client_secret", "workspace"],
+             "secret": ["client_secret"], "connector": "transcript"},
 }
+OPTIONAL = ("port", "folders", "workspace", "login", "keep")
 
 
 class ConnectionError_(RuntimeError):
@@ -119,7 +133,7 @@ def upsert_source(config_dir, src):
             v = old.get(f)
         if v not in (None, "", []):
             row[f] = v
-    missing = [f for f in KINDS[kind]["fields"] if f not in row and f not in ("port", "folders", "workspace", "login")]
+    missing = [f for f in KINDS[kind]["fields"] if f not in row and f not in OPTIONAL]
     if missing:
         raise ConnectionError_("missing: %s" % ", ".join(missing))
     data["sources"] = [s for s in data["sources"] if s["id"] != sid] + [row]
@@ -143,7 +157,7 @@ def status(config_dir):
     for s in data["sources"]:
         st = state.get(s["id"]) or {}
         rows.append({"id": s["id"], "kind": s["kind"], "label": KINDS[s["kind"]]["label"],
-                     "account": s.get("user") or s.get("email") or s.get("login") or "",
+                     "account": s.get("user") or s.get("email") or s.get("login") or s.get("path") or "",
                      "workspace": s.get("workspace") or "", "last_ok": st.get("last_ok"),
                      "last_error": st.get("last_error"), "last_count": st.get("last_count")})
     return {"me": data["me"], "sources": rows}
@@ -441,7 +455,126 @@ def fetch_ical(src, cursor, opener=None):
     return items[-MAX_PER_SOURCE:], {"modified": newest}
 
 
-FETCHERS = {"imap": fetch_imap, "slack": fetch_slack, "jira": fetch_jira, "github": fetch_github, "ical": fetch_ical}
+SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", "Library", ".Trash", ".cache", "site-packages"}
+FILE_MAX = 5_000_000
+FIRST_DAYS = 14
+
+
+def _paths(src):
+    p = src.get("path") or ""
+    return [os.path.expanduser(x.strip()) for x in (p if isinstance(p, list) else p.split(",")) if x.strip()]
+
+
+def fetch_folder(src, cursor, now=None):
+    """New or changed files under each folder. Meeting transcripts come out as
+    ``transcript`` items (cleaned text); other text files as ``file`` items.
+    The first check only looks back FIRST_DAYS days. Nothing leaves this
+    machine here: reading a folder is a local walk with no model."""
+    import hashlib
+    import transcripts
+    seen = dict((cursor or {}).get("files") or {})
+    first = not seen and not (cursor or {}).get("started")
+    since = ((now or _dt.datetime.now(_dt.timezone.utc)) - _dt.timedelta(days=FIRST_DAYS)).timestamp()
+    items, alive = [], {}
+    for root_dir in _paths(src):
+        if not os.path.isdir(root_dir):
+            raise ConnectionError_("no such folder: %s" % root_dir)
+        base_depth = root_dir.rstrip(os.sep).count(os.sep)
+        for d, dirs, names in os.walk(root_dir):
+            dirs[:] = [x for x in dirs if not x.startswith(".") and x not in SKIP_DIRS]
+            if d.count(os.sep) - base_depth >= 5:
+                dirs[:] = []
+            for n in names:
+                p = os.path.join(d, n)
+                if n.startswith(".") or os.path.splitext(n)[1].lower() not in transcripts.TEXT_EXT:
+                    continue
+                try:
+                    st = os.stat(p)
+                except OSError:
+                    continue
+                if st.st_size > FILE_MAX:
+                    continue
+                mark = "%d:%d" % (int(st.st_mtime), st.st_size)
+                alive[p] = mark
+                if seen.get(p) == mark or (first and st.st_mtime < since):
+                    continue
+                text = transcripts.read_text(p)
+                if not text.strip():
+                    continue
+                fid = hashlib.sha1(("%s|%s" % (p, mark)).encode()).hexdigest()[:12]
+                date = _iso(_dt.datetime.fromtimestamp(st.st_mtime, _dt.timezone.utc))
+                rel = os.path.relpath(p, root_dir)
+                if transcripts.looks_like_transcript(p, text):
+                    body = transcripts.clean(text)
+                    items.append({"connector": "transcript", "id": "tr-" + fid, "date": date,
+                                  "title": _meeting_title(rel), "path": p,
+                                  "speakers": transcripts.speakers(text)[:20], "text": body,
+                                  "origin": "file"})
+                else:
+                    items.append({"connector": "file", "id": "file-" + fid, "date": date, "name": rel,
+                                  "path": p, "content": text[:6000],
+                                  "keep_all": (src.get("keep") or "").lower() in ("all", "everything", "yes")})
+    items.sort(key=lambda i: i["date"])
+    return items[-MAX_PER_SOURCE:], {"files": alive, "started": True}
+
+
+def _meeting_title(rel):
+    """Zoom names a local recording's folder "2026-10-26 14.00.12 Topic name"."""
+    parts = rel.split(os.sep)
+    folder = parts[-2] if len(parts) > 1 else os.path.splitext(parts[-1])[0]
+    m = re.match(r"\d{4}-\d{2}-\d{2}[ _]\d{2}\.\d{2}\.\d{2}\s+(.+?)(?:\s+\d{6,})?$", folder)
+    return (m.group(1) if m else folder).strip()
+
+
+ZOOM_API = "https://api.zoom.us/v2"
+ZOOM_OAUTH = "https://zoom.us/oauth/token"
+
+
+def fetch_zoom(src, cursor, opener=None, base=ZOOM_API, oauth=ZOOM_OAUTH, now=None):
+    """Transcripts of cloud recordings since the last check. Needs a
+    Server-to-Server OAuth app with the read-only recording scope."""
+    import transcripts
+    opener = opener or urllib.request.urlopen
+    auth = base64.b64encode(("%s:%s" % (src["client_id"], src["client_secret"])).encode()).decode()
+    req = urllib.request.Request("%s?grant_type=account_credentials&account_id=%s" % (
+        oauth, urllib.parse.quote(src["account_id"])), data=b"", method="POST",
+        headers={"Authorization": "Basic " + auth})
+    with opener(req, timeout=TIMEOUT) as r:
+        token = json.loads(r.read().decode("utf-8"))["access_token"]
+    hdr = {"Authorization": "Bearer " + token}
+    now = now or _dt.datetime.now(_dt.timezone.utc)
+    done = list((cursor or {}).get("done") or [])
+    frm = (cursor or {}).get("from") or (now - _dt.timedelta(days=FIRST_DAYS)).date().isoformat()
+    items, token_next = [], ""
+    while True:
+        url = "%s/users/me/recordings?page_size=100&from=%s&to=%s%s" % (
+            base, frm, now.date().isoformat(), ("&next_page_token=" + token_next) if token_next else "")
+        page = _http_json(url, hdr, opener)
+        for m in page.get("meetings") or []:
+            mid = str(m.get("uuid") or m.get("id"))
+            files = [f for f in m.get("recording_files") or []
+                     if f.get("file_type") == "TRANSCRIPT" and f.get("status", "completed") == "completed"]
+            if mid in done or not files:
+                continue
+            dl = urllib.request.Request(files[0]["download_url"], headers=hdr)
+            with opener(dl, timeout=TIMEOUT) as r:
+                vtt = r.read().decode("utf-8", "replace")
+            items.append({"connector": "transcript", "id": "zoom-%s" % re.sub(r"\W", "", mid)[:24],
+                          "date": m.get("start_time") or _iso(now), "title": m.get("topic") or "Zoom meeting",
+                          "host": m.get("host_email") or "", "speakers": transcripts.speakers(vtt)[:20],
+                          "text": transcripts.clean(vtt), "origin": "zoom",
+                          "duration_min": m.get("duration")})
+            done.append(mid)
+        token_next = page.get("next_page_token") or ""
+        if not token_next:
+            break
+    # look back two days next time: a recording can take hours to process
+    frm = (now - _dt.timedelta(days=2)).date().isoformat()
+    return items[-MAX_PER_SOURCE:], {"done": done[-500:], "from": frm}
+
+
+FETCHERS = {"imap": fetch_imap, "slack": fetch_slack, "jira": fetch_jira, "github": fetch_github, "ical": fetch_ical,
+            "folder": fetch_folder, "zoom": fetch_zoom}
 
 
 def fetch_all(config_dir, only=None, _fetchers=None, now=None):

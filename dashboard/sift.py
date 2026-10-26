@@ -20,7 +20,9 @@ when one of these is true and drops it otherwise:
   platform    a platform notice that carries a person's words or an action on
               the user: "new message from", "invited you", "requested your
               review", "assigned to you", security alerts
-  own_file    a doc the user owns
+  own_file    a doc the user owns; a file in a watched folder set to keep all
+  meeting     a meeting transcript (from a watched folder or Zoom): the user
+              was in the meeting, so what was agreed in it is theirs to see
 
 Everything else (bulk mail, bots, channel chatter, other people's tickets) is
 dropped and counted by reason, so the check can say what it skipped. Rules use
@@ -76,8 +78,10 @@ def _text(i):
                         + [x.get("body") or "" for x in i.get("comments") or []])
     if c == "calendar":
         return "%s %s" % (i.get("summary") or "", i.get("description") or "")
-    if c == "drive":
+    if c == "drive" or c == "file":
         return "%s %s" % (i.get("name") or "", i.get("content") or "")
+    if c == "transcript":
+        return "%s\n%s" % (i.get("title") or "", i.get("text") or "")
     return json.dumps(i)
 
 
@@ -93,6 +97,8 @@ def thread_key(i):
         return ("github", i.get("repo"), i.get("number"))
     if c == "drive":
         return ("drive", i.get("name"))
+    if c == "file":
+        return ("file", i.get("path"))
     if c == "calendar":
         return ("calendar", i.get("summary"), i.get("organizer"))
     return (c, i.get("id"))
@@ -150,6 +156,8 @@ class Sifter:
         c = i.get("connector")
         text = _text(i)
         tk = thread_key(i)
+        if c == "transcript":
+            return "meeting"
         if self._is_user(i):
             return "direct"
         if c == "slack" and str(i.get("channel", "")).startswith(("D-", "mpdm-", "D0", "G0")):
@@ -211,7 +219,21 @@ class Sifter:
             if any((o or "").lower() in self.emails for o in i.get("owners") or []):
                 return "own_file"
             return None
+        if c == "file":
+            return "own_file" if i.get("keep_all") else None
         return None
+
+    def is_urgent(self, item, reason):
+        """True for what should be read now: a meeting transcript, a security
+        alert, or someone's direct message or mention that asks for something soon."""
+        if reason == "meeting":
+            return True
+        text = _text(item)
+        if reason == "platform":
+            return bool(re.search(r"security alert|secret scanning|credential|access key", text, re.I))
+        if reason in ("direct", "mention") and not self._is_user(item):
+            return bool(URGENT_WORDS.search(text))
+        return False
 
     def sift(self, items):
         kept, dropped = [], {}
@@ -226,6 +248,14 @@ class Sifter:
                 k = i.get("connector", "?")
                 dropped[k] = dropped.get(k, 0) + 1
         return kept, dropped
+
+
+# What should not wait for the next scheduled batch. Everything else the sift
+# keeps is queued and read together a few times a day, since every model call
+# has a fixed cost however few items it carries.
+URGENT_WORDS = re.compile(r"\b(urgent|asap|right away|immediately|today|tonight|eod|end of (the )?day|"
+                          r"in an hour|by noon|this morning|this afternoon|blocking|blocked|outage|"
+                          r"incident|sev ?[12]|p[01]\b|deadline)\b", re.I)
 
 
 def summary_line(kept, dropped):
