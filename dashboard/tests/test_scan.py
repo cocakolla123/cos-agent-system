@@ -243,10 +243,16 @@ class TestScan(unittest.TestCase):
         r = poll_direct.check(self.dir, self.gdir, now=self.NOW, scan=True, _model=self.model,
                               _fetch=self.fetcher([slack(3, "D-raj", "raj", "need the slides today please")]))
         self.assertEqual(r.get("urgent"), 1)
-        late = dt.datetime(2026, 10, 27, 5, 0, tzinfo=dt.timezone.utc)   # 10pm: outside batch hours
+        # the urgent read at 2:30pm does not move the 4pm batch
+        four = dt.datetime(2026, 10, 26, 23, 5, tzinfo=dt.timezone.utc)    # 4:05pm in Los Angeles
+        self.assertTrue(poll_direct.batch_due(self.dir, four))
+        with open(os.path.join(self.dir, poll_direct.SCAN_STATE), "w") as f:
+            json.dump({"last_flush": "2026-10-26T23:05:00Z", "last_batch": "2026-10-26T23:05:00Z"}, f)
+        late = dt.datetime(2026, 10, 27, 5, 0, tzinfo=dt.timezone.utc)     # 10pm: no batch after 4pm
         self.assertFalse(poll_direct.batch_due(self.dir, late))
-        self.assertTrue(poll_direct.batch_due(self.dir, self.NOW + dt.timedelta(hours=4)) is False)  # 6:30pm
-        morning = dt.datetime(2026, 10, 27, 16, 0, tzinfo=dt.timezone.utc)  # 9am next day
+        early = dt.datetime(2026, 10, 27, 14, 0, tzinfo=dt.timezone.utc)   # 7am next day
+        self.assertFalse(poll_direct.batch_due(self.dir, early))
+        morning = dt.datetime(2026, 10, 27, 15, 5, tzinfo=dt.timezone.utc)  # 8:05am next day
         self.assertTrue(poll_direct.batch_due(self.dir, morning))
 
     def test_a_failed_call_keeps_the_waiting_list(self):

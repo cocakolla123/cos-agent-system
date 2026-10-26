@@ -366,3 +366,35 @@ This is the shipped default (sifted, compact lines, caching off) run as the app 
 - **Accuracy holds day to day.** The one TEST arc lost versus weekly is HT12 (an auto-reply is not an answer). There is one noise task: an "Answer Sam: did the deploy go out?" chat line in a group DM.
 - **Daily costs about twice weekly**, about $0.04 a day, because every call has a fixed part. A weekend check with 15 sifted items still read 14,430 input tokens. Roughly half of that is Claude Code's own system prompt, sent even with no tools. A third is the open-task list, and the instructions are about 2,500 tokens. An API-key route skips Claude Code's part.
 - **Sifting kept 15 to 93 items a day**, so no day was empty. Every check made a call.
+
+## One day of always-on scanning (scan_day.py)
+
+`evals/longrun/scan_day.py` walks Oct 14, the day after the first full read, in
+5-minute steps: 288 scans, each seeing only the items that arrived in its 5
+minutes (1,601 items over the day), through `dashboard/poll_direct.check(scan=True)`
+as the app runs it. It starts from the recorded graph after the Oct 13 daily
+check (lrf-v3-daily d01). One meeting transcript is added at 2:30pm to exercise
+the urgent path (the world has none); it is not in the answer key. Scored
+against the gold arcs with an event that day (D07 and LD07 dev, T11 and LT04 test;
+read, not tuned on) plus the meeting's two tasks.
+
+| setup | model calls | cost of the day | gold events right by midnight | meeting tasks | still waiting at midnight |
+|---|---|---|---|---|---|
+| no scanning: one check at end of day (lrf-v3-daily d02) | 1 | $0.06 | 4/4 | (no meeting in that run) | 0 |
+| scan + urgent at once + batches 8am, noon, 4pm (default) | 4 reads + 1 draft | $0.15 | 3/4 | 2/2, at 2:35pm | 27 |
+| scan + urgent at once + Check now pressed at 5pm | 2 reads + 2 drafts | $0.12 | 4/4 | 2/2, at 2:35pm | 15 |
+
+- The 288 scans cost nothing; the sift kept 93 of the 1,601 items.
+- None of the world's own items that day were urgent; the meeting was, and both
+  setups read it on the next scan (2:35pm) and drafted its two tasks.
+- The one gold event missed by midnight under the default (T11, a new ask from a
+  client) arrived at exactly 4:00pm, just after the 4pm batch; it waits for 8am.
+  Not a model miss: every setup that read it got it right (due Oct 30).
+- The first run of the default setup found a scheduling bug: the 2:35pm urgent
+  read reset the batch timer and pushed the 4pm batch past the end of the batch
+  hours. Batches now run at fixed times and an urgent read does not move them
+  (kept as scan-day-batches-timerbug: $0.12, 42 waiting at midnight).
+- One extra task in the 5pm setup: "Reply to Sam: did the deploy go out?", from a
+  group DM with the user. Not in the answer key.
+- Cost per day is mostly the fixed part of each call; going from three batches to
+  one saves about 3 cents a day.

@@ -297,9 +297,26 @@ def flush_settings(config_dir):
             "end": d.get("flush_end", "16:30"), "timezone": cfg.get("timezone") or "UTC"}
 
 
+def _slots(fs, local):
+    """Today's batch times: flush_start, then every flush_min minutes up to flush_end."""
+    try:
+        h, m = (int(x) for x in fs["start"].split(":"))
+        eh, em = (int(x) for x in fs["end"].split(":"))
+    except ValueError:
+        return []
+    from datetime import timedelta as _td
+    t = local.replace(hour=h, minute=m, second=0, microsecond=0)
+    end = local.replace(hour=eh, minute=em, second=0, microsecond=0)
+    out = []
+    while t <= end and len(out) < 48:
+        out.append(t)
+        t = t + _td(minutes=max(fs["flush_min"], 30))
+    return out
+
+
 def batch_due(config_dir, now):
-    """True when the waiting list should be read even with nothing urgent: inside
-    the batch hours and at least flush_min minutes since the last batch."""
+    """True when a batch time (about 8am, noon and 4pm by default) has passed
+    since the last batch. A read of something urgent does not move the batches."""
     import datetime as _dt
     fs = flush_settings(config_dir)
     try:
@@ -307,17 +324,18 @@ def batch_due(config_dir, now):
         local = now.astimezone(ZoneInfo(fs["timezone"]))
     except Exception:  # noqa: BLE001
         local = now
-    hm = local.strftime("%H:%M")
-    if not (fs["start"] <= hm <= fs["end"]):
+    passed = [t for t in _slots(fs, local) if t <= local]
+    if not passed:
         return False
-    last = _scan_state(config_dir).get("last_flush")
+    st = _scan_state(config_dir)
+    last = st.get("last_batch") or st.get("last_flush")
     if not last:
         return True
     try:
         t = _dt.datetime.fromisoformat(last.replace("Z", "+00:00"))
     except ValueError:
         return True
-    return (now - t).total_seconds() >= fs["flush_min"] * 60
+    return t < passed[-1]
 
 
 # ---------------------------------------------------------------- drafting
@@ -464,7 +482,8 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
         out["quiet"] = sorted(fetched["per_source"])
         return out
     urgent = [r for r in waiting if r.get("urgent")]
-    if scan and not urgent and not batch_due(config_dir, now):
+    due = batch_due(config_dir, now) if scan else True
+    if scan and not urgent and not due:
         if not dry_run:
             _write_pending(config_dir, waiting)
         out["queued"] = True
@@ -513,6 +532,8 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     _write_pending(config_dir, [])
     st = _scan_state(config_dir)
     st["last_flush"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    if not (scan and urgent and not due):        # a batch, or Check now
+        st["last_batch"] = st["last_flush"]
     _save_scan_state(config_dir, st)
     out.update({"records": len(recs), "read": len(kept)})
     if draft and recs:
