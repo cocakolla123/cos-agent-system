@@ -1,0 +1,805 @@
+<title>Chief of Staff</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a night timetable. Charcoal ground, one lifted slate blue for "ready",
+   brick red only for late. A 3D hero turns noise into a short list; every section
+   below follows one morning: it reads, does the work, waits for your yes. */
+:root {
+  --night: #101216;
+  --night-2: #161920;
+  --panel: #1b1f27;
+  --rule: #2a303b;
+  --text: #e7e9ec;
+  --muted: #a2a9b4;
+  --dim: #6f7783;
+  --signal: #8fa3dc;
+  --signal-hot: #c3cffb;
+  --late: #d57a81;
+  --ok: #7dc29c;
+  --display: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--night); }
+body { margin: 0; background: var(--night); color: var(--text); font-family: var(--body);
+  font-size: 16px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+html, body { overflow-x: clip; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 50; background: var(--night); }
+a { color: inherit; }
+::selection { background: var(--signal); color: var(--night); }
+:focus-visible { outline: 2px solid var(--signal-hot); outline-offset: 3px; }
+.wrap { max-width: 1240px; margin: 0 auto;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.mono { font-family: var(--mono); }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--signal); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(34px, 5.4vw, 72px); line-height: .95; font-weight: 800; font-stretch: 112%; letter-spacing: -.02em; }
+.lede { font-size: clamp(17px, 1.5vw, 20px); color: var(--muted); max-width: 60ch; margin: 0; }
+
+/* ---- nav ---- */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+  background: color-mix(in srgb, var(--night) 82%, transparent); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule); }
+.nav .wrap { display: flex; align-items: center; gap: 24px; height: 60px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
+.brand-mark { width: 14px; height: 14px; background: var(--signal); box-shadow: 0 0 18px var(--signal); }
+.nav-links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--muted); }
+.nav-links a { text-decoration: none; }
+.nav-links a:hover { color: var(--text); }
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--body); padding: 14px 20px;
+  border: 1px solid var(--rule); background: transparent; color: var(--text); text-decoration: none; cursor: pointer;
+  transition: transform .2s, background .2s, border-color .2s, box-shadow .2s; }
+.btn:hover { border-color: var(--signal); transform: translateY(-2px); }
+.btn.primary { background: var(--signal); border-color: var(--signal); color: var(--night); box-shadow: 0 10px 40px -10px var(--signal); }
+.btn.primary:hover { background: var(--signal-hot); box-shadow: 0 16px 50px -10px var(--signal); }
+.btn.sm { padding: 9px 14px; font-size: 13px; }
+.nav .btn { padding: 9px 14px; font-size: 13px; }
+@media (max-width: 760px) { .nav-links { display: none; } .nav .btn { margin-left: auto; } }
+
+/* ---- hero ---- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--rule); }
+#scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-scrim { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--night) 0%, color-mix(in srgb, var(--night) 70%, transparent) 34%, transparent 62%); }
+.hero .wrap { position: relative; min-height: clamp(600px, 86vh, 860px); display: flex; flex-direction: column; justify-content: center;
+  padding-block: 56px 48px; gap: 24px; pointer-events: none; }
+.hero .wrap > * { pointer-events: auto; max-width: 600px; }
+.hero h1 { font-size: clamp(42px, 5.9vw, 92px); line-height: .9; font-weight: 900; font-stretch: 114%; letter-spacing: -.035em; }
+.hero h1 span { display: block; }
+.hero h1 .yes { color: var(--signal); text-shadow: 0 0 40px color-mix(in srgb, var(--signal) 45%, transparent); }
+.hero h1 .w { display: inline-block; opacity: 1; transform: none; }
+.js .hero h1 .w { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(.45em) rotateX(-40deg); } }
+.hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.hud { display: grid; grid-template-columns: repeat(3, auto); gap: 0; border-top: 1px solid var(--rule); width: max-content; max-width: 100%; }
+.hud div { padding: 14px 28px 0 0; }
+.hud b { display: block; font: 700 clamp(22px, 2.4vw, 32px)/1 var(--mono); font-variant-numeric: tabular-nums; }
+.hud span { font: 12px/1.4 var(--mono); color: var(--dim); text-transform: uppercase; letter-spacing: .1em; }
+.hud .hot b { color: var(--signal); }
+.hero-note { font: 12px/1.5 var(--mono); color: var(--dim); }
+@media (max-width: 860px) {
+  .hero-scrim { background: linear-gradient(180deg, var(--night) 0%, color-mix(in srgb, var(--night) 55%, transparent) 50%, var(--night) 100%); }
+  .hero .wrap { min-height: 0; padding-block: 40px 380px; }
+  .hud { grid-template-columns: repeat(3, 1fr); width: 100%; }
+  .hud div { padding-right: 12px; }
+}
+
+/* ---- sections ---- */
+section { position: relative; }
+main { overflow-x: clip; }
+.sec { padding-block: clamp(80px, 11vw, 150px); border-bottom: 1px solid var(--rule); }
+.sec-head { display: grid; gap: 22px; margin-bottom: clamp(40px, 6vw, 72px); }
+
+/* ---- the morning (3D console) ---- */
+.stage { perspective: 1800px; }
+.console { --tilt: 22; transform: rotateX(calc(var(--tilt) * 1deg)) scale(calc(1 - var(--tilt) * .004));
+  transform-origin: 50% 0; background: var(--night-2); border: 1px solid var(--rule);
+  box-shadow: 0 60px 120px -40px rgba(0,0,0,.8), 0 0 0 1px rgba(143,163,220,.06), 0 30px 90px -50px var(--signal);
+  will-change: transform; }
+.console-bar { display: flex; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--rule);
+  font: 12px/1 var(--mono); color: var(--dim); letter-spacing: .06em; flex-wrap: wrap; }
+.console-bar .live { color: var(--signal); display: inline-flex; align-items: center; gap: 8px; }
+.console-bar .live i { width: 8px; height: 8px; background: var(--signal); border-radius: 50%; box-shadow: 0 0 12px var(--signal); animation: pulse 1.6s infinite; }
+@keyframes pulse { 50% { opacity: .3; } }
+.console-bar .spacer { flex: 1; }
+.console-grid { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); min-height: 560px; }
+.log { border-right: 1px solid var(--rule); padding: 22px 20px; display: flex; flex-direction: column; gap: 14px; }
+.log h3, .queue h3 { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.step { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; gap: 10px; align-items: baseline;
+  padding: 9px 0; border-bottom: 1px dashed var(--rule); font-size: 14px; color: var(--muted); transition: color .3s, opacity .3s; }
+.step .dot { width: 8px; height: 8px; border: 1px solid var(--dim); transform: translateY(-1px); transition: all .3s; }
+.step .n { font: 13px/1 var(--mono); color: var(--dim); font-variant-numeric: tabular-nums; }
+.step.on { color: var(--text); }
+.step.on .dot { background: var(--signal); border-color: var(--signal); box-shadow: 0 0 10px var(--signal); }
+.step.on .n { color: var(--signal); }
+.step.wait { opacity: .35; }
+.bar { height: 3px; background: var(--rule); position: relative; overflow: hidden; }
+.bar i { position: absolute; inset: 0 auto 0 0; width: var(--p, 100%); background: var(--signal); box-shadow: 0 0 12px var(--signal); transition: width .25s linear; }
+.log-foot { margin-top: auto; font: 12px/1.5 var(--mono); color: var(--dim); }
+.queue { padding: 22px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.queue-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.queue-head b { font: 700 13px/1 var(--mono); color: var(--signal); }
+.cards { display: grid; gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--rule); border-left: 3px solid var(--signal); padding: 16px 18px;
+  display: grid; gap: 10px; transform-origin: 0 50%; transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .5s, max-height .5s .2s, padding .5s .2s, margin .5s .2s, border-width .5s .2s;
+  max-height: 600px; overflow: hidden; position: relative; }
+.card.late { border-left-color: var(--late); }
+.card.quiet { border-left-color: var(--dim); }
+.card.enter { opacity: 0; transform: translateY(24px) rotateX(-25deg); }
+.card.gone { opacity: 0; transform: translateX(60%) rotate(4deg); max-height: 0; padding-block: 0; margin-block: -6px; border-width: 0; }
+.card-top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font: 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--dim); }
+.chip { padding: 5px 7px; border: 1px solid var(--rule); color: var(--muted); }
+.chip.hi { color: var(--late); border-color: color-mix(in srgb, var(--late) 45%, var(--rule)); }
+.chip.ws { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 40%, var(--rule)); }
+.card h4 { margin: 0; font: 700 18px/1.25 var(--display); letter-spacing: -.01em; }
+.why { font-size: 13px; color: var(--muted); }
+.draft { font: 13px/1.6 var(--mono); color: var(--text); background: var(--night); border: 1px solid var(--rule); padding: 12px 14px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.draft .to { color: var(--dim); display: block; margin-bottom: 6px; }
+.draft mark { background: color-mix(in srgb, var(--signal) 22%, transparent); color: var(--signal-hot); padding: 0 2px; }
+.card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.stamp { position: absolute; right: 16px; top: 14px; font: 800 13px/1 var(--mono); letter-spacing: .16em; color: var(--ok);
+  border: 2px solid var(--ok); padding: 6px 8px; transform: rotate(-8deg) scale(1.6); opacity: 0; transition: all .25s cubic-bezier(.3,1.6,.5,1); }
+.card.approved .stamp { opacity: 1; transform: rotate(-8deg) scale(1); }
+.done { display: grid; place-items: center; text-align: center; gap: 14px; padding: 60px 20px; border: 1px dashed var(--rule); }
+.done b { font: 900 clamp(40px, 6vw, 76px)/1 var(--display); font-stretch: 120%; color: var(--signal); }
+@media (max-width: 860px) {
+  .console-grid { grid-template-columns: minmax(0, 1fr); }
+  .log { border-right: 0; border-bottom: 1px solid var(--rule); }
+}
+
+/* ---- three moves ---- */
+.moves { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; perspective: 1200px; }
+.move { background: var(--night-2); border: 1px solid var(--rule); padding: 28px; display: grid; gap: 16px; align-content: start;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .15s ease-out, border-color .3s; position: relative; overflow: hidden; }
+.move:hover { border-color: var(--signal); }
+.move::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), color-mix(in srgb, var(--signal) 14%, transparent), transparent 60%); }
+.move .num { font: 900 88px/.8 var(--display); font-stretch: 125%; color: transparent; -webkit-text-stroke: 1px var(--signal); }
+.move h3 { font-size: 28px; font-weight: 800; font-stretch: 110%; letter-spacing: -.01em; }
+.move p { margin: 0; color: var(--muted); }
+.move ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font: 13px/1.45 var(--mono); color: var(--dim); }
+.move li::before { content: "› "; color: var(--signal); }
+@media (max-width: 900px) { .moves { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- marquee ---- */
+.marquee { padding-block: 48px; border-bottom: 1px solid var(--rule); overflow: hidden; display: grid; gap: 14px;
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.track { display: flex; gap: 14px; width: max-content; animation: slide 90s linear infinite; }
+.track.rev { animation-direction: reverse; animation-duration: 110s; }
+.marquee:hover .track { animation-play-state: paused; }
+@keyframes slide { to { transform: translateX(-50%); } }
+.pill { font: 14px/1 var(--mono); padding: 14px 18px; border: 1px solid var(--rule); background: var(--night-2); color: var(--muted); white-space: nowrap; display: flex; gap: 10px; align-items: center; }
+.pill i { width: 6px; height: 6px; background: var(--signal); flex: none; }
+.pill.l i { background: var(--late); }
+.marquee-label { font: 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); text-align: center; }
+
+/* ---- proof ---- */
+.proof-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.ranges { display: grid; gap: 30px; }
+.range-row { display: grid; gap: 10px; }
+.range-label { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 15px; }
+.range-label b { font: 700 15px/1.2 var(--mono); font-variant-numeric: tabular-nums; color: var(--text); }
+.range-label span { color: var(--muted); }
+.rtrack { position: relative; height: 34px; border-left: 1px solid var(--rule); border-right: 1px solid var(--rule);
+  background: repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), var(--rule) calc(25% - 1px) 25%); }
+.rfill { position: absolute; top: 12px; height: 10px; left: 0; width: var(--mean); background: color-mix(in srgb, var(--signal) 28%, transparent);
+  transform-origin: 0 50%; transition: transform 1.4s cubic-bezier(.2,.8,.2,1); }
+.rspan { position: absolute; top: 6px; height: 22px; left: var(--lo); width: calc(var(--hi) - var(--lo)); border: 2px solid var(--signal); border-top: 0; border-bottom: 0; transition: opacity .6s 1s; }
+.rspan::before { content: ""; position: absolute; left: 0; right: 0; top: 10px; height: 2px; background: var(--signal); }
+.rmean { position: absolute; top: 0; height: 34px; width: 3px; left: calc(var(--mean) - 1px); background: var(--signal-hot); box-shadow: 0 0 14px var(--signal); transition: opacity .4s 1.2s; }
+.range-row.weak .rspan { border-color: var(--late); } .range-row.weak .rspan::before { background: var(--late); }
+.range-row.weak .rmean { background: var(--late); box-shadow: 0 0 14px var(--late); }
+.range-row.weak .rfill { background: color-mix(in srgb, var(--late) 24%, transparent); }
+.js .ranges:not(.in) .rfill { transform: scaleX(0); }
+.js .ranges:not(.in) .rspan, .js .ranges:not(.in) .rmean { opacity: 0; }
+.axis { display: flex; justify-content: space-between; font: 11px/1 var(--mono); color: var(--dim); }
+.proof-note { font-size: 13px; color: var(--dim); margin: 0; max-width: 62ch; }
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.tile { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 22px; display: grid; gap: 8px; align-content: start; }
+.tile b { font: 800 clamp(30px, 3.6vw, 46px)/1 var(--display); font-stretch: 115%; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.tile span { font-size: 14px; color: var(--muted); }
+.tile.hot b { color: var(--signal); }
+@media (max-width: 900px) { .proof-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- trust ---- */
+.trust { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.trust div { padding: 26px 22px 0 0; display: grid; gap: 10px; align-content: start; }
+.trust b { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--signal); }
+.trust h3 { font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+.trust p { margin: 0; color: var(--muted); font-size: 15px; }
+.tiers { margin-top: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border: 1px solid var(--rule); }
+.tier { padding: 22px; border-right: 1px solid var(--rule); display: grid; gap: 6px; }
+.tier:last-child { border-right: 0; }
+.tier .t { font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.tier b { font-size: 19px; }
+.tier span { color: var(--muted); font-size: 14px; }
+.tier .meter { height: 4px; background: var(--rule); margin-top: 8px; }
+.tier .meter i { display: block; height: 100%; background: var(--signal); }
+@media (max-width: 900px) { .trust { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; } .tiers { grid-template-columns: minmax(0, 1fr); } .tier { border-right: 0; border-bottom: 1px solid var(--rule); } .tier:last-child { border-bottom: 0; } }
+@media (max-width: 520px) { .trust { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- install ---- */
+.install { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 48px; align-items: center; }
+.term { background: #0a0b0e; border: 1px solid var(--rule); box-shadow: 0 40px 100px -40px var(--signal); }
+.term-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--rule); font: 12px/1 var(--mono); color: var(--dim); }
+.term pre { margin: 0; padding: 20px; font: 14px/1.8 var(--mono); color: var(--text); overflow-x: auto; }
+.term .p { color: var(--signal); user-select: none; }
+.term .c { color: var(--dim); }
+.caret { display: inline-block; width: 9px; height: 17px; background: var(--signal); vertical-align: -3px; animation: pulse 1s steps(1) infinite; }
+@media (max-width: 900px) { .install { grid-template-columns: minmax(0, 1fr); } }
+
+footer { padding-block: 40px 60px; color: var(--dim); font-size: 14px; }
+footer .wrap { display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between; }
+footer a { color: var(--muted); }
+
+/* scroll reveal: visible at rest; only nudged in when JS runs */
+.js .rv { transition: opacity .9s, transform .9s cubic-bezier(.2,.8,.2,1); }
+.js .rv.pre { opacity: .001; transform: translateY(40px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .console { --tilt: 0 !important; }
+}
+</style>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>Chief of Staff</a>
+    <div class="nav-links">
+      <a href="#morning">The morning</a>
+      <a href="#how">How it works</a>
+      <a href="#proof">Accuracy</a>
+      <a href="#trust">Safety</a>
+      <a href="#install">Install</a>
+    </div>
+    <a class="btn" href="https://github.com/cocakolla123/cos-agent-system">GitHub</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="scene" aria-hidden="true"></canvas>
+  <div class="hero-scrim"></div>
+  <div class="wrap">
+    <div class="eyebrow">Open source · runs on your computer · MIT</div>
+    <h1 aria-label="It reads everything. Does the work. Waits for your yes.">
+      <span><span class="w" style="animation-delay:.05s">It reads</span> <span class="w" style="animation-delay:.15s">everything.</span></span>
+      <span><span class="w" style="animation-delay:.3s">Does the</span> <span class="w" style="animation-delay:.4s">work.</span></span>
+      <span class="yes"><span class="w" style="animation-delay:.55s">Waits for</span> <span class="w" style="animation-delay:.65s">your yes.</span></span>
+    </h1>
+    <p class="lede">A chief of staff for your inbox. It goes through your email, Slack, calendar, tickets and docs on its own, finds what you owe people, and writes the reply, the plan or the check-in. You open one page and approve your day.</p>
+    <div class="hero-ctas">
+      <a class="btn primary" href="#morning">Watch a morning ↓</a>
+      <a class="btn" href="https://claude.ai/artifact/UFkc9jCX6M4gYVexuqYEnh">Open the live demo</a>
+    </div>
+    <div class="hud" aria-live="off">
+      <div><b id="hudRead">14,457</b><span>items read</span></div>
+      <div><b id="hudTasks">51</b><span>tasks found</span></div>
+      <div class="hot"><b id="hudDrafts">51</b><span>next steps ready</span></div>
+    </div>
+    <div class="hero-note">Numbers from the first run on Kestrel Labs, a made-up company: 90 days of one engineer's accounts.</div>
+  </div>
+</header>
+
+<main>
+<section class="sec" id="morning">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">The morning</div>
+      <h2>You wake up.<br>The work is already done.</h2>
+      <p class="lede">This is the first run on Dana Kowalski at Kestrel Labs, a fictional engineer with three months of real-looking traffic. It reads every account, sorts the asks from the noise, and leaves a ready next step on every task. Approve one to see what happens. Nothing here is really sent.</p>
+    </div>
+    <div class="stage">
+      <div class="console" id="console">
+        <div class="console-bar">
+          <span class="live"><i></i><span id="consoleState">Ready for you</span></span>
+          <span>Dana Kowalski · Kestrel Labs (fictional)</span>
+          <span class="spacer"></span>
+          <button class="btn sm" id="replay" type="button">↺ Replay the morning</button>
+        </div>
+        <div class="console-grid">
+          <div class="log">
+            <h3>What it read</h3>
+            <ul class="steps" id="steps">
+              <li class="step on"><span class="dot"></span><span>Slack, 140 channels</span><span class="n" data-n="13403">13,403</span></li>
+              <li class="step on"><span class="dot"></span><span>Gmail, two accounts</span><span class="n" data-n="558">558</span></li>
+              <li class="step on"><span class="dot"></span><span>Jira updates</span><span class="n" data-n="439">439</span></li>
+              <li class="step on"><span class="dot"></span><span>GitHub PRs and issues</span><span class="n" data-n="37">37</span></li>
+              <li class="step on"><span class="dot"></span><span>Calendar and Drive</span><span class="n" data-n="20">20</span></li>
+              <li class="step on"><span class="dot"></span><span>Open tasks found</span><span class="n" data-n="51">51</span></li>
+              <li class="step on"><span class="dot"></span><span>Next steps written</span><span class="n" data-n="51">51</span></li>
+            </ul>
+            <div class="bar"><i id="runBar"></i></div>
+            <div class="log-foot">Read-only the whole way. Most of it is noise: bots, asks to other people, mentions that are not asks. It keeps the 51 that are yours.</div>
+          </div>
+          <div class="queue">
+            <div class="queue-head"><h3>Waiting for your yes</h3><b id="left">6 shown · 51 ready</b></div>
+            <div class="cards" id="cards"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">How it works</div>
+      <h2>Three moves, every day.</h2>
+    </div>
+    <div class="moves">
+      <article class="move rv">
+        <div class="num">01</div>
+        <h3>It reads</h3>
+        <p>On a schedule, with no prompt from you. Every inbox, channel, ticket, calendar and doc you connect, cross-checked into one graph of who you owe what, by when.</p>
+        <ul><li>muted channels and group DMs</li><li>the one ask in a 40-message thread</li><li>work nobody assigned but is yours</li></ul>
+      </article>
+      <article class="move rv">
+        <div class="num">02</div>
+        <h3>It does the work</h3>
+        <p>Not "you should reply to Alex". The reply, written. The fix plan, the outline, the review checklist, and a "still needed?" note for tasks that went quiet.</p>
+        <ul><li>drafts in your own wording</li><li>blanks marked where only you know</li><li>ranked by deadline, stakes and recency</li></ul>
+      </article>
+      <article class="move rv">
+        <div class="num">03</div>
+        <h3>It waits for your yes</h3>
+        <p>Everything lands on one page. Approve, edit or skip. Nothing is sent, posted or merged until you click. It learns from what you change.</p>
+        <ul><li>one click per task</li><li>edits teach the next draft</li><li>filters by type, priority, workspace</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-label="Next steps it wrote on the first run">
+  <div class="marquee-label">Next steps it wrote on the first run</div>
+  <div class="track" id="trackA"></div>
+  <div class="track rev" id="trackB"></div>
+</div>
+
+<section class="sec" id="proof">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">Accuracy</div>
+      <h2>It shows its work.</h2>
+      <p class="lede">Most assistants ask you to trust them. This one comes with a test: a fake company with 18,826 messages, tickets and events over four months, a written answer for every task, and a second person who labeled it blind.</p>
+    </div>
+    <div class="proof-grid">
+      <div class="rv">
+        <div class="ranges" id="ranges">
+          <div class="range-row" style="--mean:97%;--lo:92.5%;--hi:100%">
+            <div class="range-label"><span>First run, held-out tasks fully right</span><b>38.8 of 40 · range 37 to 40</b></div>
+            <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
+          </div>
+          <div class="range-row" style="--mean:97.2%;--lo:93%;--hi:100%">
+            <div class="range-label"><span>After four weekly checks</span><b>41.8 of 43 · range 40 to 43</b></div>
+            <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
+          </div>
+          <div class="range-row weak" style="--mean:49.3%;--lo:47.5%;--hi:50%">
+            <div class="range-label"><span>Same test on a small cheap model</span><b>19.7 of 40 · range 19 to 20</b></div>
+            <div class="rtrack"><div class="rfill"></div><div class="rspan"></div><div class="rmean"></div></div>
+          </div>
+          <div class="axis"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+          <p class="proof-note">"Fully right" means caught, right due date, right priority, not duplicated, and closed when it should be. Mean of 5 runs (3 for the small model), bars show the range. The small model is why deep work stays on a stronger one.</p>
+        </div>
+      </div>
+      <div class="tiles rv">
+        <div class="tile hot"><b>166/168</b><span>calls the blind second labeler agreed with</span></div>
+        <div class="tile"><b>0</b><span>planted "close this task" instructions followed on the default model</span></div>
+        <div class="tile"><b>$0.86</b><span>to read 14,457 items on the first run</span></div>
+        <div class="tile"><b>$1.12</b><span>for the four weekly checks after that</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="trust">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">Safety</div>
+      <h2>It reads everything.<br>It sends nothing without you.</h2>
+    </div>
+    <div class="trust rv">
+      <div><b>Read-only</b><h3>Background jobs can't send</h3><p>Research and daily checks hold only read tools. No job running on its own has a send, post or delete tool.</p></div>
+      <div><b>Your click</b><h3>Every send waits</h3><p>Emails, Slack replies and PRs sit as drafts until you approve them. You can edit any line first.</p></div>
+      <div><b>Your machine</b><h3>Runs on localhost</h3><p>The app and your data stay on your computer. API keys live in a local file only you can read.</p></div>
+      <div><b>Open</b><h3>Every prompt in the repo</h3><p>MIT licensed. Read the instructions it follows, the test it is scored on, and the fixes it made.</p></div>
+    </div>
+    <div class="tiers rv">
+      <div class="tier"><span class="t">Light</span><b>Quick replies, chat</b><span>a small fast model</span><div class="meter"><i style="width:22%"></i></div></div>
+      <div class="tier"><span class="t">Standard</span><b>Daily checks, drafts</b><span>a solid everyday model</span><div class="meter"><i style="width:55%"></i></div></div>
+      <div class="tier"><span class="t">Deep</span><b>The first read, learning</b><span>your strongest model</span><div class="meter"><i style="width:100%"></i></div></div>
+    </div>
+    <p class="proof-note" style="margin-top:16px">Bring your own model for each tier: your Claude plan, or your own Anthropic, OpenAI or Gemini key. Set a daily budget and every call shows its cost.</p>
+  </div>
+</section>
+
+<section class="sec" id="install">
+  <div class="wrap install">
+    <div class="rv" style="display:grid;gap:22px">
+      <div class="eyebrow">Install</div>
+      <h2>Two lines.<br>Then approve your day.</h2>
+      <p class="lede">Needs Python 3.12 or newer and the Claude Code CLI, on macOS or Linux. Setup connects your accounts read-only and runs the first read. The dashboard opens at 127.0.0.1:8765.</p>
+    </div>
+    <div class="term rv">
+      <div class="term-bar"><span>Terminal</span><button class="btn sm" id="copy" type="button">Copy</button></div>
+<pre id="cmds"><span class="p">$ </span>git clone https://github.com/cocakolla123/cos-agent-system.git
+<span class="p">$ </span>cd cos-agent-system &amp;&amp; ./install.sh --start
+<span class="c"># then, in Claude Code from that folder:</span>
+<span class="p">› </span>/global:setup <span class="caret"></span></pre>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Chief of Staff · MIT licensed · <a href="https://github.com/cocakolla123/cos-agent-system">GitHub</a> · <a href="https://claude.ai/artifact/UFkc9jCX6M4gYVexuqYEnh">Live demo</a></span>
+    <span>Kestrel Labs, Dana Kowalski and everyone in the demo are made up.</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+document.documentElement.classList.add("js");
+const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmt = n => Math.round(n).toLocaleString("en-US");
+
+/* ---------- real tasks and drafts from the demo run ---------- */
+const TASKS = [
+  {title: "Confirm the billing cron schedule for Alex", kind: "Reply", pri: "High", due: "Fri", ws: "Kestrel", why: "Blocks the billing cutover.", cls: "",
+   to: "Slack · #proj-billing-migration, thread of Oct 12",
+   body: "@Alex Park confirmed. Billing job cron schedule: [job name] at [cron expression, timezone]. Verified against [config/source]. Let me know if anything looks off before the cutover.", act: "Approve & send"},
+  {title: "Send Northwind the pen-test summary", kind: "Reply", pri: "High", due: "Oct 22", ws: "Kestrel", why: "Client waiting.", cls: "",
+   to: "Email · Alex Brennan · RE: Security documents",
+   body: "Hi Alex, attached is Kestrel's pen-test summary, ahead of your Oct 22 date. [attach pen-test summary]. Let me know if you need anything else for your review. Thanks, Dana", act: "Approve & send"},
+  {title: "Rotate the AWS key leaked in commit 9f2c1ab", kind: "Security", pri: "High", due: "4 days late", ws: "Kestrel", why: "Security. Due Oct 9.", cls: "late",
+   to: "Your steps",
+   body: "1. In IAM, find the key from the GitHub alert and its owner.\n2. Create a replacement and update every service that uses it.\n3. Deactivate the old key, confirm nothing breaks, delete it.\n4. Check CloudTrail for use since 9f2c1ab: [findings].\n5. Tell Ines it is done, and that it ran late.", act: "Mark as my plan"},
+  {title: "Fix rota-api #430: CSV import drops the last row", kind: "Engineering", pri: "Med", due: "Open", ws: "Kestrel", why: "Regression in 2.14, assigned to you.", cls: "",
+   to: "Fix plan",
+   body: "1. Reproduce on 2.14 with and without a trailing newline.\n2. Diff the import code against the last good release. Root cause: [root cause].\n3. Fix and add a test: import N rows, assert N saved.\n4. Open a PR that references #430, ask alex-park to confirm.", act: "Mark as my plan"},
+  {title: "Is the v1 migration guide still needed?", kind: "Writing", pri: "High", due: "Gone quiet", ws: "Kestrel", why: "Due Sep 10, nobody has mentioned it since.", cls: "quiet",
+   to: "Email · Tomas Reyes · RE: Before launch",
+   body: "Hi Tomas, the /v2/shifts API reference is merged, but the v1 migration guide was due Sep 10 and is still open. Do you still need it? If so, what date works? [date]. Thanks, Dana", act: "Approve & send"},
+  {title: "Friday status email to Ines", kind: "Reply", pri: "Med", due: "Fri", ws: "Kestrel", why: "Recurring ask from your manager.", cls: "",
+   to: "Email · Ines · Weekly status (send Friday)",
+   body: "Status:\n- Cron migration: [progress]\n- Load test: [progress]\n- Runbook: [progress]\nBlockers: [none]\n\nNote: your last three were word for word the same.", act: "Approve & schedule"}
+];
+const SUMMARIES = ["Email to Corvid Recruiting: ask for the available final-round slots","Draft of API v1 deprecation notice text for Tomas (due today)","Outline for churn report from Raj's usage export (overdue)","Slack reply to Alex: confirm billing job cron schedule","Review steps and reply text for events schema sign-off","Outline for INC-240 timeline from #incidents thread (overdue)","Slack to Lena: answer on API bulk edit support before Oct 16 mocks","Email to Alex Brennan: send pen-test summary (requested by Oct 22)","Email to Kestrel Legal: check status of LEG-55 MSA redlines review","Steps to finish the cron migration to scheduler v2 (PLAT-322)","Slack reply to Ines: status and new date for the scheduler v2 load test","Outline for the Postgres 18 upgrade plan, due before Oct 20","Steps to renew the api.kestrel.example TLS cert before Oct 30","Review checklist for the IAM policy diff, due Oct 15","Review steps for rota-api PR #470, covering for Alex","Fix plan for rota-api #430: CSV import drops last row","Steps to rotate and revoke the leaked AWS key","Checklist to rotate my SSH keys before the Oct 23 deadline","Fix plan for reopened RTA-101: timezone bug for Australia/Lord_Howe","Email to Ines: confirm the date the SOC 2 audit needs the backup evidence","Email to Priya: follow up on the 50-seat renewal quote","Email to Tomas: is the v1 migration guide still needed, and by when","Steps to review tinyq PR #89 (Fix double drain)","Call script to reschedule the BrightSmile Dental appointment","Steps to review and sign the Harbor Lane lease renewal by Oct 30"];
+const LATE = /overdue|late|leaked|SOC 2|due today/i;
+
+function fillTrack(el, list) {
+  const html = list.map(s => `<span class="pill${LATE.test(s) ? " l" : ""}"><i></i>${s.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</span>`).join("");
+  el.innerHTML = html + html;
+}
+fillTrack(document.getElementById("trackA"), SUMMARIES.slice(0, 13));
+fillTrack(document.getElementById("trackB"), SUMMARIES.slice(13).concat(SUMMARIES.slice(0, 3)));
+
+/* ---------- the console ---------- */
+const cardsEl = document.getElementById("cards"), leftEl = document.getElementById("left");
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+function cardHTML(t, i) {
+  const body = esc(t.body).replace(/\[([^\]]+)\]/g, "<mark>[$1]</mark>");
+  return `<article class="card ${t.cls}" data-i="${i}">
+    <div class="stamp">${t.act.startsWith("Mark") ? "PLANNED" : "APPROVED"}</div>
+    <div class="card-top"><span class="chip ws">${t.ws}</span><span class="chip">${t.kind}</span><span class="chip${t.pri === "High" ? " hi" : ""}">${t.pri}</span><span>${t.due}</span></div>
+    <h4>${esc(t.title)}</h4>
+    <div class="why">${esc(t.why)} <span class="mono" style="color:var(--signal)">Next step ready.</span></div>
+    <div class="draft"><span class="to">${esc(t.to)}</span>${body}</div>
+    <div class="card-actions"><button class="btn sm primary" data-act="ok" type="button">${t.act}</button><button class="btn sm" data-act="edit" type="button">Edit</button><button class="btn sm" data-act="skip" type="button">Skip</button></div>
+  </article>`;
+}
+let remaining = TASKS.length;
+function updateLeft() {
+  leftEl.textContent = remaining ? `${remaining} shown · ${45 + remaining} ready` : "All clear";
+  if (!remaining) {
+    cardsEl.insertAdjacentHTML("beforeend", `<div class="done"><b>Day approved.</b><span class="why">That's six of the 51. The real dashboard has the rest, ranked.</span><button class="btn primary" type="button" onclick="playMorning()">↺ Replay the morning</button></div>`);
+  }
+}
+function renderCards(entering) {
+  cardsEl.innerHTML = TASKS.map(cardHTML).join("");
+  remaining = TASKS.length; updateLeft();
+  if (entering) cardsEl.querySelectorAll(".card").forEach(c => c.classList.add("enter"));
+}
+cardsEl.addEventListener("click", e => {
+  const b = e.target.closest("button[data-act]"); if (!b) return;
+  const card = b.closest(".card");
+  if (b.dataset.act === "edit") {
+    const d = card.querySelector(".draft");
+    const on = d.getAttribute("contenteditable") === "true";
+    d.setAttribute("contenteditable", on ? "false" : "true");
+    b.textContent = on ? "Edit" : "Done editing";
+    if (!on) d.focus();
+    return;
+  }
+  if (b.dataset.act === "ok") card.classList.add("approved");
+  card.querySelectorAll("button").forEach(x => x.disabled = true);
+  setTimeout(() => card.classList.add("gone"), b.dataset.act === "ok" ? 650 : 50);
+  setTimeout(() => { card.remove(); remaining--; updateLeft(); }, 1300);
+});
+renderCards(false);
+
+const steps = [...document.querySelectorAll("#steps .step")];
+const runBar = document.getElementById("runBar"), stateEl = document.getElementById("consoleState");
+let playing = false;
+function playMorning() {
+  if (REDUCED) { renderCards(false); return; }
+  if (playing) return; playing = true;
+  stateEl.textContent = "Reading your accounts";
+  steps.forEach(s => { s.classList.remove("on"); s.classList.add("wait"); s.querySelector(".n").textContent = "0"; });
+  runBar.style.setProperty("--p", "0%");
+  cardsEl.innerHTML = `<div class="done" style="padding:80px 20px"><span class="mono" style="color:var(--dim)">06:58 · nothing here yet. Go back to sleep.</span></div>`;
+  leftEl.textContent = "0 ready";
+  let i = 0;
+  const next = () => {
+    if (i >= steps.length) { stateEl.textContent = "Ready for you"; showCards(); return; }
+    const s = steps[i], n = +s.querySelector(".n").dataset.n, t0 = performance.now(), dur = i < 5 ? 650 : 500;
+    s.classList.remove("wait"); s.classList.add("on");
+    if (i === 5) stateEl.textContent = "Sorting asks from noise";
+    if (i === 6) stateEl.textContent = "Writing next steps";
+    const tick = now => {
+      const k = Math.min(1, (now - t0) / dur);
+      s.querySelector(".n").textContent = fmt(n * (1 - Math.pow(1 - k, 3)));
+      runBar.style.setProperty("--p", ((i + k) / steps.length * 100) + "%");
+      if (k < 1) requestAnimationFrame(tick); else { i++; setTimeout(next, 120); }
+    };
+    requestAnimationFrame(tick);
+  };
+  setTimeout(next, 700);
+}
+function showCards() {
+  renderCards(true);
+  [...cardsEl.querySelectorAll(".card")].forEach((c, k) => setTimeout(() => c.classList.remove("enter"), 120 + k * 160));
+  setTimeout(() => { playing = false; }, 1200);
+}
+window.playMorning = playMorning;
+document.getElementById("replay").addEventListener("click", () => { playMorning(); document.getElementById("console").scrollIntoView({behavior: REDUCED ? "auto" : "smooth", block: "start"}); });
+
+/* console tilt flattens as it scrolls in */
+const consoleEl = document.getElementById("console");
+function tiltOnScroll() {
+  if (REDUCED) return;
+  const r = consoleEl.getBoundingClientRect(), vh = innerHeight;
+  const k = Math.max(0, Math.min(1, (vh - r.top) / (vh * 0.75)));
+  consoleEl.style.setProperty("--tilt", (22 * (1 - k)).toFixed(2));
+}
+addEventListener("scroll", tiltOnScroll, {passive: true}); tiltOnScroll();
+
+/* play once when the console comes into view */
+if ("IntersectionObserver" in window && !REDUCED) {
+  let played = false;
+  new IntersectionObserver((es, ob) => { es.forEach(e => { if (e.isIntersecting && !played) { played = true; ob.disconnect(); playMorning(); } }); }, {threshold: .35}).observe(consoleEl);
+}
+
+/* tilt cards follow the pointer */
+document.querySelectorAll(".move").forEach(m => {
+  m.addEventListener("pointermove", e => {
+    if (REDUCED) return;
+    const r = m.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+    m.style.setProperty("--ry", ((x - .5) * 10).toFixed(2) + "deg"); m.style.setProperty("--rx", ((.5 - y) * 10).toFixed(2) + "deg");
+    m.style.setProperty("--mx", (x * 100) + "%"); m.style.setProperty("--my", (y * 100) + "%");
+  });
+  m.addEventListener("pointerleave", () => { m.style.setProperty("--rx", "0deg"); m.style.setProperty("--ry", "0deg"); });
+});
+
+/* scroll reveal (content stays visible without JS or observers) */
+if ("IntersectionObserver" in window && !REDUCED) {
+  const rvs = [...document.querySelectorAll(".rv")].filter(el => el.getBoundingClientRect().top > innerHeight);
+  rvs.forEach(el => el.classList.add("pre"));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.remove("pre"); io.unobserve(e.target); } }), {threshold: .12});
+  rvs.forEach(el => io.observe(el));
+  const rg = document.getElementById("ranges");
+  if (rg.getBoundingClientRect().top > innerHeight) {
+    const io2 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { rg.classList.add("in"); io2.disconnect(); } }), {threshold: .4});
+    io2.observe(rg);
+  } else rg.classList.add("in");
+} else document.getElementById("ranges").classList.add("in");
+
+/* copy install commands */
+document.getElementById("copy").addEventListener("click", async e => {
+  const text = "git clone https://github.com/cocakolla123/cos-agent-system.git\ncd cos-agent-system && ./install.sh --start";
+  try { await navigator.clipboard.writeText(text); e.target.textContent = "Copied"; }
+  catch (err) { const r = document.createRange(); r.selectNodeContents(document.getElementById("cmds")); const s = getSelection(); s.removeAllRanges(); s.addRange(r); e.target.textContent = "Selected"; }
+  setTimeout(() => e.target.textContent = "Copy", 1600);
+});
+
+/* ---------- 3D hero: noise in, a short list out ---------- */
+(function hero() {
+  if (!window.THREE) return;
+  const canvas = document.getElementById("scene"), hero = canvas.parentElement;
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({canvas, antialias: true, alpha: false}); } catch (e) { return; }
+  renderer.setPixelRatio(Math.min(2, devicePixelRatio || 1));
+  renderer.setClearColor(new THREE.Color(css("--night")), 1);
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(new THREE.Color(css("--night")), 0.045);
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+
+  const small = innerWidth < 700;
+  const N = small ? 2600 : 6800, SIG = Math.round(N * 0.11);
+  const pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  const base = new Float32Array(N * 3); // per particle: radius, theta, phi
+  const extra = new Float32Array(N * 4); // speed, phase, delay, source
+  const cSignal = new THREE.Color(css("--signal-hot")), cLate = new THREE.Color(css("--late"));
+  // sources, sized by the demo world: Slack 13,403, Gmail 558, Jira 439, GitHub 37, Calendar+Drive 20
+  const SRC = [[13403, "#55607a"], [558, "#8e96a8"], [439, "#6f7fb0"], [37, "#a7b3d8"], [20, "#c9cfe0"]];
+  const total = SRC.reduce((a, s) => a + s[0], 0);
+  const srcCols = SRC.map(s => new THREE.Color(s[1]));
+  const srcPick = r => { let acc = 0; for (let k = 0; k < SRC.length; k++) { acc += SRC[k][0] / total; if (r < acc) return k; } return 0; };
+  const baseCol = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    const r = 0.6 + Math.cbrt(Math.random()) * 3.2;
+    base[i*3] = r; base[i*3+1] = Math.random() * Math.PI * 2; base[i*3+2] = Math.acos(2 * Math.random() - 1);
+    extra[i*4] = (0.08 + Math.random() * 0.25) * (Math.random() < 0.5 ? 1 : 1.2) / (0.4 + r * 0.25);
+    extra[i*4+1] = Math.random() * Math.PI * 2; extra[i*4+2] = Math.random(); extra[i*4+3] = i < SIG ? -1 : srcPick(Math.random());
+    const c = i < SIG ? srcCols[srcPick(Math.random())] : srcCols[extra[i*4+3]];
+    baseCol[i*3] = c.r; baseCol[i*3+1] = c.g; baseCol[i*3+2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  const dot = document.createElement("canvas"); dot.width = dot.height = 64;
+  const g = dot.getContext("2d"), grd = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  grd.addColorStop(0, "rgba(255,255,255,1)"); grd.addColorStop(.25, "rgba(255,255,255,.85)"); grd.addColorStop(1, "rgba(255,255,255,0)");
+  g.fillStyle = grd; g.fillRect(0, 0, 64, 64);
+  const mat = new THREE.PointsMaterial({size: small ? 0.13 : 0.1, map: new THREE.CanvasTexture(dot), vertexColors: true,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true});
+  scene.add(new THREE.Points(geo, mat));
+
+  // the lens
+  const lens = new THREE.Group();
+  const ringMat = new THREE.MeshBasicMaterial({color: cSignal, transparent: true, opacity: .9, blending: THREE.AdditiveBlending});
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.35, 0.018, 8, 160), ringMat);
+  const ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.006, 6, 160), new THREE.MeshBasicMaterial({color: cSignal, transparent: true, opacity: .35, blending: THREE.AdditiveBlending}));
+  const tick = new THREE.Group();
+  for (let k = 0; k < 48; k++) { const m = new THREE.Mesh(new THREE.PlaneGeometry(0.012, k % 4 ? 0.06 : 0.14), ringMat); const a = k / 48 * Math.PI * 2; m.position.set(Math.cos(a) * 1.82, Math.sin(a) * 1.82, 0); m.rotation.z = a + Math.PI / 2; tick.add(m); }
+  lens.add(ring, ring2, tick); scene.add(lens);
+
+  // the cards: real tasks, drawn on canvas
+  const cardGroup = new THREE.Group(); scene.add(cardGroup);
+  const CW = 3.1, CH = 0.74, cards = [];
+  function drawCard(t, cv) {
+    const c = cv.getContext("2d"), W = cv.width, H = cv.height;
+    c.clearRect(0, 0, W, H);
+    c.fillStyle = "rgba(27,31,39,0.92)"; c.fillRect(0, 0, W, H);
+    c.strokeStyle = "rgba(143,163,220,0.55)"; c.lineWidth = 3; c.strokeRect(1.5, 1.5, W - 3, H - 3);
+    c.fillStyle = t.cls === "late" ? css("--late") : t.cls === "quiet" ? css("--dim") : css("--signal"); c.fillRect(0, 0, 12, H);
+    c.font = "600 26px 'JetBrains Mono', monospace"; c.fillStyle = css("--dim");
+    c.fillText((t.kind + " · " + t.pri + " · " + t.due).toUpperCase(), 40, 56);
+    c.font = "700 46px Archivo, 'Helvetica Neue', Arial, sans-serif"; c.fillStyle = css("--text");
+    let title = t.title; while (c.measureText(title).width > W - 80 && title.length > 4) title = title.slice(0, -2);
+    if (title !== t.title) title = title.trim() + "…";
+    c.fillText(title, 40, 128);
+    c.font = "600 26px 'JetBrains Mono', monospace"; c.fillStyle = css("--signal");
+    c.fillText("✓ NEXT STEP READY", 40, 186);
+  }
+  TASKS.forEach((t, k) => {
+    const cv = document.createElement("canvas"); cv.width = 1024; cv.height = 242; drawCard(t, cv);
+    const tex = new THREE.CanvasTexture(cv); tex.anisotropy = 4;
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(CW, CH), new THREE.MeshBasicMaterial({map: tex, transparent: true, opacity: 0, depthWrite: false}));
+    m.userData = {t, cv, tex}; cardGroup.add(m); cards.push(m);
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => cards.forEach(m => { drawCard(m.userData.t, m.userData.cv); m.userData.tex.needsUpdate = true; }));
+
+  let L = {}; // layout
+  const targets = new Float32Array(SIG * 3);
+  function layout() {
+    const w = hero.clientWidth, h = hero.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    const narrow = w < 860;
+    if (narrow) {
+      camera.fov = 50; camera.position.set(0, -2.2, 15.5);
+      L = {cloud: new THREE.Vector3(0, -3.2, 0), cloudScale: 0.75, lens: new THREE.Vector3(0, -6.6, 1), lensRot: 0.15,
+           cards: new THREE.Vector3(0, -10.6, 1.5), cardRot: -0.12, look: new THREE.Vector3(0, -6.8, 0)};
+      camera.position.set(0, -6.8, 17);
+    } else {
+      camera.fov = 42; camera.position.set(0.6, 0.2, 12.5);
+      L = {cloud: new THREE.Vector3(-0.2, 0.3, -1), cloudScale: 1, lens: new THREE.Vector3(2.6, 0.05, 0.2), lensRot: -0.9,
+           cards: new THREE.Vector3(5.5, 0.1, 0.4), cardRot: -0.38, look: new THREE.Vector3(2.4, 0, 0)};
+    }
+    camera.updateProjectionMatrix();
+    lens.position.copy(L.lens); lens.rotation.set(0, L.lensRot, 0);
+    lens.scale.setScalar(narrow ? 0.7 : 1);
+    cardGroup.position.copy(L.cards); cardGroup.rotation.set(0.06, L.cardRot, 0);
+    const gap = narrow ? 0.86 : 0.98, sc = narrow ? 0.8 : 1;
+    cards.forEach((m, k) => { m.position.set(narrow ? 0 : (k % 2) * 0.18, ((cards.length - 1) / 2 - k) * gap * (narrow ? 0.62 : 1), k * -0.05); m.scale.setScalar(sc * (narrow ? 0.72 : 1)); });
+    cardGroup.updateMatrixWorld(true);
+    const v = new THREE.Vector3();
+    for (let i = 0; i < SIG; i++) {
+      const m = cards[i % cards.length];
+      v.set((Math.random() - .5) * CW * 0.96, (Math.random() - .5) * CH * 0.9, 0.01);
+      m.localToWorld(v);
+      targets[i*3] = v.x; targets[i*3+1] = v.y; targets[i*3+2] = v.z;
+    }
+  }
+  layout(); addEventListener("resize", layout);
+
+  const mouse = {x: 0, y: 0};
+  addEventListener("pointermove", e => { mouse.x = e.clientX / innerWidth - .5; mouse.y = e.clientY / innerHeight - .5; }, {passive: true});
+
+  const CYCLE = 15, hR = document.getElementById("hudRead"), hT = document.getElementById("hudTasks"), hD = document.getElementById("hudDrafts");
+  const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const clamp = x => Math.max(0, Math.min(1, x));
+  let visible = true, start = performance.now(), last = start;
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }).observe(hero);
+
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!visible) { last = now; return; }
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    const T = REDUCED ? 10.5 : ((now - start) / 1000) % CYCLE;
+    // phases: 0-4.5 swirl, 4.5-9 flow through the lens, 9-13 hold, 13-15 dissolve
+    const flow = T < 4.5 ? 0 : T < 9 ? (T - 4.5) / 4.5 : T < 13 ? 1 : 1 - (T - 13) / 2;
+    const back = T >= 13;
+    const sx = L.cloudScale;
+    for (let i = 0; i < N; i++) {
+      const r = base[i*3], sp = extra[i*4], ph = extra[i*4+1], dl = extra[i*4+2];
+      if (!REDUCED) base[i*3+1] += sp * dt;
+      const th = base[i*3+1], phi = base[i*3+2];
+      const cx = L.cloud.x + r * Math.sin(phi) * Math.cos(th) * 1.35 * sx;
+      const cy = L.cloud.y + (r * Math.cos(phi) * 0.8 + Math.sin(T * 0.6 + ph) * 0.18) * sx;
+      const cz = L.cloud.z + r * Math.sin(phi) * Math.sin(th) * sx;
+      let x = cx, y = cy, z = cz, cr = baseCol[i*3], cg = baseCol[i*3+1], cb = baseCol[i*3+2], br = 0.55;
+      const k = back ? ease(flow) : ease(clamp((flow - dl * 0.45) / 0.55));
+      if (i < SIG) {
+        const tx = targets[i*3], ty = targets[i*3+1], tz = targets[i*3+2];
+        if (back) { x = cx + (tx - cx) * k; y = cy + (ty - cy) * k; z = cz + (tz - cz) * k; }
+        else {
+          const lx = L.lens.x + Math.sin(ph) * 0.25, ly = L.lens.y + Math.cos(ph) * 0.25, lz = L.lens.z;
+          const a = (1 - k) * (1 - k), b = 2 * (1 - k) * k, c = k * k;
+          x = a * cx + b * lx + c * tx; y = a * cy + b * ly + c * ty; z = a * cz + b * lz + c * tz;
+        }
+        const late = (i % cards.length) === 2;
+        const hc = late ? cLate : cSignal;
+        cr += (hc.r - cr) * k; cg += (hc.g - cg) * k; cb += (hc.b - cb) * k;
+        br = back ? 0.55 * k : (k < 0.85 ? 0.6 + 0.7 * k : 1.2 * (1 - (k - 0.85) / 0.15));
+      } else {
+        // noise drifts away and dims
+        const push = 1 + k * 0.6;
+        x = L.cloud.x + (cx - L.cloud.x) * push; y = L.cloud.y + (cy - L.cloud.y) * push - k * 0.6; z = cz - k * 1.5;
+        br = 0.55 * (1 - 0.82 * k);
+      }
+      pos[i*3] = x; pos[i*3+1] = y; pos[i*3+2] = z;
+      col[i*3] = cr * br; col[i*3+1] = cg * br; col[i*3+2] = cb * br;
+    }
+    geo.attributes.position.needsUpdate = true; geo.attributes.color.needsUpdate = true;
+    // lens and cards
+    const lensK = T < 4.5 ? 0.35 : T < 9 ? 1 : T < 13 ? 0.55 : 0.4;
+    ringMat.opacity += (lensK - ringMat.opacity) * 0.06;
+    ring.rotation.z += dt * 0.6; ring2.rotation.z -= dt * 0.25; tick.rotation.z += dt * 0.12;
+    const pulse = 1 + (T > 4.5 && T < 9 ? Math.sin((T - 4.5) / 4.5 * Math.PI) * 0.12 : 0);
+    ring.scale.setScalar(pulse);
+    cards.forEach((m, j) => {
+      const appear = back ? flow : clamp((T - 7.2 - j * 0.22) / 0.9);
+      m.material.opacity = 0.95 * (T >= 9 && T < 13 ? 1 : appear);
+      m.position.z = j * -0.05 + (1 - m.material.opacity) * -0.6;
+    });
+    // HUD counts
+    if (!REDUCED) {
+      const readK = clamp(T / 8.5), taskK = clamp((T - 7.2) / 1.6), draftK = clamp((T - 8.4) / 1.6);
+      const hold = back ? 1 : 0;
+      hR.textContent = fmt(14457 * (hold || ease(readK)));
+      hT.textContent = fmt(51 * (hold || ease(taskK)));
+      hD.textContent = fmt(51 * (hold || ease(draftK)));
+    }
+    // camera drift
+    const scrollK = Math.min(1, scrollY / (hero.clientHeight || 1));
+    const base0 = camera.userData.base || (camera.userData.base = camera.position.clone());
+    camera.position.x = base0.x + mouse.x * 1.2;
+    camera.position.y = base0.y - mouse.y * 0.8 + scrollK * 1.2;
+    camera.position.z = base0.z + scrollK * 2.5;
+    camera.lookAt(L.look);
+    renderer.render(scene, camera);
+  }
+  addEventListener("resize", () => { camera.userData.base = null; });
+  requestAnimationFrame(frame);
+})();
+</script>
