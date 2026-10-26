@@ -301,3 +301,36 @@ What it got wrong:
   - HT14: missed a mandatory @channel.
 
 The mean on the realistic world was 38.8 of 40 at C1 test (five runs, range 37 to 40). With 6x the items, the first read still got 45 of 47 TEST arcs fully right, and none of the new noise became a task. This is one run, so treat a one-arc difference as noise. Repeats would put error bars on it.
+
+## Cheaper weekly checks: sift, then read (2026-10-26)
+
+The weekly checks in `lrf-v3` let the agent search all ~8,200 new items of each week with
+tools. Two cheaper designs were run on the same world. Both reuse `lrf-v3`'s first read, so
+only the checks differ.
+
+**`dashboard/sift.py`**, a rule filter with no model, keeps an item when it could need the user:
+- a DM;
+- a mention;
+- a thread the user is in or an open task came from;
+- the user's tickets, reviews and repos;
+- a required broadcast;
+- a platform notice that carries a person's words;
+- a ticket key, PR number, invoice number or domain named by an open task;
+- the user's own files.
+
+It was tuned on DEV arc sources only (0 of 24 DEV answer items lost over the four weeks), then checked once on TEST: 4 of 22 TEST answer items were dropped. It keeps 5.8% of the weeks' items.
+
+| weekly checks | run | dev | test | cost of the four | time per check |
+|---|---|---|---|---|---|
+| the agent searches every new item with tools | `lrf-v3` | 44/50 | 48/50 | $3.43 | ~110 s |
+| sifted (~480 items), the agent searches them | `lrf-v3-sift` | 46/50 | 48/50 | $2.20 | ~40 s |
+| sifted, items inline, one call with no tools | `lrf-v3-direct` | 46/50 | 48/50 | $1.54 | ~17 s |
+
+**What this changes:**
+- **Same score for less.** Sifting lost no arc at C2 on either half, even though it dropped some of the TEST items behind them.
+- **One TEST arc moved each way.** In both sifted runs, LT07 failed because the "invitation expired" mail was dropped, so the expired invite stayed open. HT14, the mandatory @channel, passed instead of failing.
+- **Tools cost more than reading.** The direct version costs less than half the original because a text-only call skips the tool round trips. In the app, a check with nothing left after sifting makes no call at all.
+- **The format fix changed nothing.** `lrf-v3-direct` was run again after a prompt fix: the open-task list now carries `kind`, which a small model copied. The first run scored the same.
+- **One run each**, so a one-arc difference is within run-to-run noise.
+
+`dashboard/poll_direct.py` is this design in the app. `dashboard/connections.py` fetches only what is new from IMAP, Slack, Jira, GitHub and iCal, using a bookmark per source.
