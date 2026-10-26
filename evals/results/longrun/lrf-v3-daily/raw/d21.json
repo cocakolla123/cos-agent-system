@@ -1,0 +1,69 @@
+{
+ "scenario": "d21",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 31904,
+ "sifted": 61,
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"reply-sam-deploy-status\",\"name\":\"Answer Sam in the group DM: did the deploy go out?\",\"attrs\":{\"priority\":\"low\",\"evidence\":[\"sl-319167\"]},\"source\":\"eval-fixture\",\"confidence\":0.5,\"edges\":[]}]",
+  "total_cost_usd": 0.037722000000000006,
+  "duration_ms": 7392,
+  "duration_api_ms": 3910,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 16851,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 402,
+   "output_tokens_details": {
+    "thinking_tokens": 289
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 16851,
+     "output_tokens": 402,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 16851,
+    "outputTokens": 402,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.037722000000000006,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 289,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 61,
+ "attempt": 1
+}

@@ -1,0 +1,69 @@
+{
+ "scenario": "d09",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 40016,
+ "sifted": 83,
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-301-postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage (PLAT-301)\",\"attrs\":{\"due\":\"2026-07-31\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-226517\",\"sl-098922\",\"doc-340192\"],\"refs\":[\"PLAT-301\",\"INC-212\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"notifications-rfc-comments\",\"name\":\"Add comments on the notifications RFC for Tomas\",\"attrs\":{\"due\":\"2026-10-16\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-749057\",\"sl-576362\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"quillmark-offer-decision\",\"name\":\"Decide on the Quillmark Staff Engineer offer\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-992168\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick a Corvid Systems final-round interview slot\",\"attrs\":{\"due\":\"2026-10-23\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-384580\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-webhook-idempotency-keys\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-334587\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}\n]",
+  "total_cost_usd": 0.052916,
+  "duration_ms": 10883,
+  "duration_api_ms": 7676,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 20613,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 1169,
+   "output_tokens_details": {
+    "thinking_tokens": 490
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 20613,
+     "output_tokens": 1169,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 20613,
+    "outputTokens": 1169,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.052916,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 490,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 83,
+ "attempt": 1
+}

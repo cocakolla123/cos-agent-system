@@ -353,3 +353,16 @@ What this shows:
 - **Haiku.** Haiku on its own is cheaper still but loses five TEST arcs.
 
 `lrf-v3-compact` is the shipped default: $0.52 for four weeks of this person's traffic, about $0.13 a week. A check with nothing left after sifting makes no call.
+
+### Daily for four weeks: `lrf-v3-daily` (2026-10-26)
+
+This is the shipped default (sifted, compact lines, caching off) run as the app runs it: a check every day from Oct 13 to Nov 9, weekends included. That is 28 checks on one persistent graph, scored at C2.
+
+| cadence | run | dev | test | checks | cost | per check |
+|---|---|---|---|---|---|---|
+| weekly | `lrf-v3-compact` | 46/50 | 48/50 | 4 | $0.52 | ~16 s |
+| daily | `lrf-v3-daily` | 46/50 | 47/50 | 28 | $1.15 | ~5 s |
+
+- **Accuracy holds day to day.** The one TEST arc lost versus weekly is HT12 (an auto-reply is not an answer). There is one noise task: an "Answer Sam: did the deploy go out?" chat line in a group DM.
+- **Daily costs about twice weekly**, about $0.04 a day, because every call has a fixed part. A weekend check with 15 sifted items still read 14,430 input tokens. Roughly half of that is Claude Code's own system prompt, sent even with no tools. A third is the open-task list, and the instructions are about 2,500 tokens. An API-key route skips Claude Code's part.
+- **Sifting kept 15 to 93 items a day**, so no day was empty. Every check made a call.

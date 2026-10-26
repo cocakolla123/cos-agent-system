@@ -1,0 +1,69 @@
+{
+ "scenario": "d16",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 40702,
+ "sifted": 86,
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Get the 50-seat renewal quote from Priya at Stratus Monitoring\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-026317\",\"doc-756429\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Northwind the data retention policy (auditors need it by Nov 6)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"medium\",\"evidence\":[\"em-689914\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"inv-0042-lumen-dental-payment\",\"name\":\"Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)\",\"attrs\":{\"due\":\"2026-09-29\",\"priority\":\"high\",\"status\":\"paid\",\"evidence\":[\"em-799508\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}\n]",
+  "total_cost_usd": 0.052878,
+  "duration_ms": 9765,
+  "duration_api_ms": 7296,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 20854,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 1117,
+   "output_tokens_details": {
+    "thinking_tokens": 466
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 20854,
+     "output_tokens": 1117,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 20854,
+    "outputTokens": 1117,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.052878,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 466,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 86,
+ "attempt": 1
+}
