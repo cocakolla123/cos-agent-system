@@ -102,6 +102,8 @@ Measured on the four weekly checks of the 142,555-item benchmark world (`evals/r
 | sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.54 | ~17 s |
 | the same, one compact line per item, no caching premium (the default) | 46/50 | 48/50 | $0.52 | ~16 s |
 
+By default it checks three times a day (about 8am, noon and 4pm, every day); every call has a fixed cost, so checking more often costs more without finding more. Measured daily for four weeks on the same world: dev 46/50, test 47/50, $1.15 for 28 checks. Change the schedule under Polling, or press Check now.
+
 Credentials stay in `connections.json` (mode 0600, git-ignored, excluded from publishing, and Slack, GitHub and Atlassian tokens are blocked by the privacy scan).
 
 ## What it costs

@@ -2709,11 +2709,14 @@ class Handler(BaseHTTPRequestHandler):
                     cfg = read_json(cfg_path, dict(DEFAULT_POLL_CONFIG))
                     if "direct" not in cfg:     # first connection: schedule the direct check
                         cfg["timezone"] = cfg.get("timezone", "America/Los_Angeles")
-                        cfg["direct"] = {"interval_min": 15, "days": ["mon", "tue", "wed", "thu", "fri"],
-                                         "start": "07:00", "end": "19:00"}
+                        # three checks a day (about 8am, noon, 4pm): every call has a
+                        # fixed cost, so a 15-minute pace would cost far more for the same items
+                        cfg["direct"] = {"interval_min": 240,
+                                         "days": ["mon", "tue", "wed", "thu", "fri", "sat", "sun"],
+                                         "start": "08:00", "end": "16:30"}
                         write_json(cfg_path, cfg)
-                    self._send_json({"ok": True, "message": "Saved %s. Checks run every 15 minutes "
-                                     "(change it under Polling)." % sid})
+                    self._send_json({"ok": True, "message": "Saved %s. It checks three times a day (about 8am, noon and 4pm); 'Check now' runs one any time, "
+                                     "and Polling changes the schedule." % sid})
                 elif self.path == "/connections-remove":
                     _connections.remove_source(DASHBOARD_DIR, data.get("id", ""))
                     self._send_json({"ok": True, "message": "Removed."})
