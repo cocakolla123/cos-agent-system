@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-26T11:40:59.374023+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "```json\n[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-128555\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Waiting on Priya (Stratus Monitoring) for the 50-seat renewal quote\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-801289\",\"em-661530\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Northwind (Alex Brennan) Kestrel's data retention policy\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"em-304459\",\"em-457894\",\"em-689914\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"inv-0042-lumen-dental-payment\",\"name\":\"Waiting on Lumen Dental to pay INV-0042 ($2,400, due Sep 29)\",\"attrs\":{\"due\":\"2026-09-29\",\"priority\":\"high\",\"status\":\"paid\",\"blocked_on\":\"Rosa Lin (Lumen Dental)\",\"evidence\":[\"em-815263\",\"em-914019\",\"em-819691\",\"em-799508\"],\"refs\":[\"INV-0042\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-2-low-stock-alerts\",\"name\":\"Deliver Fernhill Goods Milestone 2: low-stock alerts ($900)\",\"attrs\":{\"due\":\"2026-10-24\",\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-270940\",\"em-825899\",\"em-634259\",\"em-386035\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rta-101-timezone-bug-shift-export\",\"name\":\"Fix reopened timezone bug in shift export (RTA-101, Australia/Lord_Howe)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"jr-611362\",\"jr-776795\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"oss\",\"key\":\"move-tinyq-docs-off-hostlane\",\"name\":\"Move the tinyq docs site off Hostlane before the legacy plan retires\",\"attrs\":{\"due\":\"2026-11-01\",\"priority\":\"high\",\"evidence\":[\"em-159713\",\"doc-537085\",\"em-731021\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-471926\",\"sl-282950\",\"doc-756429\"]},\"source\":\"eval-fixture\",\"confidence\":0.6,\"edges\":[]}\n]\n```",
+  "total_cost_usd": 0.7687993,
+  "duration_ms": 93263,
+  "duration_api_ms": 88714,
+  "num_turns": 35,
+  "usage": {
+   "input_tokens": 64,
+   "cache_creation_input_tokens": 100064,
+   "cache_read_input_tokens": 2588353,
+   "output_tokens": 10958,
+   "output_tokens_details": {
+    "thinking_tokens": 3522
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 100064,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1903,
+     "cache_read_input_tokens": 130355,
+     "cache_creation_input_tokens": 2240,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 2240
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 64,
+    "outputTokens": 10958,
+    "cacheReadInputTokens": 2588353,
+    "cacheCreationInputTokens": 100064,
+    "webSearchRequests": 0,
+    "costUSD": 0.7687993,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 3522,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8372,
+ "attempt": 1
+}

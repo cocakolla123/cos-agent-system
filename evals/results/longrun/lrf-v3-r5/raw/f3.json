@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-26T11:41:50.803004+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-471926\",\"sl-282950\",\"sl-026317\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"timezone-bug-shift-export\",\"name\":\"Fix reopened timezone bug in shift export\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"jr-611362\",\"jr-776795\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"inv-0042-lumen-dental-payment\",\"name\":\"Collect overdue INV-0042 ($2,400) from Lumen Dental\",\"attrs\":{\"due\":\"2026-09-29\",\"priority\":\"high\",\"status\":\"paid\",\"evidence\":[\"em-815263\",\"em-914019\",\"em-819691\",\"em-799508\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the vendor security questionnaire for Stratus (Victor)\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-128555\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Renewal quote for 50-seat plan from Stratus Monitoring\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-801289\",\"em-661530\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"data-retention-policy-northwind\",\"name\":\"Send Kestrel data retention policy to Alex Brennan (Northwind)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"em-304459\",\"em-457894\",\"em-689914\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"oss\",\"key\":\"tinyq-docs-hostlane-migration\",\"name\":\"Move tinyq-docs site off Hostlane legacy plan (site is offline)\",\"attrs\":{\"due\":\"2026-11-01\",\"priority\":\"high\",\"evidence\":[\"em-159713\",\"em-731021\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-to-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"sl-714506\",\"em-198452\",\"em-552213\",\"em-444581\",\"em-760957\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]}]",
+  "total_cost_usd": 0.5931211,
+  "duration_ms": 78721,
+  "duration_api_ms": 74881,
+  "num_turns": 28,
+  "usage": {
+   "input_tokens": 42,
+   "cache_creation_input_tokens": 84813,
+   "cache_read_input_tokens": 1631451,
+   "output_tokens": 9064,
+   "output_tokens_details": {
+    "thinking_tokens": 2714
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 84813,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1411,
+     "cache_read_input_tokens": 114063,
+     "cache_creation_input_tokens": 3281,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 3281
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 42,
+    "outputTokens": 9064,
+    "cacheReadInputTokens": 1631451,
+    "cacheCreationInputTokens": 84813,
+    "webSearchRequests": 0,
+    "costUSD": 0.5931211,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 2714,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8372,
+ "attempt": 1
+}

@@ -1,0 +1,67 @@
+{
+ "scenario": "f2",
+ "started": "2026-10-26T11:40:26.470488+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"quillmark-offer-decision\",\"name\":\"Decide on Quillmark Staff Engineer offer\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"em-881423\",\"em-992168\"],\"note\":\"Dana sent a decline to Quillmark on 2026-10-21\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"corvid-final-round-slot\",\"name\":\"Pick Corvid Systems final-round interview slot\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"em-155575\",\"em-384580\"],\"note\":\"Dana booked Oct 30 at 2pm\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-1-release\",\"name\":\"Fernhill Milestone 1 payment ($1,200) release\",\"attrs\":{\"status\":\"paid\",\"priority\":\"medium\",\"evidence\":[\"em-877588\",\"em-097014\",\"em-402082\",\"em-810099\"],\"note\":\"Upwork shows Fernhill released $1,200 on 2026-10-22\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-2-low-stock-alerts\",\"name\":\"Fernhill Milestone 2: low-stock alerts (reply to Marcus: on track?)\",\"attrs\":{\"status\":\"submitted\",\"priority\":\"medium\",\"evidence\":[\"em-270940\",\"em-825899\",\"em-756352\"],\"note\":\"Dana submitted the Milestone 2 work for review on 2026-10-23\"},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"analytics-replica-access-request\",\"name\":\"Read access to analytics replica (waiting on IT)\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"em-414920\",\"em-890897\",\"em-111120\"],\"refs\":[\"RTA-90\"],\"note\":\"Kestrel IT granted access on 2026-10-20\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"postmortem-inc-212\",\"name\":\"Write postmortem for INC-212 queue outage\",\"attrs\":{\"status\":\"done\",\"priority\":\"high\",\"evidence\":[\"jr-118347\",\"jr-631212\",\"sl-572837\",\"sl-301137\",\"jr-226517\",\"sl-098922\",\"doc-340192\"],\"refs\":[\"PLAT-301\",\"INC-212\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rewrite-oncall-runbook\",\"name\":\"Rewrite the on-call runbook\",\"attrs\":{\"status\":\"done\",\"priority\":\"high\",\"evidence\":[\"jr-511559\",\"jr-859124\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"notifications-rfc-comments\",\"name\":\"Comment on the notifications RFC for Tomas\",\"attrs\":{\"status\":\"done\",\"priority\":\"high\",\"evidence\":[\"em-612857\",\"sl-019082\",\"sl-842606\",\"sl-749057\",\"sl-576362\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-review\",\"name\":\"Legal review of Northwind MSA redlines (LEG-55)\",\"attrs\":{\"status\":\"done\",\"priority\":\"medium\",\"evidence\":[\"em-079608\",\"em-079390\",\"em-560983\"],\"refs\":[\"LEG-55\"],\"note\":\"Legal approved the redlines on 2026-10-22\"},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"send-approved-northwind-msa-redlines\",\"name\":\"Send the Legal-approved MSA redlines to Northwind\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-560983\"],\"refs\":[\"LEG-55\"]},\"source\":\"eval-fixture\",\"confidence\":0.6,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"weekly-status-to-ines\",\"name\":\"Send Ines a short status update every Friday\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"high\",\"evidence\":[\"sl-714506\",\"em-198452\",\"em-552213\",\"em-444581\"],\"note\":\"This week's status went out on 2026-10-23; the next one is due Friday 2026-10-30\"},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-401-idempotency-keys-webhook-delivery\",\"name\":\"Add idempotency keys to webhook delivery (PLAT-401)\",\"attrs\":{\"due\":\"2026-11-20\",\"priority\":\"medium\",\"evidence\":[\"jr-334587\"],\"refs\":[\"PLAT-401\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}\n]",
+  "total_cost_usd": 1.1903146999999998,
+  "duration_ms": 82333,
+  "duration_api_ms": 77673,
+  "num_turns": 35,
+  "usage": {
+   "input_tokens": 40,
+   "cache_creation_input_tokens": 191661,
+   "cache_read_input_tokens": 3243107,
+   "output_tokens": 9928,
+   "output_tokens_details": {
+    "thinking_tokens": 2183
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 191661,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 2141,
+     "cache_read_input_tokens": 219635,
+     "cache_creation_input_tokens": 4557,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 4557
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 40,
+    "outputTokens": 9928,
+    "cacheReadInputTokens": 3243107,
+    "cacheCreationInputTokens": 191661,
+    "webSearchRequests": 0,
+    "costUSD": 1.1903146999999998,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 2183,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 8121,
+ "attempt": 1
+}

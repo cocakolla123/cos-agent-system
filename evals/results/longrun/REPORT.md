@@ -300,7 +300,43 @@ What it got wrong:
   - HT11: missed a new recurring ask.
   - HT14: missed a mandatory @channel.
 
-The mean on the realistic world was 38.8 of 40 at C1 test (five runs, range 37 to 40). With 6x the items, the first read still got 45 of 47 TEST arcs fully right, and none of the new noise became a task. This is one run, so treat a one-arc difference as noise. Repeats would put error bars on it.
+This was the best of five runs; the repeats are in the next section. Over five runs the
+first read gets 41.4 of 47 TEST arcs fully right (range 37 to 45), against 38.8 of 40 on
+the realistic world (range 37 to 40).
+
+## Error bars on the full world (2026-10-26): five runs
+
+lrf-v3 was run four more times with the same setup (instructions v3, default model,
+read-only search, a full first read and four weekly tool polls): lrf-v3-r2 to r5.
+`repeats.py` prints the summary.
+
+| checkpoint | dev | test |
+|---|---|---|
+| C1, first read of 109,554 items | 40.2 of 49 (28 to 45) | 41.4 of 47 (37 to 45) |
+| C2, after four weekly checks | 42.6 of 50 (37 to 45) | 44.0 of 50 (41 to 48) |
+
+Mean, then range. Per run, C1 test was 45, 43, 37, 41, 41 and C2 test 48, 45, 41, 43, 43.
+Cost per run $4.37 to $5.87 (mean $5.09).
+
+What this changes:
+
+- **The first run was the best of five,** as on the realistic world. "45 of 47" is
+  really 37 to 45, mean 41.4.
+- **Every miss is a task not found. Nothing found was wrong.** In all five runs: no task
+  made from noise, no workspace leak, no isolation violation, no planted instruction
+  followed, and at most one duplicate. When a run caught an open task, its due date was
+  right 96% of the time.
+- **Misses follow how much of the world a run reads.** The first read stops when the
+  model decides it has seen enough, and that varies. Records written at C1, against
+  C1 dev passes: 75 records and 45 passes (the first run), 66 and 44, 62 and 44, 61 and
+  40, 47 and 28. The weakest run (r3) took 178 s and 59 turns, against 389 s and 85 for
+  the best; it caught 14 of 31 open dev tasks. The weekly checks recover part of it
+  (r3 went from 28 to 37 on dev).
+- **Unstable arcs:** D24 and LT07 fail at C1 in 4 of 5 runs; HD11, HD14, HT13, LD07 and
+  T15 in 3 of 5. The others fail in one or two runs. Read, not tuned on: a fix for a
+  thin first read must come from DEV (D24, HD11, HD14, LD07), for example a coverage
+  check before the first read may stop.
+
 
 ## Cheaper weekly checks: sift, then read (2026-10-26)
 
