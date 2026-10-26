@@ -147,6 +147,15 @@ re-analysis that replaced earlier overconfident fixture-level p values are in
 [`evals/README.md`](./evals/README.md) and `evals/results/`. Unit suites, from actual runs:
 234 tests in `dashboard/tests/` plus 51 in `evals/tests/`, CI on Python 3.9 and 3.12.
 
+## The Kestrel benchmark
+
+A whole made-up person's accounts, built from code: Dana Kowalski, an engineer who also
+freelances on Upwork, is job hunting and has side projects. 142,555 items over four months
+(109,554 before the first read): Slack, four Gmail inboxes, Jira, GitHub, Calendar and Drive,
+with spam, phishing, receipts and family mail mixed in. 101 tasks have written answers, in
+matched halves for tuning and for reporting. Score any agent with one command, write your own
+tasks, or fine-tune on the tuning half. See [`evals/longrun/BENCHMARK.md`](./evals/longrun/BENCHMARK.md).
+
 ## Security & privacy posture
 
 Each claim below names what enforces it, what it covers, and what it does not.

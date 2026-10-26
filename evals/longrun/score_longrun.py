@@ -29,7 +29,7 @@ import graph as graphlib      # noqa: E402
 
 WORLD = os.path.join(HERE, "world")
 THRESH = score.MATCH_THRESHOLD
-ID_RE = re.compile(r"\b(?:em|sl|jr|gh|cal|doc)-\d{4}\b")
+ID_RE = re.compile(r"\b(?:em|sl|jr|gh|cal|doc)-\d{4,}\b")
 CLOSED = set(graphlib.DONE_STATUSES) | set(graphlib.TERMINAL_STATUSES)
 
 

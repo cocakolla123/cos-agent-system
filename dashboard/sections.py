@@ -441,7 +441,8 @@ _FILTERS = (("all", "All"), ("overdue", "Overdue"), ("week", "This week"),
 
 KIND_LABELS = {"engineering": "Engineering", "review": "Review", "writing": "Writing",
                "reply": "Reply", "meeting": "Meeting", "security": "Security", "admin": "Admin",
-               "job-search": "Job search", "personal": "Personal", "": "Other"}
+               "freelance": "Freelance", "job-search": "Job search", "personal": "Personal",
+               "": "Other"}
 SORTS = (("urgency", "Most urgent"), ("pri-desc", "Priority: high to low"),
          ("pri-asc", "Priority: low to high"), ("due-asc", "Due: soonest first"),
          ("due-desc", "Due: latest first"), ("recent", "Recently active"))

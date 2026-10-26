@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Agreement between the author's gold and the blind second labeler.
 
-    python3 evals/longrun/second-labeler/compare.py <packet_dir> <mapping.json>
+    python3 evals/longrun/second-labeler/compare.py <packet_dir> <mapping.json> [--world full]
 
 Computed before any reconciliation. Per arc and checkpoint: state (open vs
 absent), and for arcs both call open: due date, priority (C1), workspace and
@@ -24,8 +24,8 @@ def first(items):
     return (items or [{}])[0]
 
 
-def main(packet, mapping_path):
-    _, gold, _ = build.build("realistic")
+def main(packet, mapping_path, world="realistic"):
+    _, gold, _ = build.build(world)
     gold = {a["id"]: a for a in gold}
     mapping = json.load(open(mapping_path))
     lab = json.load(open(os.path.join(packet, "labels2-cases.json")))["cases"]
@@ -90,8 +90,9 @@ def main(packet, mapping_path):
         print("- %s (%s, due %s, %s): %s" % (n["id"], n.get("workspace"), n.get("due"),
                                             n.get("confidence"), n.get("gist")))
     json.dump({"tally": tally, "rows": rows, "noise": noise},
-              open(os.path.join(HERE, "agreement.json"), "w"), indent=1)
+              open(os.path.join(os.path.dirname(os.path.abspath(packet)), "agreement.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    a = sys.argv
+    main(a[1], a[2], world=a[a.index("--world") + 1] if "--world" in a else "realistic")

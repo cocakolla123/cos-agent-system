@@ -235,6 +235,21 @@ main { overflow-x: clip; }
 .caret { display: inline-block; width: 9px; height: 17px; background: var(--signal); vertical-align: -3px; animation: pulse 1s steps(1) infinite; }
 @media (max-width: 900px) { .install { grid-template-columns: minmax(0, 1fr); } }
 
+
+/* ---- live demo frame ---- */
+.frame { border: 1px solid var(--rule); background: var(--night-2); box-shadow: 0 40px 100px -50px var(--signal); }
+.frame-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--rule); font-size: 12px; color: var(--dim); flex-wrap: wrap; }
+.frame iframe { display: block; width: 100%; height: min(820px, 80vh); border: 0; background: #f5f6f7; }
+/* ---- benchmark ---- */
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: start; }
+.bench-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+.bench-steps div { border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 20px; display: grid; gap: 8px; align-content: start; }
+.bench-steps b { font: 600 12px/1 var(--mono); color: var(--signal); letter-spacing: .1em; }
+.bench-steps h3 { font-size: 19px; font-weight: 700; }
+.bench-steps p { margin: 0; color: var(--muted); font-size: 14px; }
+@media (max-width: 900px) { .bench { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .bench-steps { grid-template-columns: minmax(0, 1fr); } }
+
 footer { padding-block: 40px 60px; color: var(--dim); font-size: 14px; }
 footer .wrap { display: flex; gap: 20px; flex-wrap: wrap; justify-content: space-between; }
 footer a { color: var(--muted); }
@@ -254,9 +269,10 @@ footer a { color: var(--muted); }
     <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span>Chief of Staff</a>
     <div class="nav-links">
       <a href="#morning">The morning</a>
-      <a href="#how">How it works</a>
+      <a href="#live">Live demo</a>
+      <a href="#computer">Dana's computer</a>
+      <a href="#benchmark">Benchmark</a>
       <a href="#proof">Accuracy</a>
-      <a href="#trust">Safety</a>
       <a href="#install">Install</a>
     </div>
     <a class="btn" href="https://github.com/cocakolla123/cos-agent-system">GitHub</a>
@@ -283,7 +299,7 @@ footer a { color: var(--muted); }
       <div><b id="hudTasks">51</b><span>tasks found</span></div>
       <div class="hot"><b id="hudDrafts">51</b><span>next steps ready</span></div>
     </div>
-    <div class="hero-note">Numbers from the first run on Kestrel Labs, a made-up company: 90 days of one engineer's accounts.</div>
+    <div class="hero-note">From the first run on Dana Kowalski, a made-up person: 90 days of her work, freelance, job-hunt and personal accounts.</div>
   </div>
 </header>
 
@@ -307,11 +323,11 @@ footer a { color: var(--muted); }
           <div class="log">
             <h3>What it read</h3>
             <ul class="steps" id="steps">
-              <li class="step on"><span class="dot"></span><span>Slack, 140 channels</span><span class="n" data-n="13403">13,403</span></li>
-              <li class="step on"><span class="dot"></span><span>Gmail, two accounts</span><span class="n" data-n="558">558</span></li>
-              <li class="step on"><span class="dot"></span><span>Jira updates</span><span class="n" data-n="439">439</span></li>
-              <li class="step on"><span class="dot"></span><span>GitHub PRs and issues</span><span class="n" data-n="37">37</span></li>
-              <li class="step on"><span class="dot"></span><span>Calendar and Drive</span><span class="n" data-n="20">20</span></li>
+              <li class="step on"><span class="dot"></span><span>Slack, 178 channels and 40 DMs</span><span class="n" data-n="75194">75,194</span></li>
+              <li class="step on"><span class="dot"></span><span>Gmail, four accounts</span><span class="n" data-n="14052">14,052</span></li>
+              <li class="step on"><span class="dot"></span><span>Jira updates</span><span class="n" data-n="8415">8,415</span></li>
+              <li class="step on"><span class="dot"></span><span>GitHub PRs and issues</span><span class="n" data-n="8006">8,006</span></li>
+              <li class="step on"><span class="dot"></span><span>Calendar and Drive</span><span class="n" data-n="3887">3,887</span></li>
               <li class="step on"><span class="dot"></span><span>Open tasks found</span><span class="n" data-n="51">51</span></li>
               <li class="step on"><span class="dot"></span><span>Next steps written</span><span class="n" data-n="51">51</span></li>
             </ul>
@@ -323,6 +339,61 @@ footer a { color: var(--muted); }
             <div class="cards" id="cards"></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="live">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">Live demo</div>
+      <h2>The real dashboard,<br>on Dana's first morning.</h2>
+      <p class="lede">This is the app itself, built from the recorded run. Filter by type, sort by priority, open a task, approve or edit its draft. Approve and chat answer from saved responses, so nothing reaches a real account or a model.</p>
+    </div>
+    <div class="frame rv">
+      <div class="frame-bar"><span class="mono">127.0.0.1:8765 · Chief of Staff</span><a class="btn sm" href="demo/index.html">Open full screen ↗</a></div>
+      <iframe src="demo/index.html" title="Chief of Staff dashboard, live demo" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="computer">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">Dana's computer</div>
+      <h2>Every item it read.<br><span id="computerCount">142,555</span> of them.</h2>
+      <p class="lede">Four months of one made-up person's accounts: work Slack and Jira, four Gmail inboxes, Upwork and Handshake, freelance clients, a job offer, spam, phishing, receipts, family, and her side-project files. Open any folder. Items the agent used are marked <b class="mono" style="color:var(--signal)">SPOTTED</b>. Items behind a task in the answer key are marked <b class="mono" style="color:var(--late)">ANSWER</b>, green when the run got that task fully right.</p>
+    </div>
+    <div id="explorer" class="rv"></div>
+    <p class="proof-note" style="margin-top:14px"><a href="explorer.html">Open Dana's computer full screen ↗</a> · Try the Freelance inbox in October, or Slack → Channels → #platform.</p>
+  </div>
+</section>
+
+<section class="sec" id="benchmark">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow">Benchmark</div>
+      <h2>Score your own agent.<br>Or train one.</h2>
+      <p class="lede">The whole world is code with fixed seeds, so anyone gets the same 142,555 items and the same answer key for 101 tasks. Every task comes in a matched pair: tune on one half, report the other.</p>
+    </div>
+    <div class="bench rv">
+      <div class="bench-steps">
+        <div><b>01</b><h3>Get the data</h3><p>Build it from code, check it against the lock file, and export a plain folder: the first read, the four weekly batches, and the answer key.</p></div>
+        <div><b>02</b><h3>Run your agent</h3><p>Any model, any framework. Write the tasks it thinks are open on Oct 13 and on Nov 10 as a JSON list.</p></div>
+        <div><b>03</b><h3>Score it</h3><p>The same scorer as this app's own runs: caught, due date, priority, who owes whom, duplicates, workspace leaks, planted instructions.</p></div>
+        <div><b>04</b><h3>Make it harder</h3><p>Each task is a short Python function. Write a pair, rebuild, and have a blind labeler check your answers. Or fine-tune on the training split, which only holds the tuning half.</p></div>
+      </div>
+      <div class="term">
+        <div class="term-bar"><span>Benchmark</span><span>Python 3.9+, no installs</span></div>
+<pre><span class="p">$ </span>python3 evals/longrun/build.py --world full --check
+<span class="c">world matches lock</span>
+<span class="p">$ </span>python3 evals/longrun/export.py ./kestrel-full
+<span class="c">first-read.jsonl · weekly/ · answers/dev.json · answers/test.json
+training/dev-tasks.jsonl</span>
+<span class="p">$ </span>python3 evals/longrun/score_tasks.py my_c1.json --checkpoint c1
+<span class="c">c1 test: fully right __ of 51 | open caught … | workspace leaks …</span></pre>
       </div>
     </div>
   </div>
@@ -446,8 +517,10 @@ footer a { color: var(--muted); }
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="explorer.js"></script>
 <script>
 document.documentElement.classList.add("js");
+try { if (window.Explorer) Explorer.mount(document.getElementById("explorer"), {base: "data/", id: "inline"}); } catch (e) {}
 const REDUCED = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const fmt = n => Math.round(n).toLocaleString("en-US");
@@ -629,8 +702,8 @@ document.getElementById("copy").addEventListener("click", async e => {
   const base = new Float32Array(N * 3); // per particle: radius, theta, phi
   const extra = new Float32Array(N * 4); // speed, phase, delay, source
   const cSignal = new THREE.Color(css("--signal-hot")), cLate = new THREE.Color(css("--late"));
-  // sources, sized by the demo world: Slack 13,403, Gmail 558, Jira 439, GitHub 37, Calendar+Drive 20
-  const SRC = [[13403, "#55607a"], [558, "#8e96a8"], [439, "#6f7fb0"], [37, "#a7b3d8"], [20, "#c9cfe0"]];
+  // sources, sized by the demo world before the first read: Slack, Gmail, Jira, GitHub, Calendar+Drive
+  const SRC = [[75194, "#55607a"], [14052, "#8e96a8"], [8415, "#6f7fb0"], [8006, "#a7b3d8"], [3887, "#c9cfe0"]];
   const total = SRC.reduce((a, s) => a + s[0], 0);
   const srcCols = SRC.map(s => new THREE.Color(s[1]));
   const srcPick = r => { let acc = 0; for (let k = 0; k < SRC.length; k++) { acc += SRC[k][0] / total; if (r < acc) return k; } return 0; };

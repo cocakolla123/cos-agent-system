@@ -74,3 +74,23 @@ the laptop item" to "followed the phishing email".)
 - Gold after: open at C2, owed by the user, no due date.
 - Rescored all realistic-world runs; lrr-v3 C2 test went from 42/43 to 43/43
   (lrr-v1 and lrr-v2, which also emitted the send task, gain the same arc).
+
+## Full world (world_full), after lrf-v3 C1
+
+### 3. Workspace of the freelance arcs whose answer is "gone"
+
+- LD02, LT02, LD05 and LT05 are freelance arcs that are absent at both checkpoints. With
+  no open state to take a workspace from, the scorer's isolation check fell back to
+  `kestrel`, so a node citing their items in `freelance` counted as a workspace leak.
+- Fix: `"isolation": "freelance"` on all four (both halves), the same field the job-search
+  and personal absent arcs already carry. A scoring fix; no right answer changed.
+- lrf-v3 C1 test isolation leaks: 4 as first scored, 0 after.
+
+### Noted, not corrected: LT05 matches the LT03 task's wording
+
+LT05 (Orbit withdrew the Terraform review) is scored absent on the keywords
+`terraform` + `orbit`. lrf-v3's LT03 task was named "Deliver the API security audit
+report to Orbit Labs ($3,000 on delivery; Terraform review dropped)": the right task, with
+a note that the Terraform ask was dropped, and the matcher counts that as LT05 still
+listed. Narrower keywords would be chosen after seeing a TEST result, so the label stays
+and LT05 counts as failed in lrf-v3. Read the C1 test number with this in mind.

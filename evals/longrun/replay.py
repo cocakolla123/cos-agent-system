@@ -158,7 +158,7 @@ def main():
     ap.add_argument("--tools", default=None,
                     help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
-    tools = args.tools or ("Read,Glob,Grep" if args.world == "realistic" else "Read,Glob")
+    tools = args.tools or ("Read,Glob,Grep" if args.world in ("realistic", "full") else "Read,Glob")
     run.assert_isolated(tools)
     items, meta = load_world(args.world)
     wdir = build.DIRS[args.world]

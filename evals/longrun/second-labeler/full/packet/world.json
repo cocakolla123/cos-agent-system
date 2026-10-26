@@ -1,0 +1,246 @@
+{
+ "slack_users": [
+  {
+   "id": "dana.k",
+   "real_name": "Dana Kowalski",
+   "email": "dana.k@kestrel.example",
+   "title": "Senior Backend Engineer, Platform"
+  },
+  {
+   "id": "ines",
+   "real_name": "Ines Moreau",
+   "email": "ines@kestrel.example",
+   "title": "Engineering Manager, Platform"
+  },
+  {
+   "id": "victor",
+   "real_name": "Victor Hale",
+   "email": "victor@kestrel.example",
+   "title": "Director of Engineering"
+  },
+  {
+   "id": "tomas",
+   "real_name": "Tomas Reyes",
+   "email": "tomas@kestrel.example",
+   "title": "Product Manager, Scheduling"
+  },
+  {
+   "id": "alex.p",
+   "real_name": "Alex Park",
+   "email": "alex.park@kestrel.example",
+   "title": "Backend Engineer, Platform"
+  },
+  {
+   "id": "dana.lee",
+   "real_name": "Dana Lee",
+   "email": "dana.lee@kestrel.example",
+   "title": "Frontend Engineer"
+  },
+  {
+   "id": "sam",
+   "real_name": "Sam Okoye",
+   "email": "sam@kestrel.example",
+   "title": "Site Reliability Engineer"
+  },
+  {
+   "id": "mei",
+   "real_name": "Mei Tanaka",
+   "email": "mei@kestrel.example",
+   "title": "QA Engineer"
+  },
+  {
+   "id": "raj",
+   "real_name": "Raj Patel",
+   "email": "raj@kestrel.example",
+   "title": "Data Engineer"
+  },
+  {
+   "id": "lena",
+   "real_name": "Lena Fischer",
+   "email": "lena@kestrel.example",
+   "title": "Product Designer"
+  },
+  {
+   "id": "alex.brennan",
+   "real_name": "Alex Brennan",
+   "email": "alex.brennan@northwind.example",
+   "title": "Operations Lead, Northwind Clinics (external, shared channel)"
+  },
+  {
+   "id": "jo.kim",
+   "real_name": "jo.kim",
+   "email": "jo.kim@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "omar.s",
+   "real_name": "omar.s",
+   "email": "omar.s@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "beth.w",
+   "real_name": "beth.w",
+   "email": "beth.w@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "luis.m",
+   "real_name": "luis.m",
+   "email": "luis.m@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "ana.r",
+   "real_name": "ana.r",
+   "email": "ana.r@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "kai.t",
+   "real_name": "kai.t",
+   "email": "kai.t@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "nina.p",
+   "real_name": "nina.p",
+   "email": "nina.p@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "ravi.k",
+   "real_name": "ravi.k",
+   "email": "ravi.k@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "zoe.h",
+   "real_name": "zoe.h",
+   "email": "zoe.h@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "tom.b",
+   "real_name": "tom.b",
+   "email": "tom.b@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "ivy.c",
+   "real_name": "ivy.c",
+   "email": "ivy.c@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "max.f",
+   "real_name": "max.f",
+   "email": "max.f@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "eli.n",
+   "real_name": "eli.n",
+   "email": "eli.n@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "fay.d",
+   "real_name": "fay.d",
+   "email": "fay.d@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "gus.o",
+   "real_name": "gus.o",
+   "email": "gus.o@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "hana.y",
+   "real_name": "hana.y",
+   "email": "hana.y@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "ian.v",
+   "real_name": "ian.v",
+   "email": "ian.v@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "june.q",
+   "real_name": "june.q",
+   "email": "june.q@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "kofi.a",
+   "real_name": "kofi.a",
+   "email": "kofi.a@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "lia.m",
+   "real_name": "lia.m",
+   "email": "lia.m@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "milo.r",
+   "real_name": "milo.r",
+   "email": "milo.r@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "noor.s",
+   "real_name": "noor.s",
+   "email": "noor.s@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "otto.b",
+   "real_name": "otto.b",
+   "email": "otto.b@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "pia.l",
+   "real_name": "pia.l",
+   "email": "pia.l@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "quinn.e",
+   "real_name": "quinn.e",
+   "email": "quinn.e@kestrel.example",
+   "title": "Engineer"
+  },
+  {
+   "id": "rosa.t",
+   "real_name": "rosa.t",
+   "email": "rosa.t@kestrel.example",
+   "title": "Engineer"
+  }
+ ],
+ "user": {
+  "name": "Dana Kowalski",
+  "email": "dana.k@kestrel.example",
+  "other_emails": [
+   "dana.kowalski@mailbox.example",
+   "dana.builds@mailbox.example",
+   "danak.dev@mailbox.example"
+  ],
+  "slack": "dana.k",
+  "github": "dana-k"
+ },
+ "workspaces": {
+  "kestrel": "employer",
+  "oss": "side-project",
+  "job-search": "job-search",
+  "personal": "personal",
+  "freelance": "freelance"
+ },
+ "c1": "2026-10-13",
+ "c2": "2026-11-10"
+}

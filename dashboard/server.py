@@ -1714,9 +1714,10 @@ def render_coverage_banner():
 def render_demo_banner():
     return (
         '<div class="demo-banner">'
-        "<strong>Live demo on fictional data.</strong> This is Dana Kowalski, an engineer "
-        "at Kestrel Labs, a made-up company: about 18,000 Slack messages, mails, Jira "
-        "tickets and calendar events over three months. The task list below is what the "
+        "<strong>Live demo on fictional data.</strong> This is Dana Kowalski, a made-up "
+        "engineer at Kestrel Labs who also freelances and is job hunting: about 110,000 Slack "
+        "messages, mails in four inboxes, Jira tickets, PRs, events and files over three "
+        "months. The task list below is what the "
         "research engine actually extracted from that world in a recorded run. Nothing here "
         "talks to a real account or a model: approve, chat and revise answer from saved "
         "responses. Data as of %s." % html.escape(demo_today()) + "</div>")

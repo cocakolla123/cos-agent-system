@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dana's computer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --night: #101216; --night-2: #161920; --panel: #1b1f27; --rule: #2a303b;
+  --text: #e7e9ec; --muted: #a2a9b4; --dim: #6f7783;
+  --signal: #8fa3dc; --signal-hot: #c3cffb; --late: #d57a81; --ok: #7dc29c;
+  --display: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --body: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--night); color: var(--text); font-family: var(--body); }
+body { padding: env(safe-area-inset-top, 0px) max(0px, env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) max(0px, env(safe-area-inset-left, 0px)); }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 600 13px/1 var(--body); padding: 8px 12px;
+  border: 1px solid var(--rule); background: transparent; color: var(--text); cursor: pointer; text-decoration: none; }
+.btn:hover { border-color: var(--signal); }
+.sm { padding: 7px 10px; font-size: 12px; }
+:focus-visible { outline: 2px solid var(--signal-hot); outline-offset: 2px; }
+.bar { display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--rule); font: 12px var(--mono); color: var(--dim); }
+.bar a { color: var(--muted); }
+#ex { border: 0; }
+#ex.ex { --ex-h: calc(100vh - 44px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+</style>
+</head>
+<body>
+<div class="bar"><a href="index.html">← Chief of Staff</a><span>Dana's computer · fictional · everything here is made up</span></div>
+<div id="ex"></div>
+<script src="explorer.js"></script>
+<script>Explorer.mount(document.getElementById("ex"), {base: "data/", id: "full"});</script>
+</body>
+</html>

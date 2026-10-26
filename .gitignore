@@ -37,3 +37,4 @@ dashboard/models.json
 dashboard/api-chat-history.json
 dashboard/usage.jsonl
 dashboard/poll-quiet.json
+evals/longrun/world_full/items.json

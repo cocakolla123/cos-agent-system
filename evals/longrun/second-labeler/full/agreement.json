@@ -1,0 +1,388 @@
+{
+ "tally": {
+  "c1 state": [
+   14,
+   14
+  ],
+  "c1 due": [
+   9,
+   10
+  ],
+  "c1 workspace": [
+   9,
+   10
+  ],
+  "c1 owner": [
+   10,
+   10
+  ],
+  "c1 priority": [
+   9,
+   10
+  ],
+  "c2 state": [
+   13,
+   14
+  ],
+  "c2 due": [
+   1,
+   2
+  ],
+  "c2 workspace": [
+   1,
+   2
+  ],
+  "c2 owner": [
+   2,
+   2
+  ]
+ },
+ "rows": [
+  {
+   "arc": "LD06",
+   "case": "case-01",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "own todo in a file",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "plantpal domain",
+   "labeler_gist": "Renew plantpal.app domain before it expires (auto-renew off)",
+   "diffs": []
+  },
+  {
+   "arc": "LD06",
+   "case": "case-01",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "own todo in a file",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Domain renewed on Oct 25 (Namecove receipt, valid to Oct 30 2027).",
+   "diffs": []
+  },
+  {
+   "arc": "LD02",
+   "case": "case-02",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "already paid",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Pixelmint contract ended and paid; leaving feedback is explicitly optional.",
+   "diffs": []
+  },
+  {
+   "arc": "LD02",
+   "case": "case-02",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "already paid",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Contract ended and paid; optional feedback is not an obligation.",
+   "diffs": []
+  },
+  {
+   "arc": "LD03",
+   "case": "case-03",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "freelance deliverable",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "low-stock alerts",
+   "labeler_gist": "Deliver Fernhill Goods Milestone 2 (low-stock alerts) on Upwork",
+   "diffs": []
+  },
+  {
+   "arc": "LD03",
+   "case": "case-03",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "freelance deliverable",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Milestone 2 submitted Oct 23 and $900 released Oct 30.",
+   "diffs": []
+  },
+  {
+   "arc": "LT02",
+   "case": "case-04",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "already paid",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "INV-0039 paid in full by Harbor Kite on Aug 15.",
+   "diffs": []
+  },
+  {
+   "arc": "LT02",
+   "case": "case-04",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "already paid",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "INV-0039 paid in full by Harbor Kite on Aug 15.",
+   "diffs": []
+  },
+  {
+   "arc": "LT01",
+   "case": "case-05",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "unpaid finished work",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "inv-0042",
+   "labeler_gist": "Chase Lumen Dental for overdue INV-0042 ($2,400); reminder sent Oct 6, awaiting payment",
+   "diffs": []
+  },
+  {
+   "arc": "LT01",
+   "case": "case-05",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "unpaid finished work",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "INV-0042 paid Oct 28; $2,400 transfer credited Oct 29.",
+   "diffs": []
+  },
+  {
+   "arc": "LT07",
+   "case": "case-06",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "recruiter or client question",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "nimbus",
+   "labeler_gist": "Reply to Nimbus Ops Upwork interview invite (start date and rate) before it expires",
+   "diffs": []
+  },
+  {
+   "arc": "LT07",
+   "case": "case-06",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "recruiter or client question",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Invitation expired Oct 25 with no response; nothing left to act on.",
+   "diffs": []
+  },
+  {
+   "arc": "LT04",
+   "case": "case-07",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "offer deadline",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "tidewater offer",
+   "labeler_gist": "Review and sign/decide Tidewater Analytics Senior Data Platform Engineer offer",
+   "diffs": []
+  },
+  {
+   "arc": "LT04",
+   "case": "case-07",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "offer deadline",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "tidewater offer",
+   "labeler_gist": "Give Tidewater Analytics a decision on the offer (extended deadline; no decision on record)",
+   "diffs": []
+  },
+  {
+   "arc": "LT03",
+   "case": "case-08",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "freelance deliverable",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "orbit audit",
+   "labeler_gist": "Deliver API security audit report to Orbit Labs (Priya Raman) per signed SOW",
+   "diffs": []
+  },
+  {
+   "arc": "LT03",
+   "case": "case-08",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "freelance deliverable",
+   "gold": "absent",
+   "labeler": "open",
+   "labeler_gist": "Awaiting Orbit Labs payment of $3,000 fee for the delivered API audit (invoice sent Oct 15)",
+   "diffs": [
+    "state"
+   ]
+  },
+  {
+   "arc": "LT06",
+   "case": "case-09",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "own todo in a file",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "blog hostlane",
+   "labeler_gist": "Move the blog off Hostlane before the legacy plan shuts down",
+   "diffs": [
+    "workspace personal vs oss"
+   ]
+  },
+  {
+   "arc": "LT06",
+   "case": "case-09",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "own todo in a file",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "blog hostlane",
+   "labeler_gist": "Blog went offline Nov 1; export site files from Hostlane before export window closes",
+   "diffs": [
+    "due 2026-11-01 vs 2026-12-01",
+    "workspace personal vs oss"
+   ]
+  },
+  {
+   "arc": "LD07",
+   "case": "case-10",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "recruiter or client question",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "brightline availability",
+   "labeler_gist": "Send Brightline Health (Maya Ortiz) availability for a 30-min intro call next week",
+   "diffs": []
+  },
+  {
+   "arc": "LD07",
+   "case": "case-10",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "recruiter or client question",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Dana replied Oct 14 and the call was booked for Wed Oct 15; done.",
+   "diffs": []
+  },
+  {
+   "arc": "LD01",
+   "case": "case-11",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "unpaid finished work",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "fernhill payment",
+   "labeler_gist": "Waiting on Fernhill Goods to approve/release Milestone 1 payment ($1,200); Dana asked Sep 25",
+   "diffs": [
+    "due None vs 2026-09-03",
+    "priority medium vs high (H1)"
+   ]
+  },
+  {
+   "arc": "LD01",
+   "case": "case-11",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "unpaid finished work",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Fernhill released the $1,200 Milestone 1 payment on Oct 22.",
+   "diffs": []
+  },
+  {
+   "arc": "LT05",
+   "case": "case-12",
+   "cp": "c1",
+   "split": "test",
+   "phenomenon": "extra ask withdrawn",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Client withdrew the Terraform review request on Oct 3 (their SRE did it).",
+   "diffs": []
+  },
+  {
+   "arc": "LT05",
+   "case": "case-12",
+   "cp": "c2",
+   "split": "test",
+   "phenomenon": "extra ask withdrawn",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Terraform review request withdrawn by the client.",
+   "diffs": []
+  },
+  {
+   "arc": "LD04",
+   "case": "case-13",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "offer deadline",
+   "gold": "open",
+   "labeler": "open",
+   "gold_gist": "quillmark offer",
+   "labeler_gist": "Give Quillmark a decision on the Staff Engineer offer",
+   "diffs": []
+  },
+  {
+   "arc": "LD04",
+   "case": "case-13",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "offer deadline",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Dana declined the Quillmark offer on Oct 21.",
+   "diffs": []
+  },
+  {
+   "arc": "LD05",
+   "case": "case-14",
+   "cp": "c1",
+   "split": "dev",
+   "phenomenon": "extra ask withdrawn",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Slack-notification request cancelled by client (intern will do it); the Oct 2 status question was answered the same day.",
+   "diffs": []
+  },
+  {
+   "arc": "LD05",
+   "case": "case-14",
+   "cp": "c2",
+   "split": "dev",
+   "phenomenon": "extra ask withdrawn",
+   "gold": "absent",
+   "labeler": "absent",
+   "labeler_why": "Request cancelled and status question answered; nothing open.",
+   "diffs": []
+  }
+ ],
+ "noise": [
+  {
+   "id": "jr-611362",
+   "gist": "RTA-101 timezone bug in shift export reopened and assigned to Dana (still broken for Australia/Lord_Howe)",
+   "due": null,
+   "workspace": "kestrel",
+   "confidence": "high"
+  },
+  {
+   "id": "jr-975465",
+   "gist": "PLAT-420 perf benchmark for the roster API, assigned to Dana by Ines",
+   "due": "2026-10-15",
+   "workspace": "kestrel",
+   "confidence": "high"
+  }
+ ]
+}

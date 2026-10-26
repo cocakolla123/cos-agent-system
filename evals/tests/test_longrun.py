@@ -204,3 +204,93 @@ class TestRealisticWorld(unittest.TestCase):
         self.assertGreater(len(chans), 100)
         muted = [c for c in self.meta["slack_channels"] if c["is_muted"]]
         self.assertGreater(len(muted), 10)
+
+
+class TestFullWorld(unittest.TestCase):
+    """The 100k+ world: same arcs plus the rest of Dana's life (world_life, arcs_life)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.items, cls.gold, cls.meta = build.build("full")
+
+    def test_only_example_domains(self):
+        blob = json.dumps([self.items, self.meta])
+        for dom in set(re.findall(r"[A-Za-z0-9._%+-]+@([A-Za-z0-9.-]+\.[A-Za-z]+)", blob)):
+            self.assertTrue(dom.endswith(".example"), dom)
+
+    def test_over_100k_items_before_the_first_read(self):
+        hist = [i for i in self.items if i["date"] < self.meta["today"]]
+        self.assertGreater(len(hist), 100000)
+        accounts = {i.get("account") for i in hist if i["connector"] == "gmail"}
+        self.assertEqual(len(accounts), 4)
+        self.assertIn("freelance", self.meta["workspaces"])
+
+    def test_oracle_passes_everything(self):
+        global GOLD
+        saved = GOLD
+        GOLD = self.gold
+        try:
+            g = ingest(graphlib.Graph(), oracle_records("c1"), self.meta["today"])
+            r1 = score_longrun.score_graph(g, self.gold, "c1", self.meta["today"])
+            self.assertEqual([a["id"] for a in r1["arcs"] if not a["pass"]], [])
+            self.assertEqual(r1["isolation"], [])
+            prev = {a["id"]: a.get("c1") for a in self.gold}
+            g = ingest(g, oracle_records("c2", prev), self.meta["c2"])
+            r2 = score_longrun.score_graph(g, self.gold, "c2", self.meta["c2"])
+            self.assertEqual([a["id"] for a in r2["arcs"] if not a["pass"]], [])
+            self.assertEqual(r2["noise_fps"], [])
+        finally:
+            GOLD = saved
+
+    def test_shared_arcs_keep_their_answers(self):
+        _, real, _ = build.build("realistic")
+        full = {a["id"]: a for a in self.gold}
+        for a in real:
+            b = full[a["id"]]
+            for cp in ("c1", "c2"):
+                self.assertEqual(a.get(cp), b.get(cp), a["id"])
+            self.assertEqual(len(a["sources"]), len(b["sources"]))
+
+    def test_ids_say_nothing_about_arcs(self):
+        ids = sorted(i["id"] for i in self.items if i["connector"] == "slack")
+        rank = {x: k / len(ids) for k, x in enumerate(ids)}
+        arc = [rank[s] for a in self.gold for s in a["sources"] if s in rank]
+        self.assertGreater(len(arc), 50)
+        mean = sum(arc) / len(arc)
+        self.assertTrue(0.35 < mean < 0.65, mean)
+        self.assertTrue(all(re.match(r"^(em|sl|jr|gh|cal|doc)-\d{6}$", i["id"]) for i in self.items))
+
+    def test_no_noise_item_matches_an_arc(self):
+        self.assertLess(self.meta["guard_dropped"], 1000)
+
+
+class TestScoreTasks(unittest.TestCase):
+    def test_adapter_matches_native_scores(self):
+        import score as evscore
+        import score_tasks
+        run = os.path.join(os.path.dirname(HERE), "results", "longrun", "lrr-v3")
+        if not os.path.isdir(run):
+            self.skipTest("lrr-v3 not present")
+        gold = json.load(open(os.path.join(LR, "world_realistic", "gold.json")))
+        for cp, step, today in (("c1", "c1", "2026-10-13"), ("c2", "f4", "2026-11-10")):
+            g = graphlib.Graph.load(os.path.join(run, "graph", step))
+            now = graphlib._parse_iso(today)
+            tasks = []
+            for n in evscore.open_actions(g):
+                if not graphlib.is_open_action(n, now=now):
+                    continue
+                a = n.get("attrs") or {}
+                extra = []
+                for k in ("note", "subject", "refs", "summary"):
+                    v = a.get(k)
+                    extra += v if isinstance(v, list) else [v or ""]
+                ev = a.get("evidence") or []
+                tasks.append({"name": " ".join([n.get("name") or ""] + [str(x) for x in extra]),
+                              "key": n["id"].split(":action:", 1)[-1], "workspace": n["workspace"],
+                              "due": str(a.get("due") or "")[:10] or None, "priority": a.get("priority"),
+                              "waiting_on": a.get("blocked_on"),
+                              "sources": ev if isinstance(ev, list) else [ev]})
+            mine = score_longrun.score_graph(score_tasks.tasks_to_graph(tasks, today), gold, cp, today)
+            native = json.load(open(os.path.join(run, "score_%s.json" % cp)))
+            for split in ("dev", "test"):
+                self.assertEqual(mine["summary"][split]["pass"], native["summary"][split]["pass"])
