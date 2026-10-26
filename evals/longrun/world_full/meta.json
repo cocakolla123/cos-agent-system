@@ -1,0 +1,1325 @@
+{
+ "c2": "2026-11-10",
+ "future_weeks": [
+  "2026-10-13",
+  "2026-10-20",
+  "2026-10-27",
+  "2026-11-03"
+ ],
+ "guard_dropped": 209,
+ "history_start": "2026-07-13",
+ "slack_channels": [
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#platform"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#frontend"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#data-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#qa"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#design"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#sre"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#incidents"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#deploys"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#releases"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#eng-announce"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#general"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#random"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#it-help"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#northwind-shared"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#dev-portal"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "team",
+   "name": "#proj-scheduler-v2"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "team",
+   "name": "#proj-billing-migration"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#billing"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#billing-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#billing-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#search"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#search-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#search-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#mobile"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#mobile-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#mobile-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#payments"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#payments-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#payments-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#growth"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#growth-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#growth-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#onboarding"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#onboarding-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#onboarding-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#reports"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#reports-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#reports-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#notifications"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#notifications-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#notifications-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#auth"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#auth-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#auth-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#exports"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#exports-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#exports-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#pricing"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#pricing-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#pricing-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#partners"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#partners-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#partners-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#analytics"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#analytics-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#analytics-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#infra-cost"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#infra-cost-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#infra-cost-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#observability"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#observability-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#observability-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#a11y"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#a11y-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#a11y-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#localization"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#localization-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#localization-alerts"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#perf"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#perf-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#perf-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#security"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#security-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#security-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#compliance"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "topic",
+   "name": "#compliance-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#compliance-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#hiring"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#hiring-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#hiring-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#interviews"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#interviews-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#interviews-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#offsite"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#offsite-eng"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#offsite-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#docs"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#docs-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#docs-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#support-escalations"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#support-escalations-eng"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "topic",
+   "name": "#support-escalations-alerts"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#pets"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#running"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#books"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#music"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#food"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#parents"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#gaming"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#plants"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#photography"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#cycling"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#coffee"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#movies"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#travel"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#kudos"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#til"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#memes"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "social",
+   "name": "#help-desk-swap"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "social",
+   "name": "#carpool"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-exports-00"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-docs-01"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-notifications-02"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-interviews-03"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-pricing-04"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-observability-05"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-offsite-06"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-payments-07"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-exports-08"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-notifications-09"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-observability-10"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-partners-11"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-onboarding-12"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-mobile-13"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-hiring-14"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-security-15"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-perf-16"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-reports-17"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-partners-18"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-payments-19"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-localization-20"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-security-21"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-compliance-22"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-billing-23"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-interviews-24"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-reports-25"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-observability-26"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-notifications-27"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-compliance-28"
+  },
+  {
+   "is_member": false,
+   "is_muted": false,
+   "kind": "other-team",
+   "name": "#team-hiring-29"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "life",
+   "name": "#ci"
+  },
+  {
+   "is_member": true,
+   "is_muted": true,
+   "kind": "life",
+   "name": "#builds"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#oncall-handoff"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#standup"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#eng-random"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#water-cooler"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#wins"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#pairing"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#reading-group"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#ml-curious"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#security-news"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#customer-feedback"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#sales-wins"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#support-tier2"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#product-updates"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#ux-crit"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#frontend-guild"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#backend-guild"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#infra-cost"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#vendor-eval"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#office-sf"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#remote"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#lunch"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#dogs"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#cats"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#bikes"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#climbing"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#baking"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#chess"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#f1"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#football"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#nba"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#gardening"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#diy"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#language-exchange"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#podcasts"
+  },
+  {
+   "is_member": true,
+   "is_muted": false,
+   "kind": "life",
+   "name": "#tv-shows"
+  }
+ ],
+ "slack_users": [
+  {
+   "email": "dana.k@kestrel.example",
+   "id": "dana.k",
+   "real_name": "Dana Kowalski",
+   "title": "Senior Backend Engineer, Platform"
+  },
+  {
+   "email": "ines@kestrel.example",
+   "id": "ines",
+   "real_name": "Ines Moreau",
+   "title": "Engineering Manager, Platform"
+  },
+  {
+   "email": "victor@kestrel.example",
+   "id": "victor",
+   "real_name": "Victor Hale",
+   "title": "Director of Engineering"
+  },
+  {
+   "email": "tomas@kestrel.example",
+   "id": "tomas",
+   "real_name": "Tomas Reyes",
+   "title": "Product Manager, Scheduling"
+  },
+  {
+   "email": "alex.park@kestrel.example",
+   "id": "alex.p",
+   "real_name": "Alex Park",
+   "title": "Backend Engineer, Platform"
+  },
+  {
+   "email": "dana.lee@kestrel.example",
+   "id": "dana.lee",
+   "real_name": "Dana Lee",
+   "title": "Frontend Engineer"
+  },
+  {
+   "email": "sam@kestrel.example",
+   "id": "sam",
+   "real_name": "Sam Okoye",
+   "title": "Site Reliability Engineer"
+  },
+  {
+   "email": "mei@kestrel.example",
+   "id": "mei",
+   "real_name": "Mei Tanaka",
+   "title": "QA Engineer"
+  },
+  {
+   "email": "raj@kestrel.example",
+   "id": "raj",
+   "real_name": "Raj Patel",
+   "title": "Data Engineer"
+  },
+  {
+   "email": "lena@kestrel.example",
+   "id": "lena",
+   "real_name": "Lena Fischer",
+   "title": "Product Designer"
+  },
+  {
+   "email": "alex.brennan@northwind.example",
+   "id": "alex.brennan",
+   "real_name": "Alex Brennan",
+   "title": "Operations Lead, Northwind Clinics (external, shared channel)"
+  },
+  {
+   "email": "jo.kim@kestrel.example",
+   "id": "jo.kim",
+   "real_name": "jo.kim",
+   "title": "Engineer"
+  },
+  {
+   "email": "omar.s@kestrel.example",
+   "id": "omar.s",
+   "real_name": "omar.s",
+   "title": "Engineer"
+  },
+  {
+   "email": "beth.w@kestrel.example",
+   "id": "beth.w",
+   "real_name": "beth.w",
+   "title": "Engineer"
+  },
+  {
+   "email": "luis.m@kestrel.example",
+   "id": "luis.m",
+   "real_name": "luis.m",
+   "title": "Engineer"
+  },
+  {
+   "email": "ana.r@kestrel.example",
+   "id": "ana.r",
+   "real_name": "ana.r",
+   "title": "Engineer"
+  },
+  {
+   "email": "kai.t@kestrel.example",
+   "id": "kai.t",
+   "real_name": "kai.t",
+   "title": "Engineer"
+  },
+  {
+   "email": "nina.p@kestrel.example",
+   "id": "nina.p",
+   "real_name": "nina.p",
+   "title": "Engineer"
+  },
+  {
+   "email": "ravi.k@kestrel.example",
+   "id": "ravi.k",
+   "real_name": "ravi.k",
+   "title": "Engineer"
+  },
+  {
+   "email": "zoe.h@kestrel.example",
+   "id": "zoe.h",
+   "real_name": "zoe.h",
+   "title": "Engineer"
+  },
+  {
+   "email": "tom.b@kestrel.example",
+   "id": "tom.b",
+   "real_name": "tom.b",
+   "title": "Engineer"
+  },
+  {
+   "email": "ivy.c@kestrel.example",
+   "id": "ivy.c",
+   "real_name": "ivy.c",
+   "title": "Engineer"
+  },
+  {
+   "email": "max.f@kestrel.example",
+   "id": "max.f",
+   "real_name": "max.f",
+   "title": "Engineer"
+  },
+  {
+   "email": "eli.n@kestrel.example",
+   "id": "eli.n",
+   "real_name": "eli.n",
+   "title": "Engineer"
+  },
+  {
+   "email": "fay.d@kestrel.example",
+   "id": "fay.d",
+   "real_name": "fay.d",
+   "title": "Engineer"
+  },
+  {
+   "email": "gus.o@kestrel.example",
+   "id": "gus.o",
+   "real_name": "gus.o",
+   "title": "Engineer"
+  },
+  {
+   "email": "hana.y@kestrel.example",
+   "id": "hana.y",
+   "real_name": "hana.y",
+   "title": "Engineer"
+  },
+  {
+   "email": "ian.v@kestrel.example",
+   "id": "ian.v",
+   "real_name": "ian.v",
+   "title": "Engineer"
+  },
+  {
+   "email": "june.q@kestrel.example",
+   "id": "june.q",
+   "real_name": "june.q",
+   "title": "Engineer"
+  },
+  {
+   "email": "kofi.a@kestrel.example",
+   "id": "kofi.a",
+   "real_name": "kofi.a",
+   "title": "Engineer"
+  },
+  {
+   "email": "lia.m@kestrel.example",
+   "id": "lia.m",
+   "real_name": "lia.m",
+   "title": "Engineer"
+  },
+  {
+   "email": "milo.r@kestrel.example",
+   "id": "milo.r",
+   "real_name": "milo.r",
+   "title": "Engineer"
+  },
+  {
+   "email": "noor.s@kestrel.example",
+   "id": "noor.s",
+   "real_name": "noor.s",
+   "title": "Engineer"
+  },
+  {
+   "email": "otto.b@kestrel.example",
+   "id": "otto.b",
+   "real_name": "otto.b",
+   "title": "Engineer"
+  },
+  {
+   "email": "pia.l@kestrel.example",
+   "id": "pia.l",
+   "real_name": "pia.l",
+   "title": "Engineer"
+  },
+  {
+   "email": "quinn.e@kestrel.example",
+   "id": "quinn.e",
+   "real_name": "quinn.e",
+   "title": "Engineer"
+  },
+  {
+   "email": "rosa.t@kestrel.example",
+   "id": "rosa.t",
+   "real_name": "rosa.t",
+   "title": "Engineer"
+  }
+ ],
+ "today": "2026-10-13",
+ "user": {
+  "email": "dana.k@kestrel.example",
+  "github": "dana-k",
+  "name": "Dana Kowalski",
+  "other_emails": [
+   "dana.kowalski@mailbox.example",
+   "dana.builds@mailbox.example",
+   "danak.dev@mailbox.example"
+  ],
+  "slack": "dana.k"
+ },
+ "workspaces": {
+  "freelance": "freelance",
+  "job-search": "job-search",
+  "kestrel": "employer",
+  "oss": "side-project",
+  "personal": "personal"
+ },
+ "world": "full"
+}

@@ -1,0 +1,255 @@
+{
+ "cases": {
+  "case-01": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Renew plantpal.app domain before it expires (auto-renew off)",
+      "due": "2026-10-30",
+      "priority": "low",
+      "rule": "L2",
+      "workspace": "oss",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Domain renewed on Oct 25 (Namecove receipt, valid to Oct 30 2027)."
+   }
+  },
+  "case-02": {
+   "c1": {
+    "state": "absent",
+    "why": "Pixelmint contract ended and paid; leaving feedback is explicitly optional."
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Contract ended and paid; optional feedback is not an obligation."
+   }
+  },
+  "case-03": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Deliver Fernhill Goods Milestone 2 (low-stock alerts) on Upwork",
+      "due": "2026-10-24",
+      "priority": "medium",
+      "rule": "M1",
+      "workspace": "freelance",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Milestone 2 submitted Oct 23 and $900 released Oct 30."
+   }
+  },
+  "case-04": {
+   "c1": {
+    "state": "absent",
+    "why": "INV-0039 paid in full by Harbor Kite on Aug 15."
+   },
+   "c2": {
+    "state": "absent",
+    "why": "INV-0039 paid in full by Harbor Kite on Aug 15."
+   }
+  },
+  "case-05": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Chase Lumen Dental for overdue INV-0042 ($2,400); reminder sent Oct 6, awaiting payment",
+      "due": "2026-09-29",
+      "priority": "high",
+      "rule": "H1",
+      "workspace": "freelance",
+      "owner": "counterparty"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "INV-0042 paid Oct 28; $2,400 transfer credited Oct 29."
+   }
+  },
+  "case-06": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Reply to Nimbus Ops Upwork interview invite (start date and rate) before it expires",
+      "due": "2026-10-25",
+      "priority": "medium",
+      "rule": "M1",
+      "workspace": "freelance",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Invitation expired Oct 25 with no response; nothing left to act on."
+   }
+  },
+  "case-07": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Review and sign/decide Tidewater Analytics Senior Data Platform Engineer offer",
+      "due": "2026-10-16",
+      "priority": "high",
+      "rule": "H1",
+      "workspace": "job-search",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Give Tidewater Analytics a decision on the offer (extended deadline; no decision on record)",
+      "due": "2026-10-30",
+      "workspace": "job-search",
+      "owner": "user"
+     }
+    ]
+   }
+  },
+  "case-08": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Deliver API security audit report to Orbit Labs (Priya Raman) per signed SOW",
+      "due": "2026-10-15",
+      "priority": "high",
+      "rule": "H1",
+      "workspace": "freelance",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Awaiting Orbit Labs payment of $3,000 fee for the delivered API audit (invoice sent Oct 15)",
+      "due": null,
+      "workspace": "freelance",
+      "owner": "counterparty"
+     }
+    ]
+   }
+  },
+  "case-09": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Move the blog off Hostlane before the legacy plan shuts down",
+      "due": "2026-11-01",
+      "priority": "low",
+      "rule": "L2",
+      "workspace": "oss",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Blog went offline Nov 1; export site files from Hostlane before export window closes",
+      "due": "2026-12-01",
+      "workspace": "oss",
+      "owner": "user"
+     }
+    ]
+   }
+  },
+  "case-10": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Send Brightline Health (Maya Ortiz) availability for a 30-min intro call next week",
+      "due": null,
+      "priority": "medium",
+      "rule": "M1",
+      "workspace": "job-search",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Dana replied Oct 14 and the call was booked for Wed Oct 15; done."
+   }
+  },
+  "case-11": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Waiting on Fernhill Goods to approve/release Milestone 1 payment ($1,200); Dana asked Sep 25",
+      "due": "2026-09-03",
+      "priority": "high",
+      "rule": "H1",
+      "workspace": "freelance",
+      "owner": "counterparty"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Fernhill released the $1,200 Milestone 1 payment on Oct 22."
+   }
+  },
+  "case-12": {
+   "c1": {
+    "state": "absent",
+    "why": "Client withdrew the Terraform review request on Oct 3 (their SRE did it)."
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Terraform review request withdrawn by the client."
+   }
+  },
+  "case-13": {
+   "c1": {
+    "state": "open",
+    "items": [
+     {
+      "gist": "Give Quillmark a decision on the Staff Engineer offer",
+      "due": "2026-10-24",
+      "priority": "medium",
+      "rule": "M1",
+      "workspace": "job-search",
+      "owner": "user"
+     }
+    ]
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Dana declined the Quillmark offer on Oct 21."
+   }
+  },
+  "case-14": {
+   "c1": {
+    "state": "absent",
+    "why": "Slack-notification request cancelled by client (intern will do it); the Oct 2 status question was answered the same day."
+   },
+   "c2": {
+    "state": "absent",
+    "why": "Request cancelled and status question answered; nothing open."
+   }
+  }
+ }
+}

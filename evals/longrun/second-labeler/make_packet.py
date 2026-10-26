@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the blind second-labeler packet for the realistic long-run world.
 
-    python3 evals/longrun/second-labeler/make_packet.py <out_dir> <mapping.json>
+    python3 evals/longrun/second-labeler/make_packet.py <out_dir> <mapping.json> [--world full] [--only L] [--noise 300]
 
 Two tasks, both from raw items only (no arc names, phenomena, stories or gold):
 
@@ -59,8 +59,11 @@ def mentions_user(i, user):
     return any(k.lower() in blob for k in keys)
 
 
-def main(out_dir, mapping_path):
-    items, gold, meta = build.build("realistic")
+def main(out_dir, mapping_path, world="realistic", only=None, noise_n=NOISE_N):
+    items, gold, meta = build.build(world)
+    all_gold = gold
+    if only:
+        gold = [a for a in gold if a["id"].startswith(only)]
     by_ctx = {}
     for i in items:
         by_ctx.setdefault(context_key(i), []).append(i)
@@ -81,9 +84,12 @@ def main(out_dir, mapping_path):
             arc_ids.update(ids)
             its = sorted((by_id[x] for x in ids), key=lambda x: (x["date"], x["id"]))
             f.write(json.dumps({"case": case, "items": its}) + "\n")
+    for arc in all_gold:      # items of arcs left out of the cases are not noise either
+        for sid in arc["sources"]:
+            arc_ids.update(x["id"] for x in by_ctx[context_key(by_id[sid])])
     pool = [i for i in items if i["id"] not in arc_ids and i["date"] < meta["c2"] + "T23:59"
             and mentions_user(i, meta["user"])]
-    sample = sorted(rng.sample(pool, min(NOISE_N, len(pool))), key=lambda x: (x["date"], x["id"]))
+    sample = sorted(rng.sample(pool, min(noise_n, len(pool))), key=lambda x: (x["date"], x["id"]))
     with open(os.path.join(out_dir, "noise.jsonl"), "w") as f:
         for i in sample:
             f.write(json.dumps(i) + "\n")
@@ -97,4 +103,8 @@ def main(out_dir, mapping_path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    # make_packet.py OUT MAPPING [--world full] [--only L] [--noise 300]
+    a = sys.argv
+    opt = lambda k, d: a[a.index(k) + 1] if k in a else d
+    main(a[1], a[2], world=opt("--world", "realistic"), only=opt("--only", None),
+         noise_n=int(opt("--noise", NOISE_N)))

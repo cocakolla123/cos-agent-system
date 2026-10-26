@@ -19,7 +19,7 @@ import draft_next_steps as dn   # noqa: E402
 
 OUT = os.path.join(HERE, "kinds.json")
 KINDS = ("engineering", "review", "writing", "reply", "meeting", "security", "admin",
-         "job-search", "personal")
+         "freelance", "job-search", "personal")
 BATCH = 17
 
 RULES = """Give each of Dana Kowalski's tasks exactly one kind:
@@ -30,6 +30,7 @@ RULES = """Give each of Dana Kowalski's tasks exactly one kind:
 - meeting: scheduling, prep or follow-up for a meeting or call
 - security: credentials, keys, access, certificates, security training
 - admin: forms, bookings, tickets, renewals, housekeeping
+- freelance: her own client work: deliverables, invoices, payments, Upwork
 - job-search: anything for her job search
 - personal: personal life
 Use the task's name and sources. Output ONLY a JSON array, one object per task, same order:

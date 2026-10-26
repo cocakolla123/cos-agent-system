@@ -5,7 +5,7 @@
 
 Everything is fictional (Kestrel Labs, Dana Kowalski, .example domains). The
 task graph is not hand-written: it is the graph the research engine built
-from the realistic long-run world in recorded run lrr-v3, at its first
+from the full long-run world (over 100,000 items) in recorded run lrf-v3, at its first
 checkpoint (2026-10-13). This script adds the parts of a dashboard that a
 crawl alone does not produce: an approval queue with drafts tied to tasks in
 that graph, a correction ledger taken from the run's real dev failures, a
@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 STATE = os.path.join(HERE, "state")
 WS = os.path.join(STATE, "workspace")
-SOURCE_GRAPH = os.path.join(ROOT, "evals", "results", "longrun", "lrr-v3", "graph", "c1")
+SOURCE_GRAPH = os.path.join(ROOT, "evals", "results", "longrun", "lrf-v3", "graph", "c1")
 TODAY = "2026-10-13"
 
 CONFIG = {
@@ -50,6 +50,8 @@ WORKSPACES = {
         {"id": "kestrel", "kind": "employer", "label": "Kestrel Labs",
          "connectors": ["gmail-work", "slack", "jira", "github", "calendar", "drive"],
          "isolation": "strict"},
+        {"id": "freelance", "kind": "freelance", "label": "Freelance",
+         "connectors": ["gmail-freelance"], "isolation": "strict"},
         {"id": "job-search", "kind": "job-search", "label": "Job search",
          "connectors": ["gmail-personal"], "isolation": "strict"},
         {"id": "personal", "kind": "personal", "label": "Personal",
@@ -76,13 +78,13 @@ QUEUE = [
     # Each draft answers a task the research engine found in the recorded run;
     # the facts in them are the world's own (bracketed parts are left for
     # Dana to fill in, which is what the Edit button is for).
-    {"id": "q-1013-tomas-deprecation", "task": "kestrel:action:api-v1-deprecation-notice", "status": "pending", "action_type": "message_send",
+    {"id": "q-1013-tomas-deprecation", "task": "kestrel:action:api-v1-deprecation-notice-text", "status": "pending", "action_type": "message_send",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:40:00-07:00",
      "short_summary": "Email to Tomas: first draft of the API v1 deprecation notice (he asked for it by today)",
      "proposed_tool_call": 'gmail-work.send to Tomas, re "Deprecation notice", with text: "Hi Tomas, here is a first draft of the v1 deprecation notice: API v1 will stop accepting requests on [date]. Please move to the v2 endpoints before then; the migration guide covers the changes. Tell me the date and anything to add, and I will finalize it today."',
      "context": "Task: Write API v1 deprecation notice text for Tomas (due 2026-10-13). Source: his email of Oct 8, 'I need the API v1 deprecation notice text by next Tuesday.'"},
-    {"id": "q-1013-alex-cron", "task": "kestrel:action:confirm-billing-cron-schedule", "status": "pending", "action_type": "message_send",
+    {"id": "q-1013-alex-cron", "task": "kestrel:action:billing-cron-schedule-confirm", "status": "pending", "action_type": "message_send",
      "priority": "high", "drafted_by": "cos-drafter",
      "created": "2026-10-13T08:44:00-07:00",
      "short_summary": "Slack reply to Alex in #proj-billing-migration: the billing cron schedule (due Oct 16)",
@@ -100,7 +102,7 @@ QUEUE = [
      "short_summary": "Email to Grace Liu (Halcyon Talent) with the updated resume [job-search workspace]",
      "proposed_tool_call": 'gmail-personal.send to Grace Liu, re "Updated resume", with text: "Hi Grace, sorry this is late. My updated resume is attached. Happy to talk whenever suits you."',
      "context": "Job-search workspace: drafted from the personal mailbox, never the work account. Task: Send updated resume to Grace Liu (asked for it by Oct 1)."},
-    {"id": "q-1012-alex-ack", "task": "kestrel:action:confirm-billing-cron-schedule", "status": "approved", "action_type": "message_send",
+    {"id": "q-1012-alex-ack", "task": "kestrel:action:billing-cron-schedule-confirm", "status": "approved", "action_type": "message_send",
      "priority": "medium", "drafted_by": "cos-drafter",
      "created": "2026-10-12T16:10:00-07:00",
      "short_summary": "Slack: acknowledge Alex's cron question (will confirm by Oct 16)",
@@ -187,7 +189,7 @@ CHAT = """**You** (Oct 13, 08:58): what's most urgent today?
 
 
 NEXT_STEPS = os.path.join(HERE, "next_steps.json")
-WORLD_ITEMS = os.path.join(ROOT, "evals", "longrun", "world_realistic", "items.json")
+WORLD_ITEMS = os.path.join(ROOT, "evals", "longrun", "world_full", "items.json")
 
 
 def activity_dates(nodes):

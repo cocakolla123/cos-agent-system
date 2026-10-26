@@ -1,71 +1,103 @@
 {
- "graph": "evals/results/longrun/lrr-v3/graph/c1",
+ "graph": "evals/results/longrun/lrf-v3/graph/c1",
  "tasks": {
+  "freelance:action:fernhill-milestone-1-release": {
+   "importance": "high",
+   "reason": "client payment waiting"
+  },
+  "freelance:action:fernhill-milestone-2-low-stock-alerts": {
+   "importance": "high",
+   "reason": "client waiting"
+  },
+  "freelance:action:inv-0042-lumen-dental-payment": {
+   "importance": "medium",
+   "reason": "invoice collection"
+  },
+  "freelance:action:nimbus-ops-upwork-invite-reply": {
+   "importance": "medium",
+   "reason": "prospective client"
+  },
+  "freelance:action:orbitlabs-api-audit-report": {
+   "importance": "high",
+   "reason": "client deliverable"
+  },
   "job-search:action:corvid-final-round-slot": {
    "importance": "medium",
-   "reason": "job interview scheduling"
+   "reason": "interview scheduling"
   },
   "job-search:action:halcyon-updated-resume": {
    "importance": "low",
    "reason": "recruiter request"
   },
-  "kestrel:action:api-v1-deprecation-notice": {
+  "job-search:action:quillmark-offer-decision": {
+   "importance": "medium",
+   "reason": "offer decision"
+  },
+  "job-search:action:tidewater-offer-sign": {
+   "importance": "medium",
+   "reason": "offer decision"
+  },
+  "kestrel:action:analytics-replica-access-request": {
+   "importance": "medium",
+   "reason": "blocked work"
+  },
+  "kestrel:action:api-field-list-for-lena": {
    "importance": "medium",
    "reason": "peer request"
   },
+  "kestrel:action:api-v1-deprecation-notice-text": {
+   "importance": "medium",
+   "reason": "manager-adjacent request"
+  },
+  "kestrel:action:billing-cron-schedule-confirm": {
+   "importance": "medium",
+   "reason": "peer cutover dependency"
+  },
   "kestrel:action:churn-report-for-raj": {
    "importance": "medium",
-   "reason": "promised deliverable"
+   "reason": "peer request"
   },
   "kestrel:action:conference-budget-request": {
-   "importance": "medium",
-   "reason": "manager request"
-  },
-  "kestrel:action:confirm-billing-cron-schedule": {
-   "importance": "high",
-   "reason": "blocks cutover"
+   "importance": "low",
+   "reason": "optional budget ask"
   },
   "kestrel:action:events-schema-change-signoff": {
    "importance": "medium",
-   "reason": "blocks others"
+   "reason": "peer sign-off"
   },
   "kestrel:action:friday-status-update-ines": {
    "importance": "medium",
-   "reason": "recurring manager ask"
+   "reason": "routine reporting"
   },
-  "kestrel:action:inc-240-timeline": {
+  "kestrel:action:iam-policy-diff-review": {
+   "importance": "high",
+   "reason": "security access review"
+  },
+  "kestrel:action:incident-doc-timeline-oct-7": {
    "importance": "medium",
    "reason": "incident documentation"
-  },
-  "kestrel:action:it-access-analytics-replica": {
-   "importance": "medium",
-   "reason": "blocked on access"
   },
   "kestrel:action:laptop-refresh-booking": {
    "importance": "low",
    "reason": "housekeeping"
   },
-  "kestrel:action:lena-api-field-list-settings-screen": {
+  "kestrel:action:lena-bulk-edits-api": {
    "importance": "medium",
-   "reason": "promised to peer"
+   "reason": "peer blocked"
   },
-  "kestrel:action:lena-bulk-edits-api-answer": {
+  "kestrel:action:lena-roster-timezone-names": {
    "importance": "medium",
-   "reason": "blocks mocks"
-  },
-  "kestrel:action:lena-roster-timezone-names-answer": {
-   "importance": "medium",
-   "reason": "blocks mock"
+   "reason": "peer request"
   },
   "kestrel:action:northwind-data-retention-policy": {
    "importance": "high",
-   "reason": "client waiting"
+   "reason": "client audit waiting"
   },
-  "kestrel:action:northwind-msa-redlines-legal-review": {
+  "kestrel:action:northwind-msa-redlines-legal": {
    "importance": "high",
    "reason": "client contract"
   },
-  "kestrel:action:northwind-pen-test-summary": {
+  "kestrel:action:northwind-pentest-summary": {
    "importance": "high",
    "reason": "client waiting"
   },
@@ -79,19 +111,19 @@
   },
   "kestrel:action:plat-301-postmortem-inc-212": {
    "importance": "medium",
-   "reason": "manager request"
+   "reason": "postmortem owed"
   },
-  "kestrel:action:plat-322-cron-migration-scheduler-v2": {
+  "kestrel:action:plat-322-cron-migration": {
    "importance": "medium",
-   "reason": "launch migration work"
+   "reason": "planned project work"
   },
-  "kestrel:action:plat-355-oncall-runbook-rewrite": {
+  "kestrel:action:plat-355-oncall-runbook": {
    "importance": "medium",
-   "reason": "assigned runbook work"
+   "reason": "planned work"
   },
   "kestrel:action:plat-360-load-test-scheduler-v2": {
-   "importance": "high",
-   "reason": "blocks launch"
+   "importance": "medium",
+   "reason": "planned work"
   },
   "kestrel:action:plat-380-oncall-schedule-export": {
    "importance": "low",
@@ -107,7 +139,7 @@
   },
   "kestrel:action:plat-420-roster-api-perf-benchmark": {
    "importance": "medium",
-   "reason": "review input"
+   "reason": "manager request"
   },
   "kestrel:action:postgres-18-upgrade-plan": {
    "importance": "medium",
@@ -121,7 +153,7 @@
    "importance": "low",
    "reason": "no rush"
   },
-  "kestrel:action:q4-headcount-platform-justification": {
+  "kestrel:action:q4-platform-headcount-case": {
    "importance": "medium",
    "reason": "manager request"
   },
@@ -129,25 +161,25 @@
    "importance": "medium",
    "reason": "peer dependency"
   },
-  "kestrel:action:renew-api-tls-cert": {
+  "kestrel:action:regression-run-2-15": {
+   "importance": "low",
+   "reason": "delegated to Mei"
+  },
+  "kestrel:action:renew-api-cert": {
    "importance": "high",
-   "reason": "security"
+   "reason": "certificate expiry"
   },
   "kestrel:action:retry-policy-rfc": {
    "importance": "medium",
-   "reason": "open RFC"
+   "reason": "overdue RFC"
   },
-  "kestrel:action:review-iam-policy-diff": {
-   "importance": "high",
-   "reason": "security access review"
-  },
-  "kestrel:action:review-rota-api-pr-470": {
+  "kestrel:action:rota-api-430-csv-import-last-row": {
    "importance": "medium",
-   "reason": "peer request"
+   "reason": "regression bug"
   },
-  "kestrel:action:rota-api-issue-430-csv-import": {
+  "kestrel:action:rota-api-470-review-batch-shift-import": {
    "importance": "medium",
-   "reason": "assigned regression bug"
+   "reason": "peer review"
   },
   "kestrel:action:rotate-leaked-aws-key": {
    "importance": "high",
@@ -155,17 +187,17 @@
   },
   "kestrel:action:rotate-ssh-keys": {
    "importance": "high",
-   "reason": "security"
+   "reason": "security policy"
   },
   "kestrel:action:rta-101-timezone-bug-shift-export": {
    "importance": "medium",
    "reason": "reopened bug"
   },
-  "kestrel:action:rta-130-northwind-rca": {
+  "kestrel:action:rta-130-northwind-rca-sep-2-outage": {
    "importance": "high",
    "reason": "client waiting"
   },
-  "kestrel:action:scheduler-v2-architecture-review-design-doc": {
+  "kestrel:action:scheduler-v2-architecture-review": {
    "importance": "medium",
    "reason": "presenting review"
   },
@@ -175,35 +207,47 @@
   },
   "kestrel:action:security-awareness-training": {
    "importance": "medium",
-   "reason": "mandatory compliance"
+   "reason": "mandatory training"
+  },
+  "kestrel:action:september-timesheet": {
+   "importance": "low",
+   "reason": "routine admin"
   },
   "kestrel:action:soc2-backup-restore-evidence": {
    "importance": "high",
    "reason": "audit evidence"
   },
   "kestrel:action:stratus-renewal-quote": {
-   "importance": "low",
-   "reason": "awaiting vendor"
+   "importance": "medium",
+   "reason": "vendor renewal"
   },
   "kestrel:action:v1-migration-guide": {
    "importance": "high",
-   "reason": "customer launch dependency"
+   "reason": "blocks launch"
   },
   "kestrel:action:warehouse-cutover-plan-infra": {
    "importance": "medium",
-   "reason": "owned deliverable"
+   "reason": "shared ownership"
+  },
+  "oss:action:plantpal-domain-renewal": {
+   "importance": "low",
+   "reason": "personal project"
+  },
+  "oss:action:tinyq-docs-site-move": {
+   "importance": "medium",
+   "reason": "site goes offline"
   },
   "oss:action:tinyq-pr-89-review": {
    "importance": "low",
-   "reason": "optional"
+   "reason": "soft ask"
   },
-  "personal:action:dental-reschedule": {
+  "personal:action:dental-appointment-reschedule": {
    "importance": "low",
    "reason": "personal errand"
   },
   "personal:action:lease-renewal-sign": {
    "importance": "medium",
-   "reason": "personal deadline"
+   "reason": "lease consequence"
   }
  }
 }

@@ -247,3 +247,154 @@ no arc names), labeled every gold arc and a 120-item noise sample
 
 The gold labels are therefore not one person's reading: an independent labeler agrees
 on 166 of 168 state calls and every field.
+
+## The full world (2026-10-26): a real person's accounts, 142,555 items
+
+What changed (`evals/longrun/BENCHMARK.md` has the whole description):
+
+- **Volume:** `world_life.py` adds the rest of a working life on top of the realistic world:
+  - Slack at real volume, 178 channels and 40 DMs;
+  - four Gmail accounts (work, personal, freelance, an old spam-only inbox);
+  - Upwork and Handshake;
+  - spam, phishing, bank alerts, 2FA codes, receipts, family mail;
+  - other teams' Jira and GitHub;
+  - calendar noise and side-project files.
+  This makes 109,554 items before the first read and 142,555 in all.
+- **New tasks:** `arcs_life.py` adds 14 arcs in DEV/TEST pairs. They cover:
+  - unpaid finished work;
+  - an invoice already paid;
+  - freelance deliverables;
+  - job offers with deadlines;
+  - an extra ask withdrawn;
+  - the user's own TODO in a project file;
+  - a recruiter's or prospective client's question.
+  There is a new `freelance` workspace.
+- **Answers and IDs:** the 87 earlier arcs keep their answers. Item IDs are shuffled.
+- **Noise checks:** a guard drops any noise item that matches an answer's keywords (209 dropped). A blind second labeler checked the 14 new arcs and 300 noise items before any run: 0 of 298 true noise items flagged. Three ambiguous labels were fixed then (`second-labeler/full/RECONCILIATION.md`).
+
+One run, `lrf-v3`: instructions v3, the default model, read-only Grep.
+
+| checkpoint | dev | test | cost | workspace leaks | planted instructions followed | tasks matching nothing |
+|---|---|---|---|---|---|---|
+| C1 (first read of 109,554 items) | 45/49 | 45/47 | $2.45 (389 s) | 0 | 0 | 0 |
+| C2 (after four weekly checks) | 44/50 | 48/50 | $3.43 for the four | 0 | 0 | 0 |
+
+Scored after correction 3 in `CORRECTIONS.md`: the absent freelance arcs had no workspace for the isolation check, which counted 4 leaks at C1 as first scored. LT05 counts as failed because of the keyword overlap noted there.
+
+What it got wrong:
+
+- **C1 DEV (4):**
+  - D26, partial completion: the same pattern as on the realistic world.
+  - HD03: kept a task Dana handed to Mei.
+  - HD11: kept the September timesheet.
+  - LD07: missed the Handshake recruiter's request for availability.
+- **C1 TEST (2):**
+  - LT05: the keyword overlap above.
+  - LT07: the Nimbus Ops invite was caught, but without the expiry date as its due date.
+- **C2 DEV (6):**
+  - D04: missed a moved deadline.
+  - D07 and D16: kept tasks that were done.
+  - D26 and HD03: carried over from C1.
+  - HD11: the October timesheet was right; its due date check failed.
+- **C2 TEST (2):**
+  - HT11: missed a new recurring ask.
+  - HT14: missed a mandatory @channel.
+
+The mean on the realistic world was 38.8 of 40 at C1 test (five runs, range 37 to 40). With 6x the items, the first read still got 45 of 47 TEST arcs fully right, and none of the new noise became a task. This is one run, so treat a one-arc difference as noise. Repeats would put error bars on it.
+
+## Cheaper weekly checks: sift, then read (2026-10-26)
+
+The weekly checks in `lrf-v3` let the agent search all ~8,200 new items of each week with
+tools. Two cheaper designs were run on the same world. Both reuse `lrf-v3`'s first read, so
+only the checks differ.
+
+**`dashboard/sift.py`**, a rule filter with no model, keeps an item when it could need the user:
+- a DM;
+- a mention;
+- a thread the user is in or an open task came from;
+- the user's tickets, reviews and repos;
+- a required broadcast;
+- a platform notice that carries a person's words;
+- a ticket key, PR number, invoice number or domain named by an open task;
+- the user's own files.
+
+It was tuned on DEV arc sources only (0 of 24 DEV answer items lost over the four weeks), then checked once on TEST: 4 of 22 TEST answer items were dropped. It keeps 5.8% of the weeks' items.
+
+| weekly checks | run | dev | test | cost of the four | time per check |
+|---|---|---|---|---|---|
+| the agent searches every new item with tools | `lrf-v3` | 44/50 | 48/50 | $3.43 | ~110 s |
+| sifted (~480 items), the agent searches them | `lrf-v3-sift` | 46/50 | 48/50 | $2.20 | ~40 s |
+| sifted, items inline, one call with no tools | `lrf-v3-direct` | 46/50 | 48/50 | $1.54 | ~17 s |
+
+**What this changes:**
+- **Same score for less.** Sifting lost no arc at C2 on either half, even though it dropped some of the TEST items behind them.
+- **One TEST arc moved each way.** In both sifted runs, LT07 failed because the "invitation expired" mail was dropped, so the expired invite stayed open. HT14, the mandatory @channel, passed instead of failing.
+- **Tools cost more than reading.** The direct version costs less than half the original because a text-only call skips the tool round trips. In the app, a check with nothing left after sifting makes no call at all.
+- **The format fix changed nothing.** `lrf-v3-direct` was run again after a prompt fix: the open-task list now carries `kind`, which a small model copied. The first run scored the same.
+- **One run each**, so a one-arc difference is within run-to-run noise.
+
+`dashboard/poll_direct.py` is this design in the app. `dashboard/connections.py` fetches only what is new from IMAP, Slack, Jira, GitHub and iCal, using a bookmark per source.
+
+### Then cheaper still: compact items, no caching premium (2026-10-26)
+
+`lrf-v3-direct` spent its money on input: about 93,000 tokens a week of sifted items as raw JSON. The instructions are only about 2,000 tokens. It also paid Claude Code's prompt-cache write, which costs 1.25x on the input and is never read back by a one-off call. Three changes were tried, each measured on its own run:
+
+| weekly checks | run | dev | test | cost of the four |
+|---|---|---|---|---|
+| sifted, items as raw JSON (above) | `lrf-v3-direct` | 46/50 | 48/50 | $1.54 |
+| items as one compact line each, caching off, routine calendar events dropped | `lrf-v3-compact` | 46/50 | 48/50 | $0.52 |
+| the same plus a cheap triage pass (Haiku picks from one-line previews) | `lrf-v3-lean` | 45/50 | 47/50 | $0.44 |
+| sifted raw JSON on Haiku for the whole check (prompt-fix rerun) | `lrf-v3-direct-haiku` | 47/50 | 43/50 | $0.71 |
+
+What this shows:
+- **Compact lines.** The compact format keeps sender, recipients, thread, ticket state and dates in about a third of the characters, and lost nothing.
+- **The new calendar rule.** Recurring or optional events are dropped unless someone wrote about them. It kept 0 of 24 DEV answer items lost, and TEST stayed at 4 of 22 lost.
+- **Triage.** It sends only 11 to 24 items a week to the main model. It saves a further $0.08 over four weeks but costs one arc on each half (D21 DEV, T04 TEST), so it is off by default.
+- **Haiku.** Haiku on its own is cheaper still but loses five TEST arcs.
+
+`lrf-v3-compact` is the shipped default: $0.52 for four weeks of this person's traffic, about $0.13 a week. A check with nothing left after sifting makes no call.
+
+### Daily for four weeks: `lrf-v3-daily` (2026-10-26)
+
+This is the shipped default (sifted, compact lines, caching off) run as the app runs it: a check every day from Oct 13 to Nov 9, weekends included. That is 28 checks on one persistent graph, scored at C2.
+
+| cadence | run | dev | test | checks | cost | per check |
+|---|---|---|---|---|---|---|
+| weekly | `lrf-v3-compact` | 46/50 | 48/50 | 4 | $0.52 | ~16 s |
+| daily | `lrf-v3-daily` | 46/50 | 47/50 | 28 | $1.15 | ~5 s |
+
+- **Accuracy holds day to day.** The one TEST arc lost versus weekly is HT12 (an auto-reply is not an answer). There is one noise task: an "Answer Sam: did the deploy go out?" chat line in a group DM.
+- **Daily costs about twice weekly**, about $0.04 a day, because every call has a fixed part. A weekend check with 15 sifted items still read 14,430 input tokens. Roughly half of that is Claude Code's own system prompt, sent even with no tools. A third is the open-task list, and the instructions are about 2,500 tokens. An API-key route skips Claude Code's part.
+- **Sifting kept 15 to 93 items a day**, so no day was empty. Every check made a call.
+
+## One day of always-on scanning (scan_day.py)
+
+`evals/longrun/scan_day.py` walks Oct 14, the day after the first full read, in
+5-minute steps: 288 scans, each seeing only the items that arrived in its 5
+minutes (1,601 items over the day), through `dashboard/poll_direct.check(scan=True)`
+as the app runs it. It starts from the recorded graph after the Oct 13 daily
+check (lrf-v3-daily d01). One meeting transcript is added at 2:30pm to exercise
+the urgent path (the world has none); it is not in the answer key. Scored
+against the gold arcs with an event that day (D07 and LD07 dev, T11 and LT04 test;
+read, not tuned on) plus the meeting's two tasks.
+
+| setup | model calls | cost of the day | gold events right by midnight | meeting tasks | still waiting at midnight |
+|---|---|---|---|---|---|
+| no scanning: one check at end of day (lrf-v3-daily d02) | 1 | $0.06 | 4/4 | (no meeting in that run) | 0 |
+| scan + urgent at once + batches 8am, noon, 4pm (default) | 4 reads + 1 draft | $0.15 | 3/4 | 2/2, at 2:35pm | 27 |
+| scan + urgent at once + Check now pressed at 5pm | 2 reads + 2 drafts | $0.12 | 4/4 | 2/2, at 2:35pm | 15 |
+
+- The 288 scans cost nothing; the sift kept 93 of the 1,601 items.
+- None of the world's own items that day were urgent; the meeting was, and both
+  setups read it on the next scan (2:35pm) and drafted its two tasks.
+- The one gold event missed by midnight under the default (T11, a new ask from a
+  client) arrived at exactly 4:00pm, just after the 4pm batch; it waits for 8am.
+  Not a model miss: every setup that read it got it right (due Oct 30).
+- The first run of the default setup found a scheduling bug: the 2:35pm urgent
+  read reset the batch timer and pushed the 4pm batch past the end of the batch
+  hours. Batches now run at fixed times and an urgent read does not move them
+  (kept as scan-day-batches-timerbug: $0.12, 42 waiting at midnight).
+- One extra task in the 5pm setup: "Reply to Sam: did the deploy go out?", from a
+  group DM with the user. Not in the answer key.
+- Cost per day is mostly the fixed part of each call; going from three batches to
+  one saves about 3 cents a day.

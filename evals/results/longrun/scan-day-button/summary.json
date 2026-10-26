@@ -1,0 +1,148 @@
+{
+ "setup": "button",
+ "button": "17:00",
+ "with_meeting": true,
+ "scans": 288,
+ "items": 1602,
+ "kept_total": 94,
+ "model_calls": 4,
+ "calls_by_job": {
+  "draft_direct": 2,
+  "poll_direct": 2
+ },
+ "cost_usd": 0.1228,
+ "cost_by_job": {
+  "draft_direct": 0.0338,
+  "poll_direct": 0.0889
+ },
+ "still_waiting_at_midnight": 15,
+ "waiting_ids": [
+  "em-730223",
+  "em-438859",
+  "em-056743",
+  "em-660461",
+  "em-564683",
+  "em-274625",
+  "doc-070598",
+  "em-539572",
+  "em-722612",
+  "em-763449",
+  "em-323070",
+  "em-169483",
+  "em-296898",
+  "em-544797",
+  "em-095749"
+ ],
+ "expectations": [
+  {
+   "ok": true,
+   "found": [
+    "Put together the Q4 capacity numbers"
+   ],
+   "due": [
+    "2026-10-22"
+   ],
+   "arc": "D07",
+   "split": "dev",
+   "words": [
+    "capacity",
+    "q4"
+   ],
+   "want": "open",
+   "what": "Ines's reminder moves the Q4 capacity numbers to Oct 22",
+   "first_ok_at": "14:35"
+  },
+  {
+   "ok": true,
+   "found": [
+    "Confirm the Nov 15 maintenance window to Alex Brennan at Northwind Clinics"
+   ],
+   "due": [
+    "2026-10-30"
+   ],
+   "arc": "T11",
+   "split": "test",
+   "words": [
+    "maintenance",
+    "window"
+   ],
+   "want": "open",
+   "what": "new: Alex asks Dana to confirm the Nov 15 maintenance window by Oct 30",
+   "first_ok_at": "17:05"
+  },
+  {
+   "ok": true,
+   "found": [
+    "Review and sign the Tidewater Analytics offer (Senior Data Platform Engineer)"
+   ],
+   "due": [
+    "2026-10-16"
+   ],
+   "arc": "LT04",
+   "split": "test",
+   "words": [
+    "tidewater",
+    "offer"
+   ],
+   "want": "open",
+   "what": "Dana asked Tidewater for until Oct 30 (the answer comes Oct 15): the offer task stays open",
+   "first_ok_at": "14:35"
+  },
+  {
+   "ok": true,
+   "found": [],
+   "due": [],
+   "arc": "LD07",
+   "split": "dev",
+   "words": [
+    "brightline",
+    "availability"
+   ],
+   "want": "closed",
+   "what": "Dana sent her availability and the interview was booked: the task closes",
+   "first_ok_at": null
+  },
+  {
+   "ok": true,
+   "found": [
+    "Write the Northwind onboarding checklist"
+   ],
+   "due": [
+    "2026-10-16"
+   ],
+   "arc": "meeting",
+   "split": "added",
+   "words": [
+    "onboarding",
+    "checklist"
+   ],
+   "want": "open",
+   "what": null,
+   "first_ok_at": "14:35"
+  },
+  {
+   "ok": true,
+   "found": [
+    "Update the SSO runbook for Northwind"
+   ],
+   "due": [
+    "2026-10-21"
+   ],
+   "arc": "meeting",
+   "split": "added",
+   "words": [
+    "sso",
+    "runbook"
+   ],
+   "want": "open",
+   "what": null,
+   "first_ok_at": "14:35"
+  }
+ ],
+ "new_open_tasks": [
+  "Confirm the Nov 15 maintenance window to Alex Brennan at Northwind Clinics",
+  "Write the Northwind onboarding checklist",
+  "Reply to Sam: did the deploy go out?",
+  "Update the SSO runbook for Northwind"
+ ]
+}

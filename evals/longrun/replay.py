@@ -71,10 +71,23 @@ def week_start(date_str):
     return (d - datetime.timedelta(days=d.weekday())).isoformat()
 
 
-def steps(meta):
-    weeks = meta["future_weeks"] + [meta["c2"]]
+def steps(meta, daily=False):
+    """c1, then one poll per future week, or with ``daily`` one per day
+    (d01..d28, weekends included) as the app's daily check would run."""
     out = [{"name": "c1", "lo": "0000", "hi": meta["today"], "today": meta["today"],
             "incremental": False}]
+    if daily:
+        d = datetime.date.fromisoformat(meta["today"])
+        end = datetime.date.fromisoformat(meta["c2"])
+        k = 0
+        while d < end:
+            k += 1
+            nxt = d + datetime.timedelta(days=1)
+            out.append({"name": "d%02d" % k, "lo": d.isoformat(), "hi": nxt.isoformat(),
+                        "today": nxt.isoformat(), "incremental": True})
+            d = nxt
+        return out
+    weeks = meta["future_weeks"] + [meta["c2"]]
     for i in range(len(meta["future_weeks"])):
         out.append({"name": "f%d" % (i + 1), "lo": weeks[i], "hi": weeks[i + 1],
                     "today": weeks[i + 1], "incremental": True})
@@ -95,9 +108,26 @@ def open_state(g, now):
     return sorted(rows, key=lambda r: (r["workspace"], r["key"]))
 
 
-def materialize(d, items, step, meta, g):
+def sift_window(items, sel, step, meta, g):
+    """The dashboard's rule filter (dashboard/sift.py) over one poll's items,
+    given the open tasks in the graph and everything seen before the window."""
+    import sift
+    now = graphlib._parse_iso(step["today"])
+    tasks = []
+    for n in score.open_actions(g):
+        if graphlib.is_open_action(n, now=now):
+            ev = (n.get("attrs") or {}).get("evidence") or []
+            tasks.append({"name": n.get("name"), "sources": ev if isinstance(ev, list) else [ev]})
+    known = [i for i in items if i["date"] < step["lo"]]
+    kept, dropped = sift.Sifter(meta["user"], meta.get("slack_channels"), tasks, known).sift(sel)
+    return kept, dropped
+
+
+def materialize(d, items, step, meta, g, use_sift=False):
     src = os.path.join(d, "sources")
     sel = [i for i in items if step["lo"] <= i["date"] < step["hi"]]
+    if use_sift and step["incremental"]:
+        sel, _ = sift_window(items, sel, step, meta, g)
     by = {}
     for i in sel:
         if i["connector"] == "slack":
@@ -130,6 +160,59 @@ def prompt(instructions, meta, step):
             + json.dumps(frame, indent=1, sort_keys=True) + "\n```\n\n" + tail)
 
 
+def _claude_text(text, model, timeout, no_cache):
+    cmd = [run.CLAUDE, "-p", "--output-format", "json", "--permission-mode", "dontAsk",
+           "--tools", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}']
+    if model:
+        cmd += ["--model", model]
+    env = dict(os.environ, DISABLE_PROMPT_CACHING="1") if no_cache else None
+    return subprocess.run(cmd, input=text, capture_output=True, text=True, timeout=timeout, env=env)
+
+
+def run_direct(items, st, meta, g, instr, model, timeout, compact=False, triage_model=None,
+               no_cache=False):
+    """The dashboard's direct check (dashboard/poll_direct.py) on one poll:
+    sift the window, optionally triage it on a cheap model, then one call with
+    the kept items inline and no tools."""
+    import poll_direct
+    import sift
+    sel = [i for i in items if st["lo"] <= i["date"] < st["hi"]]
+    now = graphlib._parse_iso(st["today"])
+    tasks = poll_direct.open_tasks(g, now)
+    known = [i for i in items if i["date"] < st["lo"]]
+    sifter = sift.Sifter(meta["user"], meta.get("slack_channels"), tasks, known)
+    kept, _ = sifter.sift(sel)
+    extra = {"sifted": len(kept)}
+    if not kept:        # a quiet check makes no call, as in the app
+        return {"scenario": st["name"], "direct": True, "quiet": True, "prompt_chars": 0,
+                "envelope": {"result": "[]", "total_cost_usd": 0.0, "duration_ms": 0,
+                             "modelUsage": {}}}, 0
+    if triage_model and len(kept) > 25:
+        always = [i["id"] for i in kept if sifter.reasons.get(i["id"]) in ("task_ref", "task_thread")]
+        tp = _claude_text(poll_direct.triage_prompt(meta["user"], kept, tasks), triage_model, timeout, no_cache)
+        try:
+            tenv = json.loads(tp.stdout)
+            kept = poll_direct.apply_triage(kept, tenv.get("result") or "", always)
+            extra.update({"triage_cost_usd": tenv.get("total_cost_usd"), "after_triage": len(kept)})
+        except ValueError:
+            extra["triage_error"] = "non-json stdout"
+    frame = {"user": meta["user"], "workspaces": meta["workspaces"], "today": st["today"]}
+    text = poll_direct.build_prompt(instr, frame, kept, tasks, compact=compact)
+    proc = _claude_text(text, model, timeout, no_cache)
+    raw = {"scenario": st["name"], "returncode": proc.returncode, "stderr": proc.stderr[-2000:],
+           "direct": True, "prompt_chars": len(text), **extra}
+    try:
+        env = json.loads(proc.stdout)
+    except ValueError:
+        raw["envelope_error"] = "non-json stdout"
+        raw["stdout"] = proc.stdout[-4000:]
+        return raw, len(kept)
+    raw["envelope"] = {k: env.get(k) for k in (
+        "result", "total_cost_usd", "duration_ms", "duration_api_ms",
+        "num_turns", "usage", "modelUsage", "is_error", "subtype")}
+    return raw, len(kept)
+
+
 def ingest(g, raw, today):
     env = raw.get("envelope") or {}
     recs, err = run.extract_json_array(env.get("result") or "") \
@@ -155,10 +238,19 @@ def main():
                     help="run id whose saved first crawl (c1) to reuse; the polls "
                          "then run on --model. Tests a large-model crawl with "
                          "cheap-model polls without paying for the crawl twice.")
+    ap.add_argument("--sift", action="store_true",
+                    help="weekly polls see only the items dashboard/sift.py keeps")
+    ap.add_argument("--direct", action="store_true",
+                    help="weekly polls run like dashboard/poll_direct.py: sifted items "
+                         "inline, no tools")
+    ap.add_argument("--daily", action="store_true", help="one poll per day instead of per week")
+    ap.add_argument("--compact", action="store_true", help="--direct: one compact line per item")
+    ap.add_argument("--triage-model", default=None, help="--direct: cheap first pass on this model")
+    ap.add_argument("--no-cache", action="store_true", help="--direct: switch off prompt caching")
     ap.add_argument("--tools", default=None,
                     help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
-    tools = args.tools or ("Read,Glob,Grep" if args.world == "realistic" else "Read,Glob")
+    tools = args.tools or ("Read,Glob,Grep" if args.world in ("realistic", "full") else "Read,Glob")
     run.assert_isolated(tools)
     items, meta = load_world(args.world)
     wdir = build.DIRS[args.world]
@@ -174,11 +266,18 @@ def main():
                 "cli_version": subprocess.run([run.CLAUDE, "--version"],
                                               capture_output=True, text=True).stdout.strip(),
                 "world": args.world, "tools": tools, "crawl_from": args.crawl_from,
+                "sift": bool(args.sift or args.direct), "direct": bool(args.direct),
+                "compact": bool(args.compact), "triage_model": args.triage_model,
+                "daily": bool(args.daily),
+                "no_cache": bool(args.no_cache),
                 "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
     log = []
-    for st in steps(meta):
+    daily = args.daily
+    if args.rescore and os.path.exists(os.path.join(out, "meta.json")):
+        daily = json.load(open(os.path.join(out, "meta.json"))).get("daily", False)
+    for st in steps(meta, daily):
         raw_path = os.path.join(raw_dir, st["name"] + ".json")
         if not args.rescore and args.crawl_from and st["name"] == "c1":
             src = os.path.join(RESULTS, args.crawl_from, "raw", "c1.json")
@@ -188,11 +287,16 @@ def main():
         elif not args.rescore:
             for attempt in (1, 2):      # one re-run for infrastructure failure only
                 with tempfile.TemporaryDirectory() as d:
-                    n = materialize(d, items, st, meta, g)
                     try:
-                        raw = run.run_scenario({"id": st["name"]}, d,
-                                               prompt(instr, meta, st), args.model,
-                                               args.timeout, allowed=tools)
+                        if args.direct and st["incremental"]:
+                            raw, n = run_direct(items, st, meta, g, instr, args.model, args.timeout,
+                                                compact=args.compact, triage_model=args.triage_model,
+                                                no_cache=args.no_cache)
+                        else:
+                            n = materialize(d, items, st, meta, g, use_sift=args.sift)
+                            raw = run.run_scenario({"id": st["name"]}, d,
+                                                   prompt(instr, meta, st), args.model,
+                                                   args.timeout, allowed=tools)
                     except subprocess.TimeoutExpired:
                         raw = {"scenario": st["name"], "envelope_error": "timeout"}
                 raw["items_in_window"] = n
@@ -207,7 +311,9 @@ def main():
         env = raw.get("envelope") or {}
         res.update({"step": st["name"], "today": st["today"],
                     "items": raw.get("items_in_window"),
-                    "cost_usd": env.get("total_cost_usd"),
+                    "cost_usd": (env.get("total_cost_usd") or 0) + (raw.get("triage_cost_usd") or 0)
+                    if env.get("total_cost_usd") is not None else None,
+                    "after_triage": raw.get("after_triage"),
                     "duration_ms": env.get("duration_ms"),
                     "models": sorted((env.get("modelUsage") or {}).keys())})
         log.append(res)

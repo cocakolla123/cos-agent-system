@@ -1,0 +1,18 @@
+{
+ "noise": [
+  {
+   "id": "jr-611362",
+   "gist": "RTA-101 timezone bug in shift export reopened and assigned to Dana (still broken for Australia/Lord_Howe)",
+   "due": null,
+   "workspace": "kestrel",
+   "confidence": "high"
+  },
+  {
+   "id": "jr-975465",
+   "gist": "PLAT-420 perf benchmark for the roster API, assigned to Dana by Ines",
+   "due": "2026-10-15",
+   "workspace": "kestrel",
+   "confidence": "high"
+  }
+ ]
+}

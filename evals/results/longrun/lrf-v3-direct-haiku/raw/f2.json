@@ -1,0 +1,68 @@
+{
+ "scenario": "f2",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 193101,
+ "envelope": {
+  "result": "```json\n[\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"security-awareness-training\", \"name\": \"Complete the mandatory annual security awareness training\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"analytics-replica-access-request\", \"name\": \"Get read access to the analytics replica (RTA-90)\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"freelance\", \"key\": \"fernhill-milestone-1-release\", \"name\": \"Milestone 1 ($1,200) payment still unreleased by Fernhill Goods\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-355-oncall-runbook\", \"name\": \"Rewrite the on-call runbook (PLAT-355)\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-301-postmortem-inc-212\", \"name\": \"Write postmortem for INC-212 queue outage (PLAT-301)\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"quillmark-offer-decision\", \"name\": \"Decide on the Quillmark Staff Engineer offer\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.97, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"job-search\", \"key\": \"corvid-final-round-slot\", \"name\": \"Pick a Corvid Systems final-round interview slot\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.97, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"oss\", \"key\": \"plantpal-domain-renewal\", \"name\": \"Renew the plantpal.app domain (auto-renew is off)\", \"attrs\": {\"status\": \"done\"}, \"source\": \"eval-fixture\", \"confidence\": 0.98, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"freelance\", \"key\": \"fernhill-milestone-2-low-stock-alerts\", \"name\": \"Deliver Milestone 2 low-stock alerts for Fernhill Goods and reply to Marcus\", \"attrs\": {\"status\": \"submitted\", \"priority\": \"medium\"}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"northwind-msa-redlines-legal\", \"name\": \"Legal review of the Northwind MSA redlines (LEG-55)\", \"attrs\": {\"priority\": \"medium\"}, \"source\": \"eval-fixture\", \"confidence\": 0.85, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"plat-401-add-idempotency-keys\", \"name\": \"Add idempotency keys to webhook delivery (PLAT-401)\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-11-20\"}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": []},\n  {\"kind\": \"Action\", \"workspace\": \"kestrel\", \"key\": \"october-timesheet-submit\", \"name\": \"Submit the October timesheet\", \"attrs\": {\"priority\": \"medium\", \"due\": \"2026-11-02\"}, \"source\": \"eval-fixture\", \"confidence\": 0.90, \"edges\": []}\n]\n```",
+  "total_cost_usd": 0.18638,
+  "duration_ms": 64161,
+  "duration_api_ms": 60208,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 9,
+   "cache_creation_input_tokens": 75288,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 7159,
+   "output_tokens_details": {
+    "thinking_tokens": 6163
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 75288,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 9,
+     "output_tokens": 7159,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 75288,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 75288
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 9,
+    "outputTokens": 7159,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 75288,
+    "webSearchRequests": 0,
+    "costUSD": 0.18638,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 6163,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 486,
+ "attempt": 1
+}

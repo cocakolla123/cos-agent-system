@@ -1,0 +1,68 @@
+{
+ "scenario": "f3",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 173008,
+ "envelope": {
+  "result": "```json\n[\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"freelance\",\n    \"key\": \"inv-0042-lumen-dental-payment\",\n    \"name\": \"Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)\",\n    \"attrs\": {\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-799508\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"stratus-security-questionnaire\",\n    \"name\": \"Review the vendor security questionnaire for Stratus\",\n    \"attrs\": {\n      \"status\": \"cancelled\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-151960\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"rta-101-timezone-bug-shift-export\",\n    \"name\": \"Fix reopened timezone bug in shift export, Australia/Lord_Howe (RTA-101)\",\n    \"attrs\": {\n      \"status\": \"done\",\n      \"priority\": \"medium\",\n      \"evidence\": [\"jr-776795\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"q4-capacity-numbers\",\n    \"name\": \"Put together the Q4 capacity numbers\",\n    \"attrs\": {\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"evidence\": [\"sl-026317\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  },\n  {\n    \"kind\": \"Action\",\n    \"workspace\": \"kestrel\",\n    \"key\": \"northwind-data-retention-policy\",\n    \"name\": \"Send Northwind the data retention policy\",\n    \"attrs\": {\n      \"due\": \"2026-11-06\",\n      \"priority\": \"high\",\n      \"evidence\": [\"em-689914\"]\n    },\n    \"source\": \"eval-fixture\",\n    \"confidence\": 1.0,\n    \"edges\": []\n  }\n]\n```",
+  "total_cost_usd": 0.167512,
+  "duration_ms": 55975,
+  "duration_api_ms": 51986,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 9,
+   "cache_creation_input_tokens": 68024,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 6291,
+   "output_tokens_details": {
+    "thinking_tokens": 5657
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 68024,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "not_available",
+   "iterations": [
+    {
+     "input_tokens": 9,
+     "output_tokens": 6291,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 68024,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 68024
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-haiku-4-5-20251001": {
+    "inputTokens": 9,
+    "outputTokens": 6291,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 68024,
+    "webSearchRequests": 0,
+    "costUSD": 0.167512,
+    "contextWindow": 200000,
+    "maxOutputTokens": 32000,
+    "thinkingTokens": 5657,
+    "canonicalModel": "claude-haiku-4-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 430,
+ "attempt": 1
+}

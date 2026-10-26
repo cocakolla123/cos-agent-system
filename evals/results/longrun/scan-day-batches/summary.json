@@ -1,0 +1,154 @@
+{
+ "setup": "batches",
+ "button": null,
+ "with_meeting": true,
+ "scans": 288,
+ "items": 1602,
+ "kept_total": 94,
+ "model_calls": 5,
+ "calls_by_job": {
+  "draft_direct": 1,
+  "poll_direct": 4
+ },
+ "cost_usd": 0.1519,
+ "cost_by_job": {
+  "draft_direct": 0.0169,
+  "poll_direct": 0.135
+ },
+ "still_waiting_at_midnight": 27,
+ "waiting_ids": [
+  "cal-568139",
+  "em-323411",
+  "em-962935",
+  "em-831528",
+  "em-872806",
+  "sl-932073",
+  "sl-159248",
+  "em-322719",
+  "sl-234463",
+  "em-602428",
+  "sl-226341",
+  "em-274311",
+  "em-730223",
+  "em-438859",
+  "em-056743",
+  "em-660461",
+  "em-564683",
+  "em-274625",
+  "doc-070598",
+  "em-539572",
+  "em-722612",
+  "em-763449",
+  "em-323070",
+  "em-169483",
+  "em-296898",
+  "em-544797",
+  "em-095749"
+ ],
+ "expectations": [
+  {
+   "ok": true,
+   "found": [
+    "Put together the Q4 capacity numbers"
+   ],
+   "due": [
+    "2026-10-22"
+   ],
+   "arc": "D07",
+   "split": "dev",
+   "words": [
+    "capacity",
+    "q4"
+   ],
+   "want": "open",
+   "what": "Ines's reminder moves the Q4 capacity numbers to Oct 22",
+   "first_ok_at": "12:00"
+  },
+  {
+   "ok": false,
+   "found": [],
+   "due": [],
+   "arc": "T11",
+   "split": "test",
+   "words": [
+    "maintenance",
+    "window"
+   ],
+   "want": "open",
+   "what": "new: Alex asks Dana to confirm the Nov 15 maintenance window by Oct 30",
+   "first_ok_at": null
+  },
+  {
+   "ok": true,
+   "found": [
+    "Review and sign the Tidewater Analytics offer (Senior Data Platform Engineer)"
+   ],
+   "due": [
+    "2026-10-16"
+   ],
+   "arc": "LT04",
+   "split": "test",
+   "words": [
+    "tidewater",
+    "offer"
+   ],
+   "want": "open",
+   "what": "Dana asked Tidewater for until Oct 30 (the answer comes Oct 15): the offer task stays open",
+   "first_ok_at": "08:00"
+  },
+  {
+   "ok": true,
+   "found": [],
+   "due": [],
+   "arc": "LD07",
+   "split": "dev",
+   "words": [
+    "brightline",
+    "availability"
+   ],
+   "want": "closed",
+   "what": "Dana sent her availability and the interview was booked: the task closes",
+   "first_ok_at": "08:00"
+  },
+  {
+   "ok": true,
+   "found": [
+    "Write the Northwind onboarding checklist"
+   ],
+   "due": [
+    "2026-10-16"
+   ],
+   "arc": "meeting",
+   "split": "added",
+   "words": [
+    "onboarding",
+    "checklist"
+   ],
+   "want": "open",
+   "what": null,
+   "first_ok_at": "14:35"
+  },
+  {
+   "ok": true,
+   "found": [
+    "Update the SSO runbook for Northwind"
+   ],
+   "due": [
+    "2026-10-21"
+   ],
+   "arc": "meeting",
+   "split": "added",
+   "words": [
+    "sso",
+    "runbook"
+   ],
+   "want": "open",
+   "what": null,
+   "first_ok_at": "14:35"
+  }
+ ],
+ "new_open_tasks": [
+  "Write the Northwind onboarding checklist",
+  "Update the SSO runbook for Northwind"
+ ]
+}

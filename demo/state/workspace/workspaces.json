@@ -16,6 +16,15 @@
    "isolation": "strict"
   },
   {
+   "id": "freelance",
+   "kind": "freelance",
+   "label": "Freelance",
+   "connectors": [
+    "gmail-freelance"
+   ],
+   "isolation": "strict"
+  },
+  {
    "id": "job-search",
    "kind": "job-search",
    "label": "Job search",

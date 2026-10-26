@@ -1122,7 +1122,11 @@
   {
    "id": "kestrel:action:warehouse-cutover-infra",
    "name": "Execute warehouse cutover (infrastructure side)",
-   "evidence": []
+   "evidence": [
+    "sl-17378",
+    "sl-17379",
+    "sl-17380"
+   ]
   }
  ],
  "summary": {

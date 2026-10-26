@@ -68,11 +68,49 @@ The instructions are the same whichever model runs them. Keys stay on your machi
 `dashboard/secrets.json` (mode 0600, git-ignored, excluded from publishing, and blocked by the
 privacy scan) and go only to their provider.
 
-Jobs that read your accounts (research, polls, learning, approvals) still run on Claude Code,
-because that is where the connectors live. When their level names another provider they use
-Claude Code's default model, and Settings says so. The evals back the defaults: a small model
+Jobs that read your accounts through Claude Code's connectors (the first research crawl,
+learning, approvals) run on Claude Code. When their level names another provider they use
+Claude Code's default model, and Settings says so. The daily check does not need Claude Code
+at all if you add direct connections (below). The evals back the defaults: a small model
 on the first crawl or on the weekly polls missed tasks the default model caught
 ([long-run report](./evals/results/longrun/REPORT.md)), so keep Standard and Deep strong.
+
+## Daily checks without Claude Code
+
+**Settings → Accounts → Direct connections** reads your accounts directly, read-only:
+
+| connection | what you give it |
+|---|---|
+| any mailbox over IMAP | an app password |
+| Slack | a user token |
+| Jira Cloud | an API token |
+| GitHub | a personal access token |
+| calendar | its private iCal link |
+| folders on this computer | nothing: pick the folders (Zoom's Documents/Zoom, Downloads, a project) |
+| Zoom cloud recordings | a Server-to-Server OAuth app with read-only recording access |
+
+Each check runs in three steps (`dashboard/poll_direct.py`):
+
+1. **Fetch only what is new.** Every connection keeps a bookmark: the last mail UID, the newest Slack message per conversation, "updated since" for Jira and GitHub, the last change for the calendar, each file's modified time in a watched folder, and the Zoom meetings already read. A meeting transcript (Zoom, Teams, Meet, Otter; .vtt, .srt, .txt or .docx) is cleaned to who said what without a model, which roughly halves it.
+2. **Sift without a model** (`dashboard/sift.py`). It keeps what could need you: direct messages, mentions, your threads, your tickets and reviews, mail to everyone that says it is required, platform notices with a person's words in them, anything naming one of your open tasks' tickets, PRs, invoices or domains, and your own files. Newsletters, bots, other people's tickets and channel chatter are dropped and counted. If nothing is left, the check stops there and costs nothing.
+3. **One text-only model call** on what is left, one compact line per item, together with your open tasks. It runs on whatever model you chose for Standard: your Claude plan or any API key. A one-off call skips prompt caching, which would cost more than it saves.
+
+Measured on the four weekly checks of the 142,555-item benchmark world (`evals/results/longrun/REPORT.md`):
+
+| weekly checks | dev | test | cost of the four | time per check |
+|---|---|---|---|---|
+| the agent searches all ~8,200 new items with tools | 44/50 | 48/50 | $3.43 | ~110 s |
+| sifted to ~480 items, the agent searches them | 46/50 | 48/50 | $2.20 | ~40 s |
+| sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.54 | ~17 s |
+| the same, one compact line per item, no caching premium (the default) | 46/50 | 48/50 | $0.52 | ~16 s |
+
+4. **A drafted next step for each new task** (one more text-only call, only when there are new tasks): the reply to the person who asked, or the work itself (an outline with the points from the meeting, the steps). They wait in the approval queue; nothing is sent until you approve it.
+
+**Always on, and free until something matters.** Steps 1 and 2 run every 5 minutes, all day, across every connection: mail, Slack, Jira, GitHub, calendar, your folders and Zoom. They cost nothing. What the sift keeps waits on a list (`pending.jsonl`) and is read in one batch three times a day (about 8am, noon and 4pm), because every call has a fixed cost however few items it carries. Something urgent skips the wait and is read at once: a meeting transcript, a security alert, or a message to you that asks for something today. Measured daily for four weeks on the benchmark world: dev 46/50, test 47/50, $1.15 for 28 batches. Change the hours under Polling, or press Check now to read everything waiting.
+
+Example, run live: a 22-turn Zoom call saved to Documents/Zoom was picked up by the next scan and read at once (urgent). It produced the meeting and three tasks for the user with the dates said aloud (final pricing copy by Wednesday, a webinar deck by Monday, an email to a customer today), left out what a colleague took on, and queued three drafts: the customer email, the deck outline with the four topics from the call, and the steps to finish the copy. Two calls, 24 seconds, $0.05. A scan with nothing new took 0.09 seconds and made no call.
+
+Credentials stay in `connections.json` (mode 0600, git-ignored, excluded from publishing, and Slack, GitHub and Atlassian tokens are blocked by the privacy scan).
 
 ## What it costs
 
@@ -146,6 +184,15 @@ agreement rate. Full numbers, matching rules, label-correction log, and the stor
 re-analysis that replaced earlier overconfident fixture-level p values are in
 [`evals/README.md`](./evals/README.md) and `evals/results/`. Unit suites, from actual runs:
 234 tests in `dashboard/tests/` plus 51 in `evals/tests/`, CI on Python 3.9 and 3.12.
+
+## The Kestrel benchmark
+
+A whole made-up person's accounts, built from code: Dana Kowalski, an engineer who also
+freelances on Upwork, is job hunting and has side projects. 142,555 items over four months
+(109,554 before the first read): Slack, four Gmail inboxes, Jira, GitHub, Calendar and Drive,
+with spam, phishing, receipts and family mail mixed in. 101 tasks have written answers, in
+matched halves for tuning and for reporting. Score any agent with one command, write your own
+tasks, or fine-tune on the tuning half. See [`evals/longrun/BENCHMARK.md`](./evals/longrun/BENCHMARK.md).
 
 ## Security & privacy posture
 

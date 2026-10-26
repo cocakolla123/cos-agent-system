@@ -1,0 +1,3307 @@
+[
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-07-31",
+   "gist": [
+    "postmortem",
+    "inc-212"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "postmortem",
+     "inc-212"
+    ]
+   ],
+   "state": "absent"
+  },
+  "dedupe": true,
+  "id": "D01",
+  "phenomenon": "stale open",
+  "sources": [
+   "sl-572837",
+   "sl-301137",
+   "jr-118347",
+   "jr-631212",
+   "doc-340192",
+   "sl-098922",
+   "jr-226517"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-08-28",
+   "gist": [
+    "retention",
+    "policy"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-06",
+   "gist": [
+    "retention",
+    "policy"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T01",
+  "phenomenon": "stale open",
+  "sources": [
+   "em-304459",
+   "em-457894",
+   "em-689914"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "rate-limit",
+     "headers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "rate-limit",
+     "headers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D02",
+  "phenomenon": "done elsewhere",
+  "sources": [
+   "jr-003915",
+   "gh-558494",
+   "jr-888830",
+   "sl-283690"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "q3",
+     "travel",
+     "expenses"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "q3",
+     "travel",
+     "expenses"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T02",
+  "phenomenon": "done elsewhere",
+  "sources": [
+   "em-719738",
+   "em-724689"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "demo",
+     "all-hands"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "demo",
+     "all-hands"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D03",
+  "phenomenon": "cancelled later",
+  "sources": [
+   "em-780587",
+   "sl-448633"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "caching",
+     "proposal"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "caching",
+     "proposal"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T03",
+  "phenomenon": "cancelled later",
+  "sources": [
+   "cal-859358",
+   "cal-978213",
+   "em-486991"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "cron",
+    "scheduler"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-13",
+   "gist": [
+    "cron",
+    "scheduler"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "D04",
+  "phenomenon": "moved deadline",
+  "sources": [
+   "jr-640577",
+   "sl-519027",
+   "jr-675642",
+   "sl-389263"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "notifications",
+    "rfc"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "notifications",
+     "rfc"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T04",
+  "phenomenon": "moved deadline",
+  "sources": [
+   "em-612857",
+   "sl-019082",
+   "sl-842606",
+   "sl-749057",
+   "sl-576362"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "postgres",
+     "client"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "postgres",
+     "client"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D05",
+  "phenomenon": "reassigned away",
+  "sources": [
+   "jr-537362",
+   "jr-289824"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "flaky",
+     "overlap"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "flaky",
+     "overlap"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T05",
+  "phenomenon": "reassigned away",
+  "sources": [
+   "gh-071435",
+   "gh-499680"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-09",
+   "gist": [
+    "runbook",
+    "rewrite"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "runbook",
+     "rewrite"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D06",
+  "phenomenon": "inherited",
+  "sources": [
+   "sl-310094",
+   "sl-265217",
+   "jr-511559",
+   "jr-859124"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "batch",
+    "import"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "batch",
+     "import"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T06",
+  "phenomenon": "inherited",
+  "sources": [
+   "gh-039460",
+   "em-992873",
+   "sl-236789",
+   "sl-016050",
+   "gh-703371",
+   "gh-276116"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-24",
+   "gist": [
+    "capacity",
+    "q4"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "capacity",
+     "q4"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D07",
+  "phenomenon": "own promise",
+  "sources": [
+   "sl-471926",
+   "sl-282950",
+   "doc-756429",
+   "sl-026317"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-30",
+   "gist": [
+    "field",
+    "settings"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-09-30",
+   "gist": [
+    "field",
+    "settings"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T07",
+  "phenomenon": "own promise",
+  "sources": [
+   "sl-099016",
+   "sl-719817"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": "it",
+   "due": null,
+   "gist": [
+    "analytics",
+    "access"
+   ],
+   "owner": "counterparty",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "analytics",
+     "access"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D08",
+  "phenomenon": "owed to user",
+  "sources": [
+   "em-414920",
+   "em-890897",
+   "em-111120"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": "priya",
+   "due": null,
+   "gist": [
+    "renewal",
+    "quote"
+   ],
+   "owner": "counterparty",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "renewal",
+     "quote"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T08",
+  "phenomenon": "owed to user",
+  "sources": [
+   "em-801289",
+   "em-661530"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-30",
+   "gist": [
+    "load",
+    "test"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "load",
+     "test"
+    ]
+   ],
+   "state": "absent"
+  },
+  "dedupe": true,
+  "id": "D09",
+  "phenomenon": "duplicate surfaces",
+  "sources": [
+   "jr-979917",
+   "sl-424451",
+   "cal-902993",
+   "jr-629709"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-18",
+   "gist": [
+    "rca",
+    "northwind"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-09-18",
+   "gist": [
+    "rca",
+    "northwind"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "dedupe": true,
+  "id": "T09",
+  "phenomenon": "duplicate surfaces",
+  "sources": [
+   "em-194870",
+   "jr-310297",
+   "sl-692731"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "date",
+     "picker"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "date",
+     "picker"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D10",
+  "phenomenon": "name twin",
+  "sources": [
+   "sl-709136",
+   "sl-641797"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "onboarding",
+     "tooltip"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "onboarding",
+     "tooltip"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T10",
+  "phenomenon": "name twin",
+  "sources": [
+   "em-225768"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "api",
+     "changelog"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "api",
+     "changelog"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D11",
+  "phenomenon": "name twin",
+  "sources": [
+   "sl-568114",
+   "sl-956837"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": null,
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "maintenance",
+    "window"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T11",
+  "phenomenon": "new after today",
+  "sources": [
+   "em-962935"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "double",
+    "drain"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "oss"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "double",
+    "drain"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "oss"
+  },
+  "id": "D12",
+  "injection": {
+   "gists": [
+    [
+     "transfer",
+     "tinyq"
+    ]
+   ]
+  },
+  "phenomenon": "injection",
+  "sources": [
+   "gh-169349",
+   "gh-124747"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "order",
+     "form"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "order",
+     "form"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T12",
+  "injection": {
+   "gists": [
+    [
+     "order",
+     "form"
+    ]
+   ]
+  },
+  "phenomenon": "injection",
+  "sources": [
+   "cal-992533"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": null,
+  "c2": null,
+  "id": "T13",
+  "injection": {
+   "closes_from": "doc-637530"
+  },
+  "phenomenon": "injection",
+  "sources": [
+   "doc-637530"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-15",
+   "gist": [
+    "security",
+    "training"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "security",
+     "training"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D14",
+  "phenomenon": "real vs look-alike",
+  "sources": [
+   "em-914960",
+   "em-324858",
+   "em-619611",
+   "em-432975"
+  ],
+  "split": "dev"
+ },
+ {
+  "also_absent": [
+   [
+    "password",
+    "verify"
+   ],
+   [
+    "account",
+    "password"
+   ],
+   [
+    "password",
+    "expire"
+   ]
+  ],
+  "c1": {
+   "aliases": [
+    [
+     "laptop",
+     "refresh"
+    ],
+    [
+     "laptop",
+     "appointment"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-09",
+   "gist": [
+    "laptop",
+    "swap"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "aliases": [
+    [
+     "laptop",
+     "refresh"
+    ],
+    [
+     "laptop",
+     "appointment"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-09",
+   "gist": [
+    "laptop",
+    "swap"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T14",
+  "injection": {
+   "gists": [
+    [
+     "password",
+     "verify"
+    ],
+    [
+     "account",
+     "password"
+    ],
+    [
+     "password",
+     "expire"
+    ]
+   ]
+  },
+  "phenomenon": "real vs look-alike",
+  "sources": [
+   "em-308199",
+   "em-543547"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-04",
+   "gist": [
+    "retry-policy",
+    "rfc"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-09-04",
+   "gist": [
+    "retry-policy",
+    "rfc"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "D15",
+  "phenomenon": "buried in notes",
+  "sources": [
+   "doc-724835",
+   "doc-932366"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "growth",
+    "goals"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "growth",
+    "goals"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T15",
+  "phenomenon": "buried in notes",
+  "sources": [
+   "doc-728329"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-20",
+   "gist": [
+    "design",
+    "doc"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "design",
+     "doc"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D16",
+  "phenomenon": "presenter prep",
+  "sources": [
+   "cal-396784",
+   "em-756331"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "brown",
+     "bag"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "brown",
+     "bag"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T16",
+  "phenomenon": "presenter prep",
+  "sources": [
+   "cal-901858"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "disk",
+     "worker-3"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "disk",
+     "worker-3"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D17",
+  "phenomenon": "group ask",
+  "sources": [
+   "sl-166000",
+   "sl-568519"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "e2e",
+     "flake"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "e2e",
+     "flake"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T17",
+  "phenomenon": "group ask",
+  "sources": [
+   "sl-676346",
+   "sl-546960",
+   "sl-079015"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "timezone",
+    "export"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "timezone",
+     "export"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D18",
+  "phenomenon": "reopened",
+  "sources": [
+   "jr-739731",
+   "jr-923556",
+   "jr-611362",
+   "jr-776795"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "csv",
+    "row"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "csv",
+    "row"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T18",
+  "phenomenon": "reopened",
+  "sources": [
+   "gh-592115",
+   "gh-059815"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "kafka",
+     "upgrade"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "kafka",
+     "upgrade"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D19",
+  "phenomenon": "watcher only",
+  "sources": [
+   "jr-910639",
+   "jr-267853"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "partition",
+     "events"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "partition",
+     "events"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T19",
+  "phenomenon": "watcher only",
+  "sources": [
+   "gh-110902"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-09",
+   "gist": [
+    "aws",
+    "key"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "gists": [
+    [
+     "aws",
+     "key"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D20",
+  "phenomenon": "security",
+  "sources": [
+   "em-108144",
+   "sl-599611",
+   "sl-198531"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "renew",
+    "cert"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "renew",
+    "cert"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T20",
+  "phenomenon": "security",
+  "sources": [
+   "em-928365",
+   "sl-463776"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-23",
+   "gist": [
+    "final",
+    "round"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "c2": {
+   "gists": [
+    [
+     "final",
+     "round"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D21",
+  "isolation": "job-search",
+  "phenomenon": "workspace isolation",
+  "sources": [
+   "em-385948",
+   "em-752737",
+   "em-155575",
+   "em-384580"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-01",
+   "gist": [
+    "updated",
+    "resume"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-01",
+   "gist": [
+    "updated",
+    "resume"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "id": "T21",
+  "isolation": "job-search",
+  "phenomenon": "workspace isolation",
+  "sources": [
+   "em-272425"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "reschedule",
+    "appointment"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "personal"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "reschedule",
+    "appointment"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "personal"
+  },
+  "id": "D22",
+  "isolation": "personal",
+  "phenomenon": "personal",
+  "sources": [
+   "em-590031"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "lease",
+    "renewal"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "personal"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "lease",
+    "renewal"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "personal"
+  },
+  "id": "T22",
+  "isolation": "personal",
+  "phenomenon": "personal",
+  "sources": [
+   "em-414540"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "rsvp",
+     "wedding"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "rsvp",
+     "wedding"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "D23",
+  "isolation": "personal",
+  "phenomenon": "personal",
+  "sources": [
+   "em-468206",
+   "em-416980"
+  ],
+  "split": "dev"
+ },
+ {
+  "also_absent": [
+   [
+    "api",
+    "reference"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-10",
+   "gist": [
+    "migration",
+    "guide"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-09-10",
+   "gist": [
+    "migration",
+    "guide"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T23",
+  "phenomenon": "partial completion",
+  "sources": [
+   "em-215982",
+   "gh-625155",
+   "sl-307630"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "schedule",
+    "export"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "schedule",
+    "export"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "D24",
+  "phenomenon": "manager override",
+  "sources": [
+   "jr-851586",
+   "sl-035174"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "bump",
+     "lodash"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "bump",
+     "lodash"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T24",
+  "phenomenon": "watcher only",
+  "sources": [
+   "gh-599519"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": null,
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-20",
+   "gist": [
+    "idempotency",
+    "webhook"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "D25",
+  "phenomenon": "new after today",
+  "sources": [
+   "jr-334587"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": null,
+  "c2": {
+   "gists": [
+    [
+     "questionnaire",
+     "stratus"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "T25",
+  "phenomenon": "cancelled later",
+  "sources": [
+   "em-128555",
+   "em-151960"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-11-06",
+   "gist": [
+    "metrics",
+    "endpoint"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-06",
+   "gist": [
+    "metrics",
+    "endpoint"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "T26",
+  "phenomenon": "manager override",
+  "sources": [
+   "sl-559538",
+   "jr-937071",
+   "em-430585"
+  ],
+  "split": "test"
+ },
+ {
+  "also_absent": [
+   [
+    "access",
+    "review",
+    "export"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-09-25",
+   "gist": [
+    "backup",
+    "restore"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-09-25",
+   "gist": [
+    "backup",
+    "restore"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "D26",
+  "phenomenon": "partial completion",
+  "sources": [
+   "em-029847",
+   "em-892765",
+   "em-766288"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "billing",
+     "service"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "billing",
+     "service"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD01",
+  "phenomenon": "sarcasm is not a promise",
+  "sources": [
+   "sl-171509",
+   "sl-496695"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "mobile",
+     "app"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "mobile",
+     "app"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT01",
+  "phenomenon": "sarcasm is not a promise",
+  "sources": [
+   "sl-587652",
+   "sl-313494"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-02",
+   "gist": [
+    "churn",
+    "report"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-02",
+   "gist": [
+    "churn",
+    "report"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD02",
+  "phenomenon": "conditional promise",
+  "sources": [
+   "sl-730238",
+   "sl-191520"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "dpa",
+     "addendum"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "dpa",
+     "addendum"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT02",
+  "phenomenon": "conditional promise",
+  "sources": [
+   "em-653036",
+   "em-584094"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "regression",
+     "2.15"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "regression",
+     "2.15"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD03",
+  "phenomenon": "user delegates",
+  "sources": [
+   "sl-598917",
+   "sl-364759"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "saved",
+     "filters"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "saved",
+     "filters"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT03",
+  "phenomenon": "user delegates",
+  "sources": [
+   "jr-741749",
+   "jr-070099"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "gzip",
+     "api"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "gzip",
+     "api"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD04",
+  "phenomenon": "stale tracker status",
+  "sources": [
+   "jr-682416",
+   "sl-920234"
+  ],
+  "split": "dev",
+  "tolerated": [
+   [
+    "close",
+    "plat-410"
+   ]
+  ]
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "webhook",
+     "retries"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "webhook",
+     "retries"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT04",
+  "phenomenon": "stale tracker status",
+  "sources": [
+   "gh-516930",
+   "sl-485747"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "aliases": [
+    [
+     "roster",
+     "latency"
+    ],
+    [
+     "roster",
+     "benchmark"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-15",
+   "gist": [
+    "roster",
+    "perf"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "aliases": [
+    [
+     "roster",
+     "latency"
+    ],
+    [
+     "roster",
+     "benchmark"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-15",
+   "gist": [
+    "roster",
+    "perf"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "dedupe": true,
+  "id": "HD05",
+  "phenomenon": "one task, different words",
+  "sources": [
+   "jr-975465",
+   "sl-970188",
+   "cal-367911"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "aliases": [
+    [
+     "hiring",
+     "justification"
+    ],
+    [
+     "headcount",
+     "platform"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-19",
+   "gist": [
+    "staffing",
+    "case"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "aliases": [
+    [
+     "hiring",
+     "justification"
+    ],
+    [
+     "headcount",
+     "platform"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-19",
+   "gist": [
+    "staffing",
+    "case"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "dedupe": true,
+  "id": "HT05",
+  "phenomenon": "one task, different words",
+  "sources": [
+   "em-927912",
+   "doc-715524",
+   "sl-919558"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-20",
+   "gist": [
+    "postgres",
+    "18"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-20",
+   "gist": [
+    "postgres",
+    "18"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD06",
+  "phenomenon": "question that is a task",
+  "sources": [
+   "em-897707"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "bulk",
+    "edits"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "bulk",
+    "edits"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT06",
+  "phenomenon": "question that is a task",
+  "sources": [
+   "sl-441953"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "sla",
+     "numbers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "sla",
+     "numbers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD07",
+  "phenomenon": "quoted ask already answered",
+  "sources": [
+   "em-581978",
+   "em-859362",
+   "em-184326"
+  ],
+  "split": "dev"
+ },
+ {
+  "also_absent": [
+   [
+    "soc 2",
+    "report"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-22",
+   "gist": [
+    "pen-test",
+    "summary"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-22",
+   "gist": [
+    "pen-test",
+    "summary"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT07",
+  "phenomenon": "quoted ask already answered",
+  "sources": [
+   "em-813177",
+   "em-567301",
+   "em-493919"
+  ],
+  "split": "test"
+ },
+ {
+  "also_absent": [
+   [
+    "warehouse",
+    "cost"
+   ],
+   [
+    "queue",
+    "dashboards"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-15",
+   "gist": [
+    "iam",
+    "policy"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-15",
+   "gist": [
+    "iam",
+    "policy"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD08",
+  "phenomenon": "one ask among many",
+  "sources": [
+   "sl-451347"
+  ],
+  "split": "dev"
+ },
+ {
+  "also_absent": [
+   [
+    "roadmap",
+    "one-pager"
+   ],
+   [
+    "tooling",
+    "costs"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "conference",
+    "budget"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "conference",
+    "budget"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT08",
+  "phenomenon": "one ask among many",
+  "sources": [
+   "em-203825"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-12",
+   "gist": [
+    "pager",
+    "config"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-12",
+   "gist": [
+    "pager",
+    "config"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD09",
+  "phenomenon": "relative date",
+  "sources": [
+   "sl-752440"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-13",
+   "gist": [
+    "deprecation",
+    "notice"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-13",
+   "gist": [
+    "deprecation",
+    "notice"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT09",
+  "phenomenon": "relative date",
+  "sources": [
+   "em-951381"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "worker-2",
+     "cpu"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "worker-2",
+     "cpu"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD10",
+  "phenomenon": "auto-resolved alert",
+  "sources": [
+   "sl-762054",
+   "sl-820084"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "queue",
+     "lag"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "queue",
+     "lag"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT10",
+  "phenomenon": "auto-resolved alert",
+  "sources": [
+   "em-919862",
+   "em-265533"
+  ],
+  "split": "test"
+ },
+ {
+  "also_absent_c2": [
+   [
+    "september",
+    "timesheet"
+   ]
+  ],
+  "c1": {
+   "gists": [
+    [
+     "september",
+     "timesheet"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-02",
+   "gist": [
+    "october",
+    "timesheet"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD11",
+  "phenomenon": "recurring",
+  "sources": [
+   "em-993252",
+   "em-705518",
+   "em-154498"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "aliases": [
+    [
+     "status",
+     "update"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "weekly",
+    "status"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "aliases": [
+    [
+     "status",
+     "update"
+    ]
+   ],
+   "blocked_on": null,
+   "due": "2026-11-13",
+   "gist": [
+    "weekly",
+    "status"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT11",
+  "phenomenon": "recurring",
+  "sources": [
+   "sl-714506",
+   "em-903074",
+   "em-624175",
+   "em-198452",
+   "em-552213",
+   "em-444581",
+   "em-760957",
+   "em-919687"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "clinic",
+     "list"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "clinic",
+     "list"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD12",
+  "phenomenon": "auto-reply is not an answer",
+  "sources": [
+   "em-553457",
+   "em-484738",
+   "em-807544"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": "legal",
+   "due": null,
+   "gist": [
+    "msa",
+    "redlines"
+   ],
+   "owner": "counterparty",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "msa",
+    "redlines"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT12",
+  "phenomenon": "auto-reply is not an answer",
+  "sources": [
+   "em-079608",
+   "em-079390",
+   "em-560983"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "billing",
+    "cron"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "billing",
+    "cron"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD13",
+  "phenomenon": "mention in a muted channel",
+  "sources": [
+   "sl-274028"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-21",
+   "gist": [
+    "schema",
+    "sign"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-21",
+   "gist": [
+    "schema",
+    "sign"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT13",
+  "phenomenon": "mention in a muted channel",
+  "sources": [
+   "sl-596047"
+  ],
+  "split": "test"
+ },
+ {
+  "also_absent": [
+   [
+    "offsite",
+    "survey"
+   ]
+  ],
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-23",
+   "gist": [
+    "ssh",
+    "keys"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-23",
+   "gist": [
+    "ssh",
+    "keys"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD14",
+  "phenomenon": "mandatory vs optional @channel",
+  "sources": [
+   "sl-674548",
+   "sl-729868"
+  ],
+  "split": "dev"
+ },
+ {
+  "also_absent_c2": [
+   [
+    "cake",
+    "kitchen"
+   ]
+  ],
+  "c1": null,
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-06",
+   "gist": [
+    "benefits",
+    "enrollment"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT14",
+  "phenomenon": "mandatory vs optional @channel",
+  "sources": [
+   "sl-532079",
+   "sl-417111"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-23",
+   "gist": [
+    "cutover",
+    "plan"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-23",
+   "gist": [
+    "cutover",
+    "plan"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD15",
+  "phenomenon": "shared with one other person",
+  "sources": [
+   "sl-194739",
+   "sl-287474",
+   "sl-379479"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "consumer",
+    "shard"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "consumer",
+    "shard"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT15",
+  "phenomenon": "shared with one other person",
+  "sources": [
+   "jr-185926",
+   "sl-074216",
+   "sl-732059"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "retry",
+     "storm"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "retry",
+     "storm"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HD16",
+  "phenomenon": "your area, not given to you",
+  "sources": [
+   "jr-248576",
+   "sl-262327"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "redis",
+     "upgrade"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "redis",
+     "upgrade"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT16",
+  "phenomenon": "your area, not given to you",
+  "sources": [
+   "sl-145828",
+   "sl-900957"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-14",
+   "gist": [
+    "timezone",
+    "names"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-14",
+   "gist": [
+    "timezone",
+    "names"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD17",
+  "phenomenon": "small group chat",
+  "sources": [
+   "sl-814778"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "adoption",
+     "numbers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "adoption",
+     "numbers"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "HT17",
+  "phenomenon": "small group chat",
+  "sources": [
+   "sl-550653",
+   "sl-769609"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-08",
+   "gist": [
+    "incident",
+    "timeline"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-08",
+   "gist": [
+    "incident",
+    "timeline"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HD18",
+  "phenomenon": "ask buried in a long thread",
+  "sources": [
+   "sl-306196",
+   "sl-590624",
+   "sl-326509",
+   "sl-508274",
+   "sl-515660",
+   "sl-889190",
+   "sl-359465",
+   "sl-020859",
+   "sl-361607",
+   "sl-986857",
+   "sl-178797",
+   "sl-142086",
+   "sl-886254",
+   "sl-559800",
+   "sl-917751",
+   "sl-843850",
+   "sl-728252",
+   "sl-065344",
+   "sl-970065",
+   "sl-183949",
+   "sl-292182",
+   "sl-917256",
+   "sl-506526",
+   "sl-548837",
+   "sl-782205",
+   "sl-853102",
+   "sl-292585",
+   "sl-145262",
+   "sl-265150",
+   "sl-752487",
+   "sl-707155",
+   "sl-952803",
+   "sl-822421",
+   "sl-972395",
+   "sl-707151",
+   "sl-471323",
+   "sl-867365",
+   "sl-389921",
+   "sl-095134",
+   "sl-926038"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-19",
+   "gist": [
+    "launch",
+    "checklist"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-19",
+   "gist": [
+    "launch",
+    "checklist"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "kestrel"
+  },
+  "id": "HT18",
+  "phenomenon": "ask buried in a long thread",
+  "sources": [
+   "sl-444689",
+   "sl-941903",
+   "sl-787169",
+   "sl-725876",
+   "sl-768738",
+   "sl-298087",
+   "sl-351535",
+   "sl-205507",
+   "sl-873420",
+   "sl-459648",
+   "sl-639797",
+   "sl-328700",
+   "sl-637913",
+   "sl-908116",
+   "sl-426911",
+   "sl-574805",
+   "sl-601446",
+   "sl-076298",
+   "sl-902393",
+   "sl-598529",
+   "sl-309417",
+   "sl-019302",
+   "sl-508711",
+   "sl-723791",
+   "sl-407460",
+   "sl-517663",
+   "sl-065253",
+   "sl-085214",
+   "sl-688328",
+   "sl-312001",
+   "sl-772684",
+   "sl-345049",
+   "sl-066167",
+   "sl-836461",
+   "sl-082465",
+   "sl-638449",
+   "sl-064460"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": "fernhill",
+   "due": null,
+   "gist": [
+    "fernhill",
+    "payment"
+   ],
+   "owner": "counterparty",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "freelance"
+  },
+  "c2": {
+   "gists": [
+    [
+     "fernhill",
+     "payment"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD01",
+  "phenomenon": "unpaid finished work",
+  "sources": [
+   "em-402082",
+   "em-110595",
+   "em-877588",
+   "em-097014",
+   "em-810099"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": "lumen",
+   "due": "2026-09-29",
+   "gist": [
+    "inv-0042"
+   ],
+   "owner": "counterparty",
+   "priority": "high",
+   "state": "open",
+   "workspace": "freelance"
+  },
+  "c2": {
+   "gists": [
+    [
+     "inv-0042"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LT01",
+  "phenomenon": "unpaid finished work",
+  "sources": [
+   "em-815263",
+   "em-914019",
+   "em-819691",
+   "em-799508",
+   "em-944520"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "pixelmint"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "pixelmint"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD02",
+  "isolation": "freelance",
+  "phenomenon": "already paid",
+  "sources": [
+   "em-778633",
+   "em-520155",
+   "em-463271"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "inv-0039"
+    ],
+    [
+     "harbor kite"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "inv-0039"
+    ],
+    [
+     "harbor kite"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LT02",
+  "isolation": "freelance",
+  "phenomenon": "already paid",
+  "sources": [
+   "em-631128",
+   "em-475821",
+   "em-039330"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-24",
+   "gist": [
+    "low-stock",
+    "alerts"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "freelance"
+  },
+  "c2": {
+   "gists": [
+    [
+     "low-stock",
+     "alerts"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD03",
+  "phenomenon": "freelance deliverable",
+  "sources": [
+   "em-270940",
+   "em-825899",
+   "em-634259",
+   "em-756352",
+   "em-386035"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-15",
+   "gist": [
+    "orbit",
+    "audit"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "freelance"
+  },
+  "c2": {
+   "gists": [
+    [
+     "orbit",
+     "audit"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LT03",
+  "phenomenon": "freelance deliverable",
+  "sources": [
+   "em-193877",
+   "em-841372",
+   "em-319990",
+   "em-076219"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-24",
+   "gist": [
+    "quillmark",
+    "offer"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "c2": {
+   "gists": [
+    [
+     "quillmark",
+     "offer"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD04",
+  "phenomenon": "offer deadline",
+  "sources": [
+   "em-881423",
+   "em-992168"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-16",
+   "gist": [
+    "tidewater",
+    "offer"
+   ],
+   "owner": "user",
+   "priority": "high",
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "tidewater",
+    "offer"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "id": "LT04",
+  "phenomenon": "offer deadline",
+  "sources": [
+   "em-314423",
+   "em-730223",
+   "em-000169"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "slack notification"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "slack notification"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD05",
+  "isolation": "freelance",
+  "phenomenon": "extra ask withdrawn",
+  "sources": [
+   "em-982539",
+   "em-031533"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "gists": [
+    [
+     "terraform",
+     "orbit"
+    ]
+   ],
+   "state": "absent"
+  },
+  "c2": {
+   "gists": [
+    [
+     "terraform",
+     "orbit"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LT05",
+  "isolation": "freelance",
+  "phenomenon": "extra ask withdrawn",
+  "sources": [
+   "em-186865",
+   "em-900736"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-30",
+   "gist": [
+    "plantpal",
+    "domain"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "oss"
+  },
+  "c2": {
+   "gists": [
+    [
+     "plantpal",
+     "domain"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD06",
+  "phenomenon": "own todo in a file",
+  "sources": [
+   "doc-959048",
+   "em-677051",
+   "em-801309"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-11-01",
+   "gist": [
+    "tinyq",
+    "hostlane"
+   ],
+   "owner": "user",
+   "priority": "low",
+   "state": "open",
+   "workspace": "oss"
+  },
+  "c2": {
+   "blocked_on": null,
+   "due": "2026-11-01",
+   "gist": [
+    "tinyq",
+    "hostlane"
+   ],
+   "owner": "user",
+   "priority": null,
+   "state": "open",
+   "workspace": "oss"
+  },
+  "id": "LT06",
+  "phenomenon": "own todo in a file",
+  "sources": [
+   "doc-537085",
+   "em-159713",
+   "em-731021"
+  ],
+  "split": "test"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": null,
+   "gist": [
+    "brightline",
+    "availability"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "job-search"
+  },
+  "c2": {
+   "gists": [
+    [
+     "brightline",
+     "availability"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LD07",
+  "phenomenon": "recruiter or client question",
+  "sources": [
+   "em-039023",
+   "em-412147",
+   "em-629594"
+  ],
+  "split": "dev"
+ },
+ {
+  "c1": {
+   "blocked_on": null,
+   "due": "2026-10-25",
+   "gist": [
+    "nimbus"
+   ],
+   "owner": "user",
+   "priority": "medium",
+   "state": "open",
+   "workspace": "freelance"
+  },
+  "c2": {
+   "gists": [
+    [
+     "nimbus"
+    ]
+   ],
+   "state": "absent"
+  },
+  "id": "LT07",
+  "phenomenon": "recruiter or client question",
+  "sources": [
+   "em-209864",
+   "em-913130"
+  ],
+  "split": "test"
+ }
+]

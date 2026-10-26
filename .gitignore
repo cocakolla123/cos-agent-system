@@ -37,3 +37,10 @@ dashboard/models.json
 dashboard/api-chat-history.json
 dashboard/usage.jsonl
 dashboard/poll-quiet.json
+evals/longrun/world_full/items.json
+__pycache__/
+dashboard/connections.json
+dashboard/fetch-state.json
+dashboard/inbox/
+dashboard/pending.jsonl
+dashboard/scan-state.json

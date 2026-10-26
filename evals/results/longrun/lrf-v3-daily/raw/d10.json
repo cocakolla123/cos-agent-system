@@ -1,0 +1,69 @@
+{
+ "scenario": "d10",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 41198,
+ "sifted": 87,
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-msa-redlines-legal\",\"name\":\"Send the approved Northwind MSA redlines (LEG-55); Legal has signed off\",\"attrs\":{\"priority\":\"medium\",\"evidence\":[\"em-560983\"]},\"source\":\"eval-fixture\",\"confidence\":0.8,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-355-oncall-runbook\",\"name\":\"Rewrite the on-call runbook (PLAT-355)\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-859124\"],\"refs\":[\"PLAT-355\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"fernhill-milestone-1-release\",\"name\":\"Milestone 1 ($1,200) payment released by Fernhill Goods\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"em-810099\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}\n]",
+  "total_cost_usd": 0.050082,
+  "duration_ms": 8251,
+  "duration_api_ms": 5983,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 20976,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 813,
+   "output_tokens_details": {
+    "thinking_tokens": 428
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 20976,
+     "output_tokens": 813,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 20976,
+    "outputTokens": 813,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.050082,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 428,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 87,
+ "attempt": 1
+}

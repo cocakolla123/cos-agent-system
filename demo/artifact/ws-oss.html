@@ -4,7 +4,7 @@
 <script>
 /* Demo build: no server behind this page. Every request answers from saved
    responses; nothing is sent anywhere. */
-window.__DEMO_RESPONSES = {"/approve": "Demo mode: nothing was sent. In the real app, approving runs exactly the tool call shown on the card (for a Slack or Gmail message it creates a draft for you to send), logs it to the audit trail, and archives the card.", "/reject": "Demo mode: rejected (nothing changes here). In the real app a rejection with a reason becomes a correction the system learns from; see Self-learning.", "/revise": "Demo mode: in the real app the drafter rewrites the card using your note and puts the new version back in the queue for approval. Nothing is ever sent from a revise.", "/save-edit": "Demo mode: your edit would replace the drafted text on the card. It still waits for your approval.", "/mark-handled": "Demo mode: marked handled. In the real app this archives the card and closes the task.", "/add-task": "Demo mode: in the real app this goes to the inbox and the next poll turns it into a task.", "/chat": {"default": "Demo mode: this is a saved reply, not a live model. In the real app the chief of staff answers from your knowledge graph and connectors (read-only), and anything it wants to do outside goes to the approval queue first.", "urgent": "Saved reply, computed from the graph: across all workspaces 18 tasks are overdue and 1 due today. Due today: Write API v1 deprecation notice text for Tomas. Most overdue: Rotate and revoke leaked AWS key (kestrel/infra commit 9f2c1ab); Load test scheduler v2 (PLAT-360); Look at the pager config for Raj. Drafts for several of these are in the approval queue; nothing is sent until you approve.", "missed": "Saved reply: In the real app this starts the correction loop. It looks for the item you say was missed, works out why the crawl missed it (a connector not searched, a rule that dropped it, a stale status), changes the cause, re-runs, and records the lesson. Three past corrections are shown under Self-learning.", "waiting": "Saved reply, computed from the graph: 3 tasks are waiting on someone else: Awaiting IT access to analytics replica (RTA-90) (on Kestrel IT); Awaiting Legal review of Northwind MSA redlines (LEG-55) (on Kestrel Legal); Awaiting Priya's renewal quote for the 50-seat Stratus plan (on Priya (Stratus Monitoring))."}, "/entry-chat": {"default": "Saved reply: In the real app you can discuss any task or draft here. The assistant reads the sources behind it and can change its notes, priority or status for you; it cannot send anything from this box."}, "/action-update": "Demo mode: in the real app this updates the task (title, notes, priority or done) and records the change.", "/poll-now": "Demo mode: no polls run here. In the real app this checks each connected account for new items since the last poll.", "/start-research": "Demo mode: the research crawl already ran on this fictional world; this page shows its recorded result."};
+window.__DEMO_RESPONSES = {"/approve": "Demo mode: nothing was sent. In the real app, approving runs exactly the tool call shown on the card (for a Slack or Gmail message it creates a draft for you to send), logs it to the audit trail, and archives the card.", "/reject": "Demo mode: rejected (nothing changes here). In the real app a rejection with a reason becomes a correction the system learns from; see Self-learning.", "/revise": "Demo mode: in the real app the drafter rewrites the card using your note and puts the new version back in the queue for approval. Nothing is ever sent from a revise.", "/save-edit": "Demo mode: your edit would replace the drafted text on the card. It still waits for your approval.", "/mark-handled": "Demo mode: marked handled. In the real app this archives the card and closes the task.", "/add-task": "Demo mode: in the real app this goes to the inbox and the next poll turns it into a task.", "/chat": {"default": "Demo mode: this is a saved reply, not a live model. In the real app the chief of staff answers from your knowledge graph and connectors (read-only), and anything it wants to do outside goes to the approval queue first.", "urgent": "Saved reply, computed from the graph: across all workspaces 18 tasks are overdue and 1 due today. Due today: Write API v1 deprecation notice text for Tomas. Most overdue: Rotate the leaked AWS key; Look at the pager config for Raj; Rewrite the on-call runbook (PLAT-355). Drafts for several of these are in the approval queue; nothing is sent until you approve.", "missed": "Saved reply: In the real app this starts the correction loop. It looks for the item you say was missed, works out why the crawl missed it (a connector not searched, a rule that dropped it, a stale status), changes the cause, re-runs, and records the lesson. Three past corrections are shown under Self-learning.", "waiting": "Saved reply, computed from the graph: 6 tasks are waiting on someone else: Milestone 1 ($1,200) payment still unreleased by Fernhill Goods (on Marcus Bell (Fernhill Goods)); Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6) (on Rosa Lin (Lumen Dental)); Get read access to the analytics replica (RTA-90) (on Kestrel IT); Legal review of the Northwind MSA redlines (LEG-55) (on Kestrel Legal)."}, "/entry-chat": {"default": "Saved reply: In the real app you can discuss any task or draft here. The assistant reads the sources behind it and can change its notes, priority or status for you; it cannot send anything from this box."}, "/action-update": "Demo mode: in the real app this updates the task (title, notes, priority or done) and records the change.", "/poll-now": "Demo mode: no polls run here. In the real app this checks each connected account for new items since the last poll.", "/start-research": "Demo mode: the research crawl already ran on this fictional world; this page shows its recorded result."};
 window.__DEMO_DEFAULT = "Demo mode: nothing was sent or changed. In the real app this runs only on your machine, against your own connected accounts.";
 function demoReply(path, body) {
   const r = window.__DEMO_RESPONSES[path];
@@ -34,39 +34,39 @@ window.fetch = async function (url, opts) {
 <title>Kestrel Labs Chief of Staff</title>
 <script>try { const t = localStorage.getItem("cos-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
 <style>:root {
-  --bg: #ffffff; --panel: #f3f3f1; --panel-2: #e9e9e6; --line: #dcdcd8; --line-strong: #0d0d0d;
-  --ink: #0d0d0d; --ink-2: #4a4a48; --ink-3: #74746f;
-  --cobalt: #1b3bff; --cobalt-hover: #0026e6; --cobalt-soft: rgba(27,59,255,.08); --on-cobalt: #ffffff;
-  --red: #e4002b; --red-soft: rgba(228,0,43,.08);
-  --amber: #a55d00; --amber-soft: rgba(255,170,0,.14);
-  --green: #00804a; --green-soft: rgba(0,128,74,.10);
-  --violet: #6b2bd6; --violet-soft: rgba(107,43,214,.09);
-  --row-hover: #f7f7f5; --row-sel: #eef1ff;
+  --bg: #f5f6f7; --panel: #eceef0; --panel-2: #e2e5e8; --line: #d6d9dd; --line-strong: #2b2f35;
+  --ink: #1f2328; --ink-2: #4b5058; --ink-3: #6b7079;
+  --cobalt: #48609e; --cobalt-hover: #3b5089; --cobalt-soft: rgba(72,96,158,.09); --on-cobalt: #f5f6f7;
+  --red: #b0444d; --red-soft: rgba(176,68,77,.08);
+  --amber: #8f6420; --amber-soft: rgba(196,150,60,.13);
+  --green: #2f7655; --green-soft: rgba(47,118,85,.09);
+  --violet: #66549e; --violet-soft: rgba(102,84,158,.09);
+  --row-hover: #eef0f2; --row-sel: #e6eaf2;
   color-scheme: light;
 
   --sans: "Helvetica Neue", Helvetica, "Inter", "Segoe UI", "Arial Nova", Arial, system-ui, sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
-  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
-  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
-  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
-  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
-  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
-  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
-  --row-hover: #0c0c0d; --row-sel: #0d1233;
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
   color-scheme: dark;
 } }
 :root[data-theme="dark"] {
-  --bg: #000000; --panel: #0e0e0f; --panel-2: #18181a; --line: #262628; --line-strong: #f2f2f0;
-  --ink: #f2f2f0; --ink-2: #b4b4af; --ink-3: #8a8a85;
-  --cobalt: #5c78ff; --cobalt-hover: #7a90ff; --cobalt-soft: rgba(92,120,255,.14); --on-cobalt: #000000;
-  --red: #ff3b55; --red-soft: rgba(255,59,85,.13);
-  --amber: #ffb43d; --amber-soft: rgba(255,180,61,.13);
-  --green: #39d98a; --green-soft: rgba(57,217,138,.12);
-  --violet: #b18cff; --violet-soft: rgba(177,140,255,.13);
-  --row-hover: #0c0c0d; --row-sel: #0d1233;
+  --bg: #16181b; --panel: #1c1f23; --panel-2: #24282d; --line: #30353b; --line-strong: #c4c8ce;
+  --ink: #e1e3e6; --ink-2: #a7acb3; --ink-3: #868b93;
+  --cobalt: #8b9ed3; --cobalt-hover: #9eaedc; --cobalt-soft: rgba(139,158,211,.13); --on-cobalt: #16181b;
+  --red: #d2777e; --red-soft: rgba(210,119,126,.12);
+  --amber: #d0a45e; --amber-soft: rgba(208,164,94,.12);
+  --green: #74b993; --green-soft: rgba(116,185,147,.11);
+  --violet: #a898d6; --violet-soft: rgba(168,152,214,.12);
+  --row-hover: #1b1e22; --row-sel: #202634;
   color-scheme: dark;
 }
 * { box-sizing: border-box; border-radius: 0; }
@@ -194,7 +194,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 .badge.rejected, .badge.stale, .badge.superseded { background: var(--red-soft); color: var(--red); }
 .badge.failed { background: var(--amber-soft); color: var(--amber); }
 .badge.drafted { background: var(--cobalt-soft); color: var(--cobalt); }
-.priority-high { background: var(--red); color: #fff; }
+.priority-high { background: var(--red); color: var(--bg); }
 .priority-medium { background: var(--panel-2); color: var(--ink); }
 .priority-low { background: var(--panel); color: var(--ink-3); }
 .tag-ticket, .tag-meeting { background: var(--cobalt-soft); color: var(--cobalt); }
@@ -425,7 +425,7 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 <nav class="nav" aria-label="Sections">
   <div class="brand"><span class="brand-mark" aria-hidden="true"></span><div>Chief of Staff</div></div>
   <div class="nav-group">Work</div>
-  <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">1</span></a>
+  <a class="nav-link" href="#today" data-view="today">Today <span class="nav-count">3</span></a>
   <a class="nav-link" href="#meetings" data-view="meetings">Meetings <span class="nav-count">2</span></a>
   <a class="nav-link" href="#inbox" data-view="inbox">Inbox &amp; questions</a>
   <a class="nav-link" href="#archive" data-view="archive">Archive <span class="nav-count">2</span></a>
@@ -459,27 +459,27 @@ input::placeholder, textarea::placeholder { color: var(--ink-3); }
 </header>
 <div class="content-grid"><div class="content">
 <div id="pollResult" class="result"></div>
-<div class="demo-banner"><strong>Live demo on fictional data.</strong> This is Dana Kowalski, an engineer at Kestrel Labs, a made-up company: about 18,000 Slack messages, mails, Jira tickets and calendar events over three months. The task list below is what the research engine actually extracted from that world in a recorded run. Nothing here talks to a real account or a model: approve, chat and revise answer from saved responses. Data as of 2026-10-13.</div>
+<div class="demo-banner"><strong>Live demo on fictional data.</strong> This is Dana Kowalski, a made-up engineer at Kestrel Labs who also freelances and is job hunting: about 110,000 items over three months (Slack, mail in four inboxes, Jira, GitHub, calendar and files). The task list below is what the research engine actually extracted from that world in a recorded run. Nothing here talks to a real account or a model: approve, chat and revise answer from saved responses. Data as of 2026-10-13.</div>
 
 
 <section class="view" id="v-today" data-title="Today">
 
-<div class="stats"><div class="stat "><div class="stat-num">0</div><div class="stat-label">overdue, still live</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">due today</div></div><div class="stat stat-accent"><div class="stat-num">51</div><div class="stat-label">drafts waiting for you</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">gone quiet, still needed?</div></div></div>
+<div class="stats"><div class="stat "><div class="stat-num">0</div><div class="stat-label">overdue, still live</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">due today</div></div><div class="stat stat-accent"><div class="stat-num">62</div><div class="stat-label">drafts waiting for you</div></div><div class="stat "><div class="stat-num">0</div><div class="stat-label">gone quiet, still needed?</div></div></div>
 <details class="briefing"><summary>Today's briefing (2026-10-13)</summary><pre>Tuesday, Oct 13
 
 Since Friday: 404 Slack messages, 16 mails and 18 Jira updates across the connected
 accounts. Most of it is noise, asks to other people, or bots.
 
-Open tasks: 51 in total, 31 high priority.
+Open tasks: 62 in total, 36 high priority.
 
-Drafted: a next step for every open task (24 messages waiting for approval,
-27 drafted for you to do yourself). They are on each task in the Command Center.
+Drafted: a next step for every open task (30 messages waiting for approval,
+32 drafted for you to do yourself). They are on each task in the Command Center.
 Nothing has been sent.
 
 Set aside: the Sep 22 &quot;password expires&quot; mail from kestrel-helpdesk.example, a
 look-alike of Kestrel IT. Not a task.
 </pre></details>
-<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" role="navigation" aria-label="Workspace"><a href="index.html">All</a><a href="ws-job-search.html">Job search</a><a href="ws-kestrel.html">Kestrel Labs</a><a href="ws-oss.html" class="ws-active">Open source</a><a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">1</span></h3><div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div><div class="todo-filters" role="toolbar" aria-label="Filter tasks"><div class="tf-chips"><button type="button" class="tf-chip tf-on" data-filter="all" onclick="todoFilter(this.dataset.filter)">All <span class="tf-n">1</span></button></div><div class="tf-tools"><label class="tf-sel"><span>Type</span><select id="todoKind" onchange="todoFilter()"><option value="">All types</option><option value="review">Review (1)</option></select></label><label class="tf-sel"><span>Sort</span><select id="todoSort" onchange="todoSort(this.value)"><option value="urgency">Most urgent</option><option value="pri-desc">Priority: high to low</option><option value="pri-asc">Priority: low to high</option><option value="due-asc">Due: soonest first</option><option value="due-desc">Due: latest first</option><option value="recent">Recently active</option></select></label><input id="todoSearch" class="tf-search" placeholder="Filter by words" oninput="todoFilter()" aria-label="Filter tasks by words"/></div></div><div class="todo-board"><div class="todo-table"><div class="todo-head" role="row"><button type="button" onclick="todoSort('due-asc')">Due</button><span>Task</span><button type="button" onclick="todoSort('kind')">Type</button><button type="button" onclick="todoSortToggle()">Priority</button></div><div class="todo-list" id="todoList"><div class="todo-row todo-low" data-id="oss:action:tinyq-pr-89-review" data-title="Review tinyq PR #89 (Fix double drain)" data-note="" data-evidence="[&#x27;gh-0038&#x27;]" data-priority="low" data-due="" data-ws="oss" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="optional" data-waiting="" data-kind="review" data-act="47" data-rank="0" data-draft="1" data-q="0" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Review tinyq PR #89 (Fix double drain)</span><span class="todo-sub"><span class="todo-why">optional</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div></div>
+<div class="graph-command-center"><h2>Command Center <span class="cc-sub">(live from the knowledge graph)</span></h2><div class="ws-switcher" role="navigation" aria-label="Workspace"><a href="index.html">All</a><a href="ws-freelance.html">Freelance</a><a href="ws-job-search.html">Job search</a><a href="ws-kestrel.html">Kestrel Labs</a><a href="ws-oss.html" class="ws-active">Open source</a><a href="ws-personal.html">Personal</a></div><section class="graph-section" id="sec-to-do---next-actions"><h3>To-Do / Next Actions <span class="sec-count">3</span></h3><div class="quick-line">most urgent on top: deadline, priority and recent activity — click a task to open it</div><div class="todo-filters" role="toolbar" aria-label="Filter tasks"><div class="tf-chips"><button type="button" class="tf-chip tf-on" data-filter="all" onclick="todoFilter(this.dataset.filter)">All <span class="tf-n">3</span></button></div><div class="tf-tools"><label class="tf-sel"><span>Type</span><select id="todoKind" onchange="todoFilter()"><option value="">All types</option><option value="admin">Admin (1)</option><option value="engineering">Engineering (1)</option><option value="review">Review (1)</option></select></label><label class="tf-sel"><span>Sort</span><select id="todoSort" onchange="todoSort(this.value)"><option value="urgency">Most urgent</option><option value="pri-desc">Priority: high to low</option><option value="pri-asc">Priority: low to high</option><option value="due-asc">Due: soonest first</option><option value="due-desc">Due: latest first</option><option value="recent">Recently active</option></select></label><input id="todoSearch" class="tf-search" placeholder="Filter by words" oninput="todoFilter()" aria-label="Filter tasks by words"/></div></div><div class="todo-board"><div class="todo-table"><div class="todo-head" role="row"><button type="button" onclick="todoSort('due-asc')">Due</button><span>Task</span><button type="button" onclick="todoSort('kind')">Type</button><button type="button" onclick="todoSortToggle()">Priority</button></div><div class="todo-list" id="todoList"><div class="todo-row todo-low" data-id="oss:action:plantpal-domain-renewal" data-title="Renew the plantpal.app domain (auto-renew is off)" data-note="" data-evidence="[&#x27;em-677051&#x27;, &#x27;doc-959048&#x27;]" data-priority="low" data-due="2026-10-30" data-ws="oss" data-url="" data-duelabel="due in 17 days" data-stale="" data-overdue="" data-days="17" data-reason="personal project" data-waiting="" data-kind="admin" data-act="12" data-rank="0" data-draft="1" data-q="0" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Oct 30</span><span class="todo-main"><span class="todo-title">Renew the plantpal.app domain (auto-renew is off)</span><span class="todo-sub"><span class="todo-why">personal project</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Admin</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-row todo-medium" data-id="oss:action:tinyq-docs-site-move" data-title="Move the tinyq docs site off Hostlane before the legacy plan retires" data-note="" data-evidence="[&#x27;em-159713&#x27;, &#x27;doc-537085&#x27;]" data-priority="medium" data-due="2026-11-01" data-ws="oss" data-url="" data-duelabel="due in 19 days" data-stale="" data-overdue="" data-days="19" data-reason="site goes offline" data-waiting="" data-kind="engineering" data-act="18" data-rank="1" data-draft="1" data-q="1" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">Nov 1</span><span class="todo-main"><span class="todo-title">Move the tinyq docs site off Hostlane before the legacy plan retires</span><span class="todo-sub"><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Engineering</span><span class="todo-pcell"><span class="todo-pri pri-medium"><span class="pri-bars" aria-hidden="true"></span>Med</span></span></div><div class="todo-row todo-low" data-id="oss:action:tinyq-pr-89-review" data-title="Review tinyq PR #89 Fix double drain (#88)" data-note="" data-evidence="[&#x27;gh-124747&#x27;]" data-priority="low" data-due="" data-ws="oss" data-url="" data-duelabel="low" data-stale="" data-overdue="" data-days="" data-reason="soft ask" data-waiting="" data-kind="review" data-act="47" data-rank="2" data-draft="1" data-q="2" onclick="todoOpen(this)" tabindex="-1"><span class="todo-when">—</span><span class="todo-main"><span class="todo-title">Review tinyq PR #89 Fix double drain (#88)</span><span class="todo-sub"><span class="todo-why">soft ask</span><span class="todo-draft">Drafted for you</span></span></span><span class="todo-kind">Review</span><span class="todo-pcell"><span class="todo-pri pri-low"><span class="pri-bars" aria-hidden="true"></span>Low</span></span></div><div class="todo-none" id="todoNone" hidden>No tasks match this filter.</div></div></div>
 <div class="todo-detail" id="todoDetail">
   <div class="td-empty" id="tdEmpty">Select a task</div>
   <div id="tdBody" style="display:none">
@@ -681,6 +681,81 @@ document.addEventListener("DOMContentLoaded", () => {
 </script></div><template id="tdq-0">
 <div class="card pending">
   <span class="badge pending">Pending</span><span class="priority-tag priority-low">Low</span>
+  <div class="card-title">Steps to renew plantpal.app at Namecove before it expires Oct 30</div>
+  <div class="meta">self_do · drafted by cos-poll · <code>q-1013-plantpal-domain-renewal</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs-quick" data-entry="cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs" onclick="showTab('q-1013-plantpal-domain-renewal','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs-details" data-entry="cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs" onclick="showTab('q-1013-plantpal-domain-renewal','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs-quick" data-entry="cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs">
+    
+    <div class='tm-plan draft-text'>1. Log in to Namecove with the dana.kowalski@mailbox.example account.
+2. Open the plantpal.app domain page.
+3. Renew for [term, e.g. 1 or 2 years] and pay with [payment method].
+4. Turn auto-renew on so it does not lapse again.
+5. Confirm the new expiry date [date] on the domain page and save the receipt email.</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs-details" data-entry="cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs">
+    <pre>1. Log in to Namecove with the dana.kowalski@mailbox.example account.
+* 2. Open the plantpal.app domain page.
+* 3. Renew for [term, e.g. 1 or 2 years] and pay with [payment method].
+* 4. Turn auto-renew on so it does not lapse again.
+* 5. Confirm the new expiry date [date] on the domain page and save the receipt email.</pre>
+    
+    <div class="meta">Task: Renew the plantpal.app domain (auto-renew is off). Sources: em-677051, doc-959048.</div>
+    
+  </div>
+  <div class="actions"><button data-id="q-1013-plantpal-domain-renewal" data-copy="1. Log in to Namecove with the dana.kowalski@mailbox.example account.
+2. Open the plantpal.app domain page.
+3. Renew for [term, e.g. 1 or 2 years] and pay with [payment method].
+4. Turn auto-renew on so it does not lapse again.
+5. Confirm the new expiry date [date] on the domain page and save the receipt email." onclick="copyText(this)">Copy text</button><button data-id="q-1013-plantpal-domain-renewal" onclick="markHandled(this)">Mark handled</button><span class='meta'>Drafted for you: no connected tool can do this one. Copy the draft, finish it yourself, then mark handled.</span></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-plantpal-domain-renewal" onclick="revise(this)">Revise</button></div>
+  <div class="result" id="result-cS0xMDEzLXBsYW50cGFsLWRvbWFpbi1yZW5ld2Fs"></div>
+</div>
+</template><template id="tdq-1">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-low">Low</span>
+  <div class="card-title">Checklist to move the tinyq-docs site off Hostlane before Nov 1</div>
+  <div class="meta">self_do · drafted by cos-poll · <code>q-1013-tinyq-docs-site-move</code></div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" id="btn-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl-quick" data-entry="cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl" onclick="showTab('q-1013-tinyq-docs-site-move','quick')">Quick</button>
+    <button class="tab-btn" id="btn-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl-details" data-entry="cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl" onclick="showTab('q-1013-tinyq-docs-site-move','details')">Details</button>
+  </div>
+  <div class="tab-panel active" id="panel-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl-quick" data-entry="cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl">
+    
+    <div class='tm-plan draft-text'>1. Choose the new host: [host].
+2. Build the tinyq-docs site (new theme and search are done) and deploy it to [host].
+3. Check pages and search work on the new host.
+4. Point the docs domain DNS at the new host: [domain / DNS records].
+5. Confirm the site is live and [URL] loads before Nov 1.
+6. Cancel the Hostlane legacy plan once the move is verified.</div>
+  </div>
+  <div class="tab-panel" id="panel-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl-details" data-entry="cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl">
+    <pre>1. Choose the new host: [host].
+* 2. Build the tinyq-docs site (new theme and search are done) and deploy it to [host].
+* 3. Check pages and search work on the new host.
+* 4. Point the docs domain DNS at the new host: [domain / DNS records].
+* 5. Confirm the site is live and [URL] loads before Nov 1.
+* 6. Cancel the Hostlane legacy plan once the move is verified.</pre>
+    
+    <div class="meta">Task: Move the tinyq docs site off Hostlane before the legacy plan retires. Sources: em-159713, doc-537085.</div>
+    
+  </div>
+  <div class="actions"><button data-id="q-1013-tinyq-docs-site-move" data-copy="1. Choose the new host: [host].
+2. Build the tinyq-docs site (new theme and search are done) and deploy it to [host].
+3. Check pages and search work on the new host.
+4. Point the docs domain DNS at the new host: [domain / DNS records].
+5. Confirm the site is live and [URL] loads before Nov 1.
+6. Cancel the Hostlane legacy plan once the move is verified." onclick="copyText(this)">Copy text</button><button data-id="q-1013-tinyq-docs-site-move" onclick="markHandled(this)">Mark handled</button><span class='meta'>Drafted for you: no connected tool can do this one. Copy the draft, finish it yourself, then mark handled.</span></div>
+  <div style='margin-top:.75rem'><textarea id='feedback-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea><button class='small' data-id="q-1013-tinyq-docs-site-move" onclick="revise(this)">Revise</button></div>
+  <div class="result" id="result-cS0xMDEzLXRpbnlxLWRvY3Mtc2l0ZS1tb3Zl"></div>
+</div>
+</template><template id="tdq-2">
+<div class="card pending">
+  <span class="badge pending">Pending</span><span class="priority-tag priority-low">Low</span>
   <div class="card-title">Steps to review tinyq PR #89 (Fix double drain) from olu-a</div>
   <div class="meta">self_do · drafted by cos-poll · <code>q-1013-tinyq-pr-89-review</code></div>
   
@@ -705,7 +780,7 @@ document.addEventListener("DOMContentLoaded", () => {
 * 5. Leave review comments: [findings].
 * 6. Approve or request changes, then thank olu-a.</pre>
     
-    <div class="meta">Task: Review tinyq PR #89 (Fix double drain). Sources: gh-0038.</div>
+    <div class="meta">Task: Review tinyq PR #89 Fix double drain (#88). Sources: gh-124747.</div>
     
   </div>
   <div class="actions"><button data-id="q-1013-tinyq-pr-89-review" data-copy="1. Open dana-k/tinyq PR #89 and read issue #88 to confirm the double drain behavior.
@@ -1053,7 +1128,7 @@ async function setSelfLearning() {
 <div class="quick-line" style="margin-top:.5rem"><strong>Recently learned:</strong><ul><li><strong>&#x27;Benchmark numbers&#x27; and &#x27;latency numbers for the review&#x27; are the same task.</strong> → one piece of work listed twice → <em>Instructions: one piece of work is one task however many places word it differently; merge and cite every source.</em> ✓</li><li><strong>The Corvid final-round slot pick shows as low. Interviews are not personal erran</strong> → job-search read as personal for priority → <em>Instructions: job-search work is not &#x27;personal&#x27; for the low-priority rule.</em> ✓</li><li><strong>Mei said &#x27;on it&#x27; about the dashboard migration last week, why is it still on my </strong> → accepted hand-off kept as delegated → <em>Instructions: when the person a task is handed to accepts (&#x27;on it&#x27;), it leaves your list instead of staying as &#x27;delegate</em> ✓</li></ul></div>
 </section>
 
-</div><aside class="side-panel"><h3>Today</h3><div class="today-brief"><div class="tb-line"><strong>Next up:</strong> Review tinyq PR #89 (Fix double drain)</div></div><div class="cal-box"><div class="cal-head">October 2026</div><table class="cal"><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr><tr><td class="cal-out" title="">27</td><td class="cal-out" title="">28</td><td class="cal-out" title="">29</td><td class="cal-out" title="">30</td><td class="" title="">1</td><td class="" title="">2</td><td class="" title="">3</td></tr><tr><td class="" title="">4</td><td class="" title="">5</td><td class="" title="">6</td><td class="" title="">7</td><td class="" title="">8</td><td class="" title="">9</td><td class="" title="">10</td></tr><tr><td class="" title="">11</td><td class="" title="">12</td><td class="cal-today" title="">13</td><td class="" title="">14</td><td class="" title="">15</td><td class="" title="">16</td><td class="" title="">17</td></tr><tr><td class="" title="">18</td><td class="" title="">19</td><td class="" title="">20</td><td class="" title="">21</td><td class="" title="">22</td><td class="" title="">23</td><td class="" title="">24</td></tr><tr><td class="" title="">25</td><td class="" title="">26</td><td class="" title="">27</td><td class="" title="">28</td><td class="" title="">29</td><td class="" title="">30</td><td class="" title="">31</td></tr></table></div></aside></div>
+</div><aside class="side-panel"><h3>Today</h3><div class="today-brief"><div class="tb-line"><strong>Next up:</strong> Renew the plantpal.app domain (auto-renew is off) · Move the tinyq docs site off Hostlane before the legacy plan retires · Review tinyq PR #89 Fix double drain (#88)</div></div><div class="cal-box"><div class="cal-head">October 2026</div><table class="cal"><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr><tr><td class="cal-out" title="">27</td><td class="cal-out" title="">28</td><td class="cal-out" title="">29</td><td class="cal-out" title="">30</td><td class="" title="">1</td><td class="" title="">2</td><td class="" title="">3</td></tr><tr><td class="" title="">4</td><td class="" title="">5</td><td class="" title="">6</td><td class="" title="">7</td><td class="" title="">8</td><td class="" title="">9</td><td class="" title="">10</td></tr><tr><td class="" title="">11</td><td class="" title="">12</td><td class="cal-today" title="">13</td><td class="" title="">14</td><td class="" title="">15</td><td class="" title="">16</td><td class="" title="">17</td></tr><tr><td class="" title="">18</td><td class="" title="">19</td><td class="" title="">20</td><td class="" title="">21</td><td class="" title="">22</td><td class="" title="">23</td><td class="" title="">24</td></tr><tr><td class="" title="">25</td><td class="" title="">26</td><td class="" title="">27</td><td class="" title="">28</td><td class="" title="">29</td><td class="cal-marked" title="⏰ Renew the plantpal.app domain (auto-rene">30<span class='cal-dot'>•</span></td><td class="" title="">31</td></tr></table></div></aside></div>
 </div>
 
 <div id="chatBubble" class="chat-bubble" onclick="toggleChat()" title="Chat" aria-label="Chat"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" fill="#fff"/></svg></div>

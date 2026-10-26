@@ -1084,12 +1084,16 @@
   {
    "id": "kestrel:action:api-bulk-edit-support",
    "name": "Clarify API bulk edit support for settings screen",
-   "evidence": []
+   "evidence": [
+    "sl-17366"
+   ]
   },
   {
    "id": "kestrel:action:roster-api-timezone-support",
    "name": "Clarify roster API timezone field support for design mock",
-   "evidence": []
+   "evidence": [
+    "sl-17386"
+   ]
   }
  ],
  "summary": {

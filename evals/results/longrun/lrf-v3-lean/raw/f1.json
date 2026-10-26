@@ -1,0 +1,71 @@
+{
+ "scenario": "f1",
+ "returncode": 0,
+ "stderr": "",
+ "direct": true,
+ "prompt_chars": 30163,
+ "sifted": 453,
+ "triage_cost_usd": 0.061579,
+ "after_triage": 24,
+ "envelope": {
+  "result": "[\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rotate-leaked-aws-key\",\"name\":\"Rotate the leaked AWS key\",\"attrs\":{\"due\":\"2026-10-09\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-198531\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"sl-282950\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-maintenance-window-confirm\",\"name\":\"Confirm the Nov 15 maintenance window to Alex Brennan at Northwind\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"medium\",\"evidence\":[\"em-962935\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"job-search\",\"key\":\"tidewater-offer-sign\",\"name\":\"Review and sign the Tidewater Analytics offer (Senior Data Platform Engineer)\",\"attrs\":{\"due\":\"2026-10-30\",\"priority\":\"medium\",\"evidence\":[\"em-730223\",\"em-000169\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-322-cron-migration\",\"name\":\"Migrate cron jobs to scheduler v2 (PLAT-322)\",\"attrs\":{\"due\":\"2026-11-13\",\"priority\":\"medium\",\"evidence\":[\"sl-389263\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"evidence\":[\"em-128555\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rota-api-470-review-batch-shift-import\",\"name\":\"Review rota-api#470 Batch shift import (taking over from Alex)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"gh-276116\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"orbitlabs-api-audit-report\",\"name\":\"Deliver the API security audit report to Orbit Labs ($3,000 on delivery; Terraform review dropped)\",\"attrs\":{\"due\":\"2026-10-15\",\"priority\":\"high\",\"status\":\"delivered\",\"evidence\":[\"em-319990\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"plat-360-load-test-scheduler-v2\",\"name\":\"Load test scheduler v2 (PLAT-360)\",\"attrs\":{\"due\":\"2026-09-30\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"jr-629709\"]},\"source\":\"eval-fixture\",\"confidence\":0.97,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"scheduler-v2-architecture-review\",\"name\":\"Present the scheduler v2 architecture review on Oct 22 (design doc already circulated Oct 19)\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"evidence\":[\"em-756331\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},\n{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"benefits-enrollment\",\"name\":\"Complete benefits enrollment (defaults to basic plan otherwise)\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"medium\",\"evidence\":[\"sl-532079\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]}\n]",
+  "total_cost_usd": 0.058992,
+  "duration_ms": 19146,
+  "duration_api_ms": 15888,
+  "num_turns": 1,
+  "usage": {
+   "input_tokens": 15921,
+   "cache_creation_input_tokens": 0,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 2715,
+   "output_tokens_details": {
+    "thinking_tokens": 1310
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 0,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 15921,
+     "output_tokens": 2715,
+     "cache_read_input_tokens": 0,
+     "cache_creation_input_tokens": 0,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 15921,
+    "outputTokens": 2715,
+    "cacheReadInputTokens": 0,
+    "cacheCreationInputTokens": 0,
+    "webSearchRequests": 0,
+    "costUSD": 0.058992,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 1310,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 24,
+ "attempt": 1
+}

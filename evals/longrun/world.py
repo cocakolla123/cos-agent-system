@@ -91,7 +91,7 @@ class Store:
               account="work", thread=None):
         labels = ["SENT"] if sent else ["INBOX"]
         return self.add("gmail", {
-            "date": date, "account": WORK if account == "work" else PERSONAL,
+            "date": date, "account": {"work": WORK, "personal": PERSONAL}.get(account, account),
             "labelIds": labels, "from": frm, "to": to if isinstance(to, list) else [to],
             "cc": cc or [], "subject": subject, "body": body,
             "threadId": thread or "th-" + subject.lower().replace("re: ", "")[:24]

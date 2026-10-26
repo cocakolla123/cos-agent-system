@@ -67,6 +67,32 @@ while IFS= read -r connector; do
   fi
 done <<< "$connectors"
 
+# "direct" is the check that needs no Claude Code (dashboard/poll_direct.py --scan): every few
+# minutes it fetches only what is new from connections.json and sifts it without a model, which
+# is free. What it keeps waits for the next batch (a few times a day) unless it is urgent, like a
+# meeting transcript; only then is the model called. It never shares a run with the rest.
+rest=()
+for connector in ${due[@]+"${due[@]}"}; do
+  if [ "$connector" = "direct" ]; then
+    ws_dir=$(jq -r '.workspace_dir // empty' "$MAIN_CFG" 2>/dev/null || true)
+    [ -n "$ws_dir" ] || ws_dir="$DASH_DIR/workspace"
+    case "$ws_dir" in /*) ;; *) ws_dir="$DASH_DIR/$ws_dir" ;; esac
+    tmp=$(mktemp)
+    jq --arg now "$now_epoch" '.direct = ($now | tonumber)' "$LAST_RUN" > "$tmp" && mv "$tmp" "$LAST_RUN"
+    if python3 "$SCRIPT_DIR/poll_direct.py" "$DASH_DIR" "$ws_dir/graph" --scan >> "$DASH_DIR/launchd-poll.log" 2>> "$DASH_DIR/launchd-poll.err"; then
+      COMPLETED="$DASH_DIR/poll-last-completed.json"
+      [ -f "$COMPLETED" ] || echo '{}' > "$COMPLETED"
+      tmp=$(mktemp)
+      jq --arg now "$(TZ="$TZ_NAME" date +%s)" '.direct = ($now | tonumber)' "$COMPLETED" > "$tmp" && mv "$tmp" "$COMPLETED"
+    else
+      echo "$(date '+%Y-%m-%dT%H:%M:%S') direct check FAILED" >> "$DASH_DIR/launchd-poll.err"
+    fi
+  else
+    rest+=("$connector")
+  fi
+done
+due=(${rest[@]+"${rest[@]}"})
+
 if [ ${#due[@]} -eq 0 ]; then
   exit 0
 fi
