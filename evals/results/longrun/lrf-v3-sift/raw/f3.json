@@ -1,0 +1,67 @@
+{
+ "scenario": "f3",
+ "started": "2026-10-26T08:20:42.475838+00:00",
+ "returncode": 0,
+ "stderr": "",
+ "envelope": {
+  "result": "[{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"q4-capacity-numbers\",\"name\":\"Put together the Q4 capacity numbers\",\"attrs\":{\"due\":\"2026-10-22\",\"priority\":\"high\",\"status\":\"done\",\"evidence\":[\"sl-282950\",\"sl-471926\",\"sl-026317\",\"doc-756429\"]},\"source\":\"eval-fixture\",\"confidence\":0.9,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"rta-101-timezone-bug-shift-export\",\"name\":\"Fix reopened timezone bug in shift export, Australia/Lord_Howe (RTA-101)\",\"attrs\":{\"priority\":\"medium\",\"status\":\"done\",\"evidence\":[\"jr-611362\",\"jr-776795\"],\"refs\":[\"RTA-101\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"freelance\",\"key\":\"inv-0042-lumen-dental-payment\",\"name\":\"Collect INV-0042 ($2,400) from Lumen Dental (reminder sent Oct 6)\",\"attrs\":{\"due\":\"2026-09-29\",\"priority\":\"high\",\"status\":\"paid\",\"evidence\":[\"em-815263\",\"em-914019\",\"em-819691\",\"em-799508\"],\"refs\":[\"INV-0042\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-security-questionnaire-review\",\"name\":\"Review the Stratus vendor security questionnaire for Victor\",\"attrs\":{\"due\":\"2026-10-29\",\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-128555\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"stratus-renewal-quote\",\"name\":\"Get the 50-seat renewal quote from Priya at Stratus Monitoring\",\"attrs\":{\"priority\":\"medium\",\"status\":\"cancelled\",\"evidence\":[\"em-801289\",\"em-661530\",\"em-151960\"]},\"source\":\"eval-fixture\",\"confidence\":0.85,\"edges\":[]},{\"kind\":\"Action\",\"workspace\":\"kestrel\",\"key\":\"northwind-data-retention-policy\",\"name\":\"Send Northwind the data retention policy\",\"attrs\":{\"due\":\"2026-11-06\",\"priority\":\"high\",\"evidence\":[\"em-304459\",\"em-457894\",\"em-689914\"]},\"source\":\"eval-fixture\",\"confidence\":0.95,\"edges\":[]}]",
+  "total_cost_usd": 0.5406470999999999,
+  "duration_ms": 34309,
+  "duration_api_ms": 31802,
+  "num_turns": 18,
+  "usage": {
+   "input_tokens": 24,
+   "cache_creation_input_tokens": 100451,
+   "cache_read_input_tokens": 975451,
+   "output_tokens": 4125,
+   "output_tokens_details": {
+    "thinking_tokens": 1033
+   },
+   "server_tool_use": {
+    "web_search_requests": 0,
+    "web_fetch_requests": 0
+   },
+   "service_tier": "standard",
+   "cache_creation": {
+    "ephemeral_1h_input_tokens": 100451,
+    "ephemeral_5m_input_tokens": 0
+   },
+   "inference_geo": "global",
+   "iterations": [
+    {
+     "input_tokens": 2,
+     "output_tokens": 1103,
+     "cache_read_input_tokens": 121427,
+     "cache_creation_input_tokens": 7606,
+     "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 7606
+     },
+     "type": "message"
+    }
+   ],
+   "speed": "standard",
+   "fallback_credit": null
+  },
+  "modelUsage": {
+   "claude-sonnet-5-5": {
+    "inputTokens": 24,
+    "outputTokens": 4125,
+    "cacheReadInputTokens": 975451,
+    "cacheCreationInputTokens": 100451,
+    "webSearchRequests": 0,
+    "costUSD": 0.5406470999999999,
+    "contextWindow": 1000000,
+    "maxOutputTokens": 128000,
+    "thinkingTokens": 1033,
+    "canonicalModel": "claude-sonnet-5-5",
+    "provider": "firstParty",
+    "costBasis": "list"
+   }
+  },
+  "is_error": false,
+  "subtype": "success"
+ },
+ "items_in_window": 430,
+ "attempt": 1
+}

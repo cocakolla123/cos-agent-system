@@ -44,6 +44,9 @@ JOBS = {
     "revise": ("standard", False),
     "draft": ("standard", True),
     "poll": ("standard", True),
+    # the direct check: items are fetched by connections.py and sifted, so the
+    # model only reads text and any provider can run it
+    "poll_direct": ("standard", False),
     "accounts_probe": ("light", True),
     "research": ("deep", True),
     "learn": ("deep", True),

@@ -34,7 +34,8 @@ TOKENS_FILENAME = "privacy-tokens.txt"
 EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 # API keys: Anthropic/OpenAI/OpenRouter ("sk-..."), Google ("AIza...").
 # Long enough that test fixtures like "sk-test-123" do not trip it.
-API_KEY_RE = re.compile(r"\b(?:sk-[A-Za-z0-9_-]{32,}|AIza[0-9A-Za-z_-]{35})\b")
+API_KEY_RE = re.compile(r"\b(?:sk-[A-Za-z0-9_-]{32,}|AIza[0-9A-Za-z_-]{35}|xox[abposr]-[A-Za-z0-9-]{20,}|"
+                        r"ghp_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{40,}|ATATT[A-Za-z0-9_=-]{40,})\b")
 MONEY_RE = re.compile(r"\$\s?\d{1,3}(?:,\d{3})+(?:\.\d+)?|\$\s?\d{5,}")
 
 REAL_PROVIDERS = {

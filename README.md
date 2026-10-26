@@ -68,11 +68,40 @@ The instructions are the same whichever model runs them. Keys stay on your machi
 `dashboard/secrets.json` (mode 0600, git-ignored, excluded from publishing, and blocked by the
 privacy scan) and go only to their provider.
 
-Jobs that read your accounts (research, polls, learning, approvals) still run on Claude Code,
-because that is where the connectors live. When their level names another provider they use
-Claude Code's default model, and Settings says so. The evals back the defaults: a small model
+Jobs that read your accounts through Claude Code's connectors (the first research crawl,
+learning, approvals) run on Claude Code. When their level names another provider they use
+Claude Code's default model, and Settings says so. The daily check does not need Claude Code
+at all if you add direct connections (below). The evals back the defaults: a small model
 on the first crawl or on the weekly polls missed tasks the default model caught
 ([long-run report](./evals/results/longrun/REPORT.md)), so keep Standard and Deep strong.
+
+## Daily checks without Claude Code
+
+**Settings → Accounts → Direct connections** reads your accounts directly, read-only:
+
+| connection | what you give it |
+|---|---|
+| any mailbox over IMAP | an app password |
+| Slack | a user token |
+| Jira Cloud | an API token |
+| GitHub | a personal access token |
+| calendar | its private iCal link |
+
+Each check runs in three steps (`dashboard/poll_direct.py`):
+
+1. **Fetch only what is new.** Every connection keeps a bookmark: the last mail UID, the newest Slack message per conversation, "updated since" for Jira and GitHub, and the last change for the calendar.
+2. **Sift without a model** (`dashboard/sift.py`). It keeps what could need you: direct messages, mentions, your threads, your tickets and reviews, mail to everyone that says it is required, platform notices with a person's words in them, anything naming one of your open tasks' tickets, PRs, invoices or domains, and your own files. Newsletters, bots, other people's tickets and channel chatter are dropped and counted. If nothing is left, the check stops there and costs nothing.
+3. **One text-only model call** on what is left, together with your open tasks. It runs on whatever model you chose for Standard: your Claude plan or any API key.
+
+Measured on the four weekly checks of the 142,555-item benchmark world (`evals/results/longrun/REPORT.md`):
+
+| weekly checks | dev | test | cost of the four | time per check |
+|---|---|---|---|---|
+| the agent searches all ~8,200 new items with tools | 44/50 | 48/50 | $3.43 | ~110 s |
+| sifted to ~480 items, the agent searches them | 46/50 | 48/50 | $2.20 | ~40 s |
+| sifted, one call with the items inline, no tools | 46/50 | 48/50 | $1.52 | ~15 s |
+
+Credentials stay in `connections.json` (mode 0600, git-ignored, excluded from publishing, and Slack, GitHub and Atlassian tokens are blocked by the privacy scan).
 
 ## What it costs
 

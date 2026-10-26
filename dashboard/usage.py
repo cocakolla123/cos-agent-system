@@ -39,7 +39,7 @@ _BUILTIN = {"Read", "Edit", "Write", "Glob", "Grep", "Bash", "Agent", "Task", "T
 
 DEFAULT_CALL_CAPS = {"research": 15.0, "learn": 3.0, "poll": 1.5, "approve": 1.0,
                      "revise": 0.75, "chat": 0.5, "task_chat": 0.5, "accounts_probe": 0.5,
-                     "draft": 1.0}
+                     "draft": 1.0, "poll_direct": 1.0}
 
 
 def _now():
@@ -187,14 +187,15 @@ BUDGET_MESSAGE = ("Today's model budget is used up (${spent:.2f} of ${cap:.2f}),
                   "not run. Raise or clear it in Settings → Usage.")
 
 
-def run(cmd, job, config_dir, cwd=None, timeout=None, env=None, enforce_budget=True):
+def run(cmd, job, config_dir, cwd=None, timeout=None, env=None, enforce_budget=True, input=None):
     """Run one claude call through the limits above; returns a Result."""
     if enforce_budget and job != "approve":
         over, spent, cap = over_daily_budget(config_dir)
         if over:
             return Result(3, BUDGET_MESSAGE.format(spent=spent, cap=cap), "")
     proc = subprocess.run(prepare(cmd, job, config_dir), cwd=cwd, capture_output=True,
-                          text=True, timeout=timeout, env=env)
+                          text=True, timeout=timeout, env=env,
+                          input=input if input is not None else "")
     try:
         envelope = json.loads(proc.stdout)
     except ValueError:

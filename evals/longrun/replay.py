@@ -95,9 +95,26 @@ def open_state(g, now):
     return sorted(rows, key=lambda r: (r["workspace"], r["key"]))
 
 
-def materialize(d, items, step, meta, g):
+def sift_window(items, sel, step, meta, g):
+    """The dashboard's rule filter (dashboard/sift.py) over one poll's items,
+    given the open tasks in the graph and everything seen before the window."""
+    import sift
+    now = graphlib._parse_iso(step["today"])
+    tasks = []
+    for n in score.open_actions(g):
+        if graphlib.is_open_action(n, now=now):
+            ev = (n.get("attrs") or {}).get("evidence") or []
+            tasks.append({"name": n.get("name"), "sources": ev if isinstance(ev, list) else [ev]})
+    known = [i for i in items if i["date"] < step["lo"]]
+    kept, dropped = sift.Sifter(meta["user"], meta.get("slack_channels"), tasks, known).sift(sel)
+    return kept, dropped
+
+
+def materialize(d, items, step, meta, g, use_sift=False):
     src = os.path.join(d, "sources")
     sel = [i for i in items if step["lo"] <= i["date"] < step["hi"]]
+    if use_sift and step["incremental"]:
+        sel, _ = sift_window(items, sel, step, meta, g)
     by = {}
     for i in sel:
         if i["connector"] == "slack":
@@ -130,6 +147,34 @@ def prompt(instructions, meta, step):
             + json.dumps(frame, indent=1, sort_keys=True) + "\n```\n\n" + tail)
 
 
+def run_direct(items, st, meta, g, instr, model, timeout):
+    """The dashboard's direct check (dashboard/poll_direct.py) on one poll:
+    sift the window, then one call with the kept items inline and no tools."""
+    import poll_direct
+    sel = [i for i in items if st["lo"] <= i["date"] < st["hi"]]
+    kept, _ = sift_window(items, sel, st, meta, g)
+    tasks = poll_direct.open_tasks(g, graphlib._parse_iso(st["today"]))
+    frame = {"user": meta["user"], "workspaces": meta["workspaces"], "today": st["today"]}
+    text = poll_direct.build_prompt(instr, frame, kept, tasks)
+    cmd = [run.CLAUDE, "-p", "--output-format", "json", "--permission-mode", "dontAsk",
+           "--tools", "", "--strict-mcp-config", "--mcp-config", '{"mcpServers":{}}']
+    if model:
+        cmd += ["--model", model]
+    proc = subprocess.run(cmd, input=text, capture_output=True, text=True, timeout=timeout)
+    raw = {"scenario": st["name"], "returncode": proc.returncode, "stderr": proc.stderr[-2000:],
+           "direct": True, "prompt_chars": len(text)}
+    try:
+        env = json.loads(proc.stdout)
+    except ValueError:
+        raw["envelope_error"] = "non-json stdout"
+        raw["stdout"] = proc.stdout[-4000:]
+        return raw, len(kept)
+    raw["envelope"] = {k: env.get(k) for k in (
+        "result", "total_cost_usd", "duration_ms", "duration_api_ms",
+        "num_turns", "usage", "modelUsage", "is_error", "subtype")}
+    return raw, len(kept)
+
+
 def ingest(g, raw, today):
     env = raw.get("envelope") or {}
     recs, err = run.extract_json_array(env.get("result") or "") \
@@ -155,6 +200,11 @@ def main():
                     help="run id whose saved first crawl (c1) to reuse; the polls "
                          "then run on --model. Tests a large-model crawl with "
                          "cheap-model polls without paying for the crawl twice.")
+    ap.add_argument("--sift", action="store_true",
+                    help="weekly polls see only the items dashboard/sift.py keeps")
+    ap.add_argument("--direct", action="store_true",
+                    help="weekly polls run like dashboard/poll_direct.py: sifted items "
+                         "inline, no tools")
     ap.add_argument("--tools", default=None,
                     help="read-only allowlist (default Read,Glob; realistic adds Grep)")
     args = ap.parse_args()
@@ -174,6 +224,7 @@ def main():
                 "cli_version": subprocess.run([run.CLAUDE, "--version"],
                                               capture_output=True, text=True).stdout.strip(),
                 "world": args.world, "tools": tools, "crawl_from": args.crawl_from,
+                "sift": bool(args.sift or args.direct), "direct": bool(args.direct),
                 "world_lock": json.load(open(os.path.join(wdir, "world.lock.json")))}
         json.dump(info, open(os.path.join(out, "meta.json"), "w"), indent=1)
     g = graphlib.Graph()
@@ -188,11 +239,14 @@ def main():
         elif not args.rescore:
             for attempt in (1, 2):      # one re-run for infrastructure failure only
                 with tempfile.TemporaryDirectory() as d:
-                    n = materialize(d, items, st, meta, g)
                     try:
-                        raw = run.run_scenario({"id": st["name"]}, d,
-                                               prompt(instr, meta, st), args.model,
-                                               args.timeout, allowed=tools)
+                        if args.direct and st["incremental"]:
+                            raw, n = run_direct(items, st, meta, g, instr, args.model, args.timeout)
+                        else:
+                            n = materialize(d, items, st, meta, g, use_sift=args.sift)
+                            raw = run.run_scenario({"id": st["name"]}, d,
+                                                   prompt(instr, meta, st), args.model,
+                                                   args.timeout, allowed=tools)
                     except subprocess.TimeoutExpired:
                         raw = {"scenario": st["name"], "envelope_error": "timeout"}
                 raw["items_in_window"] = n

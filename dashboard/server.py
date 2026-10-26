@@ -228,6 +228,11 @@ try:
     import models as _models
 except Exception:  # pragma: no cover
     _models = None
+# Direct connections (dashboard/connections.py): read accounts without Claude Code.
+try:
+    import connections as _connections
+except Exception:  # pragma: no cover
+    _connections = None
 try:
     import usage as _usage
 except Exception:  # pragma: no cover
@@ -2052,6 +2057,103 @@ async function saveBudget() {{
 </script>"""
 
 
+_CONN_HELP = {
+    "imap": [("id", "Name", "work-mail"), ("host", "IMAP server", "imap.gmail.com"), ("port", "Port", "993"),
+             ("user", "Address", "you@example.com"), ("password", "App password", ""),
+             ("folders", "Folders", "INBOX, [Gmail]/Sent Mail"), ("workspace", "Workspace", "")],
+    "slack": [("id", "Name", "work-slack"), ("token", "User token (xoxp-)", ""), ("workspace", "Workspace", "")],
+    "jira": [("id", "Name", "jira"), ("base_url", "Site", "https://your-org.atlassian.net"),
+             ("email", "Your Atlassian email", ""), ("token", "API token", ""), ("workspace", "Workspace", "")],
+    "github": [("id", "Name", "github"), ("token", "Personal access token", ""), ("login", "Username", ""),
+               ("workspace", "Workspace", "")],
+    "ical": [("id", "Name", "calendar"), ("url", "Private iCal link", "https://calendar.google.com/...basic.ics"),
+             ("workspace", "Workspace", "")],
+}
+_CONN_HOWTO = {
+    "imap": "Gmail: turn on 2-step verification, then create an app password (Google Account, Security, App passwords). Read-only: the app only selects folders read-only.",
+    "slack": "Create a Slack app with user scopes channels:history, groups:history, im:history, mpim:history, channels:read, groups:read, im:read, mpim:read and users:read, install it, and copy the User OAuth Token.",
+    "jira": "Create an API token at id.atlassian.com, Security, API tokens.",
+    "github": "Create a fine-grained token with read-only access to issues and pull requests.",
+    "ical": "Google Calendar: Settings, your calendar, Integrate calendar, Secret address in iCal format.",
+}
+
+
+def render_connections_section():
+    """Accounts → Direct connections: read accounts without Claude Code."""
+    if _connections is None:
+        return ""
+    try:
+        st = _connections.status(DASHBOARD_DIR)
+    except Exception:
+        return ""
+    me = st["me"]
+    rows = "".join(
+        f"""<div class="conn-row" data-id="{html.escape(r['id'])}"><b>{html.escape(r['label'])}</b>
+  <span>{html.escape(r['id'])}{(' · ' + html.escape(r['account'])) if r['account'] else ''}</span>
+  <span class="meta">{('last check ' + html.escape(r['last_ok'] or '') + ', %s new' % (r['last_count'] if r['last_count'] is not None else 0)) if r['last_ok'] else 'not checked yet'}{(' · error: ' + html.escape(r['last_error'])) if r['last_error'] else ''}</span>
+  <button class="small" onclick="connTest('{html.escape(r['id'])}', this)">Test</button>
+  <button class="small" onclick="connRemove('{html.escape(r['id'])}')">Remove</button></div>"""
+        for r in st["sources"]) or "<div class='meta'>No direct connections yet.</div>"
+    kinds = "".join('<option value="%s">%s</option>' % (k, html.escape(v["label"]))
+                    for k, v in _connections.KINDS.items())
+    return f"""
+<h2 id="connections">Direct connections</h2>
+<div class="quick-line">Read your accounts without Claude Code. Each check fetches only what is new
+since the last one, drops noise without a model (newsletters, bots, other people's tickets), and
+sends what is left to the model you chose for Standard work, which can be an API key. A quiet check
+costs nothing. Credentials stay on this machine in <code>connections.json</code>, readable by you
+alone, and every connection is read-only.</div>
+<div class="conn-me">
+  <b>You</b>
+  <input id="connName" placeholder="Full name" value="{html.escape(me.get('name', ''))}" />
+  <input id="connEmails" placeholder="Your addresses, comma separated" value="{html.escape(', '.join(me.get('emails') or []))}" />
+  <input id="connSlack" placeholder="Slack handle" value="{html.escape(me.get('slack', ''))}" />
+  <input id="connGithub" placeholder="GitHub username" value="{html.escape(me.get('github', ''))}" />
+  <button class="small" onclick="connSaveMe()">Save</button> <span id="connMeResult" class="meta"></span>
+</div>
+<div class="conn-list">{rows}</div>
+<details class="conn-add"><summary>Add a connection</summary>
+  <select id="connKind" onchange="connFields()">{kinds}</select>
+  <div id="connHowto" class="meta"></div>
+  <div id="connFields"></div>
+  <button class="primary small" onclick="connSave()">Save connection</button> <span id="connSaveResult" class="meta"></span>
+</details>
+<div class="pill-row" style="margin:.4rem 0"><button class="small" onclick="connCheck(this)">Check now</button>
+<span id="connCheckResult" class="meta"></span></div>
+<style>.conn-me,.conn-row{{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:.35rem 0}}
+.conn-me input,#connFields input{{min-width:0;flex:1 1 180px}}#connFields{{display:grid;gap:6px;margin:.5rem 0;max-width:560px}}
+#connFields label{{display:grid;gap:2px;font-size:12px}}</style>
+<script>
+const CONN_FIELDS = {json.dumps(_CONN_HELP)}, CONN_HOWTO = {json.dumps(_CONN_HOWTO)},
+      CONN_SECRET = {json.dumps({k: v["secret"] for k, v in _connections.KINDS.items()})};
+function connFields() {{
+  const k = document.getElementById("connKind").value;
+  document.getElementById("connHowto").textContent = CONN_HOWTO[k] || "";
+  document.getElementById("connFields").innerHTML = CONN_FIELDS[k].map(([f, label, ph]) =>
+    `<label>${{label}}<input data-f="${{f}}" type="${{CONN_SECRET[k].includes(f) ? "password" : "text"}}" placeholder="${{ph}}" autocomplete="off"></label>`).join("");
+}}
+connFields();
+async function connSaveMe() {{
+  const r = await post("/connections-me", {{name: connName.value, emails: connEmails.value.split(",").map(x => x.trim()).filter(Boolean),
+                                             slack: connSlack.value, github: connGithub.value}});
+  connMeResult.textContent = r.message;
+}}
+async function connSave() {{
+  const src = {{kind: connKind.value}};
+  document.querySelectorAll("#connFields input").forEach(i => {{ if (i.value.trim()) src[i.dataset.f] = i.value.trim(); }});
+  const r = await post("/connections-save", src);
+  connSaveResult.textContent = r.message;
+  if (r.ok) setTimeout(() => location.reload(), 700);
+}}
+async function connTest(id, btn) {{
+  btn.textContent = "Testing…"; const r = await post("/connections-test", {{id}}); btn.textContent = "Test";
+  btn.closest(".conn-row").querySelector(".meta").textContent = r.message;
+}}
+async function connRemove(id) {{ const r = await post("/connections-remove", {{id}}); if (r.ok) location.reload(); }}
+async function connCheck(btn) {{ const r = await post("/connections-check", {{}}); connCheckResult.textContent = r.message; }}
+</script>"""
+
+
 def render_accounts_section():
     """The 'Accounts & connections' panel (M10). Empty string if unavailable."""
     if _accounts is None:
@@ -2550,7 +2652,7 @@ class Handler(BaseHTTPRequestHandler):
             command_center=command_center,
             live_refresh_js=render_live_refresh_js(),
             self_learning_html=render_self_learning_section(),
-            accounts_html=render_accounts_section(),
+            accounts_html=render_accounts_section() + render_connections_section(),
             models_html=render_models_section(),
             usage_html=render_usage_section(),
             nav_spend=(("$%.2f" % _usage.spent_today(DASHBOARD_DIR)) if _usage is not None else ""),
@@ -2590,6 +2692,49 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json({"message": ("Saved: $%.2f a day." % b) if b else "No daily budget."})
             except (ValueError, TypeError) as exc:
                 self._send_json({"message": "⚠️ %s" % exc}, 400)
+            return
+
+        if self.path in ("/connections-me", "/connections-save", "/connections-remove",
+                         "/connections-test", "/connections-check"):
+            if _connections is None:
+                self._send_json({"message": "direct connections unavailable"}, 500)
+                return
+            try:
+                if self.path == "/connections-me":
+                    _connections.save_me(DASHBOARD_DIR, data)
+                    self._send_json({"ok": True, "message": "Saved."})
+                elif self.path == "/connections-save":
+                    sid = _connections.upsert_source(DASHBOARD_DIR, data)
+                    cfg_path = os.path.join(DASHBOARD_DIR, "poll-config.json")
+                    cfg = read_json(cfg_path, dict(DEFAULT_POLL_CONFIG))
+                    if "direct" not in cfg:     # first connection: schedule the direct check
+                        cfg["timezone"] = cfg.get("timezone", "America/Los_Angeles")
+                        cfg["direct"] = {"interval_min": 15, "days": ["mon", "tue", "wed", "thu", "fri"],
+                                         "start": "07:00", "end": "19:00"}
+                        write_json(cfg_path, cfg)
+                    self._send_json({"ok": True, "message": "Saved %s. Checks run every 15 minutes "
+                                     "(change it under Polling)." % sid})
+                elif self.path == "/connections-remove":
+                    _connections.remove_source(DASHBOARD_DIR, data.get("id", ""))
+                    self._send_json({"ok": True, "message": "Removed."})
+                elif self.path == "/connections-test":
+                    src = next((x for x in _connections.load(DASHBOARD_DIR)["sources"]
+                                if x["id"] == data.get("id")), None)
+                    if not src:
+                        self._send_json({"message": "No such connection."})
+                        return
+                    items, _ = _connections.FETCHERS[src["kind"]](src, {})   # bookmark untouched
+                    last = items[-1] if items else {}
+                    title = last.get("subject") or last.get("text") or last.get("title") or last.get("summary") or ""
+                    self._send_json({"message": "✅ works: %d items in the last 14 days%s" % (
+                        len(items), (", newest: " + title[:60]) if title else "")})
+                else:
+                    cmd = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "poll_direct.py"),
+                           DASHBOARD_DIR, os.path.join(COS_DIR, "graph")]
+                    spawn_background(cmd, "launchd-poll.log")
+                    self._send_json({"message": "Checking. The result goes to the poll log."})
+            except Exception as exc:
+                self._send_json({"ok": False, "message": "⚠️ " + str(exc)[:300]}, 200)
             return
 
         if self.path in ("/models-save", "/models-key", "/models-list", "/models-test"):

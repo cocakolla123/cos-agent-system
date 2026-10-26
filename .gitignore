@@ -39,3 +39,6 @@ dashboard/usage.jsonl
 dashboard/poll-quiet.json
 evals/longrun/world_full/items.json
 __pycache__/
+dashboard/connections.json
+dashboard/fetch-state.json
+dashboard/inbox/
