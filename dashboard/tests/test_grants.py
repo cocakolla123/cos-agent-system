@@ -90,11 +90,14 @@ class TestShippedDefaults(unittest.TestCase):
         import sys
         sys.path.insert(0, DASH)
         import validate_config
+        # only when the configured list is used as it is (research_broad_grant)
         findings = validate_config.validate(
-            {"research_tools": "Read,Edit,Write,Glob,Grep,Agent"})
+            {"research_tools": "Read,Edit,Write,Glob,Grep,Agent", "research_broad_grant": True})
         self.assertTrue(any(f["level"] == "error" and
                             f["field"] == "research_tools"
                             for f in findings))
+        # otherwise the server builds the grant, and an empty list is fine
+        self.assertEqual(validate_config.validate({"research_tools": ""}), [])
 
 
 if __name__ == "__main__":
