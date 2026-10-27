@@ -890,7 +890,8 @@ PAGE_TEMPLATE = """<!doctype html>
     </div>
     <button class="search-btn" onclick="paletteOpen()" title="Jump to a task or a view"><span>Jump to…</span><kbd>⌘K</kbd></button>
     <button class="small" onclick="ctxOpen()" title="Paste text or attach md/txt/pdf/docx — seeds the knowledge graph with your own facts">Add context</button>
-    <button class="small primary" onclick="pollNow()" title="Full sweep: checks every configured connector plus the general re-check">Poll now</button>
+    <button class="small primary" onclick="pollNow()" title="Quick sweep: anything new on every connector since the last tick, plus the queue re-check">Poll now</button>
+    <button class="small" onclick="deepSweep()" title="Full research crawl: re-reads your accounts from scratch and rebuilds the picture — slow and the most expensive single run there is">Deep sweep</button>
   </div>
 </header>
 <div class="content-grid"><div class="content">
@@ -1221,6 +1222,14 @@ async function pollNow() {{
   const res = await post("/poll-now", {{}});
   el.textContent = res.message;
   setTimeout(() => location.reload(), 1500);
+}}
+async function deepSweep() {{
+  if (!confirm("Deep sweep re-reads your accounts from scratch (the full research crawl). " +
+               "It runs in the background for a while and is the most expensive single run. Start it?")) return;
+  const el = document.getElementById("pollResult");
+  el.textContent = "Deep sweep started — the crawl runs in the background (research.log)...";
+  const res = await post("/start-research", {{}});
+  el.textContent = res.message;
 }}
 let selectedDaysByConnector = {{}};
 for (const [k, v] of Object.entries({selected_days_by_connector_json})) {{
@@ -3321,7 +3330,7 @@ class Handler(BaseHTTPRequestHandler):
             return
 
         if self.path == "/poll-now":
-            # "Poll now" is a FULL sweep: every configured connector's
+            # "Poll now" is the QUICK sweep: every configured connector's
             # anything-new scan (--scope=all of them) plus the general
             # re-check — not just the bare general sweep.
             poll_cfg = read_json(os.path.join(DASHBOARD_DIR, "poll-config.json"),

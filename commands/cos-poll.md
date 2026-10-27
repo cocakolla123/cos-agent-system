@@ -15,10 +15,12 @@ dir from the deployment before touching any file), and/or `--force` (ignore the 
 `--scope` is given and this is a bare manual invocation (not via `poll-tick.sh`), run a
 `general` sweep (below) only.
 
-**Dashboard "Poll now" = full sweep.** The dashboard passes `--scope=<every configured
-connector> --force`. In that case run **every** listed connector's anything-new scan AND the
-`general` scope afterward unconditionally (not only on escalation) — the user pressed the
-button to get a complete check of messages, email, tickets, calendar, and the queue, right now.
+**Dashboard "Poll now" = the quick sweep, run immediately.** The dashboard passes
+`--scope=<every configured connector> --force`. Run every listed connector's anything-new scan
+AND the `general` scope afterward — but each stays as lightweight as a scheduled tick: a narrow
+since-last-check window per connector, no rediscovery, no re-reading of threads nothing new
+arrived on. Deep rediscovery is `/cos-research`'s job (the dashboard's "Deep sweep" button),
+never this command's.
 
 You run in the main session as the orchestrator. Holds no mutating tool — same posture as
 `/cos`. Each scope is intentionally narrow — re-checking known things is cheap; rediscovering
