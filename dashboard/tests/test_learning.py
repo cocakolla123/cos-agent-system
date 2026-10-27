@@ -168,9 +168,11 @@ class TestSnapshotRollback(unittest.TestCase):
 
 
 class TestToggle(unittest.TestCase):
-    def test_defaults_on(self):
+    def test_defaults(self):
+        # learning is on; changing its own code is opt-in (fixes are drafted as tasks)
         self.assertTrue(learning.self_learning_enabled({}))
-        self.assertTrue(learning.self_modify_enabled({}))
+        self.assertFalse(learning.self_modify_enabled({}))
+        self.assertTrue(learning.self_modify_enabled({"self_modify_code": True}))
 
     def test_master_switch_off_disables_both(self):
         cfg = {"self_learning": False, "self_modify_code": True}

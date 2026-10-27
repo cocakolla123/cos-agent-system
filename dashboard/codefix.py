@@ -26,6 +26,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import shlex
 import subprocess
 
 import graph
@@ -82,10 +83,34 @@ def prepare(repo, slug, ws_dir):
     return {"repo": repo, "slug": slug, "branch": branch, "base": base, "worktree": tree}
 
 
+# what a test run inherits from the environment: enough to find tools, never
+# the keys and tokens the dashboard or the user's shell may hold
+TEST_ENV_KEEP = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TERM", "PYTHONPATH",
+                 "VIRTUAL_ENV", "JAVA_HOME", "GOPATH", "GOROOT", "NODE_PATH")
+SHELLS = {"sh", "bash", "zsh", "dash", "fish", "ksh", "csh", "tcsh", "cmd", "powershell", "pwsh"}
+
+
+def test_argv(test_cmd):
+    """The test command as a program and its arguments, run without a shell:
+    no pipes, redirects, ';' or '&&', and no shell as the program. A suite that
+    needs several steps belongs in a script in the repo, named here."""
+    argv = shlex.split(test_cmd) if isinstance(test_cmd, str) else list(test_cmd)
+    if not argv:
+        raise FixError("empty test command")
+    if os.path.basename(argv[0]).lower() in SHELLS:
+        raise FixError("the test command may not be a shell; name the test runner or a script")
+    return argv
+
+
 def run_tests(tree, test_cmd, timeout=900):
-    """Run the repo's test command in the worktree. Returns (exit_code, tail)."""
-    p = subprocess.run(test_cmd, cwd=tree, shell=True, capture_output=True,
-                       text=True, timeout=timeout)
+    """Run the repo's test command in the worktree. Returns (exit_code, tail).
+
+    Not a sandbox: the tests run as the user, with file and network access.
+    What this does guarantee is no shell parsing of the command and no
+    credentials in the environment it runs with."""
+    env = {k: v for k, v in os.environ.items() if k in TEST_ENV_KEEP}
+    p = subprocess.run(test_argv(test_cmd), cwd=tree, shell=False, capture_output=True,
+                       text=True, timeout=timeout, env=env)
     out = (p.stdout + "\n" + p.stderr).strip().splitlines()
     return p.returncode, "\n".join(out[-TEST_TAIL_LINES:])
 
@@ -107,7 +132,12 @@ def finalize(fix, test_cmd, title, body, task_id, ws_dir, base_branch="main",
         raise FixError("no changes on %s: nothing to propose" % branch)
     diff = _git(tree, "diff", "%s...HEAD" % base)
     stat = _git(tree, "diff", "--stat", "%s...HEAD" % base).splitlines()
+    tested = _git(tree, "rev-parse", "HEAD")
     code, tail = run_tests(tree, test_cmd)
+    if _git(tree, "rev-parse", "HEAD") != tested or _git(tree, "status", "--porcelain", "--untracked-files=no"):
+        # the test run itself changed the branch or tracked files: what passed
+        # is not what would be pushed
+        code, tail = (code or 1), tail + "\nthe test run changed the branch or its files; not approvable"
     fixes = os.path.join(os.path.abspath(ws_dir), FIX_DIR)
     diff_file = os.path.join(fixes, fix["slug"] + ".diff")
     with open(diff_file, "w") as f:
@@ -133,6 +163,7 @@ def finalize(fix, test_cmd, title, body, task_id, ws_dir, base_branch="main",
         "diff_file": diff_file,
         "test_command": _field(test_cmd),
         "test_exit": str(code),
+        "tested_commit": tested,
         "test_summary": _field(tail.splitlines()[-1] if tail else ""),
         "pr_title": _field(title),
         "pr_body": _field(body),
@@ -187,9 +218,15 @@ def open_pr(entry, gh="gh", remote="origin"):
     p = _run(["git", "merge-base", "--is-ancestor", entry["base_commit"], branch], tree)
     if p.returncode != 0:
         raise FixError("branch %s no longer descends from its base commit" % branch)
+    # push exactly the commit whose tests passed, nothing added since
+    tested = entry.get("tested_commit") or ""
+    if not re.match(r"^[0-9a-f]{40}$", tested):
+        raise FixError("no tested commit recorded; run the fix flow again")
+    if _git(tree, "rev-parse", "refs/heads/" + branch) != tested:
+        raise FixError("branch %s has changed since its tests passed; run the fix flow again" % branch)
     # push from the main checkout: a remote given as a relative path is
     # relative to it, not to the worktree (the branch is shared by both)
-    _git(entry["repo"], "push", "-u", remote, branch)
+    _git(entry["repo"], "push", "-u", remote, "%s:refs/heads/%s" % (tested, branch))
     p = _run([gh, "pr", "create", "--base", entry.get("base_branch", "main"),
               "--head", branch, "--title", entry.get("pr_title", branch),
               "--body", (entry.get("pr_body", "") + "\n\nTests: `%s` passed. "

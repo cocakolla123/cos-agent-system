@@ -47,10 +47,13 @@ def validate(config, available_tools=None):
     if not isinstance(config, dict):
         return [_finding("error", "", "config is not a JSON object")]
 
-    # 1. baseline tool grants
+    # 1. baseline tool grants. research_tools is only a list of extra read-only
+    # MCP tools now: server.py builds the research grant itself (grants.py),
+    # unless research_broad_grant asks for the configured list as it is.
+    broad = bool(config.get("research_broad_grant"))
     for field, needed in _BASELINE.items():
         val = config.get(field)
-        if val is None:
+        if val is None or (field == "research_tools" and not broad):
             continue  # a missing grant falls back to a safe default elsewhere
         grant = {t.strip() for t in str(val).split(",") if t.strip()}
         missing = needed - grant
@@ -63,7 +66,12 @@ def validate(config, available_tools=None):
     # 1b. research needs SOME Bash grant; flag network-capable or unscoped
     # grants as broader than the shipped default (review finding, 2026-10-05).
     rt = config.get("research_tools")
-    if rt is not None:
+    if broad:
+        findings.append(_finding(
+            "warn", "research_broad_grant",
+            "the research crawl uses research_tools exactly as written, instead of the "
+            "narrow default (Bash only for cos_tool.py, writes only in the workspace)"))
+    if rt is not None and broad:
         grant = {t.strip() for t in str(rt).split(",") if t.strip()}
         if not any(g == "Bash" or g.startswith("Bash(") for g in grant):
             findings.append(_finding(
@@ -80,7 +88,7 @@ def validate(config, available_tools=None):
             findings.append(_finding(
                 "warn", field,
                 "unscoped Bash grant — this subprocess can reach the network "
-                "(curl etc.); the shipped default scopes it to Bash(python3:*)"))
+                "(curl etc.); the shipped default allows only dashboard/cos_tool.py"))
         for net in ("WebSearch", "WebFetch"):
             if net in grant:
                 findings.append(_finding(

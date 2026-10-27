@@ -14,6 +14,7 @@
 # include wherever `claude` is installed — a launchd job's default environment often doesn't
 # include /usr/local/bin, which breaks this silently otherwise (see PLAN.md lessons-learned).
 set -euo pipefail
+umask 077   # the graph, inbox and logs it writes hold account content
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DASH_DIR="${1:-$SCRIPT_DIR}"

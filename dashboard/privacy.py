@@ -92,22 +92,42 @@ def scan_text(text, tokens, is_markdown=False):
     return out
 
 
+# Fail closed: every file is scanned as text, whatever its name. A binary file
+# is refused unless it is an image or a font; a file that cannot be read, or is
+# too large to read, is refused too. (Before 2026-10-27 the scan read only seven
+# extensions and silently passed everything else, .jsonl and .html included.)
+SAFE_BINARY = (".png", ".jpg", ".jpeg", ".gif", ".ico", ".webp", ".bmp",
+               ".woff", ".woff2", ".ttf", ".otf", ".eot")
+MAX_SCAN_BYTES = 64 * 1024 * 1024
+
+
 def scan_tree(root, tokens):
     """Walk ``root`` and return {relpath: [violations]} (empty dict = clean)."""
     found = {}
     for dirpath, dirnames, filenames in os.walk(root):
         dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS]
         for fname in filenames:
-            if not fname.endswith(SCAN_EXTENSIONS):
-                continue
             path = os.path.join(dirpath, fname)
-            try:
-                text = open(path, encoding="utf-8", errors="replace").read()
-            except OSError:
+            rel = os.path.relpath(path, root)
+            if os.path.islink(path):
+                found[rel] = [("symlink", "links are not published")]
                 continue
-            viols = scan_text(text, tokens, is_markdown=fname.endswith(".md"))
+            try:
+                if os.path.getsize(path) > MAX_SCAN_BYTES:
+                    found[rel] = [("too large to scan", fname)]
+                    continue
+                with open(path, "rb") as f:
+                    raw = f.read()
+            except OSError as e:
+                found[rel] = [("unreadable", str(e)[:60])]
+                continue
+            if b"\x00" in raw[:8192]:
+                if not fname.lower().endswith(SAFE_BINARY):
+                    found[rel] = [("binary file not scanned", fname)]
+                continue
+            viols = scan_text(raw.decode("utf-8", "replace"), tokens, is_markdown=fname.endswith(".md"))
             if viols:
-                found[os.path.relpath(path, root)] = viols
+                found[rel] = viols
     return found
 
 

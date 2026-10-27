@@ -245,6 +245,33 @@ def run_model(config_dir, prompt, claude_bin="claude", job="poll_direct"):
     return res.stdout, (res.record or {}).get("cost_usd")
 
 
+class ExtractionError(RuntimeError):
+    """The model's reply could not be read; nothing was acknowledged."""
+
+
+def record_problems(r):
+    """What is wrong with one model record ([] = usable). The same checks the
+    benchmark applies before its ingest (evals/schema.py), minus the kind list:
+    the graph accepts new kinds."""
+    if not isinstance(r, dict):
+        return ["not an object"]
+    errs = []
+    for k in ("kind", "workspace", "key"):
+        if not isinstance(r.get(k), str) or not r.get(k).strip():
+            errs.append("needs %s" % k)
+    if r.get("attrs") is not None and not isinstance(r.get("attrs"), dict):
+        errs.append("attrs must be an object")
+    conf = r.get("confidence", 1.0)
+    if not isinstance(conf, (int, float)) or not 0 <= conf <= 1:
+        errs.append("confidence must be 0..1")
+    for e in r.get("edges") or []:
+        if not (isinstance(e, dict) and e.get("to_kind") and e.get("to_key") and e.get("type")):
+            errs.append("bad edge")
+    if r.get("edges") is not None and not isinstance(r.get("edges"), list):
+        errs.append("edges must be a list")
+    return errs
+
+
 # ---------------------------------------------------------------- waiting list
 
 def _read_pending(config_dir):
@@ -267,10 +294,14 @@ def _write_pending(config_dir, rows):
         if os.path.exists(path):
             os.remove(path)
         return
-    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    tmp = path + ".tmp"           # written whole, then swapped in: a crash leaves the old list
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
 
 
 def _scan_state(config_dir):
@@ -284,6 +315,24 @@ def _scan_state(config_dir):
 def _save_scan_state(config_dir, st):
     with open(os.path.join(config_dir, SCAN_STATE), "w") as f:
         json.dump(st, f, indent=1)
+
+
+def _note_failure(config_dir, now):
+    st = _scan_state(config_dir)
+    st["read_failures"] = int(st.get("read_failures") or 0) + 1
+    st["last_failure"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+    _save_scan_state(config_dir, st)
+
+
+def _in_backoff(config_dir, now):
+    import datetime as _dt
+    st = _scan_state(config_dir)
+    n = int(st.get("read_failures") or 0)
+    if not n or not st.get("last_failure"):
+        return False
+    t = _dt.datetime.fromisoformat(st["last_failure"].replace("Z", "+00:00"))
+    wait = min(60 * 2 ** (n - 1), 1440)
+    return (now - t).total_seconds() < wait * 60
 
 
 def flush_settings(config_dir):
@@ -461,7 +510,12 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     when something urgent is waiting or the next batch is due."""
     import datetime as _dt
     now = now or _dt.datetime.now(_dt.timezone.utc)
-    fetched = (_fetch or connections.fetch_all)(config_dir)
+    # bookmarks are not saved yet: they move only once what was fetched is safe
+    # on the waiting list (or was dropped by the sift), and never on a dry run
+    if _fetch:
+        fetched = _fetch(config_dir)
+    else:
+        fetched = connections.fetch_all(config_dir, commit=False)
     new = fetched["items"]
     g = graphlib.Graph.load(graph_dir) if os.path.isdir(graph_dir) else graphlib.Graph()
     tasks = open_tasks(g, now)
@@ -478,20 +532,27 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     out = {"fetched": fetched["per_source"], "new": len(new), "kept": len(kept_new), "dropped": dropped,
            "line": sift.summary_line(kept_new, dropped), "records": 0, "cost_usd": 0.0,
            "waiting": len(waiting), "drafts": 0}
+    if dry_run:
+        out["dry_run"] = True
+        return out
+    # durable first, then acknowledge: the waiting list holds every kept item
+    # before the bookmarks move past it, and until a read has gone into the graph
+    _write_pending(config_dir, waiting)
+    if not _fetch:
+        connections.commit_fetch(config_dir, fetched)
     if not waiting:
         out["quiet"] = sorted(fetched["per_source"])
         return out
     urgent = [r for r in waiting if r.get("urgent")]
     due = batch_due(config_dir, now) if scan else True
     if scan and not urgent and not due:
-        if not dry_run:
-            _write_pending(config_dir, waiting)
         out["queued"] = True
         return out
-    if dry_run:
-        out["dry_run"] = True
+    if scan and _in_backoff(config_dir, now):
+        # the last read failed: wait (1h, 2h, 4h... up to a day) rather than pay
+        # for the same failing read every five minutes; Check now still reads
+        out.update({"queued": True, "backoff": True})
         return out
-    _write_pending(config_dir, waiting)          # kept safe until the call succeeds
     out["urgent"] = len(urgent)
     kept = [r["item"] for r in waiting]
     for r in waiting:
@@ -517,20 +578,37 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     if kept:
         with open(INSTRUCTIONS) as f:
             prompt = build_prompt(f.read(), frame, kept, tasks)
-        text, c2 = call(config_dir, prompt)
+        try:
+            text, c2 = call(config_dir, prompt)
+        except Exception:
+            _note_failure(config_dir, now)
+            raise
         cost += c2 or 0.0
-        recs = extract_json_array(text) or []
+        parsed = extract_json_array(text)
+        if parsed is None:
+            # not a JSON array: nothing is acknowledged, the items stay waiting
+            _note_failure(config_dir, now)
+            raise ExtractionError("the model's reply was not a JSON array; %d items stay waiting"
+                                  % len(waiting))
+        recs = [r for r in parsed if not record_problems(r)]
+        out["invalid_records"] = len(parsed) - len(recs)
     import research
-    before = {n["id"] for n in g.query(type_="Action") if graphlib.is_open_action(n, now=now)}
-    research.ingest(g, recs, now=now)
-    try:
-        import correlate
-        correlate.correlate(g, now=now)
-    except Exception:  # noqa: BLE001
-        pass
-    g.save(graph_dir)
+    # load, change and save under one lock, on the graph as it is now: a
+    # dashboard edit made while the model was reading is kept, not overwritten
+    with graphlib.transaction(graph_dir):
+        g = graphlib.Graph.load(graph_dir) if os.path.isdir(graph_dir) else graphlib.Graph()
+        before = {n["id"] for n in g.query(type_="Action") if graphlib.is_open_action(n, now=now)}
+        research.ingest(g, recs, now=now)
+        try:
+            import correlate
+            correlate.correlate(g, now=now)
+        except Exception:  # noqa: BLE001
+            pass
+        g.save(graph_dir)
     _write_pending(config_dir, [])
     st = _scan_state(config_dir)
+    st.pop("read_failures", None)
+    st.pop("last_failure", None)
     st["last_flush"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     if not (scan and urgent and not due):        # a batch, or Check now
         st["last_batch"] = st["last_flush"]
@@ -557,7 +635,12 @@ def main(argv):
     if len(argv) < 2:
         sys.stderr.write("usage: poll_direct.py CONFIG_DIR GRAPH_DIR [--scan] [--dry-run]\n")
         return 2
-    res = check(argv[0], argv[1], dry_run="--dry-run" in argv, scan="--scan" in argv)
+    os.umask(0o077)       # the graph, inbox and waiting list hold account content
+    try:
+        res = check(argv[0], argv[1], dry_run="--dry-run" in argv, scan="--scan" in argv)
+    except ExtractionError as e:
+        print("check not applied: %s" % e)
+        return 1
     for sid, r in sorted(res["fetched"].items()):
         if not r.get("ok"):
             print("%s: error: %s" % (sid, r.get("error")))

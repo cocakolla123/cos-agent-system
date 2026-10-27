@@ -42,7 +42,7 @@ SNAPSHOT_DIR = "self-changes"
 # Feature toggle (the "auto self-learning mode" switch)
 # ---------------------------------------------------------------------------
 
-DEFAULTS = {"self_learning": True, "self_modify_code": True}
+DEFAULTS = {"self_learning": True, "self_modify_code": False}
 
 
 def self_learning_enabled(config):

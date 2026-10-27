@@ -115,7 +115,7 @@ DEFAULT_CONFIG = {
     # grant for /cos-learn — local file tools + Agent; NO external mutating
     # tool, so dontAsk is safe (external actions still go via the queue).
     "self_learning": True,
-    "self_modify_code": True,
+    "self_modify_code": False,   # opt-in: code changes are drafted as tasks until the user turns this on
     "learn_tools": "Read,Edit,Write,Bash(python3:*),Bash(git:*),Agent",
 }
 CONFIG_PATH_DEFAULT = os.path.join(TEMPLATE_DASHBOARD_DIR, "config.json")
@@ -213,9 +213,24 @@ LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
 # outside review caught it and the default narrowed 2026-10-05. WebSearch was
 # dropped for the same reason. MCP read tools get appended by /setup once
 # discovered; mutating MCP tools are never in this list.
-RESEARCH_TOOLS = CONFIG.get(
-    "research_tools",
-    "Read,Edit,Write,Bash(python3:*),Glob,Grep,Agent,ToolSearch")
+# 2026-10-27: an audit pointed out that Bash(python3:*) is a whole interpreter:
+# a crawl steered by a malicious mail or repo could read any file or reach the
+# network through it. The grant is now narrow and built here with absolute
+# paths: Bash runs only dashboard/cos_tool.py (fixed graph and account
+# operations), and files can be written only inside the workspace. An old
+# config's broad entries are replaced; MCP read tools it lists are kept.
+# research_broad_grant: true in config.json restores the old grant on purpose.
+COS_TOOL = os.path.join(TEMPLATE_DASHBOARD_DIR, "cos_tool.py")
+
+
+import grants as _grants
+
+
+def research_grant(cfg):
+    return _grants.research_grant(cfg, COS_DIR, COS_TOOL)
+
+
+RESEARCH_TOOLS = research_grant(CONFIG)
 # M12: the scheduler lesson, applied to the server too — schedulers and app
 # launchers often run with a minimal PATH that doesn't include `claude`.
 # Resolution order: env CLAUDE_BIN > config claude_bin > bare "claude".
@@ -666,8 +681,7 @@ def grant_mailbox_tools(server):
         CHAT_TOOLS = CONFIG["chat_tools"]
         POLL_TOOLS = CONFIG["poll_tools"]
         LEARN_TOOLS = CONFIG.get("learn_tools", DEFAULT_CONFIG["learn_tools"])
-        RESEARCH_TOOLS = CONFIG.get(
-            "research_tools", DEFAULT_CONFIG.get("research_tools", ""))
+        RESEARCH_TOOLS = research_grant(CONFIG)
     return changed
 
 
@@ -2366,7 +2380,7 @@ def update_graph_node(node_id, name=None, note=None, priority=None, status=None)
     mark-done). Locked read-modify-write; audit-logged; returns (ok, message)."""
     import graph as _g
     gdir = os.path.join(COS_DIR, "graph")
-    with _file_lock(os.path.join(gdir, "node-update")):
+    with _g.transaction(gdir):      # the same lock a check holds while it ingests
         gg = _g.Graph.load(gdir)
         n = gg.get(node_id)
         if n is None:
@@ -3316,7 +3330,7 @@ class Handler(BaseHTTPRequestHandler):
             # grant silently starved it of every one of those (first-run lesson).
             try:
                 spawn_background(
-                    [CLAUDE_BIN, "-p", "/global:cos-research --full", *model_args("research"),
+                    [CLAUDE_BIN, "-p", "/global:cos-research --full --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("research"),
                      "--permission-mode", "dontAsk",
                      "--allowedTools", RESEARCH_TOOLS,
                      "--output-format", "text"], "research.log", job="research")
@@ -3357,7 +3371,7 @@ class Handler(BaseHTTPRequestHandler):
                     # grant silently starves it (same lesson as first-run
                     # research; it happened again here).
                     spawn_background(
-                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
+                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", RESEARCH_TOOLS,
                          "--output-format", "text"], "accounts.log", job="accounts_probe")
@@ -3375,7 +3389,7 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 spawn_background(
                     [
-                        CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
+                        CLAUDE_BIN, "-p", "/global:cos-accounts --probe --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("accounts_probe"),
                         "--permission-mode", "dontAsk",
                         "--allowedTools", RESEARCH_TOOLS,
                         "--output-format", "text",
@@ -3414,7 +3428,7 @@ class Handler(BaseHTTPRequestHandler):
                 # the user finishes the browser login
                 try:
                     spawn_background(
-                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe", *model_args("accounts_probe"),
+                        [CLAUDE_BIN, "-p", "/global:cos-accounts --probe --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
                          "--allowedTools", POLL_TOOLS,
                          "--output-format", "text"], "accounts.log", job="accounts_probe")
@@ -3485,6 +3499,9 @@ def start_poll_ticker():
 
 
 def main():
+    # everything this process and its jobs write (graph, inbox, queue, logs)
+    # holds account content: owner-only, whatever the machine's umask
+    os.umask(0o077)
     if DEMO:
         # nothing is written and nothing runs; bind where --host says
         host = _arg_after("--host") or "127.0.0.1"

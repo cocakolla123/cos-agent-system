@@ -201,12 +201,20 @@ Each claim below names what enforces it, what it covers, and what it does not.
 - **Subprocess tool grants** (`dashboard/server.py`, `--allowedTools` under
   `--permission-mode dontAsk`; shipped defaults pinned by `tests/test_grants.py`):
   chat holds `Read,Agent` plus read-only connector tools; poll holds `Read,Edit,Agent`;
-  research holds `Read,Edit,Write,Bash(python3:*),Glob,Grep,Agent,ToolSearch` plus the
-  read-only connector tools `/setup` discovers. No subprocess holds a mutating connector
-  tool, and since 2026-10-05 none holds unscoped Bash or WebSearch (an outside review found
-  the earlier research default could reach the network; fixed, with a validator rule and a
-  pinned test). Not covered: a deployment owner can widen their own config.json;
-  `validate_config.py` warns when they do.
+  research and the account probe hold `Read,Glob,Grep,Agent,ToolSearch`, file writes only
+  inside the workspace (`Edit(//<workspace>/**)`), and Bash only for `dashboard/cos_tool.py`
+  (`dashboard/grants.py`), plus the read-only connector tools `/setup` discovers.
+  `cos_tool.py` is a fixed list of graph and account operations that take JSON files and
+  run no code from them. No subprocess holds a mutating connector tool, unscoped Bash or
+  WebSearch. History: an outside review on 2026-10-05 found unscoped Bash in the research
+  default; an audit on 2026-10-27 pointed out that the narrowed `Bash(python3:*)` was still a
+  whole interpreter that a crawl steered by a malicious message could use to read any file
+  or reach the network. An old config's broad entries are now ignored. Not covered: a
+  deployment owner can widen their own grants (`research_broad_grant: true`, or the learn
+  job's `learn_tools`, which keeps `Bash(python3:*)` and `Bash(git:*)` because it runs the
+  test suite; it starts only when the user reports a miss in chat, and since 2026-10-27 it
+  changes code only when `self_modify_code` is turned on, otherwise drafting the change as a
+  task); `validate_config.py` warns. Not a sandbox: the processes run as the user.
 - **Prompt injection**: injected text cannot trigger an external action, because the
   subprocess reading it holds no tool that sends or posts. Injected text CAN still shape
   what gets written locally: records, to-dos, drafts, and approval-queue proposals. The

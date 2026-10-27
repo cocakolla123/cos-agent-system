@@ -222,7 +222,9 @@ class TestConnections(unittest.TestCase):
         self.assertEqual(jc["updated"], "2026-10-13 09:30")
         jql = next(q for p, q, _ in Fake.seen if p.endswith("/search"))["jql"]
         self.assertIn('updated >= "2026-10-12 00:00"', jql)
-        g, gc = connections.fetch_github({"token": "t", "login": "dana-k"}, {}, base=self.base)
+        # a fixed bookmark: with none, the window is the last 14 days from today
+        g, gc = connections.fetch_github({"token": "t", "login": "dana-k"}, {"updated_at": "2026-10-01T00:00:00Z"},
+                                         base=self.base)
         self.assertEqual((g[0]["repo"], g[0]["number"], g[0]["assignees"]), ("org/api", 430, ["dana-k"]))
         self.assertEqual(gc["updated_at"], "2026-10-13T08:00:00Z")
         c, cc = connections.fetch_ical({"id": "cal", "url": self.base + "/cal.ics"}, {})

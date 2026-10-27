@@ -11,20 +11,29 @@ namespace. This command keeps the system's picture of those instances current: w
 logged in as, whether it still works, and which workspace it belongs to. The deterministic core
 is `dashboard/accounts.py`; the dashboard renders the results and pops the auth modal.
 
+**How you write:** this run has no Python interpreter. Its only Bash command is
+`python3 <tool> <command>` (the `--tool=<path>` the dashboard passes), and it writes files only
+inside the workspace (`--workspace=<path>`); put any JSON a command needs under
+`<workspace>/tmp/`. The commands: `accounts-list`, `accounts-detect <tools.json>`,
+`accounts-add <entry.json>`, `accounts-bind <id> <workspace>`, `accounts-status <id> ok|failed
+[--identity X] [--error X]`, `accounts-declined <id>`, `accounts-auth <id> [--reason X] [--url
+https://...]`, `accounts-summary`, `workspace-connect <workspace dir> <workspace> <connector>`,
+`agents-propose <workspace>/graph`.
+
 **Hard rules:** read-only against every connector; never store tokens (status + identity only);
-never enqueue an auth ask for an account the user has **declined** (`accounts.is_declined` —
+never enqueue an auth ask for an account the user has **declined** (`accounts-declined <id>` —
 Refuse is permanent); ask the user nothing except authorization, and only via the dashboard
 popup mechanism (the auth-request queue), never inline.
 
 ## Step 1 — Enumerate instances
 Merge two sources:
 - `connector_accounts` in `dashboard/config.json` (the configured accounts), via
-  `accounts.load_accounts(config)`.
-- The live tool list: `accounts.detect_instances(<discovered MCP tool names>)` — this catches
+  `python3 <tool> accounts-list`.
+- The live tool list: `python3 <tool> accounts-detect <workspace>/tmp/tools.json` (the discovered MCP tool names) — this catches
   instances the config doesn't know yet (e.g. the user just added `gmail-work` in Claude's
-  connector settings). `accounts.multi_account_kinds` flags kinds with ≥2 instances. For each
+  connector settings). its `multi_account_kinds` flags kinds with ≥2 instances. For each
   unconfigured instance, draft a new `connector_accounts` entry (id from the server name, kind
-  from the tool signals, `tool_prefix` from the namespace) and add it to config.json.
+  from the tool signals, `tool_prefix` from the namespace) and add it with `accounts-add`.
 
 ## Step 2 — Probe each instance (identity + auth)
 For each account, one cheap **identity-revealing read-only call** via its `probe_tool`:
@@ -32,12 +41,12 @@ For each account, one cheap **identity-revealing read-only call** via its `probe
 - messaging: the self-identity/auth-test read;
 - calendar: the primary calendar's id;
 - anything else: the cheapest 1-item read the instance offers.
-Record with `accounts.write_status(dashboard_dir, id, ok, identity=..., error=...)`. An auth/
+Record with `python3 <tool> accounts-status <id> ok|failed --identity ... --error ...`. An auth/
 permission failure is status, not a crash — continue with the rest.
 
 ## Step 3 — Auth asks (popup only, Refuse is forever)
-For each account whose probe failed with an auth error AND `not accounts.is_declined(...)`:
-`accounts.enqueue_auth_request(dashboard_dir, id, reason, auth_url)` — the dashboard renders
+For each account whose probe failed with an auth error AND not declined (`accounts-declined <id>`):
+`python3 <tool> accounts-auth <id> --reason ... --url ...` — the dashboard renders
 the modal (Authorize / Not now / Refuse) and records the outcome. `auth_url` is the best
 available entry point: the connector's own auth URL if the error exposes one, else Claude's
 connector-settings page. Declined accounts are skipped everywhere and reported as
@@ -47,12 +56,12 @@ connector-settings page. Declined accounts are skipped everywhere and reported a
 For accounts with an identity but no `workspace`: infer — company-domain address matching a
 known employer workspace → that workspace; `.edu` → school; personal-domain (gmail.com etc.) →
 personal; a domain matching a freelance client in the graph → that client's workspace. Save the
-binding into `connector_accounts` and the workspace registry's `connectors[]`
-(`dashboard/workspaces.py`). Only a genuinely ambiguous identity generates a question — and even
+binding with `accounts-bind <id> <workspace>` and add the connector to the workspace registry
+with `workspace-connect <workspace dir> <workspace> <connector>`. Only a genuinely ambiguous identity generates a question — and even
 that goes through the dashboard (an open question via `cos-knowledge`), not an inline prompt.
 
 ## Step 5 — Update agents
-Run `factory.propose_agents(graph, accounts=accounts.load_accounts(config))`: workspaces with
+Run `python3 <tool> agents-propose <workspace>/graph`: workspaces with
 their own communication accounts get per-workspace comms agents (`cos-comms-<workspace>`)
 granted ONLY that workspace's instance tools. Propose additions/changes the same way `/setup`
 does (collision-safe, user approves before any agent file is written). Research modules
@@ -61,7 +70,7 @@ isolation follows automatically.
 
 ## Step 6 — Report
 Per account: state (connected ✓ / needs auth ✗ / declined 🚫 / unknown), identity, workspace,
-and the exact fix for anything broken. One-line summary from `accounts.summarize_accounts`.
+and the exact fix for anything broken. One-line summary from `python3 <tool> accounts-summary`.
 Forward a `Memory update:` to `cos-knowledge`. Nothing external was sent or modified.
 
 ## Local mailbox instances (M14)

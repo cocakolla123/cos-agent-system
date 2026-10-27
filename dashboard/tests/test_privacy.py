@@ -66,6 +66,20 @@ class TestScanTree(unittest.TestCase):
 
 
 class TestTokens(unittest.TestCase):
+    def test_every_file_type_is_scanned_and_unscannable_ones_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            for name, body in (("inbox.jsonl", b'{"from": "dana.kowalski@gmail.com"}\n'),
+                               ("page.html", b"<p>mail jordan.lee@outlook.com</p>"),
+                               ("Makefile", b"KEY=sk-" + b"a" * 40 + b"\n"),
+                               ("report.pdf", b"%PDF-1.4\x00\x01binary"),
+                               ("logo.png", b"\x89PNG\x00\x00"),
+                               ("ok.js", b"const host = 'api.example';\n")):
+                with open(os.path.join(d, name), "wb") as f:
+                    f.write(body)
+            found = privacy.scan_tree(d, [])
+        self.assertEqual(sorted(found), ["Makefile", "inbox.jsonl", "page.html", "report.pdf"])
+        self.assertEqual(found["report.pdf"][0][0], "binary file not scanned")
+
     def test_load_tokens_skips_comments_and_blanks(self):
         with tempfile.TemporaryDirectory() as d:
             open(os.path.join(d, privacy.TOKENS_FILENAME), "w").write(
