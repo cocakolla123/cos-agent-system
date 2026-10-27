@@ -1640,6 +1640,30 @@ def spawn_background(cmd, logname, job=None):
         log.close()
 
 
+def draft_missing_async(logname="launchd-poll.log"):
+    """Run poll_direct's draft-missing pass in the background. Every path
+    that mints tasks (crawl, tick, Poll now) calls this so a new task gets
+    its next step right away instead of waiting for a later poll; the pass
+    exits before any model call when nothing is missing, so idle calls are
+    free."""
+    cmd = [sys.executable, os.path.join(TEMPLATE_DASHBOARD_DIR, "poll_direct.py"),
+           DASHBOARD_DIR, os.path.join(COS_DIR, "graph"), "--draft-missing"]
+
+    def _run():
+        try:
+            with open(os.path.join(DASHBOARD_DIR, logname), "a") as f:
+                f.write("\n[draft] drafting next steps for tasks without one...\n")
+                f.flush()
+                subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, timeout=1200,
+                               cwd=ORCHESTRATOR_CWD,
+                               env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN})
+        except Exception:
+            pass
+
+    import threading
+    threading.Thread(target=_run, daemon=True, name="draft-missing").start()
+
+
 def maybe_start_learn_loop(message):
     """If ``message`` reads as a correction and self-learning is on: enqueue it,
     launch the /cos-learn loop in the background (non-blocking), and return the
@@ -3219,9 +3243,52 @@ class Handler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 output = (result.stdout or result.stderr or "").strip()
+                draft_missing_async("launchd-poll.log")
                 self._send_json({"message": output[:2000] or "(no output)"})
             except subprocess.TimeoutExpired:
                 self._send_json({"message": "timed out after 300s"}, 504)
+            return
+
+        if self.path == "/draft-next":
+            # Draft a next step NOW — one task (id) or every open task that
+            # has none — via poll_direct's drafting step. Entries land in the
+            # approval queue as pending; nothing external is sent by this.
+            cmd = [sys.executable, os.path.join(TEMPLATE_DASHBOARD_DIR, "poll_direct.py"),
+                   DASHBOARD_DIR, os.path.join(COS_DIR, "graph"), "--draft-missing"]
+            tid = str(data.get("id") or "").strip()
+            if tid:
+                cmd += ["--task", tid]
+            try:
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=280,
+                                      cwd=ORCHESTRATOR_CWD,
+                                      env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN})
+                lines = [l for l in (proc.stdout or proc.stderr or "").strip().splitlines() if l.strip()]
+                self._send_json({"message": lines[-1] if lines else "(no output)"})
+            except subprocess.TimeoutExpired:
+                self._send_json({"message": "timed out after 280s"}, 504)
+            return
+
+        if self.path == "/fix-now":
+            # Draft a real code fix via /cos-fix: a test + patch on a
+            # cos/fix-* branch, repo tests run by codefix.finalize, the diff
+            # queued for approval. Nothing is pushed until the user approves
+            # that card (and the fix flow has no merge path at all).
+            tid = str(data.get("id") or "").strip()
+            if not tid:
+                self._send_json({"message": "missing task id"}, 400)
+                return
+            try:
+                spawn_background(
+                    [CLAUDE_BIN, "-p", "/global:cos-fix %s" % tid,
+                     *model_args("learn"),
+                     "--permission-mode", "dontAsk",
+                     "--allowedTools", LEARN_TOOLS,
+                     "--output-format", "text"], "fix.log", job="learn")
+                self._send_json({"message": "fix run started in the background — the "
+                                            "drafted diff lands in the approval queue "
+                                            "(details in fix.log)"})
+            except OSError as exc:
+                self._send_json({"message": f"could not start the fix: {exc}"}, 500)
             return
 
         if self.path == "/set-poll-mode":
@@ -3329,11 +3396,20 @@ class Handler(BaseHTTPRequestHandler):
             # persist the graph and Glob/Grep the local FS — the narrow polling
             # grant silently starved it of every one of those (first-run lesson).
             try:
-                spawn_background(
+                proc = spawn_background(
                     [CLAUDE_BIN, "-p", "/global:cos-research --full --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("research"),
                      "--permission-mode", "dontAsk",
                      "--allowedTools", RESEARCH_TOOLS,
                      "--output-format", "text"], "research.log", job="research")
+
+                def _draft_after(p=proc):
+                    # a crawl must never leave its new tasks actionless
+                    p.wait()
+                    draft_missing_async("research.log")
+
+                import threading
+                threading.Thread(target=_draft_after, daemon=True,
+                                 name="draft-after-research").start()
                 self._send_json({"message": "research started in the background — "
                                             "watch the Command Center fill in "
                                             "(details in research.log)"})
@@ -3485,6 +3561,9 @@ def start_poll_ticker():
                 subprocess.run(["/bin/bash", script], cwd=DASHBOARD_DIR,
                                env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN},
                                timeout=1800)
+                # whatever the tick minted must not wait for the next tick
+                # to get its draft (free when nothing is missing)
+                draft_missing_async("launchd-poll.log")
             except Exception as exc:
                 try:
                     with open(os.path.join(DASHBOARD_DIR, "launchd-poll.err"), "a") as f:
@@ -3498,10 +3577,24 @@ def start_poll_ticker():
     return t
 
 
+def _sync_gmail_accounts():
+    """sections.py builds Gmail deep links for mail-derived tasks; tell it
+    which connector id is which mailbox so the link opens the right account."""
+    try:
+        import sections
+        sections.GMAIL_ACCOUNTS = {
+            str(acc.get("id")): str(acc.get("account") or "")
+            for acc in (CONFIG.get("connector_accounts") or [])
+            if str(acc.get("kind")) == "email" and acc.get("account")}
+    except Exception:
+        pass
+
+
 def main():
     # everything this process and its jobs write (graph, inbox, queue, logs)
     # holds account content: owner-only, whatever the machine's umask
     os.umask(0o077)
+    _sync_gmail_accounts()
     if DEMO:
         # nothing is written and nothing runs; bind where --host says
         host = _arg_after("--host") or "127.0.0.1"

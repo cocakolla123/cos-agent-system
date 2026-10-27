@@ -50,6 +50,7 @@ class TestShippedDefaults(unittest.TestCase):
         import grants
         g = _tokens(grants.research_grant({}, "/home/u/cos/ws", "/home/u/cos/dashboard/cos_tool.py"))
         self.assertEqual(g, ["Read", "Glob", "Grep", "Agent", "ToolSearch", "Edit(//home/u/cos/ws/**)",
+                             "Write(//home/u/cos/ws/**)",
                              "Bash(python3 /home/u/cos/dashboard/cos_tool.py:*)"])
         self.assertFalse(any(t in ("Bash", "Write", "Edit", "Bash(python3:*)") for t in g))
 

@@ -7,8 +7,12 @@ is a whole interpreter: a crawl steered by a malicious message could read any
 file or reach the network through it. The grant is now:
 
   Read, Glob, Grep, Agent, ToolSearch     reading
-  Edit(//<workspace>/**)                  writing, only inside the workspace
-                                          (Claude Code's Edit rules cover Write too)
+  Edit(//<workspace>/**)                  editing, only inside the workspace
+  Write(//<workspace>/**)                 creating files, only inside the workspace
+                                          (the Edit rule alone left the Write TOOL
+                                          unloaded: usage.py derives --tools from
+                                          grant names, so a crawl could not stage
+                                          its record batch; observed 2026-10-27)
   Bash(python3 <dashboard>/cos_tool.py:*) the fixed graph and account operations
 
 An existing config's broad entries (Bash, Write, Edit, Bash(...)) are replaced;
@@ -26,6 +30,7 @@ BROAD = set(READ) | {"Edit", "Write"}
 
 def research_base(cos_dir, cos_tool):
     return READ + ["Edit(/%s/**)" % os.path.abspath(cos_dir),
+                   "Write(/%s/**)" % os.path.abspath(cos_dir),
                    "Bash(python3 %s:*)" % os.path.abspath(cos_tool)]
 
 

@@ -402,6 +402,10 @@ These tasks were just found. For EACH task write exactly one next step {name} ca
     <account>.send_message in <#channel or DM with Name>, with text: "<message>"
   using one of these accounts: {accounts}. Reply where the ask came from; for a meeting,
   send the follow-up to the person who asked, by email unless the meeting was on Slack.
+- When the task is a bug, failing CI or code change in one of {name}'s own repositories,
+  write action_type "self_do": first line "Run /cos-fix <task id>" (the id from the ### task
+  header), then the concrete steps you would take: the repo, the likely cause, the files to
+  look at, the test to add.
 - Otherwise (write a document, prepare slides, review code, fill a form, book something)
   write action_type "self_do", and proposed_tool_call is the work itself: an outline with
   real section headings and the points said in the meeting under each, numbered steps, or
@@ -462,8 +466,10 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
             if i:
                 r = render_item(i)
                 src.append(_clip(r, 12000) if i.get("connector") == "transcript" else r)
-        blocks.append("### task %s\nname: %s\nworkspace: %s\ndue: %s\nwaiting on: %s\nsources:\n%s\n" % (
+        about = a.get("detail") or a.get("note") or ""
+        blocks.append("### task %s\nname: %s\nworkspace: %s\ndue: %s\nwaiting on: %s\n%ssources:\n%s\n" % (
             n["id"], n.get("name"), n.get("workspace"), a.get("due", "none"), a.get("blocked_on", "nobody"),
+            ("about: %s\n" % " ".join(str(about).split())) if about else "",
             "\n".join(src) or "(none)"))
     prompt = DRAFT_RULES.format(name=user.get("name") or "the user", today=now.date().isoformat(),
                                 accounts=accounts, tasks="\n".join(blocks))
@@ -498,6 +504,38 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
                     f.write("- %s: %s\n" % (k, v))
                 written += 1
     return written, cost or 0.0
+
+
+def draft_missing(config_dir, graph_dir, task_id=None, now=None, claude_bin=None):
+    """Draft a next step for every open task that has none (no pending queue
+    entry and no next_step) — the on-demand form of the check's drafting step,
+    so a task minted by a crawl or poll is never left actionless until some
+    later poll. Free when nothing is missing: no model call is made then.
+    Returns (entries written, cost)."""
+    import datetime as _dt
+    now = now or _dt.datetime.now(_dt.timezone.utc)
+    g = graphlib.Graph.load(graph_dir) if os.path.isdir(graph_dir) else graphlib.Graph()
+    queue_path = os.path.join(os.path.dirname(os.path.abspath(graph_dir)), "approval-queue.md")
+    covered = pending_queue_tasks(queue_path)
+    nodes = []
+    for n in g.query(type_="Action"):
+        if not graphlib.is_open_action(n, now=now):
+            continue
+        if task_id and n["id"] != task_id:
+            continue
+        a = n.get("attrs") or {}
+        if n["id"] in covered or a.get("next_step"):
+            continue
+        nodes.append(n)
+    if not nodes:
+        return 0, 0.0
+    user = connections.user_identity(config_dir)
+    bin_ = claude_bin or os.environ.get("CLAUDE_BIN", "claude")
+
+    def call(cfg, prompt, job="draft_direct"):
+        return run_model(cfg, prompt, claude_bin=bin_, job=job)
+
+    return draft_new_tasks(config_dir, g, nodes, {}, user, now, call, queue_path)
 
 
 # ---------------------------------------------------------------- the check
@@ -636,6 +674,16 @@ def main(argv):
         sys.stderr.write("usage: poll_direct.py CONFIG_DIR GRAPH_DIR [--scan] [--dry-run]\n")
         return 2
     os.umask(0o077)       # the graph, inbox and waiting list hold account content
+    if "--draft-missing" in argv:
+        tid = argv[argv.index("--task") + 1] if "--task" in argv else None
+        try:
+            written, _cost = draft_missing(argv[0], argv[1], task_id=tid)
+        except Exception as e:
+            print("drafting failed: %s" % e)
+            return 1
+        print(("%d draft(s) added to the approval queue" % written) if written
+              else "nothing to draft: every open task already has a next step")
+        return 0
     try:
         res = check(argv[0], argv[1], dry_run="--dry-run" in argv, scan="--scan" in argv)
     except ExtractionError as e:

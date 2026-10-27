@@ -31,6 +31,7 @@ Attribute conventions a discovery module sets (all optional):
 from __future__ import annotations
 
 import html as _html
+import re
 
 import correlate
 import graph as _graph
@@ -59,6 +60,28 @@ def _pri(n):
     # same default as research.DEFAULT_PRIORITY and the task board
     # effective, not stored: a medium item becomes high the week it is due
     return _PRIORITY_RANK.get(_graph.effective_priority(n), 1)
+
+
+# gmail-derived tasks carry hex thread ids, not urls; server.py fills this
+# with {connector id -> account email} so the link opens the right mailbox
+GMAIL_ACCOUNTS = {}
+
+
+def _gmail_url(n):
+    a = n.get("attrs", {}) or {}
+    ids = []
+    for k in ("thread", "newest_thread", "threads", "refs", "evidence"):
+        v = a.get(k)
+        for x in (v if isinstance(v, (list, tuple)) else [v]):
+            if isinstance(x, str) and re.fullmatch(r"[0-9a-f]{15,17}", x):
+                ids.append(x)
+    if not ids:
+        return ""
+    email = GMAIL_ACCOUNTS.get(str(n.get("source") or ""))
+    base = "https://mail.google.com/mail/"
+    if email:
+        base += "?authuser=%s" % email
+    return base + "#all/" + ids[0]
 
 
 def _url(n):
@@ -422,7 +445,10 @@ def _todo_row_data(g, n):
         "priority": _graph.importance(n),
         "due": str(a.get("due", "")),
         "ws": n.get("workspace", ""),
-        "url": _url(n),
+        "url": _url(n) or _gmail_url(n),
+        "detail": " ".join(str(x) for x in (
+            a.get("detail"), a.get("derived_reason"), a.get("caution")) if x),
+        "src": str(n.get("source") or ""),
         "duelabel": _days_label(n) + _quiet_label(n),
         "stale": "1" if _graph.is_gone_quiet(n) else "",
         "overdue": "1" if _graph.is_overdue(n) else "",
@@ -467,7 +493,9 @@ def _filter_bar(counts, kinds=None):
             '<label class="tf-sel"><span>Type</span><select id="todoKind" onchange="todoFilter()">%s</select></label>'
             '<label class="tf-sel"><span>Sort</span><select id="todoSort" onchange="todoSort(this.value)">%s</select></label>'
             '<input id="todoSearch" class="tf-search" placeholder="Filter by words" '
-            'oninput="todoFilter()" aria-label="Filter tasks by words"/></div></div>' % (
+            'oninput="todoFilter()" aria-label="Filter tasks by words"/>'
+            '<button type="button" class="small" onclick="todoDraftAll(this)">Draft missing next steps</button>'
+            '</div></div>' % (
                 chips, kind_opts, sort_opts))
 
 
@@ -566,12 +594,14 @@ def render_todo_board(g, ws=None, limit=100, attached=None, used=None):
       </select>
       <button class="primary" onclick="todoDone()">Mark done</button>
       <button class="small" onclick="todoSave()">Save changes</button>
+      <button class="small" id="tmFixBtn" style="display:none" onclick="todoFix(this)">Draft a code fix</button>
     </div>
     <div class="tm-next" id="tmNext">
       <div class="quick-line tm-next-head">Next step</div>
       <div id="tmQueue"></div>
     </div>
-    <textarea id="tmNote" rows="3" placeholder="Description / notes..."></textarea>
+    <div class="tm-context sec-sub" id="tmContext" style="white-space:pre-wrap"></div>
+    <textarea id="tmNote" rows="3" placeholder="Your notes..."></textarea>
     <div class="tm-evidence sec-sub" id="tmEvidence"></div>
     <div id="tmResult" class="result"></div>
     <div class="tm-chat">
@@ -600,6 +630,15 @@ function todoOpen(el) {
   document.getElementById("tmPriority").value = d.priority || "medium";
   document.getElementById("tmWs").textContent = d.ws;
   document.getElementById("tmDue").textContent = d.duelabel || (d.due ? ("due " + d.due) : "no deadline");
+  const ctx = document.getElementById("tmContext");
+  let info = d.detail || "";
+  if (d.src) info += (info ? "\\n" : "") + "found in: " + d.src;
+  ctx.textContent = info;
+  ctx.style.display = info ? "block" : "none";
+  const fx = document.getElementById("tmFixBtn");
+  const codey = d.kind === "engineering" || /\\b(ci|workflow|build|repo|bug|test)\\b/i.test(d.title);
+  fx.style.display = codey ? "inline-block" : "none";
+  fx.disabled = false; fx.textContent = "Draft a code fix";
   document.getElementById("tmEvidence").textContent = d.evidence ? ("source: " + d.evidence) : "";
   const link = document.getElementById("tmLink");
   if (d.url) { link.href = d.url; link.style.display = "inline"; } else { link.style.display = "none"; }
@@ -612,13 +651,32 @@ function todoOpen(el) {
     q.innerHTML = "<div class='tm-plan'></div>";
     q.firstChild.textContent = d.nextstep;
   } else {
-    q.innerHTML = "<div class='sec-sub'>Nothing drafted for this task yet. The next poll drafts one.</div>";
+    q.innerHTML = "<div class='sec-sub'>Nothing drafted yet.</div>" +
+      "<button class='small' onclick='todoDraft()'>Draft next step now</button>";
   }
   loadTodoChat(d.id);
   document.getElementById("tmResult").textContent = "";
   if (window.innerWidth < 980) {
     document.getElementById("todoDetail").scrollIntoView({behavior: "smooth"});
   }
+}
+async function todoDraft() {
+  const q = document.getElementById("tmQueue");
+  q.innerHTML = "<div class='sec-sub'>drafting… this takes about half a minute</div>";
+  const r = await post("/draft-next", {id: _todoId});
+  q.firstChild.textContent = r.message;
+  setTimeout(() => location.reload(), 1500);
+}
+async function todoDraftAll(btn) {
+  btn.disabled = true; btn.textContent = "drafting…";
+  const r = await post("/draft-next", {});
+  btn.textContent = (r.message || "").slice(0, 70);
+  setTimeout(() => location.reload(), 1500);
+}
+async function todoFix(btn) {
+  btn.disabled = true; btn.textContent = "starting fix run…";
+  const r = await post("/fix-now", {id: _todoId});
+  btn.textContent = (r.message || "").slice(0, 80);
 }
 async function todoSave() {
   const r = await post("/action-update", {id: _todoId,
