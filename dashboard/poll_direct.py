@@ -65,6 +65,28 @@ other people took on unless the user is waiting on it.
 """
 
 
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+
+
+def graph_people(g, user=None):
+    """Every address the knowledge graph knows (Person nodes and any attr that
+    carries a mail address), plus their domains. Feeds the sift so mail from a
+    known counterparty is kept deterministically — no model call to decide
+    that someone already in the graph matters."""
+    people = set()
+    for n in getattr(g, "nodes", {}).values():
+        for v in (n.get("attrs") or {}).values():
+            if isinstance(v, str) and "@" in v:
+                people |= {m.lower() for m in EMAIL_RE.findall(v)}
+            elif isinstance(v, list):
+                for x in v:
+                    if isinstance(x, str) and "@" in x:
+                        people |= {m.lower() for m in EMAIL_RE.findall(x)}
+    own = {str(e).lower() for e in [(user or {}).get("email")] + list((user or {}).get("other_emails") or []) if e}
+    people -= own
+    return people, {e.split("@")[-1] for e in people}
+
+
 def open_tasks(g, now):
     rows = []
     for n in g.query(type_="Action"):
@@ -618,7 +640,8 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     tasks = open_tasks(g, now)
     user = connections.user_identity(config_dir)
     known = [i for i in connections.recent_items(config_dir) if i.get("id") not in {x["id"] for x in new}]
-    sifter = sift.Sifter(user, None, tasks, known)
+    people, orgs = graph_people(g, user)
+    sifter = sift.Sifter(user, None, tasks, known, people=people, orgs=orgs)
     kept_new, dropped = sifter.sift(new)
     waiting = _read_pending(config_dir)
     have = {r["item"].get("id") for r in waiting}

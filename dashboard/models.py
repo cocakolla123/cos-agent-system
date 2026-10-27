@@ -43,7 +43,9 @@ JOBS = {
     "task_chat": ("light", False),
     "revise": ("standard", False),
     "draft": ("standard", True),
-    "poll": ("standard", True),
+    # the tick is a narrow scan; judgment-heavy work (drafting, research)
+    # stays on the standard/deep tiers
+    "poll": ("light", True),
     # the direct check: items are fetched by connections.py and sifted, so the
     # model only reads text and any provider can run it
     "poll_direct": ("standard", False),

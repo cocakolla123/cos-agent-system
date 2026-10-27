@@ -105,11 +105,20 @@ def thread_key(i):
 
 
 class Sifter:
-    def __init__(self, user, channels=None, open_tasks=None, known_items=None):
+    FREEMAIL = {"gmail.com", "googlemail.com", "yahoo.com", "outlook.com",
+                "hotmail.com", "live.com", "icloud.com", "aol.com", "proton.me",
+                "protonmail.com"}
+
+    def __init__(self, user, channels=None, open_tasks=None, known_items=None,
+                 people=None, orgs=None):
         """user: {"name", "email", "other_emails", "slack", "github"}.
         channels: Slack directory rows with is_member / is_muted.
         open_tasks: rows with "name" and "sources" (item ids).
-        known_items: earlier items, so threads the user is in are known."""
+        known_items: earlier items, so threads the user is in are known.
+        people: addresses the knowledge graph already knows (counterparties);
+        orgs: their domains. Mail from either is kept without any model —
+        the graph IS the context, so a known sender never needs an AI call
+        to be recognized as mattering."""
         self.name = (user.get("name") or "").strip()
         self.first = self.name.split()[0] if self.name else ""
         self.emails = {e.lower() for e in [user.get("email")] + list(user.get("other_emails") or []) if e}
@@ -130,6 +139,9 @@ class Sifter:
         for i in known_items or []:
             if self._is_user(i) or self.mention_re.search(_text(i)):
                 self.threads.add(thread_key(i))
+        self.people = {str(e).lower() for e in people or ()} - self.emails
+        own = {e.split("@")[-1] for e in self.emails}
+        self.orgs = {str(d).lower() for d in orgs or ()} - own - self.FREEMAIL
         for t in open_tasks or []:
             text = t.get("name") or ""
             for s in t.get("sources") or []:
@@ -168,6 +180,11 @@ class Sifter:
             return "task_thread"
         if tk in self.threads:
             return "thread"
+        if c == "gmail" and _addr(i.get("from")) in self.people:
+            # the sender is already a node in the knowledge graph: an active
+            # counterparty. Kept even when the mail looks automated — a
+            # pipeline's noreply reminder is the pipeline moving.
+            return "known_person"
         refs = ({k.upper() for k in KEY_RE.findall(text)} | {k.upper() for k in NUM_RE.findall(text)}
                 | {d.upper() for d in DOMAIN_RE.findall(text)})
         if refs & self.refs:
@@ -181,6 +198,10 @@ class Sifter:
             role = _addr(frm).split("@")[0] in ROLE
             if not bulk and not role and to & self.emails:
                 return "direct"
+            if not bulk and not role and _addr(frm).split("@")[-1] in self.orgs:
+                # new sender, but their org is already in the graph (a known
+                # counterparty's colleague chiming into a live pipeline)
+                return "known_org"
             dom = {e.split("@")[-1] for e in self.emails}
             if _addr(frm).split("@")[-1] in dom and REQUIRED.search(text):
                 return "broadcast"
