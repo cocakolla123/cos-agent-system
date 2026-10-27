@@ -1366,6 +1366,9 @@ def render_entry(e):
                 f"data-summary=\"{summary}\" onclick=\"approve(this)\">{btn_label}</button>"
                 f"<button data-id=\"{safe_id}\" onclick=\"reject(this)\">Reject</button>"
             )
+            if action_type == "message_send":
+                actions += (f"<button class='small' data-id=\"{safe_id}\" "
+                            f"data-action-type=\"message_send\" onclick=\"saveEdit(this)\">Save draft</button>")
         else:
             link_label, link_url = external_link_for(e)
             link_html = f' · <a href="{link_url}" target="_blank">{link_label}</a>' if link_url else ""
@@ -1383,16 +1386,27 @@ def render_entry(e):
             f"<textarea id='feedback-{b64_id}' rows='1' placeholder='Tell it what to change instead of approving/rejecting...'></textarea>"
             f"<button class='small' data-id=\"{safe_id}\" onclick=\"revise(this)\">Revise</button>"
         )
-        if executable and not is_fix:
+        if executable and not is_fix and action_type == "message_send":
+            # the draft lives in ONE editable box inside the Quick panel, with
+            # the entry's context above it — no duplicate read-only copy and
+            # no Edit toggle; only Discuss remains down here
+            revise_box += (
+                f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleDiscuss(this)\">💬 Discuss</button>"
+                f"</div>"
+                f"<div id='discuss-{b64_id}' class='entry-chat' style='display:none'>"
+                f"<div class='chat-log' id='discussLog-{b64_id}' style='max-height:200px'></div>"
+                f"<div class='chat-input-row'>"
+                f"<textarea id='discussInput-{b64_id}' rows='1' placeholder='Ask about this entry...'></textarea>"
+                f"<button class='small' data-id=\"{safe_id}\" onclick=\"sendDiscuss(this)\">Send</button>"
+                f"</div></div>"
+            )
+        elif executable and not is_fix:
             raw_text = extract_message_text(e.get("proposed_tool_call", ""))
-            # an email draft is the thing being approved: show it editable up
-            # front instead of behind the Edit toggle
-            edit_display = "block" if action_type == "message_send" else "none"
             revise_box += (
                 f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleEdit(this)\">Edit</button>"
                 f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleDiscuss(this)\">💬 Discuss</button>"
                 f"</div>"
-                f"<div id='edit-{b64_id}' style='display:{edit_display}; margin-top:.5rem'>"
+                f"<div id='edit-{b64_id}' style='display:none; margin-top:.5rem'>"
                 f"<div class='pill-row'>"
                 f"<button type='button' class='small' onclick=\"wrapSelection('editbox-{b64_id}','*')\"><b>B</b></button>"
                 f"<button type='button' class='small' onclick=\"wrapSelection('editbox-{b64_id}','_')\"><i>I</i></button>"
@@ -1421,6 +1435,15 @@ def render_entry(e):
         actions = ""
         revise_box = ""
 
+    quick_body = draft_preview(e)
+    if status == "pending" and executable and not is_fix and action_type == "message_send":
+        quick_body = (
+            f"<div class='meta' style='margin-bottom:.4rem'>{html.escape(e.get('context', ''))}</div>"
+            f"<textarea id='editbox-{b64_id}' rows='10' style='width:100%'>"
+            f"{html.escape(extract_message_text(e.get('proposed_tool_call', '')))}</textarea>"
+            f"<textarea id='notes-{b64_id}' style='display:none'></textarea>"
+        )
+
     tags_html = render_tags(compute_tags(e))
 
     return f"""
@@ -1435,7 +1458,7 @@ def render_entry(e):
   </div>
   <div class="tab-panel active" id="panel-{b64_id}-quick" data-entry="{b64_id}">
     {"" if quick_line == title else '<div class="quick-line">' + quick_line + '</div>'}
-    {draft_preview(e)}
+    {quick_body}
   </div>
   <div class="tab-panel" id="panel-{b64_id}-details" data-entry="{b64_id}">
     <pre>{html.escape(e.get('proposed_tool_call',''))}</pre>
