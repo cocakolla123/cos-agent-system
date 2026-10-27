@@ -65,6 +65,19 @@ Dispatch the modules for the in-scope categories. Each module **reads** its conn
 edges[]}`. Emit a provisional `workspace` and, where you can, an `attrs.org` signal (employer /
 client / school domain) — Step 4 uses it to cluster.
 
+**Every record carries its way back to the source.** The dashboard renders a clickable
+source link on each task card, built from these attrs — a record without them forces the
+user to go searching for the thing you already had open:
+- mail-derived: `attrs.thread` = the Gmail thread id exactly as the connector returned it
+  (the 16-hex-char id from `search_threads`/`get_thread`), and `attrs.evidence` listing the
+  message/thread ids actually read. One id is mandatory, not optional, for any Action minted
+  from mail.
+- code-hosting-derived: `attrs.refs` entries shaped `owner/repo`, `owner/repo#N` (issue/PR)
+  or `owner/repo@sha` (commit) — the dashboard turns each into a GitHub link.
+- anything with a real URL (a doc, a board, a calendar event's htmlLink): `attrs.url`.
+Set `source` to the connector *instance* id from config (`gmail-personal`, `gmail-asu`),
+not the bare kind, so the link opens in the right account.
+
 | Module (category) | Reads | Emits (node kinds → edges) |
 |---|---|---|
 | **code hosting** | repos, PRs, orgs, deployments | Repository, PR, Deployment · `authored_by`, `belongs_to`, `deploys` |

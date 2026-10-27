@@ -59,7 +59,10 @@ The full narrow check:
   waiting on someone else gets a short follow-up draft to that person only if the wait is
   past its due date; otherwise skip it.
 - **Activity dates.** When a new message touches an open task (a reminder, a follow-up, a
-  partial answer), re-emit the task with `attrs.last_activity` set to that message's date. That
+  partial answer), re-emit the task with `attrs.last_activity` set to that message's date
+  — and with `attrs.thread` (the Gmail thread id) / `attrs.refs` (`owner/repo#N`,
+  `owner/repo@sha`) / `attrs.url` set per cos-research's source-link rule, so the card's
+  clickable source link works for poll-minted and poll-refreshed tasks too. That
   is what keeps a chased task near the top and lets an abandoned one sink.
 - **Priority reassessment.** For each still-`pending` entry, look at its `created` date and
   current `priority`. If it's old (roughly 30+ days with no update, and especially 6+ months)
