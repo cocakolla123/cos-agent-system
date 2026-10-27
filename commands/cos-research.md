@@ -220,6 +220,16 @@ haven't heard back* — and for each hit check whether a reply ever came. **A re
 that was never answered is an open obligation on the user**, because nobody else is going to move
 it.
 
+**Re-validate every open Action you carry forward, against its thread, every crawl.** An Action
+minted on an earlier pass froze that moment's reading of the thread; the thread moved on. For each
+open Action whose attrs name a thread id, read the thread's newest message and the user's sent
+mail to that counterparty before keeping it: if the newest state contradicts the Action's detail
+(the counterparty answered, the user already sent the thing, the step turned out to be the
+mechanism of something else), rewrite the detail from the live state, set or clear next_step, and
+supersede any pending queue entry built on the stale premise, naming the message. Updating a
+sibling node (the JobApplication) while leaving the Action stale is the failure mode that produced
+two wrong drafts on 2026-10-27 — the drafter downstream trusts the Action's detail verbatim.
+
 **Rank obligations by resolution state, never by recency — for obligations the two are actively
 opposed.** An obligation that is being handled generates fresh mail (reminders, confirmations,
 receipts); one that is *stuck* generates silence. So an open obligation gets **older**, not

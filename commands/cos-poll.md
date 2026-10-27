@@ -41,7 +41,13 @@ invocation before finishing, rather than waiting for `general`'s own next schedu
 The full narrow check:
 - For each `pending` `approval-queue.md` entry, re-check its real source and mark it
   `superseded` (via `cos-knowledge`, with a one-line reason) if someone else already resolved
-  it. Leave unchanged entries alone.
+  it. Leave unchanged entries alone. **Re-checking the real source means reading the thread,
+  not the graph:** for an entry whose task names a mail thread, read that thread's newest
+  message and the user's own sent mail to that counterparty (last 14 days) before leaving it
+  pending. A counterparty message that already answers the entry, or says they are handling,
+  considering or reviewing it, supersedes the entry — name that message in the reason. The
+  same check runs before minting a new entry: a chase drafted against a thread whose newest
+  message makes the chase wrong is a defect, not a draft (observed twice on 2026-10-27).
 - **A next step for every open task.** Every open task in the Command Center should carry
   something the user can act on. For each open `Action` in the graph (highest effective
   priority and nearest due date first, at most 10 per tick) with no `pending` entry whose
