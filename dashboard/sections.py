@@ -634,7 +634,7 @@ function todoOpen(el) {
   let info = d.detail || "";
   if (d.src) info += (info ? "\\n" : "") + "found in: " + d.src;
   ctx.textContent = info;
-  ctx.style.display = info ? "block" : "none";
+  ctx.style.display = (info && !d.q) ? "block" : "none";
   const fx = document.getElementById("tmFixBtn");
   const codey = d.kind === "engineering" || /\\b(ci|workflow|build|repo|bug|test)\\b/i.test(d.title);
   fx.style.display = codey ? "inline-block" : "none";

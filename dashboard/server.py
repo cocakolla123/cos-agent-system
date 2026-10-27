@@ -1503,8 +1503,10 @@ def render_entry(e, node=None):
     src_ctx = source_context_html(e, node) if status == "pending" else ""
     quick_body = src_ctx + draft_preview(e)
     if status == "pending" and executable and not is_fix and action_type == "message_send":
+        head = e.get("proposed_tool_call", "").split(", with text:", 1)[0]
         quick_body = (
             src_ctx
+            + f"<div class='meta' style='margin-bottom:.3rem'>{html.escape(head)}</div>"
             + f"<textarea id='editbox-{b64_id}' rows='10' style='width:100%'>"
             f"{html.escape(extract_message_text(e.get('proposed_tool_call', '')))}</textarea>"
             f"<textarea id='notes-{b64_id}' style='display:none'></textarea>"
@@ -1518,20 +1520,20 @@ def render_entry(e, node=None):
   <div class="card-title">{title}</div>
   <div class="meta">{html.escape(action_type)} · drafted by {html.escape(e.get('drafted_by',''))} · <code>{safe_id}</code></div>
   {priority_note_html}
-  <div class="tabs">
-    <button class="tab-btn active" id="btn-{b64_id}-quick" data-entry="{b64_id}" onclick="showTab('{safe_id}','quick')">Quick</button>
-    <button class="tab-btn" id="btn-{b64_id}-details" data-entry="{b64_id}" onclick="showTab('{safe_id}','details')">Raw</button>
-  </div>
+  {('<div class="tabs">'
+     f'<button class="tab-btn active" id="btn-{b64_id}-quick" data-entry="{b64_id}" onclick="showTab(\'' + safe_id + '\',\'quick\')">Quick</button>'
+     f'<button class="tab-btn" id="btn-{b64_id}-details" data-entry="{b64_id}" onclick="showTab(\'' + safe_id + '\',\'details\')">Details</button>'
+     '</div>') if is_fix else ''}
   <div class="tab-panel active" id="panel-{b64_id}-quick" data-entry="{b64_id}">
     {"" if quick_line == title else '<div class="quick-line">' + quick_line + '</div>'}
     {quick_body}
-  </div>
-  <div class="tab-panel" id="panel-{b64_id}-details" data-entry="{b64_id}">
-    <pre>{html.escape(e.get('proposed_tool_call',''))}</pre>
-    {render_fix_details(e) if is_fix else ""}
-    <div class="meta">{html.escape(e.get('context',''))}</div>
     {render_linked_domain(e)}
   </div>
+  {(f'<div class="tab-panel" id="panel-{b64_id}-details" data-entry="{b64_id}">'
+    f'<pre>{html.escape(e.get("proposed_tool_call", ""))}</pre>'
+    + render_fix_details(e)
+    + f'<div class="meta">{html.escape(e.get("context", ""))}</div>'
+    + '</div>') if is_fix else ''}
   <div class="actions">{actions}</div>
   {revise_box}
   <div class="result" id="result-{b64_id}"></div>
