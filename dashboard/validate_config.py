@@ -80,7 +80,7 @@ def validate(config, available_tools=None):
             findings.append(_finding(
                 "warn", field,
                 "unscoped Bash grant — this subprocess can reach the network "
-                "(curl etc.); the shipped default scopes it to Bash(python3:*)"))
+                "(curl etc.); the shipped default allows only dashboard/cos_tool.py"))
         for net in ("WebSearch", "WebFetch"):
             if net in grant:
                 findings.append(_finding(

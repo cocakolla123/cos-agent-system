@@ -120,5 +120,34 @@ class TestCodeFix(unittest.TestCase):
         self.assertFalse(os.path.exists(self.gh_log))
 
 
+    def test_only_the_tested_commit_can_be_pushed(self):
+        fix = self._fix()
+        e = codefix.finalize(fix, TEST_CMD, "Fix", "", "t", self.ws)
+        self.assertRegex(e["tested_commit"], r"^[0-9a-f]{40}$")
+        # a commit added after the tests passed
+        with open(os.path.join(fix["worktree"], "extra.py"), "w") as f:
+            f.write("x = 1\n")
+        sh(fix["worktree"], "git", "add", "-A")
+        sh(fix["worktree"], "git", "commit", "-q", "-m", "later")
+        with self.assertRaises(codefix.FixError):
+            codefix.open_pr(e, gh=self.gh)
+        with self.assertRaises(codefix.FixError):
+            codefix.open_pr(dict(e, tested_commit=""), gh=self.gh)
+        self.assertFalse(os.path.exists(self.gh_log))
+
+    def test_test_command_runs_without_a_shell_or_secrets(self):
+        for bad in ("bash -c 'make test'", "sh run.sh", ""):
+            with self.assertRaises(codefix.FixError):
+                codefix.test_argv(bad)
+        self.assertEqual(codefix.test_argv("python3 -m pytest -q 'a b'"), ["python3", "-m", "pytest", "-q", "a b"])
+        os.environ["ANTHROPIC_API_KEY"] = "sk-test-secret"
+        try:
+            probe = "%s -c \"import os,sys; sys.exit(3 if 'ANTHROPIC_API_KEY' in os.environ else 0)\"" % sys.executable
+            code, _ = codefix.run_tests(self.repo, probe)
+        finally:
+            del os.environ["ANTHROPIC_API_KEY"]
+        self.assertEqual(code, 0)
+
+
 if __name__ == "__main__":
     unittest.main()

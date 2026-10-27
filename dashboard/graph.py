@@ -71,6 +71,17 @@ def file_lock(path):
         finally:
             fcntl.flock(f, fcntl.LOCK_UN)
 
+def transaction(graph_dir):
+    """The lock every load-change-save of a graph holds, start to finish.
+
+    ``save`` alone only keeps two writers from interleaving a file; a writer
+    that loaded earlier would still overwrite the other's change. Hold this
+    around the whole cycle (the dashboard's task edits, a check's ingest, the
+    research tool) so each one starts from the latest saved graph. Not
+    re-entrant: do not nest it for the same graph."""
+    return file_lock(os.path.join(graph_dir, "txn"))
+
+
 # ---------------------------------------------------------------------------
 # Vocabulary (advisory — upsert does not reject unknown types, so research
 # modules can introduce new ones without editing this file first).
@@ -243,7 +254,7 @@ class Graph:
     def save(self, graph_dir):
         """Persist deterministically (sorted, sorted keys) for clean diffs.
         Serialized against concurrent savers via file_lock."""
-        os.makedirs(graph_dir, exist_ok=True)
+        os.makedirs(graph_dir, mode=0o700, exist_ok=True)
         with file_lock(os.path.join(graph_dir, "graph")):
             _write_jsonl(os.path.join(graph_dir, self.NODES_FILE),
                          [self.nodes[k] for k in sorted(self.nodes)])
@@ -779,9 +790,15 @@ def _read_jsonl(path, key_field):
     return out
 
 
+def _private_open(tmp):
+    """Graph files hold account content: readable by the owner only."""
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    return os.fdopen(fd, "w", encoding="utf-8")
+
+
 def _write_jsonl(path, objects):
     tmp = path + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as f:
+    with _private_open(tmp) as f:
         for obj in objects:
             f.write(json.dumps(obj, sort_keys=True, ensure_ascii=False) + "\n")
     os.replace(tmp, path)
@@ -789,7 +806,7 @@ def _write_jsonl(path, objects):
 
 def _write_text(path, text):
     tmp = path + ".tmp"
-    with open(tmp, "w", encoding="utf-8") as f:
+    with _private_open(tmp) as f:
         f.write(text)
     os.replace(tmp, path)
 
@@ -856,9 +873,10 @@ def _main(argv):
     ap.add_argument("--stale", action="store_true", help="list stale nodes")
     args = ap.parse_args(argv)
 
-    g = Graph.load(args.graph_dir)
+    with transaction(args.graph_dir):
+        g = Graph.load(args.graph_dir)
+        paths = g.render_views(args.graph_dir) if args.render else []
     if args.render:
-        paths = g.render_views(args.graph_dir)
         print("rendered %d view(s)" % len(paths))
     if args.stats or not (args.render or args.stale):
         print("nodes=%d edges=%d" % (len(g.nodes), len(g.edges)))

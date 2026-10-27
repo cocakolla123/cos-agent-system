@@ -19,7 +19,8 @@
   "revise_tools": "Read,Edit,Agent",
   "poll_tools": "Read,Edit,Agent",
   "_comment_research_tools": "V2.4: the /start-research subprocess grant. Research MUST hold Write+Bash (to persist the graph via graph.py) and Glob/Grep (local FS discovery) on top of the baseline \u2014 the narrow poll grant starves it silently (first-run lesson, 2026-09-12). /setup appends the deployment's discovered READ-ONLY MCP tool names (search/get/list/read) here and to poll_tools/chat_tools; never a mutating MCP tool.",
-  "research_tools": "Read,Edit,Write,Bash(python3:*),Glob,Grep,Agent,ToolSearch",
+  "_comment_research_tools": "The research crawl and account probe read untrusted content, so their grant is built by server.py: Read/Glob/Grep/Agent/ToolSearch, file writes only inside the workspace, and Bash only for dashboard/cos_tool.py. List extra read-only MCP tools here; broad entries (Bash, Write, Edit) are ignored unless research_broad_grant is true.",
+  "research_tools": "",
   "domain_tag": "YourDomain",
   "domain_keywords": [
     "example-keyword",
@@ -54,7 +55,7 @@
   ],
   "_comment_self_learning": "V2.1 (M9): auto self-learning mode. When the user reports a miss in chat, the system remediates, diagnoses why it was missed, fixes the cause itself (config/instructions/code, gated by its test suite with auto-rollback + guardrails), and records the lesson. self_modify_code=false drafts code fixes as tasks instead of applying them. learn_tools is the /cos-learn subprocess grant \u2014 local file tools + Agent, never an external mutating tool. Toggleable live from the dashboard.",
   "self_learning": true,
-  "self_modify_code": true,
+  "self_modify_code": false,
   "learn_tools": "Read,Edit,Write,Bash(python3:*),Bash(git:*),Agent",
   "publish": {
     "repo_url": "https://github.com/YOUR-USERNAME/YOUR-FORK-OF-THIS-REPO.git",

@@ -22,19 +22,40 @@ written into the file-based knowledge graph (`dashboard/graph.py`) as nodes + ed
 - **Ask only what can't be inferred** (workspace kind/label when ambiguous — see Step 4).
 
 ## Arguments
+- `--tool=<path>` — the absolute path of `dashboard/cos_tool.py`, and `--workspace=<path>` — the
+  workspace directory. The dashboard passes both.
 - `--full` (default) — crawl every discovered connector category.
 - `--scope=<connector>` — restrict to one category (e.g. `--scope=ticketing`). Used by
   `/cos-poll` for cheap per-connector ticks.
 - `--incremental` — only look at sources changed since the last run (read the newest
   `last_verified` in the graph as the watermark). Cheapest mode; the default for polling.
 
+## How you write to the graph (read this before Step 0)
+This run reads untrusted content, so it has no Python interpreter. Its only Bash command is
+`python3 <tool> <command> ...` (the `--tool` path), and it can write files only inside the
+workspace. Every graph or account operation below is one `cos_tool.py` command; anything a
+command needs as JSON, write to a file under `<workspace>/tmp/` first and pass its path. Do not
+try `python3 -c`, other scripts or other shells: they are refused. Run `python3 <tool>` with no
+command for the full list.
+
+| step | command |
+|---|---|
+| persist records (validate, upsert, correlate, render) | `python3 <tool> ingest <workspace>/graph <workspace>/tmp/records.json` |
+| regenerate the markdown views | `python3 <tool> render <workspace>/graph` |
+| cluster records into workspaces | `python3 <tool> infer-workspaces <workspace>/tmp/records.json` |
+| persist confirmed workspaces | `python3 <tool> ingest-workspaces <workspace>/graph <workspace>/tmp/proposals.json` |
+| sections with no items | `python3 <tool> coverage <workspace>/graph` |
+| how far back each source reaches | `python3 <tool> window-audit <workspace>/graph` |
+| user-provided files waiting | `python3 <tool> context-pending <workspace>` / `context-done <workspace> <file>` |
+| account instances in a tool list | `python3 <tool> accounts-detect <workspace>/tmp/tools.json` |
+| was an account declined | `python3 <tool> accounts-declined <id>` |
+
 ## Step 0 — Connector auth preflight
 For each connector category you intend to crawl, make **one** cheap read-only probe (e.g. a
 1-item search). Collect the outcomes as `{connector, ok, error}` and pass them through
-`preflight.summarize(results)` (`dashboard/preflight.py`) to get an available/unavailable split
-and a one-line report. If a category is `unavailable` (auth/permission failure or outage),
-**continue with what's reachable** (`preflight.should_continue` is true as long as one connector
-works) — never treat a connector outage as "no results." Report the unavailable set at the end so
+the rules in `dashboard/preflight.py` (read it) to split them into available and unavailable and
+write a one-line report. If a category is `unavailable` (auth/permission failure or outage),
+**continue with what's reachable** (keep going as long as one connector works) — never treat a connector outage as "no results." Report the unavailable set at the end so
 the user can `/mcp` re-auth.
 
 ## Step 1 — Run the discovery modules
@@ -424,18 +445,19 @@ decision recorded in the repo, a review or issue waiting on the user. A project 
 being worked on gets a state summary, not a task.
 
 ## Step 2 — Persist to the graph
-Write the records into the graph via `research.ingest(graph, records)` (see `research.py`). Because
-upsert dedups by stable id, this is safe to run repeatedly. Concretely: assemble the records as
-JSON and apply them with the graph library (Read/Edit/Bash on `dashboard/graph.py` + the graph
-dir), or hand the batch to `cos-knowledge` to persist. Then regenerate the markdown views
-(`python3 dashboard/graph.py <graph-dir> --render`).
+Write the records as one JSON array to `<workspace>/tmp/records.json` and run
+`python3 <tool> ingest <workspace>/graph <workspace>/tmp/records.json`. It validates each
+record (an invalid one is dropped and counted, never half-written), upserts them with
+`research.ingest` under the graph's lock, runs the correlation pass and regenerates the views.
+Because upsert dedups by stable id, this is safe to run repeatedly; a large crawl can ingest
+in several batches.
 
 ## Step 3 — Correlate (if M5 is present)
-If `dashboard/correlate.py` exists, run the correlation pass so related items collapse into
+`ingest` already ran the correlation pass (when `dashboard/correlate.py` exists), so related items collapse into
 `Objective` (workstream) nodes. Otherwise skip.
 
 ## Step 4 — Infer workspaces, ask only the residual
-Run `research.infer_workspaces(records)` to cluster everything into candidate workspaces. For each
+Run `python3 <tool> infer-workspaces <workspace>/tmp/records.json` to cluster everything into candidate workspaces. For each
 proposal whose members are *all* dormant (Step 1a) is a historical workspace, not a current one:
 persist it with `attrs.dormant: true` so it stays queryable without claiming to be live work — and
 don't spend a Step 4 question on it. For each remaining
@@ -443,10 +465,10 @@ proposal whose `kind` is unambiguous (single strong signal), adopt it silently. 
 are ambiguous or `kind: unknown`, **ask the user one short question** ("Is *Acme* your employer,
 a freelance client, or something else?") — and nothing else, apart from the connect-or-tell-me
 questions from Step 1d (one per org whose work lives in a system you cannot see). Persist confirmed workspaces with
-`research.workspace_records(proposals)` → `ingest`.
+`python3 <tool> ingest-workspaces <workspace>/graph <workspace>/tmp/proposals.json`.
 
 ## Step 5 — Report (and check your own coverage)
-Before summarizing, call `sections.coverage_report(graph)` and **list every section with a count
+Before summarizing, run `python3 <tool> coverage <workspace>/graph` and **list every section with a count
 of zero**. This is not cosmetic: an empty section renders as blank space, so a question the
 pipeline never collected the inputs for looks precisely like a question with a genuinely empty
 answer. Two separate corrections in this deployment were invisible for exactly that reason (2019
@@ -458,7 +480,7 @@ have to justify:
   scope, or record it as a known gap so it is diagnosable later. **A zero you cannot explain is a
   finding, not a blank.**
 
-Then call `research.window_audit(graph)` and report every source it marks `short`. A zero section
+Then run `python3 <tool> window-audit <workspace>/graph` and report every source it marks `short`. A zero section
 is at least conspicuous; a section filled from **two days of a ninety-day window** is not — it
 renders as a populated, plausible, wrong answer, which is why this failure recurred twice before
 anything caught it. The audit compares what each crawl *declared* it covered
@@ -472,20 +494,19 @@ that were unavailable, unexplained zero-coverage sections, and any residual ques
 `cos-knowledge`. **Nothing external was sent or modified** — say so explicitly.
 
 ## Multi-account note (V2.2, M10)
-Connector *instances* are accounts: run `accounts.detect_instances` on the discovered tool list
+Connector *instances* are accounts: write the discovered tool names to `<workspace>/tmp/tools.json` and run `python3 <tool> accounts-detect` on it
 and treat each instance separately — probe each via `/cos-accounts`, skip any the user has
-**declined** (`accounts.is_declined`), and tag every record a module emits with the instance's
+**declined** (`python3 <tool> accounts-declined <id>`), and tag every record a module emits with the instance's
 bound workspace so graph isolation holds automatically. Two Gmail instances are two different
 workspaces' data, never merged.
 
 ## User-provided context (V2.3, M11) — read this FIRST
-Before Step 0, check `<workspace>/context-inbox/` via `context_intake.pending_files`
-(`dashboard/context_intake.py`). These are files the user pasted/uploaded through the
+Before Step 0, check `<workspace>/context-inbox/` with `python3 <tool> context-pending <workspace>`. These are files the user pasted/uploaded through the
 dashboard's startup popup (md/txt read directly; pdf/docx via the Read tool). Treat them as the
 **highest-confidence source**: extract entities/facts as records with
 `source="user-context"` and `confidence=0.95`, and use them to seed workspace inference
 (an employer or project the user *told* you about outranks anything inferred). After ingesting
-a file, `context_intake.mark_processed(ws, path)` — never delete it. User-stated facts also
+a file, `python3 <tool> context-done <workspace> <file>` — never delete it. User-stated facts also
 resolve ambiguities that would otherwise generate a Step 4 question.
 
 ## Every node carries its link (first-run UI feedback)

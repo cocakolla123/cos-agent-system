@@ -172,8 +172,12 @@ def load_state(config_dir):
 
 
 def save_state(config_dir, state):
-    with open(_path(config_dir, STATE_FILE), "w") as f:
+    path = _path(config_dir, STATE_FILE)
+    tmp = path + ".tmp"
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
         json.dump(state, f, indent=1)
+    os.replace(tmp, path)
 
 
 def user_identity(config_dir):
@@ -254,7 +258,9 @@ def fetch_imap(src, cursor, _imap=None):
                 typ, data = conn.uid("SEARCH", None, "SINCE", since)
             else:
                 typ, data = conn.uid("SEARCH", None, "UID", "%d:*" % (last + 1))
-            uids = [int(x) for x in (data[0] or b"").split() if int(x) > last][-MAX_PER_SOURCE:]
+            # oldest first, and at most MAX_PER_SOURCE a check: the bookmark stops at the
+            # last one read, so a backlog is read over several checks, never skipped
+            uids = sorted(int(x) for x in (data[0] or b"").split() if int(x) > last)[:MAX_PER_SOURCE]
             sent = "sent" in folder.lower()
             for uid in uids:
                 typ, msgdata = conn.uid("FETCH", str(uid), "(BODY.PEEK[] X-GM-THRID)")
@@ -328,31 +334,59 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
             name = "#" + (c.get("name") or cid)
         names[cid] = name
         oldest = cursor.get(cid) or ("%.6f" % first)
-        q = urllib.parse.urlencode({"channel": cid, "oldest": oldest, "limit": 200})
-        r = _http_json("%s/conversations.history?%s" % (base, q), h, opener)
-        if not r.get("ok"):
+        try:
+            msgs = _slack_pages(base, "conversations.history", {"channel": cid, "oldest": oldest}, h, opener)
+        except ConnectionError_:
             continue
-        newest = oldest
-        msgs = list(r.get("messages") or [])
         for m in list(msgs):        # thread replies arrive only through conversations.replies
             if m.get("reply_count") and float(m.get("latest_reply") or 0) > float(oldest):
-                q2 = urllib.parse.urlencode({"channel": cid, "ts": m["ts"], "oldest": oldest, "limit": 200})
-                rr = _http_json("%s/conversations.replies?%s" % (base, q2), h, opener)
-                msgs += [x for x in rr.get("messages") or [] if x.get("ts") != m["ts"]]
+                try:
+                    rep = _slack_pages(base, "conversations.replies",
+                                       {"channel": cid, "ts": m["ts"], "oldest": oldest}, h, opener)
+                except ConnectionError_:
+                    rep = []
+                msgs += [x for x in rep if x.get("ts") != m["ts"]]
+        # oldest first; past the cap, the bookmark stops at the last one kept
+        msgs = sorted({m["ts"]: m for m in msgs if m.get("ts")}.values(), key=lambda m: float(m["ts"]))
+        msgs = msgs[:MAX_PER_SOURCE]
+        newest = oldest
         for m in msgs:
+            ts = m.get("ts")
+            if float(ts) > float(newest):
+                newest = ts
             if m.get("subtype") in ("channel_join", "channel_leave"):
                 continue
-            ts = m.get("ts")
             handle, real = uname(m.get("user")) if m.get("user") else (m.get("username") or "bot", m.get("username") or "bot")
             items.append({"connector": "slack", "id": "sl-%s-%s" % (cid, ts), "channel": name,
                           "date": _iso(_dt.datetime.fromtimestamp(float(ts), _dt.timezone.utc)),
                           "user": handle, "user_name": real, "text": m.get("text") or "",
                           "thread_ts": ("sl-%s-%s" % (cid, m["thread_ts"])) if m.get("thread_ts") and m.get("thread_ts") != ts else None,
                           "reactions": [x.get("name") for x in m.get("reactions") or []]})
-            if float(ts) > float(newest):
-                newest = ts
         cursor[cid] = newest
-    return items[-MAX_PER_SOURCE:], cursor
+    return items, cursor
+
+
+SLACK_MAX_PAGES = 50
+
+
+def _slack_pages(base, method, params, h, opener):
+    """Every page of a Slack history or replies call (200 a page)."""
+    out, nxt = [], ""
+    for _ in range(SLACK_MAX_PAGES):
+        q = dict(params, limit=200)
+        if nxt:
+            q["cursor"] = nxt
+        r = _http_json("%s/%s?%s" % (base, method, urllib.parse.urlencode(q)), h, opener)
+        if not r.get("ok"):
+            raise ConnectionError_("slack %s: %s" % (method, r.get("error")))
+        out += r.get("messages") or []
+        nxt = (r.get("response_metadata") or {}).get("next_cursor") or ""
+        if not (r.get("has_more") or nxt) or not nxt:
+            break
+    return out
+
+
+JIRA_MAX_PAGES = 50
 
 
 def fetch_jira(src, cursor, opener=None):
@@ -362,11 +396,26 @@ def fetch_jira(src, cursor, opener=None):
     if not since:
         since = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=14)).strftime("%Y-%m-%d %H:%M")
     jql = 'updated >= "%s" ORDER BY updated ASC' % since
-    q = urllib.parse.urlencode({"jql": jql, "maxResults": 100,
-                                "fields": "summary,status,assignee,reporter,duedate,priority,description,updated,comment"})
-    r = _http_json("%s/rest/api/3/search?%s" % (src["base_url"].rstrip("/"), q), h, opener)
+    issues, start, token = [], 0, ""
+    for _ in range(JIRA_MAX_PAGES):
+        params = {"jql": jql, "maxResults": 100,
+                  "fields": "summary,status,assignee,reporter,duedate,priority,description,updated,comment"}
+        if token:
+            params["nextPageToken"] = token
+        else:
+            params["startAt"] = start
+        r = _http_json("%s/rest/api/3/search?%s" % (src["base_url"].rstrip("/"), urllib.parse.urlencode(params)),
+                       h, opener)
+        page = r.get("issues") or []
+        issues += page
+        token = r.get("nextPageToken") or ""
+        start += len(page)
+        if token:
+            continue
+        if not page or r.get("isLast") or start >= int(r.get("total") or 0):
+            break
     items, newest = [], since
-    for iss in r.get("issues") or []:
+    for iss in issues[:MAX_PER_SOURCE]:
         f = iss.get("fields") or {}
         upd = f.get("updated") or ""
         name = lambda x: (x or {}).get("displayName") if x else None  # noqa: E731
@@ -393,9 +442,16 @@ def fetch_github(src, cursor, opener=None, base="https://api.github.com"):
     login = src.get("login") or _http_json(base + "/user", h, opener).get("login")
     since = (cursor or {}).get("updated_at") or _iso(_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=14))
     q = urllib.parse.quote("involves:%s updated:>=%s" % (login, since))
-    r = _http_json("%s/search/issues?q=%s&sort=updated&order=asc&per_page=100" % (base, q), h, opener)
+    found = []
+    for page in range(1, 11):         # the search API returns at most 1,000 results
+        r = _http_json("%s/search/issues?q=%s&sort=updated&order=asc&per_page=100&page=%d" % (base, q, page),
+                       h, opener)
+        batch = r.get("items") or []
+        found += batch
+        if len(batch) < 100:
+            break
     items, newest = [], since
-    for it in r.get("items") or []:
+    for it in found[:MAX_PER_SOURCE]:
         repo = "/".join((it.get("repository_url") or "").split("/")[-2:])
         upd = it.get("updated_at") or since
         items.append({"connector": "github", "id": "gh-%s-%s-%s" % (repo.replace("/", "-"), it.get("number"), re.sub(r"\D", "", upd)),
@@ -450,9 +506,15 @@ def fetch_ical(src, cursor, opener=None):
                       "organizer": get("ORGANIZER").replace("mailto:", "").replace("MAILTO:", ""),
                       "attendees": [v.replace("mailto:", "").replace("MAILTO:", "") for _, v in ev.get("ATTENDEE") or []],
                       "description": get("DESCRIPTION").replace("\\n", "\n").replace("\\,", ",")[:2000],
-                      "status": get("STATUS").lower() or "confirmed", "recurrence": get("RRULE") or None})
-        newest = max(newest, mod)
-    return items[-MAX_PER_SOURCE:], {"modified": newest}
+                      "status": get("STATUS").lower() or "confirmed", "recurrence": get("RRULE") or None,
+                      "_mod": mod})
+    # oldest change first; past the cap, the bookmark stops at the last one kept
+    items.sort(key=lambda i: i["_mod"])
+    items = items[:MAX_PER_SOURCE]
+    newest = max([since] + [i["_mod"] for i in items])
+    for i in items:
+        i.pop("_mod")
+    return items, {"modified": newest}
 
 
 SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", "venv", "Library", ".Trash", ".cache", "site-packages"}
@@ -515,7 +577,12 @@ def fetch_folder(src, cursor, now=None):
                                   "path": p, "content": text[:6000],
                                   "keep_all": (src.get("keep") or "").lower() in ("all", "everything", "yes")})
     items.sort(key=lambda i: i["date"])
-    return items[-MAX_PER_SOURCE:], {"files": alive, "started": True}
+    for i in items[MAX_PER_SOURCE:]:      # past the cap: not marked read, so the next check takes them
+        if seen.get(i["path"]):
+            alive[i["path"]] = seen[i["path"]]
+        else:
+            alive.pop(i["path"], None)
+    return items[:MAX_PER_SOURCE], {"files": alive, "started": True}
 
 
 def _meeting_title(rel):
@@ -570,23 +637,27 @@ def fetch_zoom(src, cursor, opener=None, base=ZOOM_API, oauth=ZOOM_OAUTH, now=No
             break
     # look back two days next time: a recording can take hours to process
     frm = (now - _dt.timedelta(days=2)).date().isoformat()
-    return items[-MAX_PER_SOURCE:], {"done": done[-500:], "from": frm}
+    return items, {"done": done[-500:], "from": frm}
 
 
 FETCHERS = {"imap": fetch_imap, "slack": fetch_slack, "jira": fetch_jira, "github": fetch_github, "ical": fetch_ical,
             "folder": fetch_folder, "zoom": fetch_zoom}
 
 
-def fetch_all(config_dir, only=None, _fetchers=None, now=None):
+def fetch_all(config_dir, only=None, _fetchers=None, now=None, commit=True):
     """Fetch every connection (or ``only`` these ids). A bookmark moves only
-    when its fetch succeeds. Returns {"items": [...], "per_source": {...}}."""
+    when its fetch succeeds. Returns {"items": [...], "per_source": {...}}.
+
+    commit=False saves nothing: the new bookmarks travel in the result
+    ("_state") and ``commit_fetch`` saves them, with the items, once the
+    caller has put what it needs somewhere safe. A dry run never commits."""
     fetchers = _fetchers or FETCHERS
     data, state = load(config_dir), load_state(config_dir)
     out, per = [], {}
     for src in data["sources"]:
         if only and src["id"] not in only:
             continue
-        st = state.get(src["id"]) or {}
+        st = dict(state.get(src["id"]) or {})
         try:
             items, cursor = fetchers[src["kind"]](src, st.get("cursor") or {})
             for i in items:
@@ -601,14 +672,27 @@ def fetch_all(config_dir, only=None, _fetchers=None, now=None):
             st["last_error"] = str(e)[:300]
             per[src["id"]] = {"ok": False, "error": str(e)[:300]}
         state[src["id"]] = st
-    save_state(config_dir, state)
-    if out:
-        day = (now or _dt.datetime.now(_dt.timezone.utc)).date().isoformat()
-        os.makedirs(_path(config_dir, INBOX_DIR), exist_ok=True)
-        with open(os.path.join(config_dir, INBOX_DIR, day + ".jsonl"), "a") as f:
-            for i in sorted(out, key=lambda x: x.get("date") or ""):
+    res = {"items": sorted(out, key=lambda x: x.get("date") or ""), "per_source": per,
+           "_state": state, "_day": (now or _dt.datetime.now(_dt.timezone.utc)).date().isoformat()}
+    if commit:
+        commit_fetch(config_dir, res)
+    return res
+
+
+def commit_fetch(config_dir, res):
+    """Save a fetch's bookmarks and append its items to the inbox."""
+    if res.get("_committed"):
+        return
+    if res["items"]:
+        d = _path(config_dir, INBOX_DIR)
+        os.makedirs(d, mode=0o700, exist_ok=True)
+        path = os.path.join(d, res["_day"] + ".jsonl")
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+        with os.fdopen(fd, "a") as f:
+            for i in res["items"]:
                 f.write(json.dumps(i, ensure_ascii=False) + "\n")
-    return {"items": sorted(out, key=lambda x: x.get("date") or ""), "per_source": per}
+    save_state(config_dir, res["_state"])
+    res["_committed"] = True
 
 
 def recent_items(config_dir, days=30, now=None):
