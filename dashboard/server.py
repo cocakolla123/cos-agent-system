@@ -1329,7 +1329,72 @@ def draft_preview(e):
     return "<div class='tm-plan draft-text'>" + html.escape(body) + "</div>" if body else ""
 
 
-def render_entry(e):
+def _github_ref_url(node):
+    """Best-effort GitHub link from a node's refs: owner/repo#N -> issue,
+    owner/repo@sha -> commit, owner/repo -> the repo."""
+    a = (node or {}).get("attrs") or {}
+    refs = a.get("refs") or []
+    refs = refs if isinstance(refs, list) else [refs]
+    repo = str(a.get("repo") or "")
+    for r in [str(x) for x in refs] + ([repo] if repo else []):
+        m = re.fullmatch(r"([\w.-]+/[\w.-]+)#(\d+)", r)
+        if m:
+            return "https://github.com/%s/issues/%s" % (m.group(1), m.group(2))
+        m = re.fullmatch(r"([\w.-]+/[\w.-]+)@([0-9a-f]{7,40})", r)
+        if m:
+            return "https://github.com/%s/commit/%s" % (m.group(1), m.group(2))
+        if re.fullmatch(r"[\w.-]+/[\w.-]+", r):
+            return "https://github.com/" + r
+    return ""
+
+
+def source_context_html(e, node=None):
+    """The why-this-exists block shown ABOVE a pending card's draft: the task
+    node's own explanation, where it was found, and a clickable link to the
+    source — a stored thread/url when the graph has one, a Gmail search link
+    built from the task name otherwise."""
+    parts = []
+    url = label = src = ""
+    if node is not None:
+        a = node.get("attrs") or {}
+        text = " ".join(str(a[k]) for k in ("detail", "derived_reason", "caution") if a.get(k))
+        if text:
+            parts.append(html.escape(text))
+        src = str(node.get("source") or "")
+        if _sections is not None:
+            url = _sections._url(node) or _sections._gmail_url(node)
+            if url:
+                label = "open the thread ↗" if src.startswith("gmail") else "open source ↗"
+        if not url:
+            url = _github_ref_url(node)
+            if url:
+                label = "open on GitHub ↗"
+        if not url and src.startswith("gmail"):
+            import urllib.parse
+            words = re.findall(r"[A-Za-z0-9][\w'-]*", node.get("name", ""))[:6]
+            if words:
+                email = (_sections.GMAIL_ACCOUNTS.get(src, "") if _sections is not None else "")
+                url = ("https://mail.google.com/mail/"
+                       + (("?authuser=%s" % email) if email else "")
+                       + "#search/" + urllib.parse.quote(" ".join(words)))
+                label = "find the thread in Gmail ↗"
+    if not parts:
+        ctx = re.sub(r"\s*Sources:\s*\.?\s*$", "", str(e.get("context") or "")).strip()
+        if ctx:
+            parts.append(html.escape(ctx))
+    tail = ("found in: " + html.escape(src)) if src else ""
+    if url:
+        tail += (" · " if tail else "") + (
+            '<a href="%s" target="_blank" rel="noopener">%s</a>'
+            % (html.escape(url, quote=True), html.escape(label or "open source ↗")))
+    if tail:
+        parts.append(tail)
+    if not parts:
+        return ""
+    return "<div class='meta' style='margin-bottom:.4rem'>" + "<br>".join(parts) + "</div>"
+
+
+def render_entry(e, node=None):
     status = e.get("status", "pending")
     action_type = e.get("action_type", "")
     entry_id = e.get("id", "")
@@ -1435,11 +1500,12 @@ def render_entry(e):
         actions = ""
         revise_box = ""
 
-    quick_body = draft_preview(e)
+    src_ctx = source_context_html(e, node) if status == "pending" else ""
+    quick_body = src_ctx + draft_preview(e)
     if status == "pending" and executable and not is_fix and action_type == "message_send":
         quick_body = (
-            f"<div class='meta' style='margin-bottom:.4rem'>{html.escape(e.get('context', ''))}</div>"
-            f"<textarea id='editbox-{b64_id}' rows='10' style='width:100%'>"
+            src_ctx
+            + f"<textarea id='editbox-{b64_id}' rows='10' style='width:100%'>"
             f"{html.escape(extract_message_text(e.get('proposed_tool_call', '')))}</textarea>"
             f"<textarea id='notes-{b64_id}' style='display:none'></textarea>"
         )
@@ -1454,7 +1520,7 @@ def render_entry(e):
   {priority_note_html}
   <div class="tabs">
     <button class="tab-btn active" id="btn-{b64_id}-quick" data-entry="{b64_id}" onclick="showTab('{safe_id}','quick')">Quick</button>
-    <button class="tab-btn" id="btn-{b64_id}-details" data-entry="{b64_id}" onclick="showTab('{safe_id}','details')">Details</button>
+    <button class="tab-btn" id="btn-{b64_id}-details" data-entry="{b64_id}" onclick="showTab('{safe_id}','details')">Raw</button>
   </div>
   <div class="tab-panel active" id="panel-{b64_id}-quick" data-entry="{b64_id}">
     {"" if quick_line == title else '<div class="quick-line">' + quick_line + '</div>'}
@@ -2503,7 +2569,8 @@ def attach_to_tasks(pending, g):
         tid = entry_task_id(e, g)
         if tid:
             out.setdefault(tid, []).append({
-                "id": e.get("id"), "html": render_entry(e),
+                "id": e.get("id"),
+                "html": render_entry(e, node=(g.nodes.get(tid) if g is not None else None)),
                 "label": CHIP_LABELS.get(e.get("action_type", ""), "Needs approval")})
     return out
 
