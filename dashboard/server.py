@@ -898,6 +898,7 @@ PAGE_TEMPLATE = """<!doctype html>
 <div id="pollResult" class="result"></div>
 {guardrail_banner}
 {coverage_banner}
+{cost_intro}
 
 <section class="view" id="v-today" data-title="Today">
 {start_research_html}
@@ -1819,6 +1820,87 @@ def _graph_is_empty():
         return not _g.Graph.load(os.path.join(COS_DIR, "graph")).nodes
     except Exception:
         return True
+
+
+def render_cost_intro():
+    """One-time popup for a fresh install: scheduled checks spend model usage
+    every tick, direct connections make the routine fetch free. Personalized
+    to the accounts this install has connected, with each one's setup steps.
+    Gone forever once any direct source exists; until then, dismissal lives in
+    the browser (localStorage), so each new user sees it once."""
+    if _connections is None or DEMO:
+        return ""
+    try:
+        if _connections.status(DASHBOARD_DIR)["sources"]:
+            return ""
+    except Exception:
+        return ""
+    kind_map = {"email": "imap", "calendar": "ical", "messaging": "slack",
+                "ticketing": "jira", "code": "github"}
+
+    def _match(k, acc):
+        # a Jira token only reads Atlassian; a Slack token only Slack — never
+        # claim a direct connection covers a service it cannot reach
+        aid = str(acc.get("id", "")).lower()
+        if k == "jira":
+            return "jira" in aid or "atlassian" in aid
+        if k == "slack":
+            return "slack" in aid
+        return True
+
+    accounts = CONFIG.get("connector_accounts") or []
+    items, seen = [], set()
+    for acc in accounts:
+        k = kind_map.get(str(acc.get("kind")))
+        if not k or k in seen or not _match(k, acc):
+            continue
+        seen.add(k)
+        ids = ", ".join(str(a.get("id")) for a in accounts
+                        if kind_map.get(str(a.get("kind"))) == k and _match(k, a))
+        items.append("<li><b>%s</b> <span class='meta'>· covers %s</span><br>"
+                     "<span class='meta'>%s</span></li>"
+                     % (html.escape(_connections.KINDS[k]["label"]), html.escape(ids),
+                        html.escape(_CONN_HOWTO.get(k, ""))))
+    items.append("<li><b>Folders on this computer</b> <span class='meta'>· no account "
+                 "needed — meeting transcripts and downloads</span></li>")
+    return """
+<div id="costIntro" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:60">
+ <div style="max-width:620px;margin:8vh auto;background:var(--bg,#fff);color:inherit;border-radius:10px;
+             padding:1.2rem 1.4rem;max-height:80vh;overflow:auto;box-shadow:0 8px 40px rgba(0,0,0,.35)">
+  <h3 style="margin-top:0">Make the routine checks free</h3>
+  <p>Right now, every scheduled check runs a small model pass — that spends a little of your
+  Claude usage each time, even when nothing new arrived. There is a cheaper way: <b>direct
+  connections</b> read your accounts without a model at all. A free scan fetches only what is new,
+  drops noise deterministically (the knowledge graph already knows which senders matter), and a
+  model is only called when something actually needs judgment. A quiet check then costs nothing.</p>
+  <p>Credentials are read-only, stay on this machine, and are never committed or sent anywhere.
+  Based on what you have connected, these are worth setting up:</p>
+  <ul style="padding-left:1.2rem">%s</ul>
+  <div style="display:flex;gap:8px;margin-top:.6rem">
+    <button class="primary small" onclick="costIntroGo()">Set them up</button>
+    <button class="small" onclick="costIntroDismiss()">Maybe later</button>
+  </div>
+ </div>
+</div>
+<script>
+function costIntroDismiss() {
+  try { localStorage.setItem("costIntroSeen", "1"); } catch (e) {}
+  document.getElementById("costIntro").style.display = "none";
+}
+function costIntroGo() {
+  costIntroDismiss();
+  const d = document.querySelector("details.conn-add");
+  if (d) d.setAttribute("open", "");
+  location.hash = "#connections";
+  const h = document.getElementById("connections");
+  if (h) h.scrollIntoView({behavior: "smooth"});
+}
+try {
+  if (!localStorage.getItem("costIntroSeen"))
+    document.getElementById("costIntro").style.display = "block";
+} catch (e) {}
+</script>
+""" % "".join(items)
 
 
 def render_coverage_banner():
@@ -2814,6 +2896,7 @@ class Handler(BaseHTTPRequestHandler):
             auth_modal_html=render_auth_modal(),
             context_modal_html=render_context_modal(),
             guardrail_banner=(render_demo_banner() if DEMO else render_guardrail_banner()),
+            cost_intro=render_cost_intro(),
             coverage_banner=("" if DEMO else render_coverage_banner()),
             start_research_html=render_start_research(),
             recent_learnings_html=render_recent_learnings(),

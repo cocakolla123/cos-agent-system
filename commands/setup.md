@@ -142,6 +142,17 @@ for the `tools:` frontmatter — never invent a tool name.
    them makes every one of those calls fail silently with "Unknown command" (this exact gap
    shipped once — see `../lessons-learned.md` 2026-07-17).
 
+### Step 5.1 — point the user at free direct connections
+
+Scheduled checks run a model pass and spend usage every tick. The dashboard carries a cheaper
+path — **Direct connections** (Accounts section): read-only credentials the user enters once
+(Gmail app password, Slack user token, GitHub token, Jira API token, a calendar's secret iCal
+link, plain folders), after which a free scan fetches new items with no model and the knowledge
+graph decides deterministically what matters. The dashboard shows every new user a one-time
+popup explaining this, personalized to their connected accounts, with per-connector steps under
+"Add a connection". During setup, say one line about it and leave the decision to the user —
+never ask them to paste a credential into the chat; the dashboard form keeps it on their machine.
+
 ## Step 6 — register local polling
 
 1. Write `dashboard/poll-config.json`: one entry per fast-check connector from Step 1 (interval
