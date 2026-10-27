@@ -1125,9 +1125,12 @@ document.getElementById("taskForm").addEventListener("submit", async (e) => {{
 }});
 async function approve(btn) {{
   const id = btn.dataset.id, actionType = btn.dataset.actionType, summary = btn.dataset.summary;
-  if (!confirm("Really execute this now?\\n\\n" + summary)) return;
+  const eb = document.getElementById("editbox-" + btoa(id));
+  const shown = (eb && eb.value.trim()) ? eb.value.trim() : summary;
+  if (!confirm("Really execute this now?\\n\\n" + shown)) return;
   const el = document.getElementById("result-" + btoa(id));
   el.textContent = "Running... (can take a minute or two)";
+  if (eb) await post("/save-edit", {{id: id, action_type: actionType, text: eb.value}});
   const res = await post("/approve", {{id: id, action_type: actionType}});
   el.textContent = res.message;
   if (res.success) setTimeout(() => location.reload(), 1200);
@@ -1354,8 +1357,10 @@ def render_entry(e):
     if status == "pending":
         if executable:
             summary = html.escape(e.get("proposed_tool_call", ""))[:400]
+            send_label = ("Send message" if ".send_message in" in e.get("proposed_tool_call", "")
+                          else "Send email")
             btn_label = ("Approve &amp; open PR" if is_fix else
-                         "Approve &amp; create draft" if action_type == "message_send" else "Approve &amp; send")
+                         send_label if action_type == "message_send" else "Approve &amp; send")
             actions = (
                 f"<button class=\"primary\" data-id=\"{safe_id}\" data-action-type=\"{html.escape(action_type)}\" "
                 f"data-summary=\"{summary}\" onclick=\"approve(this)\">{btn_label}</button>"
@@ -1380,11 +1385,14 @@ def render_entry(e):
         )
         if executable and not is_fix:
             raw_text = extract_message_text(e.get("proposed_tool_call", ""))
+            # an email draft is the thing being approved: show it editable up
+            # front instead of behind the Edit toggle
+            edit_display = "block" if action_type == "message_send" else "none"
             revise_box += (
                 f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleEdit(this)\">Edit</button>"
                 f"<button class='small' data-id=\"{safe_id}\" onclick=\"toggleDiscuss(this)\">💬 Discuss</button>"
                 f"</div>"
-                f"<div id='edit-{b64_id}' style='display:none; margin-top:.5rem'>"
+                f"<div id='edit-{b64_id}' style='display:{edit_display}; margin-top:.5rem'>"
                 f"<div class='pill-row'>"
                 f"<button type='button' class='small' onclick=\"wrapSelection('editbox-{b64_id}','*')\"><b>B</b></button>"
                 f"<button type='button' class='small' onclick=\"wrapSelection('editbox-{b64_id}','_')\"><i>I</i></button>"
@@ -1392,7 +1400,7 @@ def render_entry(e):
                 f"<button type='button' class='small' onclick=\"wrapSelection('editbox-{b64_id}','`')\">Code</button>"
                 f"</div>"
                 f"<textarea id='editbox-{b64_id}' rows='3' oninput=\"updateSlackPreview('{safe_id}')\">{html.escape(raw_text)}</textarea>"
-                f"<div class='slack-preview-label'>Preview — how this looks in Slack:</div>"
+                f"<div class='slack-preview-label'>Preview:</div>"
                 f"<div class='slack-preview' id='preview-{b64_id}'></div>"
                 f"<div class='extra-notes-label'>Extra notes (e.g. \"attach the Q2 report\") — "
                 f"Slack's draft API has no attachment field, so this is saved as a reminder for "

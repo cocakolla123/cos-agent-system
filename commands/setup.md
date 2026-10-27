@@ -53,10 +53,26 @@ in one message, not a long form:
 2. For each ambiguous connector-to-role mapping from Step 1 (e.g. two ticketing systems found,
    or a messaging tool with both a `send` and a `send_draft`-shaped tool), ask which one is the
    "real" one for this role.
-3. Whether any messaging/send-capable connector is known to be blocked by an org policy on
-   real sends (if the user doesn't know, default `action_tools` for that role to a draft-
-   creating tool if one exists, real-send otherwise — see `lessons-learned.md`'s worked
-   example).
+3. **The write-capability pass — offer every connected service, ask before wiring any of
+   it.** For each reachable connector from Step 1, enumerate its write-shaped tools
+   (`ToolSearch` for send / reply / create / update / post / comment / respond / publish
+   verbs in that connector's namespace) and show ONE consolidated table: service → what
+   the system could do after an approval click (send an email, post a Slack message,
+   comment on or transition a ticket, accept or move a calendar event, edit a doc, push a
+   `cos/fix-*` branch and open a PR). Then ask per CATEGORY, yes/no, not per tool:
+   - messaging sends (email, Slack, DMs) → `action_tools.message_send`
+   - ticket updates (comment, status, assignee) → `action_tools.ticket_update`
+   - calendar changes (respond, propose, move) → `action_tools.calendar_change`
+   - code publish (push the drafted fix branch and open a PR via `gh`) → the codefix
+     flow; check `gh auth status` and record the result. There is no merge option to
+     offer: the fix flow refuses merges by construction.
+   Spell out what a "yes" means: that tool is granted ONLY to the approval subprocess,
+   invoked ONLY against the exact queue entry the user just clicked — never to polling,
+   research, drafting or chat, whose grants stay read-only. A "no" (or an unanswered
+   category) stays in copy-text mode, exactly like a fresh install. Also ask whether any
+   send-capable connector is known to be blocked by an org policy on real sends (if the
+   user doesn't know, default that category to a draft-creating tool if one exists,
+   real-send otherwise — see `lessons-learned.md`'s worked example).
 4. Whether there are categories of action this user never wants done autonomously (common
    defaults to offer: deploy to prod, merge code, delete data, close incidents, change
    permissions, contact external users/customers, legal/financial/employment/security/policy
@@ -94,7 +110,13 @@ for the `tools:` frontmatter — never invent a tool name.
    - `action_tools` — keyed by the **canonical `action_type` strings** the dashboard already
      knows how to render: `message_send`, `ticket_update`, `calendar_change` (extend only if a
      genuinely new action shape is needed, and update `server.py`'s `ICONS`/`compute_tags` to
-     match — don't invent a new key the dashboard can't render). Values from Step 2's answers.
+     match — don't invent a new key the dashboard can't render). Values from Step 2's
+     write-capability answers, and a value may be a comma-joined LIST when several accounts
+     or services serve one action type (two Gmail accounts plus a Slack workspace can all sit
+     under `message_send`: `"mcp__gmail_a__send_message,mcp__gmail_b__send_email,mcp__slack__post_message"`).
+     The approve subprocess is granted exactly that list for that one clicked entry, and the
+     entry's own `proposed_tool_call` names which account to use. Categories the user
+     declined in Step 2.3 are simply absent — those cards render in copy-text mode.
    - `domain_tag`/`domain_keywords`/`domain_url_keywords` from Step 2's core-job answer plus a
      couple of research passes for the domain's actual terminology (queue names, product
      names, internal tool URLs — whatever's realistic to pattern-match on later).
