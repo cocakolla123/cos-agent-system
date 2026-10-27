@@ -6,7 +6,12 @@ description: Lightweight autonomous check-in, scoped per connector. Fired by pol
 
 Arguments: $ARGUMENTS — `--scope=<connectors>` (comma-separated subset of whatever connectors
 are defined in `dashboard/poll-config.json` — the caller, `poll-tick.sh` or the dashboard's
-"Poll now," already decided which are due) and/or `--force` (ignore the schedule gate). If no
+"Poll now," already decided which are due), `--tool=<absolute path to cos_tool.py>` and
+`--workspace=<absolute path to the workspace dir>` (passed by the caller; every file this
+command names resolves against them — `poll-config.json`, the logs and `poll-log.md` live in
+the `--tool` file's directory, the graph and `approval-queue.md` under `--workspace`. Use
+these absolute paths, never a guessed relative one; if they are missing, derive the dashboard
+dir from the deployment before touching any file), and/or `--force` (ignore the schedule gate). If no
 `--scope` is given and this is a bare manual invocation (not via `poll-tick.sh`), run a
 `general` sweep (below) only.
 

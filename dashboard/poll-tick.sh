@@ -122,7 +122,7 @@ while IFS= read -r a; do [ -n "$a" ] && model_args+=("$a"); done < <(
 # usage.py sends only the poll's tools, caps the call and logs its cost
 out_file=$(mktemp)
 if python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
-  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope" ${model_args[@]+"${model_args[@]}"} \
+  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --tool=$SCRIPT_DIR/cos_tool.py --workspace=$DASH_DIR/workspace" ${model_args[@]+"${model_args[@]}"} \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \

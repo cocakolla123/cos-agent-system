@@ -3327,8 +3327,9 @@ class Handler(BaseHTTPRequestHandler):
             poll_cfg = read_json(os.path.join(DASHBOARD_DIR, "poll-config.json"),
                                  DEFAULT_POLL_CONFIG)
             scopes = ",".join(poll_connectors(poll_cfg))
-            prompt = ("/global:cos-poll --scope=%s --force" % scopes
-                      if scopes else "/global:cos-poll --force")
+            paths = " --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR)
+            prompt = (("/global:cos-poll --scope=%s --force" % scopes
+                      if scopes else "/global:cos-poll --force") + paths)
             try:
                 result = claude_run("poll", 
                     [
