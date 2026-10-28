@@ -1857,10 +1857,10 @@ def render_cost_intro():
         seen.add(k)
         ids = ", ".join(str(a.get("id")) for a in accounts
                         if kind_map.get(str(a.get("kind"))) == k and _match(k, a))
-        items.append("<li><b>%s</b> <span class='meta'>· covers %s</span><br>"
-                     "<span class='meta'>%s</span></li>"
-                     % (html.escape(_connections.KINDS[k]["label"]), html.escape(ids),
-                        html.escape(_CONN_HOWTO.get(k, ""))))
+        steps = "".join("<li>%s</li>" % html.escape(t) for t in _CONN_HOWTO.get(k, []))
+        items.append("<li><b>%s</b> <span class='meta'>· covers %s</span>"
+                     "<ol class='meta' style='margin:.2rem 0 .5rem;padding-left:1.1rem;display:grid;gap:3px'>%s</ol></li>"
+                     % (html.escape(_connections.KINDS[k]["label"]), html.escape(ids), steps))
     items.append("<li><b>Folders on this computer</b> <span class='meta'>· no account "
                  "needed — meeting transcripts and downloads</span></li>")
     return """
@@ -2287,7 +2287,7 @@ async function saveBudget() {{
 
 _CONN_HELP = {
     "imap": [("id", "Name", "work-mail"), ("host", "IMAP server", "imap.gmail.com"), ("port", "Port", "993"),
-             ("user", "Address", "you@example.com"), ("password", "App password", ""),
+             ("user", "Address", "you@gmail.com"), ("password", "App password", "the 16 characters from Google"),
              ("folders", "Folders", "INBOX, [Gmail]/Sent Mail"), ("workspace", "Workspace", "")],
     "slack": [("id", "Name", "work-slack"), ("token", "User token (xoxp-)", ""), ("workspace", "Workspace", "")],
     "jira": [("id", "Name", "jira"), ("base_url", "Site", "https://your-org.atlassian.net"),
@@ -2303,13 +2303,42 @@ _CONN_HELP = {
              ("client_secret", "Client secret", ""), ("workspace", "Workspace", "")],
 }
 _CONN_HOWTO = {
-    "imap": "Gmail: turn on 2-step verification, then create an app password (Google Account, Security, App passwords). Read-only: the app only selects folders read-only.",
-    "slack": "Create a Slack app with user scopes channels:history, groups:history, im:history, mpim:history, channels:read, groups:read, im:read, mpim:read and users:read, install it, and copy the User OAuth Token.",
-    "jira": "Create an API token at id.atlassian.com, Security, API tokens.",
-    "github": "Create a fine-grained token with read-only access to issues and pull requests.",
-    "ical": "Google Calendar: Settings, your calendar, Integrate calendar, Secret address in iCal format.",
-    "folder": "Read on this computer, no account needed. Zoom saves local recordings and transcripts in Documents/Zoom; Teams and Meet transcripts you download land in Downloads. Meeting transcripts are always read; other files only when they mention you or an open task, unless you set keep to all.",
-    "zoom": "For transcripts of cloud recordings: at marketplace.zoom.us, Develop, Build App, Server-to-Server OAuth, add the scope cloud_recording:read:list_user_recordings (read-only), activate it, and copy the Account ID, Client ID and Client secret. Turn on audio transcripts under Settings, Recording.",
+    "imap": [
+        "Open myaccount.google.com/apppasswords in your browser (sign in). If it says the setting is unavailable, first turn on 2-Step Verification at myaccount.google.com/security, then come back.",
+        "Where it says App name, type anything (for example: CoS dashboard) and click Create. Google shows a 16-character password like \u201cabcd efgh ijkl mnop\u201d \u2014 copy it now; it is only shown once.",
+        "Fill the form below: IMAP server = imap.gmail.com \u00b7 Port = 993 \u00b7 Address = your full Gmail address \u00b7 App password = the 16 characters you copied (spaces do not matter). Leave Folders empty for the defaults.",
+        "Click Save connection, then Test. For a second Gmail account, repeat with a different Name (for example: school-mail).",
+        "Not Gmail? Outlook/Office365: server outlook.office365.com, and the password is an app password from account.microsoft.com/security. Either way access is read-only \u2014 mail is never changed.",
+    ],
+    "slack": [
+        "Open api.slack.com/apps, click Create New App, pick From scratch, name it (for example: CoS) and choose your workspace.",
+        "In the app\u2019s left menu open OAuth & Permissions. Scroll to Scopes \u2192 User Token Scopes and add: channels:history, groups:history, im:history, mpim:history, channels:read, groups:read, im:read, mpim:read, users:read.",
+        "Scroll back up on that same page and click Install to Workspace, then Allow.",
+        "Copy the User OAuth Token (it starts with xoxp-) and paste it into Token below. Save, then Test.",
+    ],
+    "jira": [
+        "Open id.atlassian.com/manage-profile/security/api-tokens and click Create API token. Name it, create, and copy the token.",
+        "Fill the form: Site = https://your-company.atlassian.net (the address you open Jira at) \u00b7 Your Atlassian email = the address you log in with \u00b7 API token = what you copied. Save, then Test.",
+    ],
+    "github": [
+        "Open github.com/settings/personal-access-tokens and click Generate new token (the fine-grained kind).",
+        "Repository access: All repositories (or pick the ones that matter). Under Permissions grant Issues and Pull requests, both Read-only.",
+        "Generate, copy the token (it starts with github_pat_), paste it into Personal access token below, and put your GitHub username in Username. Save, then Test.",
+    ],
+    "ical": [
+        "Open calendar.google.com, click the gear (top right) \u2192 Settings, then click your calendar\u2019s name in the left column.",
+        "Scroll to Integrate calendar and copy the Secret address in iCal format (a long link ending in .ics). Treat that link like a password.",
+        "Paste it into Private iCal link below. Save, then Test. Works the same with any calendar app that offers an iCal/ICS link.",
+    ],
+    "folder": [
+        "No account needed \u2014 this reads folders on this computer. Zoom saves local recordings and transcripts in Documents/Zoom; Teams and Meet transcripts you download land in Downloads.",
+        "Enter the folder paths, comma separated. Meeting transcripts are always read; other files only when they mention you or an open task, unless you set keep to all.",
+    ],
+    "zoom": [
+        "For transcripts of Zoom cloud recordings. Open marketplace.zoom.us \u2192 Develop \u2192 Build App \u2192 Server-to-Server OAuth.",
+        "Add the scope cloud_recording:read:list_user_recordings (read-only) and activate the app.",
+        "Copy the Account ID, Client ID and Client secret into the form below. In Zoom itself, make sure audio transcripts are on under Settings \u2192 Recording. Save, then Test.",
+    ],
 }
 
 
@@ -2364,7 +2393,11 @@ const CONN_FIELDS = {json.dumps(_CONN_HELP)}, CONN_HOWTO = {json.dumps(_CONN_HOW
       CONN_SECRET = {json.dumps({k: v["secret"] for k, v in _connections.KINDS.items()})};
 function connFields() {{
   const k = document.getElementById("connKind").value;
-  document.getElementById("connHowto").textContent = CONN_HOWTO[k] || "";
+  const steps = CONN_HOWTO[k] || [];
+  document.getElementById("connHowto").innerHTML = steps.length
+    ? "<ol style='margin:.3rem 0;padding-left:1.2rem;display:grid;gap:4px'>" +
+      steps.map(t => "<li>" + t + "</li>").join("") + "</ol>"
+    : "";
   document.getElementById("connFields").innerHTML = CONN_FIELDS[k].map(([f, label, ph]) =>
     `<label>${{label}}<input data-f="${{f}}" type="${{CONN_SECRET[k].includes(f) ? "password" : "text"}}" placeholder="${{ph}}" autocomplete="off"></label>`).join("");
 }}
