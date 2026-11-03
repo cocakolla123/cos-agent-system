@@ -6,11 +6,15 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.dirname(HERE))
 
 import codefix  # noqa: E402
+import sandbox  # noqa: E402
+
+NEEDS_SANDBOX = unittest.skipUnless(sandbox.backend() is not None, sandbox.unavailable_message())
 
 BUGGY = "def add(a, b):\n    return a - b\n"
 FIXED = "def add(a, b):\n    return a + b\n"
@@ -62,6 +66,7 @@ class TestCodeFix(unittest.TestCase):
             f.write(content)
         return fix
 
+    @NEEDS_SANDBOX
     def test_passing_fix_is_queued_and_approval_opens_a_pr(self):
         fix = self._fix()
         self.assertEqual(fix["branch"], "cos/fix-add-subtracts")
@@ -90,6 +95,7 @@ class TestCodeFix(unittest.TestCase):
                               capture_output=True, text=True).stdout.strip()
         self.assertEqual(main, e["base_commit"])
 
+    @NEEDS_SANDBOX
     def test_failing_fix_is_visible_but_not_approvable(self):
         fix = self._fix(content="def add(a, b):\n    return a * b\n")
         e = codefix.finalize(fix, TEST_CMD, "Wrong fix", "", "t", self.ws)
@@ -120,6 +126,7 @@ class TestCodeFix(unittest.TestCase):
         self.assertFalse(os.path.exists(self.gh_log))
 
 
+    @NEEDS_SANDBOX
     def test_only_the_tested_commit_can_be_pushed(self):
         fix = self._fix()
         e = codefix.finalize(fix, TEST_CMD, "Fix", "", "t", self.ws)
@@ -135,6 +142,7 @@ class TestCodeFix(unittest.TestCase):
             codefix.open_pr(dict(e, tested_commit=""), gh=self.gh)
         self.assertFalse(os.path.exists(self.gh_log))
 
+    @NEEDS_SANDBOX
     def test_test_command_runs_without_a_shell_or_secrets(self):
         for bad in ("bash -c 'make test'", "sh run.sh", ""):
             with self.assertRaises(codefix.FixError):
@@ -147,6 +155,31 @@ class TestCodeFix(unittest.TestCase):
         finally:
             del os.environ["ANTHROPIC_API_KEY"]
         self.assertEqual(code, 0)
+
+    def test_without_a_sandbox_the_fix_is_queued_failed_and_not_run(self):
+        fix = self._fix()
+        with mock.patch.object(sandbox, "backend", return_value=None):
+            e = codefix.finalize(fix, TEST_CMD, "Fix", "", "t", self.ws)
+        self.assertEqual(e["status"], "failed")
+        self.assertEqual(e["test_exit"], str(codefix.EXIT_NO_SANDBOX))
+        self.assertIn("tests not run", e["test_summary"])
+        with self.assertRaises(codefix.FixError):
+            codefix.open_pr(e, gh=self.gh)
+        self.assertFalse(os.path.exists(self.gh_log))
+
+    def test_commit_skips_repo_hooks(self):
+        # a hook inside the repo is repo code; the commit runs unsandboxed
+        hooks = os.path.join(self.repo, ".githooks")
+        os.makedirs(hooks)
+        marker = os.path.join(self.tmp.name, "hook-ran")
+        with open(os.path.join(hooks, "pre-commit"), "w") as f:
+            f.write("#!/bin/sh\ntouch %s\n" % marker)
+        os.chmod(os.path.join(hooks, "pre-commit"), 0o755)
+        sh(self.repo, "git", "config", "core.hooksPath", ".githooks")
+        fix = self._fix()
+        with mock.patch.object(sandbox, "backend", return_value=None):
+            codefix.finalize(fix, TEST_CMD, "Fix", "", "t", self.ws)
+        self.assertFalse(os.path.exists(marker))
 
 
 if __name__ == "__main__":

@@ -226,7 +226,11 @@ Each claim below names what enforces it, what it covers, and what it does not.
   stored `proposed_tool_call`, only after you approve. The one exception is a code fix, and
   it is narrower still: `/cos-fix` drafts the fix on its own `cos/fix-*` branch in a
   separate worktree, with a test that reproduces the bug. `dashboard/codefix.py` then re-runs
-  the tests itself and shows the diff and the result on the card. Approving runs plain code,
+  the tests itself, inside an OS sandbox (`dashboard/sandbox.py`: macOS `sandbox-exec`, or
+  `bwrap` on Linux) with no network, no reads of the home directory or the dashboard's
+  secrets, writes only inside the fix worktree, no credentials in the environment and a hard
+  timeout; with no sandbox available the tests are not run and the card cannot be approved.
+  It shows the diff and the result on the card. Approving runs plain code,
   with no model call: it pushes that branch and opens a pull request with `gh`. It has no
   merge path and refuses merge commands, so merging stays yours. A fix whose tests fail
   cannot be approved.
