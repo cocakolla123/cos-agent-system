@@ -35,6 +35,7 @@ import json
 import os
 import re
 import subprocess
+import time
 import sys
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -1725,6 +1726,9 @@ def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None)
     if _usage is None:
         return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout)
     return _usage.run(cmd, job, DASHBOARD_DIR, cwd=cwd, timeout=timeout)
+
+
+_POLL_NOW = None
 
 
 def spawn_background(cmd, logname, job=None):
@@ -3512,24 +3516,34 @@ class Handler(BaseHTTPRequestHandler):
             paths = " --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR)
             prompt = (("/global:cos-poll --scope=%s --force" % scopes
                       if scopes else "/global:cos-poll --force") + paths)
+            # in the background, like a crawl: a sweep that re-reads each
+            # pending thread outlasts any sane request timeout, and a killed
+            # poll records nothing (observed: every Poll now died at 300s)
+            global _POLL_NOW
+            if _POLL_NOW is not None and _POLL_NOW.poll() is None:
+                self._send_json({"message": "a poll is already running — results land in a few "
+                                            "minutes (Polling → Recent checks, launchd-poll.log)"})
+                return
             try:
-                result = claude_run("poll", 
-                    [
-                        CLAUDE_BIN, "-p", prompt, *model_args("poll"),
-                        "--permission-mode", "dontAsk",
-                        "--allowedTools", POLL_TOOLS,
-                        "--output-format", "text",
-                    ],
-                    cwd=ORCHESTRATOR_CWD,
-                    capture_output=True,
-                    text=True,
-                    timeout=300,
-                )
-                output = (result.stdout or result.stderr or "").strip()
-                draft_missing_async("launchd-poll.log")
-                self._send_json({"message": output[:2000] or "(no output)"})
-            except subprocess.TimeoutExpired:
-                self._send_json({"message": "timed out after 300s"}, 504)
+                with open(os.path.join(DASHBOARD_DIR, "launchd-poll.log"), "a") as f:
+                    f.write("\n[poll now] %s\n" % time.strftime("%Y-%m-%dT%H:%M:%S"))
+                proc = spawn_background(
+                    [CLAUDE_BIN, "-p", prompt, *model_args("poll"),
+                     "--permission-mode", "dontAsk",
+                     "--allowedTools", POLL_TOOLS,
+                     "--output-format", "text"], "launchd-poll.log", job="poll")
+                _POLL_NOW = proc
+
+                def _after(p=proc):
+                    p.wait()
+                    draft_missing_async("launchd-poll.log")
+
+                import threading
+                threading.Thread(target=_after, daemon=True, name="draft-after-poll").start()
+                self._send_json({"message": "poll started — it reads every pending thread, so it "
+                                            "takes a few minutes; the board updates when it lands"})
+            except OSError as exc:
+                self._send_json({"message": f"could not start the poll: {exc}"}, 500)
             return
 
         if self.path == "/explain":
