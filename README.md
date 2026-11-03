@@ -36,15 +36,30 @@ authorization, via a dashboard popup you can refuse permanently.
 
 ## Install
 
+Get this repository onto your Mac (the green **Code** button: *Download ZIP*, or `git clone`
+the address it shows), then from inside the folder:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR-USERNAME/YOUR-FORK/main/install.sh \
-  | bash -s -- --repo https://github.com/YOUR-USERNAME/YOUR-FORK.git --start
+./install.sh --start
 ```
 
-Or from a checkout: `./install.sh --start`. Requirements: Python ≥ 3.12, the
-[`claude` CLI](https://claude.ai/install.sh), macOS or Linux. Then, in Claude Code from the
-install folder, run `/global:setup` once. Dashboard: `http://127.0.0.1:8765`. Remove cleanly
-anytime with `/cos-uninstall`.
+The installer checks everything it needs first and tells you exactly what's missing and how to
+get it: Python ≥ 3.12, `git`, `jq`, and the [`claude` CLI](https://claude.ai/install.sh). Then, in
+Claude Code from the same folder, run `/global:setup` once. The dashboard is at
+`http://127.0.0.1:8765`.
+
+| To | Run |
+|---|---|
+| update to the latest version | `./install.sh --update` |
+| undo the last update | `./install.sh --rollback` |
+| remove the commands (your data stays) | `./install.sh --uninstall` |
+| remove everything, data included | `/global:cos-uninstall` in Claude Code, which asks first |
+
+Updates only fast-forward. If you have edited the code, an update stops and says so instead of
+overwriting your changes. If a new version doesn't compile on your machine, it rolls itself back.
+Commands you have customized in `~/.claude/commands/global/` are never replaced: the new
+version is saved next to yours as `<name>.md.new`. The version you're running is in `VERSION`.
+What stays on your machine and what leaves it is in [PRIVACY.md](PRIVACY.md).
 
 ## Bring your own model
 
