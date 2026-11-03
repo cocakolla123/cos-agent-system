@@ -35,6 +35,9 @@ _BASELINE = {
 }
 
 
+POLL_TOOLS_MAX = 40
+
+
 def _finding(level, field, message):
     return {"level": level, "field": field, "message": message}
 
@@ -78,6 +81,13 @@ def validate(config, available_tools=None):
                 "error", "research_tools",
                 "no Bash grant at all — the crawl can't run graph.py and will "
                 "silently persist nothing"))
+    pt = {t.strip() for t in str(config.get("poll_tools") or "").split(",") if t.strip()}
+    if len(pt) > POLL_TOOLS_MAX:
+        findings.append(_finding(
+            "warn", "poll_tools",
+            "%d tools in the poll grant — keep it to discovery (mail, calendar, messaging) plus "
+            "the read tools for following a message into a work connector; a crowded grant makes "
+            "polls pick the wrong tool and costs every tick" % len(pt)))
     for field in ("research_tools", "poll_tools", "chat_tools", "learn_tools",
                   "revise_tools", "base_tools"):
         val = config.get(field)

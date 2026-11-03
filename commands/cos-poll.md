@@ -52,16 +52,25 @@ invocation before finishing, rather than waiting for `general`'s own next schedu
 The full narrow check, in this order — the first step always runs, even when the budget
 then runs out before the rest:
 - **New since the last poll — first, every time.** Read `poll-last-completed.json` in
-  `--dashboard` for the last successful run (if absent, look back 3 days). Search every
-  connected mailbox (each email account's search tool: `after:<that date>`, and `in:sent`
-  for what the user sent), the calendar, and each messaging/ticketing connector for what is
-  new since then. For each new message that asks the user for something, changes the state
+  `--dashboard` for the last successful run (if absent, look back 3 days). Then check every
+  connected discovery source for what is new since then:
+  - **mail:** each mailbox's search (`after:<that date>`, and `in:sent` for what the user sent);
+  - **messaging:** Slack/Teams DMs, @mentions of the user, and replies in threads the user is in;
+  - **tickets:** Jira, Linear, Asana, GitHub issues and PRs assigned to the user, mentioning
+    them, or that they reported, changed since then (new comment, status, assignee, due date);
+  - **calendar:** events created or changed since then, and anything starting in the next 48 h.
+  A connector that isn't authorized is reported by name in the tick summary, never skipped
+  silently. For each new message that asks the user for something, changes the state
   of something already in the graph (an offer approved, a start date set, a document now
   due), or confirms the user did something, update or create the `Action` / record with
   `attrs.thread` and `attrs.last_activity`, exactly as `cos-research` would. This is the only
   step that sees mail nobody has mentioned yet; without it a poll can only re-check what it
   already knew (observed 2026-11-03: an approved offer and a same-day onboarding deadline
   sat unseen for days while every poll re-checked old drafts).
+  **Follow what a message points at.** When a new message references something in another
+  connected tool — a Notion page, an Asana task, a Drive doc — open it with that connector's
+  read tool before deciding what it means (the poll grant includes those read tools for
+  exactly this). A message saying "updated the doc" is a pointer; the doc is the content.
 - For each `pending` `approval-queue.md` entry, re-check its real source and mark it
   `superseded` (via `cos-knowledge`, with a one-line reason) if someone else already resolved
   it. Leave unchanged entries alone. **Re-checking the real source means reading the thread,
@@ -76,7 +85,9 @@ then runs out before the rest:
   priority and nearest due date first, at most 10 per tick) with no `pending` entry whose
   `task` is its id, queue one entry with `task: <node id>`:
   - if the next move is a message or reply a connected tool can send, a `message_send` draft
-    to the person who asked, in the thread they asked in;
+    to the person who asked, in the thread they asked in, with an `account: <connector account
+    id>` line naming the mailbox it was found in (e.g. `account: gmail-personal`) — approval
+    sends only with that account's own tool and refuses an entry that names none;
   - otherwise a `self_do` entry whose `proposed_tool_call` is the drafted work itself: an
     outline with real headings for a document, the steps for a booking or a form, the text
     to paste.

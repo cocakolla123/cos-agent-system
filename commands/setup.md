@@ -131,6 +131,16 @@ for the `tools:` frontmatter — never invent a tool name.
      search/get, chat search/read-thread, calendar list/search). Forgetting the baseline
      produces a subprocess that can't even call another agent — a silent, hard-to-diagnose
      failure, not a crash.
+     **`poll_tools` stays small: discovery plus follow-ups, about 20 to 30 tools.** Discovery is
+     everything that can bring something new to the user: each mailbox's search/get-thread, each
+     calendar's list/search/get, Slack/Teams search and read-thread (DMs, mentions), and each
+     ticket tracker's search/get for work assigned to or mentioning the user (Jira, Linear, Asana,
+     GitHub issues). Follow-ups are the one or two read tools per work
+     connector needed to open what a message points at (a Notion page's search/fetch, an Asana
+     task's get/search, a Drive file's search/read). Leave out design and media connectors
+     (Figma, Canva, video, audio) and anything that writes: they never serve a poll. Measured
+     2026-11-03: a 126-tool grant made a smaller model pick the wrong mailbox tool and give up,
+     and bloated every tick. The research crawl keeps the full read-only set.
 2. Write `<workspace>/APPROVAL_POLICY.md` if Step 2's question 4 produced any never-autonomous
    categories — plain markdown list, one line per category. `/cos`, `/cos-approve`, and
    `/cos-approve-confirmed` already look for this exact filename.

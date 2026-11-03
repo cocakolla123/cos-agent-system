@@ -569,6 +569,19 @@ def named_account(call):
     return m.group(1).lower() if m else ""
 
 
+def node_email_account(node, config_dir):
+    """The one configured email account named in a task's ``source``, or None
+    (none named, or more than one: then approval refuses rather than guess)."""
+    try:
+        with open(os.path.join(config_dir, "config.json")) as f:
+            accts = {str(a.get("id")) for a in (json.load(f) or {}).get("connector_accounts") or []
+                     if a.get("kind") == "email" and a.get("id")}
+    except (OSError, ValueError):
+        return None
+    hit = [s.strip() for s in str(node.get("source") or "").split(",") if s.strip() in accts]
+    return hit[0] if len(set(hit)) == 1 else None
+
+
 def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queue_path, graph_dir=None):
     """One call that drafts a next step for each new task; entries go into the
     approval queue as pending. A "wait" verdict (the live thread says the ball
@@ -633,6 +646,10 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
                 ev = ev if isinstance(ev, list) else [ev]
                 call_text = d.get("proposed_tool_call")
                 acct, addr = source_account(ev, items_by_id)
+                if not acct and d["action_type"] == "message_send":
+                    # drafted without fetched items (the draft-missing pass): the
+                    # task's own source names the mailbox it was found in
+                    acct = node_email_account(n, config_dir)
                 if d["action_type"] == "message_send":
                     # a reply goes out from the account the ask came in on,
                     # decided here from the sources: a draft that names another

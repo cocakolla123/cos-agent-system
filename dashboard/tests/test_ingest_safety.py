@@ -255,6 +255,20 @@ class TestCrashRecovery(Base):
         self.assertEqual(self.bookmark(), {"C1": "1"})
 
 
+class TestDraftAccount(unittest.TestCase):
+    def test_a_task_names_its_mailbox_or_nothing(self):
+        d = tempfile.mkdtemp()
+        with open(os.path.join(d, "config.json"), "w") as f:
+            json.dump({"connector_accounts": [{"id": "gmail-personal", "kind": "email"},
+                                              {"id": "gmail-asu", "kind": "email"},
+                                              {"id": "google-calendar", "kind": "calendar"}]}, f)
+        acct = poll_direct.node_email_account
+        self.assertEqual(acct({"source": "gmail-personal"}, d), "gmail-personal")
+        self.assertEqual(acct({"source": "gmail-asu, google-calendar"}, d), "gmail-asu")
+        self.assertIsNone(acct({"source": "gmail-personal, gmail-asu"}, d))   # ambiguous: refuse
+        self.assertIsNone(acct({"source": "gmail"}, d))                       # not a configured id
+
+
 class Pages(BaseHTTPRequestHandler):
     def log_message(self, *a):
         pass
