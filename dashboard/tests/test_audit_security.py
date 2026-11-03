@@ -9,6 +9,7 @@ import unittest
 from unittest import mock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import approval  # noqa: E402
 import codefix   # noqa: E402
@@ -85,3 +86,81 @@ class TestPublishSkipsClaudeDir(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+import json             # noqa: E402
+import threading        # noqa: E402
+import connections      # noqa: E402
+import poll_direct      # noqa: E402
+import runtrace         # noqa: E402
+from test_ingest_safety import REC, Base as IngestBase, slack  # noqa: E402
+
+
+class TestConcurrentChecks(IngestBase):
+    def test_a_check_during_anothers_read_does_not_lose_its_items(self):
+        import datetime as dt
+        now = dt.datetime(2026, 10, 27, 20, 0, tzinfo=dt.timezone.utc)
+        in_read, release = threading.Event(), threading.Event()
+        rec_y = dict(REC, key="y-task", name="Y task", attrs={"evidence": ["sl-2"]})
+
+        def slow(d, p, job="poll_direct"):
+            in_read.set()
+            release.wait(10)
+            return json.dumps([REC]), 0.0
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")],
+                       [slack(2, "Dana please review the deck by today")]]
+        a = threading.Thread(target=lambda: poll_direct.check(self.dir, self.gdir, now=now, draft=False,
+                                                              _model=slow))
+        a.start()
+        self.assertTrue(in_read.wait(10))
+        b = threading.Thread(target=lambda: poll_direct.check(self.dir, self.gdir, now=now, draft=False,
+                                                              _model=lambda d, p, job="poll_direct":
+                                                              (json.dumps([rec_y]), 0.0)))
+        b.start()
+        b.join(0.5)
+        self.assertTrue(b.is_alive())          # B waits for A instead of racing it
+        release.set()
+        a.join(10)
+        b.join(10)
+        import graph as _g
+        keys = {n["id"].split(":action:")[-1] for n in _g.Graph.load(self.gdir).query(type_="Action")}
+        self.assertEqual(keys, {"q4-numbers", "y-task"})
+        self.assertEqual(poll_direct._read_pending(self.dir), [])
+
+
+class TestFatesAndIdentity(IngestBase):
+    def test_an_uncited_bad_record_does_not_quarantine_other_items(self):
+        import datetime as dt
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?"),
+                        slack(2, "Dana can you also check the budget today?")]]
+        bad = {"kind": "Action", "name": "no key"}                # cites nothing
+        poll_direct.check(self.dir, self.gdir, draft=False,
+                          now=dt.datetime(2026, 10, 27, 20, 0, tzinfo=dt.timezone.utc),
+                          _model=lambda d, p, job="poll_direct": (json.dumps([REC, bad]), 0.0))
+        items = runtrace.runs(self.dir)[-1]["items"]
+        self.assertEqual(items["sl-1"]["fate"], "task")
+        self.assertEqual(items["sl-2"]["fate"], "no_task")
+        self.assertEqual(len(poll_direct.read_quarantine(self.dir)), 1)   # still kept on disk
+
+    def test_connected_mailboxes_are_the_users_own(self):
+        with open(os.path.join(self.dir, "config.json"), "w") as f:
+            json.dump({"connector_accounts": [{"id": "school", "kind": "email",
+                                               "account": "dana@school.example"}]}, f)
+        me = connections.user_identity(self.dir)
+        self.assertIn("dana@school.example", [me["email"]] + me["other_emails"])
+        g = graph.Graph()
+        g.upsert_node("Person", "default", "dana", attrs={"email": "dana@school.example"})
+        g.upsert_node("Person", "default", "prof", attrs={"email": "prof@school.example"})
+        people, orgs = poll_direct.graph_people(g, me)
+        self.assertNotIn("dana@school.example", people)
+        self.assertNotIn("school.example", orgs)        # the user's own org is not a counterparty
+
+    def test_drafting_tools_never_include_a_write(self):
+        with open(os.path.join(self.dir, "config.json"), "w") as f:
+            json.dump({"research_tools": ",".join([
+                "mcp__gmail-x__search_emails", "mcp__gmail-x__read_email",
+                "mcp__gmail-x__get_or_create_label", "mcp__gmail-x__send_email",
+                "mcp__Google_Calendar__list_events", "mcp__Google_Calendar__respond_to_event"])}, f)
+        got = poll_direct.verify_tools(self.dir).split(",")
+        self.assertEqual(sorted(got), ["mcp__Google_Calendar__list_events", "mcp__gmail-x__read_email",
+                                       "mcp__gmail-x__search_emails"])

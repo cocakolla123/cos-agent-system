@@ -191,6 +191,17 @@ def user_identity(config_dir):
     for s in load(config_dir)["sources"]:
         if s["kind"] == "imap" and s.get("user") and s["user"] not in emails:
             emails.append(s["user"])
+    # every mailbox connected through Claude is the user's own too: without
+    # these, the user's other addresses read as counterparties
+    try:
+        with open(os.path.join(config_dir, "config.json")) as f:
+            accts = (json.load(f) or {}).get("connector_accounts") or []
+    except (OSError, ValueError):
+        accts = []
+    for a in accts:
+        addr = str(a.get("account") or "").strip().lower()
+        if a.get("kind") == "email" and "@" in addr and addr not in [e.lower() for e in emails]:
+            emails.append(addr)
     return {"name": me.get("name", ""), "email": emails[0] if emails else "",
             "other_emails": emails[1:], "slack": me.get("slack", ""),
             "github": me.get("github") or next((s.get("login") for s in load(config_dir)["sources"]
@@ -273,6 +284,9 @@ def fetch_imap(src, cursor, _imap=None):
     items, cursor, notes = [], dict(cursor or {}), []
     try:
         conn.login(src["user"], src["password"])
+        caps = getattr(conn, "capabilities", ()) or ()
+        gmail = any((c.decode() if isinstance(c, bytes) else str(c)).upper() == "X-GM-EXT-1" for c in caps)
+        fetch_parts = "(BODY.PEEK[] X-GM-THRID)" if gmail else "(BODY.PEEK[])"
         for folder in folders:
             typ, data = conn.select('"%s"' % folder, readonly=True)
             if typ != "OK":
@@ -296,7 +310,7 @@ def fetch_imap(src, cursor, _imap=None):
             sent = "sent" in folder.lower()
             read = []
             for uid in uids:
-                typ, msgdata = conn.uid("FETCH", str(uid), "(BODY.PEEK[] X-GM-THRID)")
+                typ, msgdata = conn.uid("FETCH", str(uid), fetch_parts)
                 raw = next((p[1] for p in msgdata or [] if isinstance(p, tuple)), None)
                 if not raw:
                     # the bookmark stops before it: retried next check, never skipped
@@ -361,6 +375,7 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
         return users.get(uid, (uid, uid))
 
     items, notes = [], []
+    threads = {k: dict(v) for k, v in (cursor.get("_threads") or {}).items() if isinstance(v, dict)}
     first = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=14)).timestamp()
     for c in convs:
         cid = c["id"]
@@ -380,14 +395,35 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
             continue
         if len(msgs) > MAX_PER_SOURCE:
             notes.append("%s: %d more waiting" % (name, len(msgs) - MAX_PER_SOURCE))
-        for m in list(msgs):        # thread replies arrive only through conversations.replies
-            if m.get("reply_count") and float(m.get("latest_reply") or 0) > float(oldest):
-                try:
-                    rep = _slack_pages(base, "conversations.replies",
-                                       {"channel": cid, "ts": m["ts"], "oldest": oldest}, h, opener)
-                except ConnectionError_:
-                    rep = []
-                msgs += [x for x in rep if x.get("ts") != m["ts"]]
+        # thread replies arrive only through conversations.replies, and history
+        # only returns parents newer than the bookmark: a reply in an older
+        # thread would never be seen, so threads with recent replies are
+        # remembered (cursor["_threads"]) and re-checked on later checks too
+        tracked = threads.setdefault(cid, {})
+        parents = {m["ts"]: float(m.get("latest_reply") or 0) for m in msgs
+                   if m.get("reply_count") and m.get("ts")}
+        for pts, latest in parents.items():
+            tracked[pts] = max(float(tracked.get(pts) or 0), latest)
+        replies_ok = True
+        for pts in sorted(tracked):
+            if pts not in parents and float(tracked[pts]) < float(oldest) - THREAD_KEEP_S:
+                continue                          # quiet for too long; expired below
+            if pts in parents and parents[pts] <= float(oldest):
+                continue                          # no reply since the bookmark
+            try:
+                rep = _slack_pages(base, "conversations.replies",
+                                   {"channel": cid, "ts": pts, "oldest": oldest}, h, opener)
+            except ConnectionError_ as e:
+                # keep this channel's bookmark so the replies are fetched again
+                notes.append("%s: thread %s: %s" % (name, pts, str(e)[:80]))
+                replies_ok = False
+                continue
+            new_reps = [x for x in rep if x.get("ts") != pts and float(x.get("ts") or 0) > float(oldest)]
+            if new_reps:
+                tracked[pts] = max([float(tracked[pts])] + [float(x["ts"]) for x in new_reps])
+            msgs += new_reps
+        horizon = float(oldest) - THREAD_KEEP_S
+        threads[cid] = {k: v for k, v in tracked.items() if float(v) >= horizon or k in parents}
         # oldest first; past the cap, the bookmark stops at the last one kept
         msgs = sorted({m["ts"]: m for m in msgs if m.get("ts")}.values(), key=lambda m: float(m["ts"]))
         msgs = msgs[:MAX_PER_SOURCE]
@@ -404,12 +440,14 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
                           "user": handle, "user_name": real, "text": m.get("text") or "",
                           "thread_ts": ("sl-%s-%s" % (cid, m["thread_ts"])) if m.get("thread_ts") and m.get("thread_ts") != ts else None,
                           "reactions": [x.get("name") for x in m.get("reactions") or []]})
-        cursor[cid] = newest
+        cursor[cid] = newest if replies_ok else oldest
+    cursor["_threads"] = threads
     if notes:
         cursor["_incomplete"] = "; ".join(notes)
     return items, cursor
 
 
+THREAD_KEEP_S = 14 * 86400     # re-check a thread for replies until it has been quiet this long
 SLACK_MAX_PAGES = 500       # 100,000 messages; past it the channel is reported, not cut
 
 
@@ -433,6 +471,17 @@ def _slack_pages(base, method, params, h, opener):
 
 
 JIRA_MAX_PAGES = 50
+
+
+def _jira_utc(upd):
+    """Jira's '2026-11-03T20:30:00.000-0800' as UTC; the offset is real."""
+    try:
+        return _iso(_dt.datetime.strptime(upd[:28], "%Y-%m-%dT%H:%M:%S.%f%z"))
+    except ValueError:
+        try:
+            return _iso(_dt.datetime.strptime(upd[:19] + upd[23:28], "%Y-%m-%dT%H:%M:%S%z"))
+        except ValueError:
+            return upd[:19] + "Z"
 
 
 def fetch_jira(src, cursor, opener=None):
@@ -481,7 +530,7 @@ def fetch_jira(src, cursor, opener=None):
         if isinstance(desc, dict):        # Atlassian document format
             desc = " ".join(re.findall(r'"text":\s*"([^"]*)"', json.dumps(desc)))
         items.append({"connector": "jira", "id": "jr-%s-%s" % (iss.get("key"), re.sub(r"\D", "", upd)[:14]),
-                      "date": upd[:19] + "Z" if upd else _iso(_dt.datetime.now(_dt.timezone.utc)), "key": iss.get("key"),
+                      "date": _jira_utc(upd) if upd else _iso(_dt.datetime.now(_dt.timezone.utc)), "key": iss.get("key"),
                       "fields": {"summary": f.get("summary"), "status": (f.get("status") or {}).get("name"),
                                  "assignee": name(f.get("assignee")), "reporter": name(f.get("reporter")),
                                  "duedate": f.get("duedate"), "priority": (f.get("priority") or {}).get("name"),
@@ -552,6 +601,22 @@ def _ical_events(text):
         yield ev
 
 
+def _ical_time_tz(entry):
+    """``(params, value)`` from an iCal property, honouring TZID: a floating
+    local time in a named zone is converted, not labelled UTC."""
+    params, v = entry if isinstance(entry, tuple) else ("", entry)
+    m = re.search(r"TZID=([^;:]+)", params or "")
+    v = (v or "").strip()
+    if m and re.match(r"^\d{8}T\d{6}$", v):
+        try:
+            from zoneinfo import ZoneInfo
+            t = _dt.datetime.strptime(v, "%Y%m%dT%H%M%S").replace(tzinfo=ZoneInfo(m.group(1).strip('"')))
+            return _iso(t)
+        except Exception:  # noqa: BLE001  (an unknown zone falls back to the plain reading)
+            pass
+    return _ical_time(v)
+
+
 def _ical_time(v):
     v = v.strip()
     for fmt in ("%Y%m%dT%H%M%SZ", "%Y%m%dT%H%M%S", "%Y%m%d"):
@@ -572,11 +637,12 @@ def fetch_ical(src, cursor, opener=None):
         mod = _ical_time(get("LAST-MODIFIED") or get("DTSTAMP") or "") or ""
         if since and mod <= since:
             continue
-        start = _ical_time(get("DTSTART"))
+        getp = lambda k: (ev.get(k) or [("", "")])[0]  # noqa: E731
+        start = _ical_time_tz(getp("DTSTART"))
         items.append({"connector": "calendar", "id": "cal-%s-%s" % (src["id"], re.sub(r"\W", "", get("UID"))[:40] + re.sub(r"\D", "", mod)),
                       "date": mod or start or _iso(_dt.datetime.now(_dt.timezone.utc)),
                       "summary": get("SUMMARY").replace("\\,", ",").replace("\\n", " "),
-                      "start": start, "end": _ical_time(get("DTEND")),
+                      "start": start, "end": _ical_time_tz(getp("DTEND")),
                       "organizer": get("ORGANIZER").replace("mailto:", "").replace("MAILTO:", ""),
                       "attendees": [v.replace("mailto:", "").replace("MAILTO:", "") for _, v in ev.get("ATTENDEE") or []],
                       "description": get("DESCRIPTION").replace("\\n", "\n").replace("\\,", ",")[:2000],

@@ -35,6 +35,7 @@ import json
 import os
 import re
 import subprocess
+import threading
 import time
 import sys
 import uuid
@@ -389,8 +390,12 @@ def read_json(path, default):
 
 
 def write_json(path, obj):
-    with open(path, "w") as f:
+    """Written to a temp file and swapped in: a reader never sees half a file
+    (read_json turns that into {} and a later write would keep only that)."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
         json.dump(obj, f, indent=2)
+    os.replace(tmp, path)
 
 
 def latest_daily_log():
@@ -522,6 +527,12 @@ def rebuild_tool_call_text(original, new_message):
 
 
 def edit_proposed_text(entry_id, action_type, new_text_raw, keep_lines=False):
+    """Locked wrapper: the queue is shared with the poll and draft passes."""
+    with _file_lock(os.path.join(COS_DIR, "approval-queue.md")):
+        return _edit_proposed_text_locked(entry_id, action_type, new_text_raw, keep_lines)
+
+
+def _edit_proposed_text_locked(entry_id, action_type, new_text_raw, keep_lines=False):
     """Directly overwrite a pending entry's proposed_tool_call with the user's manually edited
     text (no AI redraft). Returns (old_text, changed: bool) or (None, False) if not found.
     ``keep_lines`` stores a multi-line draft (a self_do outline) as '  * ' continuation
@@ -543,6 +554,10 @@ def edit_proposed_text(entry_id, action_type, new_text_raw, keep_lines=False):
     if not matches:
         return None, False
     last = matches[-1]
+    block_end = text.find("\n### ", last.start() + 1)
+    block = text[last.start(): block_end if block_end >= 0 else len(text)]
+    if not re.search(r"(?m)^- status:\s*pending\s*$", block):
+        return None, False      # only a pending draft is editable
     old_text = last.group(2).strip()
     if old_text == new_text_flat:
         return old_text, False
@@ -573,12 +588,13 @@ def get_chat_session():
 
 def get_entry_chat_session(entry_id):
     path = os.path.join(DASHBOARD_DIR, "entry-chat-sessions.json")
-    sessions = read_json(path, {})
-    if entry_id not in sessions:
-        import uuid
+    with _file_lock(path):
+        sessions = read_json(path, {})
+        if entry_id not in sessions:
+            import uuid
 
-        sessions[entry_id] = {"session_id": str(uuid.uuid4()), "started": False}
-        write_json(path, sessions)
+            sessions[entry_id] = {"session_id": str(uuid.uuid4()), "started": False}
+            write_json(path, sessions)
     return sessions[entry_id], sessions, path
 
 
@@ -591,11 +607,12 @@ def append_entry_chat(entry_id, role, text):
     a reply survives the tab closing, a page reload, or a different browser —
     the in-page log is just a view of it."""
     path = entry_chat_log_path()
-    logmap = read_json(path, {})
-    logmap.setdefault(entry_id, []).append({
-        "role": role, "text": text,
-        "ts": datetime.datetime.now().astimezone().isoformat(timespec="seconds")})
-    write_json(path, logmap)
+    with _file_lock(path):
+        logmap = read_json(path, {})
+        logmap.setdefault(entry_id, []).append({
+            "role": role, "text": text,
+            "ts": datetime.datetime.now().astimezone().isoformat(timespec="seconds")})
+        write_json(path, logmap)
 
 
 import directives as _directives
@@ -1736,6 +1753,8 @@ def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None)
 
 
 _POLL_NOW = None
+_POLL_NOW_LOCK = threading.Lock()
+_DRAFT_LOCK = threading.Lock()
 
 
 def spawn_background(cmd, logname, job=None, cwd=None):
@@ -1764,6 +1783,10 @@ def draft_missing_async(logname="launchd-poll.log"):
            DASHBOARD_DIR, os.path.join(COS_DIR, "graph"), "--draft-missing"]
 
     def _run():
+        # one pass at a time: two passes started minutes apart both see the
+        # same task as undrafted and would each queue a draft for it
+        if not _DRAFT_LOCK.acquire(blocking=False):
+            return
         try:
             with open(os.path.join(DASHBOARD_DIR, logname), "a") as f:
                 f.write("\n[draft] drafting next steps for tasks without one...\n")
@@ -1773,8 +1796,9 @@ def draft_missing_async(logname="launchd-poll.log"):
                                env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN})
         except Exception:
             pass
+        finally:
+            _DRAFT_LOCK.release()
 
-    import threading
     threading.Thread(target=_run, daemon=True, name="draft-missing").start()
 
 
@@ -2997,6 +3021,15 @@ class Handler(BaseHTTPRequestHandler):
         self._send_html(page)
 
     def do_POST(self):
+        try:
+            self._do_POST()
+        except Exception as exc:  # a failed handler answers in JSON, never a dropped connection
+            try:
+                self._send_json({"message": "request failed: %s: %s" % (type(exc).__name__, exc)}, 500)
+            except Exception:
+                pass
+
+    def _do_POST(self):
         if not self._origin_ok():
             self._send_json({"message": "forbidden: non-local Host/Origin"}, 403)
             return
@@ -3295,49 +3328,51 @@ class Handler(BaseHTTPRequestHandler):
             # separate systems this endpoint has no path to at all.
             path = os.path.join(COS_DIR, "approval-queue.md")
             archive_path = os.path.join(COS_DIR, "approval-queue-archive.md")
-            text = read_file(path)
-            header_part, sep, body = text.partition("\n---\n")
-            blocks = re.split(r"(?=^### )", body, flags=re.MULTILINE)
-            kept, moved = [], []
-            for block in blocks:
-                m = re.search(r"^### .*?\n- status: (\w+)", block, re.MULTILINE)
-                if m and m.group(1) in ("approved", "rejected", "stale", "superseded"):
-                    moved.append(block)
-                else:
-                    kept.append(block)
-            if not moved:
-                self._send_json({"message": "archive already empty — nothing to move"})
-                return
-            with open(path, "w") as f:
-                f.write(header_part + sep + "".join(kept))
-            if not os.path.exists(archive_path):
-                with open(archive_path, "w") as f:
-                    f.write("# Approval queue — archive\n\nEntries moved here by the dashboard's "
-                             "\"Clear archive\" button. Nothing is deleted, only relocated out of "
-                             "the main approval-queue.md to keep it lean. Any memory/knowledge "
-                             "captured from this work lives in SHARED_CONTEXT.md/decisions.md/"
-                             "projects/*.md/agent memory files — entirely separate, untouched by "
-                             "this file.\n\n---\n")
-            with open(archive_path, "a") as f:
-                f.write("".join(moved))
+            with _file_lock(path):
+                text = read_file(path)
+                header_part, sep, body = text.partition("\n---\n")
+                blocks = re.split(r"(?=^### )", body, flags=re.MULTILINE)
+                kept, moved = [], []
+                for block in blocks:
+                    m = re.search(r"^### .*?\n- status: (\w+)", block, re.MULTILINE)
+                    if m and m.group(1) in ("approved", "rejected", "stale", "superseded", "drafted"):
+                        moved.append(block)
+                    else:
+                        kept.append(block)
+                if not moved:
+                    self._send_json({"message": "archive already empty — nothing to move"})
+                    return
+                with open(path, "w") as f:
+                    f.write(header_part + sep + "".join(kept))
+                if not os.path.exists(archive_path):
+                    with open(archive_path, "w") as f:
+                        f.write("# Approval queue — archive\n\nEntries moved here by the dashboard's "
+                                 "\"Clear archive\" button. Nothing is deleted, only relocated out of "
+                                 "the main approval-queue.md to keep it lean. Any memory/knowledge "
+                                 "captured from this work lives in SHARED_CONTEXT.md/decisions.md/"
+                                 "projects/*.md/agent memory files — entirely separate, untouched by "
+                                 "this file.\n\n---\n")
+                with open(archive_path, "a") as f:
+                    f.write("".join(moved))
             self._send_json({"message": f"moved {len(moved)} entries to approval-queue-archive.md"})
             return
 
         if self.path == "/retry-failed":
             entry_id = data.get("id", "")
             path = os.path.join(COS_DIR, "approval-queue.md")
-            text = read_file(path)
-            pattern = re.compile(
-                r"(### " + re.escape(entry_id) + r"\n(?:(?!\n### ).)*?- status: )failed",
-                re.DOTALL,
-            )
-            new_text, n = pattern.subn(r"\g<1>pending", text, count=1)
-            if n:
-                with open(path, "w") as f:
-                    f.write(new_text)
-                self._send_json({"message": f"{entry_id} reset to pending"})
-            else:
-                self._send_json({"message": "no failed entry found for that id"}, 404)
+            with _file_lock(path):
+                text = read_file(path)
+                pattern = re.compile(
+                    r"(### " + re.escape(entry_id) + r"\n(?:(?!\n### ).)*?- status: )failed",
+                    re.DOTALL,
+                )
+                new_text, n = pattern.subn(r"\g<1>pending", text, count=1)
+                if n:
+                    with open(path, "w") as f:
+                        f.write(new_text)
+                    self._send_json({"message": f"{entry_id} reset to pending"})
+                else:
+                    self._send_json({"message": "no failed entry found for that id"}, 404)
             return
 
         if self.path == "/reject":
@@ -3527,7 +3562,16 @@ class Handler(BaseHTTPRequestHandler):
             # pending thread outlasts any sane request timeout, and a killed
             # poll records nothing (observed: every Poll now died at 300s)
             global _POLL_NOW
-            if _POLL_NOW is not None and _POLL_NOW.poll() is None:
+            if not _POLL_NOW_LOCK.acquire(blocking=False):
+                self._send_json({"message": "a poll is starting — results land in a few minutes"})
+                return
+            try:
+                busy = _POLL_NOW is True or (_POLL_NOW is not None and _POLL_NOW.poll() is None)
+                if not busy:
+                    _POLL_NOW = True        # claimed; replaced by the process below
+            finally:
+                _POLL_NOW_LOCK.release()
+            if busy:
                 self._send_json({"message": "a poll is already running — results land in a few "
                                             "minutes (Polling → Recent checks, launchd-poll.log)"})
                 return
@@ -3551,6 +3595,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json({"message": "poll started — it reads every pending thread, so it "
                                             "takes a few minutes; the board updates when it lands"})
             except OSError as exc:
+                _POLL_NOW = None
                 self._send_json({"message": f"could not start the poll: {exc}"}, 500)
             return
 
@@ -3613,7 +3658,8 @@ class Handler(BaseHTTPRequestHandler):
             cfg = read_json(cfg_path, dict(DEFAULT_POLL_CONFIG))
             cfg["timezone"] = cfg.get("timezone", "America/Los_Angeles")
             cfg[connector] = {
-                "interval_min": max(1, int(data.get("interval_min") or 15)),
+                "interval_min": max(1, int(str(data.get("interval_min") or 15).strip() or 15)
+                                    if str(data.get("interval_min") or "15").strip().isdigit() else 15),
                 "days": data.get("days") or [],
                 "start": data.get("start") or "07:00",
                 "end": data.get("end") or "19:00",
@@ -3819,7 +3865,7 @@ class Handler(BaseHTTPRequestHandler):
                     spawn_background(
                         [CLAUDE_BIN, "-p", "/global:cos-accounts --probe --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR), *model_args("accounts_probe"),
                          "--permission-mode", "dontAsk",
-                         "--allowedTools", POLL_TOOLS,
+                         "--allowedTools", RESEARCH_TOOLS,
                          "--output-format", "text"], "accounts.log", job="accounts_probe")
                 except OSError:
                     pass

@@ -84,8 +84,11 @@ def graph_people(g, user=None):
                     if isinstance(x, str) and "@" in x:
                         people |= {m.lower() for m in EMAIL_RE.findall(x)}
     own = {str(e).lower() for e in [(user or {}).get("email")] + list((user or {}).get("other_emails") or []) if e}
+    own |= {str(e).lower() for e in (user or {}).get("account_addresses") or [] if e}
     people -= own
-    return people, {e.split("@")[-1] for e in people}
+    # the user's own organisation is not a counterparty
+    own_domains = {e.split("@")[-1] for e in own}
+    return people, {e.split("@")[-1] for e in people} - own_domains
 
 
 def open_tasks(g, now):
@@ -305,7 +308,9 @@ def verify_tools(config_dir):
         verb = t.split("__")[-1].lower()
         if (t.startswith("mcp__") and ("gmail" in t.lower() or "calendar" in t.lower())
                 and any(verb.startswith(v) or ("_" + v) in verb or ("-" + v) in verb
-                        for v in ("get", "search", "read", "list"))):
+                        for v in ("get", "search", "read", "list"))
+                and not re.search(r"create|update|delete|send|modify|remove|trash|label|draft|"
+                                  r"respond|move|batch|set|add", verb)):
             keep.append(t)
     return ",".join(keep)
 
@@ -396,6 +401,7 @@ def _quarantine(config_dir, rejected, items, now):
     why and with the source item ids it cites (or, when it cites none, every
     item that was in the read), so they can be inspected and replayed."""
     ids = [i.get("id") for i in items if i.get("id")]
+    cited = []      # ids a rejected record named itself (for the run's trace)
     path = os.path.join(config_dir, QUARANTINE_FILE)
     fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
     with os.fdopen(fd, "a") as f:
@@ -403,11 +409,13 @@ def _quarantine(config_dir, rejected, items, now):
             ev = (rec.get("attrs") or {}).get("evidence") if isinstance(rec, dict) and \
                 isinstance(rec.get("attrs"), dict) else None
             ev = [e for e in (ev if isinstance(ev, list) else [ev]) if e] if ev else []
+            cited.extend(ev)
             f.write(json.dumps({"ts": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "problems": problems,
                                 "record": rec, "source_items": ev or ids},
                                ensure_ascii=False, default=str) + "\n")
         f.flush()
         os.fsync(f.fileno())
+    return cited
 
 
 def read_quarantine(config_dir):
@@ -630,6 +638,9 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
         if exists:
             with open(queue_path) as f:
                 taken = approval.queue_ids(f.read())
+        # another pass (or a poll) may have drafted these during the model call
+        already = pending_queue_tasks(queue_path)
+        drafts = [d for d in drafts if str(d.get("task")) not in already]
         with open(queue_path, "a") as f:
             if not exists:
                 f.write("# Approval queue\n\nEvery external action waits here until you approve it.\n\n---\n")
@@ -740,7 +751,11 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     """One direct check, traced: a line in runs.jsonl says what it did and
     what happened to every item (see runtrace). Returns a summary dict."""
     import runtrace
-    with runtrace.start(config_dir, "scan" if scan else "check", now=now) as tr:
+    # one check at a time: a second check committing bookmarks while the first
+    # is reading would have its new items erased by the first's final clear
+    # of the waiting list, with the source never sending them again
+    with graphlib.file_lock(os.path.join(config_dir, "check")), \
+            runtrace.start(config_dir, "scan" if scan else "check", now=now) as tr:
         out = _check(config_dir, graph_dir, tr, dry_run=dry_run, now=now, _fetch=_fetch, _model=_model,
                      triage=triage, scan=scan, draft=draft)
         outcome = ("dry_run" if out.get("dry_run") else "quiet" if "quiet" in out else
@@ -836,10 +851,14 @@ def _check(config_dir, graph_dir, tr, dry_run=False, now=None, _fetch=None, _mod
     if triage and len(kept) > 25:
         always = [i["id"] for i in kept if sifter.reasons.get(i["id"]) in ("task_ref", "task_thread", "meeting")]
         ttext, tcost = call(config_dir, triage_prompt(user, kept, tasks), job="triage")
+        before_ids = {i.get("id") for i in kept}
         kept = apply_triage(kept, ttext, always)
+        for iid in before_ids - {i.get("id") for i in kept}:
+            tr.item(iid, "dropped", by="triage")
         cost += tcost or 0.0
         out["after_triage"] = len(kept)
     recs = []
+    quarantined_ids = set()
     if kept:
         with open(INSTRUCTIONS) as f:
             prompt = build_prompt(f.read(), frame, kept, tasks)
@@ -867,7 +886,7 @@ def _check(config_dir, graph_dir, tr, dry_run=False, now=None, _fetch=None, _mod
         if rejected:
             # never silently lost: a rejected record is kept with the items it
             # came from before the waiting list is cleared below
-            _quarantine(config_dir, rejected, kept, now)
+            quarantined_ids = set(_quarantine(config_dir, rejected, kept, now))
             out["quarantined"] = len(rejected)
     import research
     # load, change and save under one lock, on the graph as it is now: a
@@ -896,8 +915,9 @@ def _check(config_dir, graph_dir, tr, dry_run=False, now=None, _fetch=None, _mod
         ev = (r.get("attrs") or {}).get("evidence") or []
         for e in (ev if isinstance(ev, list) else [ev]):
             cites.setdefault(e, []).append("%s:%s" % (r.get("kind"), r.get("key")))
-    for row in read_quarantine(config_dir)[-(out.get("quarantined") or 0):] if out.get("quarantined") else []:
-        bad |= set(row.get("source_items") or [])
+    # only the items a malformed record cited itself: a record citing nothing is
+    # in the quarantine file under every read item, but it is not their fate
+    bad |= quarantined_ids
     for i in kept:
         iid = i.get("id")
         if iid in cites:

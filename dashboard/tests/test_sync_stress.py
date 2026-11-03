@@ -181,6 +181,41 @@ class TestSlackStress(Base):
         self.assertIn("500 more waiting", row["incomplete"])
 
 
+class TestSlackThreads(Base):
+    def test_a_new_reply_in_an_older_thread_is_fetched(self):
+        connections.upsert_source(self.dir, {"kind": "slack", "id": "src", "token": "xoxp-test"})
+        t0 = time.time() - 5 * 86400
+        parent = {"ts": "%.6f" % t0, "user": "U1", "text": "kickoff", "reply_count": 1,
+                  "latest_reply": "%.6f" % (t0 + 10), "thread_ts": "%.6f" % t0}
+        replies = [dict(parent), {"ts": "%.6f" % (t0 + 10), "user": "U1", "text": "first reply",
+                                  "thread_ts": parent["ts"]}]
+
+        def history(q):
+            return {"ok": True, "messages": [m for m in [parent] if float(m["ts"]) > float(q["oldest"])]}
+
+        def conv_replies(q):
+            return {"ok": True, "messages": [m for m in replies if float(m["ts"]) > float(q.get("oldest") or 0)
+                                             or m["ts"] == parent["ts"]]}
+        Server.routes = {
+            "/api/users.conversations": lambda q: {"ok": True, "channels": [{"id": "C1", "name": "eng"}]},
+            "/api/users.info": lambda q: {"ok": True, "user": {"name": "ines"}},
+            "/api/conversations.history": history,
+            "/api/conversations.replies": conv_replies,
+        }
+        f = functools.partial(connections.fetch_slack, base=self.base + "/api")
+        first = connections.fetch_all(self.dir, _fetchers={"slack": f})
+        self.assertEqual(sorted(i["text"] for i in first["items"]), ["first reply", "kickoff"])
+        # days later: the parent is far behind the bookmark, and someone replies
+        late = {"ts": "%.6f" % (time.time() - 60), "user": "U1", "text": "@dana can you review by today?",
+                "thread_ts": parent["ts"]}
+        replies.append(late)
+        parent["latest_reply"] = late["ts"]
+        second = connections.fetch_all(self.dir, _fetchers={"slack": f})
+        self.assertEqual([i["text"] for i in second["items"]], ["@dana can you review by today?"])
+        third = connections.fetch_all(self.dir, _fetchers={"slack": f})
+        self.assertEqual(third["items"], [])
+
+
 # ---------------------------------------------------------------- Jira
 
 def jira_world(issues):

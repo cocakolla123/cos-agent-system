@@ -204,8 +204,11 @@ class TestDraftingIntoTheQueue(_QueueCase):
             self.run_draft([self.node(i, "Rotate keys")], {i["id"]: i}, d)
         text, by_id = self.entries()
         ids = [e["id"] for e in approval.parse_queue(text)]
-        self.assertEqual(len(ids), 5)
-        self.assertEqual(len(set(ids)), 5)
+        # the later run sees the task already has pending drafts and adds none
+        # (two passes must not double-draft one task); the first run's two get
+        # distinct ids
+        self.assertEqual(len(ids), 3)
+        self.assertEqual(len(set(ids)), 3)
 
     def test_status_in_a_draft_is_ignored(self):
         i = items()[0]
