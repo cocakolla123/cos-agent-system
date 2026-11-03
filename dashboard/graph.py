@@ -48,28 +48,75 @@ import os
 import re
 
 
+class LockUnavailable(RuntimeError):
+    """No file-locking primitive on this platform (neither fcntl nor msvcrt)."""
+
+
+def lock_backend():
+    """Which locking primitive file_lock uses here: "fcntl" (POSIX),
+    "msvcrt" (Windows), or "none" only when COS_ALLOW_UNLOCKED=1 says the
+    caller accepts last-write-wins. Otherwise raises LockUnavailable, since
+    running several writers without a lock silently loses edits."""
+    try:
+        import fcntl  # noqa: F401
+        return "fcntl"
+    except ImportError:
+        pass
+    try:
+        import msvcrt  # noqa: F401
+        return "msvcrt"
+    except ImportError:
+        pass
+    if os.environ.get("COS_ALLOW_UNLOCKED") == "1":
+        return "none"
+    raise LockUnavailable(
+        "no file lock on this platform (neither fcntl nor msvcrt): concurrent "
+        "graph writers would lose edits. Set COS_ALLOW_UNLOCKED=1 to run "
+        "unlocked anyway (one writer at a time only).")
+
+
 @contextlib.contextmanager
 def file_lock(path):
-    """Advisory exclusive lock via a ``.lock`` sidecar (fcntl.flock).
+    """Advisory exclusive lock via a ``.lock`` sidecar.
 
     V2 has several writers (server threads, poll/learn/probe subprocesses) on
     shared files; this serializes read-modify-write cycles so a status flip
-    can't be lost to a concurrent rewrite. No-op where fcntl is unavailable
-    (Windows) — behavior there stays last-write-wins, as before.
+    can't be lost to a concurrent rewrite. fcntl.flock on POSIX, a blocking
+    msvcrt byte-range lock on Windows; see lock_backend() for the rest. The
+    lock belongs to the open file, so threads of one process exclude each
+    other too, and a killed holder releases it with its process.
     """
     lock_path = str(path) + ".lock"
-    try:
-        import fcntl
-    except ImportError:  # pragma: no cover - non-POSIX
+    backend = lock_backend()
+    if backend == "none":
         yield
         return
     os.makedirs(os.path.dirname(lock_path) or ".", exist_ok=True)
-    with open(lock_path, "w") as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
+    if backend == "fcntl":
+        import fcntl
+        with open(lock_path, "w") as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(f, fcntl.LOCK_UN)
+        return
+    import msvcrt
+    import time
+    with open(lock_path, "a+") as f:
+        while True:
+            f.seek(0)
+            try:            # LK_LOCK gives up after ~10 s; we wait as flock does
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                break
+            except OSError:
+                time.sleep(0.05)
         try:
             yield
         finally:
-            fcntl.flock(f, fcntl.LOCK_UN)
+            f.seek(0)
+            msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+
 
 def transaction(graph_dir):
     """The lock every load-change-save of a graph holds, start to finish.

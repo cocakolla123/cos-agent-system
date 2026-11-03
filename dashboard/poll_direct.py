@@ -615,11 +615,20 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
                     f.write("- %s: %s\n" % (k, v))
                 written += 1
     if waits and graph_dir:
-        for nid, note in waits.items():
-            node = g.nodes.get(nid)
-            if node is not None:
-                node.setdefault("attrs", {})["next_step"] = note
-        g.save(graph_dir)
+        # the graph ``g`` was loaded before the model call, which can take
+        # minutes: saving it would overwrite any edit made meanwhile. Re-apply
+        # the holds to the graph as it is now, under the transaction lock.
+        with _g.transaction(graph_dir):
+            live = graphlib.Graph.load(graph_dir)
+            for nid, note in waits.items():
+                node = live.nodes.get(nid)
+                if node is not None:
+                    node.setdefault("attrs", {})["next_step"] = note
+            live.save(graph_dir)
+    for nid, note in waits.items():         # keep the caller's copy in step
+        node = g.nodes.get(nid)
+        if node is not None:
+            node.setdefault("attrs", {})["next_step"] = note
     return written, cost or 0.0
 
 
@@ -791,7 +800,7 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
         fresh.sort(key=lambda n: ((n.get("attrs") or {}).get("due") or "9999", n["id"]))
         try:
             n_drafts, c3 = draft_new_tasks(config_dir, g, fresh[:DRAFT_MAX], {i["id"]: i for i in kept},
-                                           user, now, call, queue_path)
+                                           user, now, call, queue_path, graph_dir=graph_dir)
             out["drafts"] = n_drafts
             cost += c3
         except Exception as e:  # noqa: BLE001  (the tasks are saved; a failed draft is retried by the next poll)
