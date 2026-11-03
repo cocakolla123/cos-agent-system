@@ -43,9 +43,12 @@ JOBS = {
     "task_chat": ("light", False),
     "revise": ("standard", False),
     "draft": ("standard", True),
-    # the tick is a narrow scan; judgment-heavy work (drafting, research)
-    # stays on the standard/deep tiers
-    "poll": ("light", True),
+    # not light: a tick must load its connector tools through ToolSearch and
+    # pick the right account's tool. Measured 2026-11-03: Haiku picked an
+    # ungranted mailbox tool, was denied, and reported "OAuth unavailable" on
+    # every tick for a week while exiting 0; Sonnet with the same grant read
+    # the mailbox. The free path for quiet ticks is direct connections.
+    "poll": ("standard", True),
     # the direct check: items are fetched by connections.py and sifted, so the
     # model only reads text and any provider can run it
     "poll_direct": ("standard", False),
