@@ -85,14 +85,28 @@ def _config():
         return {}
 
 
-def _save_config(cfg):
+def _write_config(cfg):
     path = _config_path()
-    with graph.file_lock(path):
-        tmp = path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            json.dump(cfg, f, indent=2)
-            f.write("\n")
-        os.replace(tmp, path)
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+
+
+def _save_config(cfg):
+    with graph.file_lock(_config_path()):
+        _write_config(cfg)
+
+
+def _update_config(change):
+    """Read, change and write config.json under one lock, so a concurrent
+    writer (the dashboard granting mailbox tools) is never overwritten."""
+    with graph.file_lock(_config_path()):
+        cfg = _config()
+        result = change(cfg)
+        _write_config(cfg)
+        return result
 
 
 def _flag(args, name, default=""):
@@ -161,10 +175,11 @@ def cmd_ingest_workspaces(gdir, prop_path):
 def cmd_workspace_connect(ws_dir, wsid, connector):
     import workspaces
     ws_dir = os.path.abspath(ws_dir)
-    reg = workspaces.Registry.load(ws_dir)
-    w = reg.get(wsid) or {}
-    reg.upsert(wsid, connectors=list(w.get("connectors") or []) + [connector])
-    reg.save(ws_dir)
+    with graph.file_lock(os.path.join(ws_dir, "workspaces-registry")):
+        reg = workspaces.Registry.load(ws_dir)
+        w = reg.get(wsid) or {}
+        reg.upsert(wsid, connectors=list(w.get("connectors") or []) + [connector])
+        reg.save(ws_dir)
     return reg.get(wsid)
 
 
@@ -205,21 +220,25 @@ def cmd_accounts_add(entry_path):
     if not isinstance(e, dict) or not e.get("id"):
         raise ToolError("an account entry needs an id")
     e = {k: str(e[k]) for k in ENTRY_FIELDS if e.get(k) is not None}
-    cfg = _config()
-    rows = [a for a in cfg.get("connector_accounts") or [] if a.get("id") != e["id"]]
-    cfg["connector_accounts"] = rows + [e]
-    _save_config(cfg)
+
+    def add(cfg):
+        rows = [a for a in cfg.get("connector_accounts") or [] if a.get("id") != e["id"]]
+        cfg["connector_accounts"] = rows + [e]
+    _update_config(add)
     return e
 
 
 def cmd_accounts_bind(aid, wsid):
-    cfg = _config()
-    for a in cfg.get("connector_accounts") or []:
-        if a.get("id") == aid:
-            a["workspace"] = graph.slug(wsid)
-            _save_config(cfg)
-            return a
-    raise ToolError("no account %s" % aid)
+    def bind(cfg):
+        for a in cfg.get("connector_accounts") or []:
+            if a.get("id") == aid:
+                a["workspace"] = graph.slug(wsid)
+                return a
+        return None
+    hit = _update_config(bind)
+    if hit is None:
+        raise ToolError("no account %s" % aid)
+    return hit
 
 
 def cmd_accounts_status(aid, state, *rest):

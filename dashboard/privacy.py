@@ -191,8 +191,10 @@ def audit_permissions(dashboard_dir):
     dirs = {dashboard_dir, os.path.join(dashboard_dir, "inbox"),
             os.path.join(dashboard_dir, "workspace"), os.path.join(dashboard_dir, "workspace", "graph")}
     for p in list(_data_paths(dashboard_dir)) + sorted(d for d in dirs if os.path.isdir(d)):
+        if os.path.islink(p):
+            continue        # never reach through a link to a file outside the dashboard
         try:
-            mode = os.stat(p).st_mode & 0o777
+            mode = os.lstat(p).st_mode & 0o777
         except OSError:
             continue
         if mode & 0o077 and not (os.path.isdir(p) and p == dashboard_dir):

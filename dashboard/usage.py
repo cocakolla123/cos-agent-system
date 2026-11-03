@@ -111,10 +111,22 @@ def on_subscription(env=None, home=None):
     there the dollar figures are only an API-equivalent estimate, and a cap
     would just cut a crawl or poll off halfway through the user's mail."""
     env = os.environ if env is None else env
-    if env.get("ANTHROPIC_API_KEY") or env.get("ANTHROPIC_AUTH_TOKEN"):
+    paid = ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_CODE_USE_BEDROCK", "CLAUDE_CODE_USE_VERTEX")
+    if any(env.get(k) for k in paid):
         return False
+    home = home or os.path.expanduser("~")
+    # an API key can also come from Claude Code's own settings: a key helper,
+    # or the env block, both of which bill real money per call
+    for name in ("settings.json", "settings.local.json"):
+        try:
+            with open(os.path.join(home, ".claude", name)) as f:
+                st = json.load(f) or {}
+        except (OSError, ValueError):
+            continue
+        if st.get("apiKeyHelper") or any((st.get("env") or {}).get(k) for k in paid):
+            return False
     try:
-        with open(os.path.join(home or os.path.expanduser("~"), ".claude.json")) as f:
+        with open(os.path.join(home, ".claude.json")) as f:
             return bool((json.load(f) or {}).get("oauthAccount"))
     except (OSError, ValueError):
         return False

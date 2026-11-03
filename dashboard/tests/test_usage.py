@@ -61,6 +61,11 @@ class TestUsage(unittest.TestCase):
         self.assertTrue(usage.on_subscription(env={}, home=home))
         self.assertFalse(usage.on_subscription(env={"ANTHROPIC_API_KEY": "k"}, home=home))
         self.assertFalse(usage.on_subscription(env={}, home=tempfile.mkdtemp()))
+        os.makedirs(os.path.join(home, ".claude"))
+        with open(os.path.join(home, ".claude", "settings.json"), "w") as f:
+            f.write('{"apiKeyHelper": "/usr/local/bin/get-key"}')
+        self.assertFalse(usage.on_subscription(env={}, home=home))     # a helper bills real money
+        self.assertFalse(usage.on_subscription(env={"CLAUDE_CODE_USE_BEDROCK": "1"}, home=tempfile.mkdtemp()))
 
     def test_run_returns_text_and_logs_cost(self):
         res = usage.run([self.fake, "-p", "hi", "--allowedTools", "Read"], "poll", self.d)

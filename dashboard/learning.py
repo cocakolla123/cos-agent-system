@@ -144,8 +144,10 @@ def make_correction(text, hint=None, workspace=None, source="chat", now=None):
 
 def enqueue(ws_dir, rec):
     os.makedirs(ws_dir, exist_ok=True)
-    with open(os.path.join(ws_dir, QUEUE_FILE), "a", encoding="utf-8") as f:
-        f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    path = os.path.join(ws_dir, QUEUE_FILE)
+    with graph.file_lock(path):
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
     return rec
 
 
@@ -157,18 +159,21 @@ def pending(ws_dir):
 def resolve(ws_dir, correction_id, status="resolved"):
     """Mark a queued correction non-pending (rewrites the small queue file)."""
     path = os.path.join(ws_dir, QUEUE_FILE)
-    rows = _read_jsonl(path)
-    hit = False
-    for r in rows:
-        if r.get("id") == correction_id:
-            r["status"] = status
-            hit = True
-    if hit:
-        tmp = path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            for r in rows:
-                f.write(json.dumps(r, ensure_ascii=False) + "\n")
-        os.replace(tmp, path)
+    # under the same lock as enqueue: a correction appended between this read
+    # and the replace would otherwise be dropped
+    with graph.file_lock(path):
+        rows = _read_jsonl(path)
+        hit = False
+        for r in rows:
+            if r.get("id") == correction_id:
+                r["status"] = status
+                hit = True
+        if hit:
+            tmp = path + ".tmp"
+            with open(tmp, "w", encoding="utf-8") as f:
+                for r in rows:
+                    f.write(json.dumps(r, ensure_ascii=False) + "\n")
+            os.replace(tmp, path)
     return hit
 
 

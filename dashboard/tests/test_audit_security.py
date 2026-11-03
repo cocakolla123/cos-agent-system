@@ -164,3 +164,26 @@ class TestFatesAndIdentity(IngestBase):
         got = poll_direct.verify_tools(self.dir).split(",")
         self.assertEqual(sorted(got), ["mcp__Google_Calendar__list_events", "mcp__gmail-x__read_email",
                                        "mcp__gmail-x__search_emails"])
+
+
+@unittest.skipUnless(hasattr(__import__("time"), "tzset"), "needs time.tzset")
+class TestLocalDueDates(unittest.TestCase):
+    def setUp(self):
+        import time as _t
+        self._tz = os.environ.get("TZ")
+        os.environ["TZ"] = "America/Los_Angeles"
+        _t.tzset()
+
+    def tearDown(self):
+        import time as _t
+        if self._tz is None:
+            os.environ.pop("TZ", None)
+        else:
+            os.environ["TZ"] = self._tz
+        _t.tzset()
+
+    def test_due_today_in_the_evening_is_not_overdue(self):
+        import datetime as dt
+        evening = dt.datetime(2026, 10, 14, 1, 0, tzinfo=dt.timezone.utc)   # 6 pm PT, Oct 13
+        self.assertEqual(graph.days_until_due({"attrs": {"due": "2026-10-13"}}, now=evening), 0)
+        self.assertEqual(graph.days_until_due({"attrs": {"due": "2026-10-17"}}, now=evening), 4)

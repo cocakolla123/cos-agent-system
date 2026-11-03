@@ -679,7 +679,10 @@ def days_until_due(node, now=None):
     due = _parse_iso(attrs.get("due") or attrs.get("due_on"))
     if due is None:
         return None
-    return (due.date() - _utcnow(now).date()).days
+    # "today" is the user's local date, as in due_days(): at 6 pm in
+    # California it is already tomorrow in UTC, and an item due today would
+    # read as overdue
+    return (due.date() - _utcnow(now).astimezone().date()).days
 
 
 def effective_priority(node, now=None):
