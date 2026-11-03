@@ -42,18 +42,31 @@ now_hm=$(TZ="$TZ_NAME" date +%H:%M)
 
 # Connectors are whatever top-level keys /setup wrote into poll-config.json, minus "timezone" —
 # not a hardcoded list, so this works for any connector set, not just slack/email/general.
-connectors=$(jq -r 'keys[] | select(. != "timezone")' "$CFG")
+# only object entries are connectors: any other top-level value would make the
+# per-connector jq lookups below fail and, under set -e, end the tick silently
+connectors=$(jq -r 'to_entries[] | select(.key != "timezone" and (.value | type) == "object") | .key' "$CFG")
+
+# minutes since midnight from "H:MM" or "HH:MM" ("7:00" and "07:00" alike)
+hm_min() { local h m; IFS=: read -r h m <<< "$1"; echo $(( 10#${h:-0} * 60 + 10#${m:-0} )); }
+now_min=$(hm_min "$now_hm")
 
 due=()
 while IFS= read -r connector; do
   [ -z "$connector" ] && continue
   interval_min=$(jq -r --arg c "$connector" '.[$c].interval_min // 15' "$CFG")
-  days=$(jq -r --arg c "$connector" '.[$c].days // [] | join(",")' "$CFG")
+  days=$(jq -r --arg c "$connector" '.[$c].days // ["mon","tue","wed","thu","fri","sat","sun"] | join(",")' "$CFG")
   start=$(jq -r --arg c "$connector" '.[$c].start // "07:00"' "$CFG")
   end=$(jq -r --arg c "$connector" '.[$c].end // "19:00"' "$CFG")
 
   if [[ ",$days," != *",$now_day,"* ]]; then continue; fi
-  if [[ "$now_hm" < "$start" || "$now_hm" > "$end" ]]; then continue; fi
+  s_min=$(hm_min "$start"); e_min=$(hm_min "$end")
+  # the end is exclusive (a 09:00-17:00 window stops at 17:00, not 17:59), and
+  # a window that wraps midnight (22:00-06:00) is open on both sides of it
+  if [ "$s_min" -le "$e_min" ]; then
+    if [ "$now_min" -lt "$s_min" ] || [ "$now_min" -ge "$e_min" ]; then continue; fi
+  else
+    if [ "$now_min" -lt "$s_min" ] && [ "$now_min" -ge "$e_min" ]; then continue; fi
+  fi
 
   last=$(jq -r --arg c "$connector" '.[$c] // 0' "$LAST_RUN")
   elapsed_min=$(( (now_epoch - last) / 60 ))
@@ -123,10 +136,16 @@ while IFS= read -r a; do [ -n "$a" ] && model_args+=("$a"); done < <(
 # run from a neutral folder: inside the repo, Claude Code loads the project's
 # auto-memory into the call (see RUN_DIR in server.py); files come via --add-dir
 RUN_DIR="${COS_RUN_DIR:-$HOME/.cos-agent/run}"
+# the workspace the dashboard and approvals read: config's workspace_dir, as in
+# the direct check above, not a hardcoded subfolder
+POLL_WS=$(jq -r '.workspace_dir // empty' "$MAIN_CFG" 2>/dev/null || true)
+[ -n "$POLL_WS" ] || POLL_WS="$DASH_DIR/workspace"
+case "$POLL_WS" in /*) ;; *) POLL_WS="$DASH_DIR/$POLL_WS" ;; esac
 mkdir -p "$RUN_DIR"
 out_file=$(mktemp)
 if (cd "$RUN_DIR" && python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
-  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --dashboard=$DASH_DIR --workspace=$DASH_DIR/workspace" ${model_args[@]+"${model_args[@]}"} \
+  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --dashboard=$DASH_DIR --workspace=$POLL_WS" ${model_args[@]+"${model_args[@]}"} \
+  --add-dir "$POLL_WS" \
   --add-dir "$DASH_DIR" \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
@@ -150,6 +169,7 @@ if (cd "$RUN_DIR" && python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
     mv "$tmp" "$COMPLETED"
   done
 else
+  rc=$?    # first statement: anything after this would overwrite it (it always logged 0)
   cat "$out_file" >> "$DASH_DIR/launchd-poll.log"; rm -f "$out_file"
-  echo "$(date '+%Y-%m-%dT%H:%M:%S') poll FAILED (scope=$scope, exit=$?)" >> "$DASH_DIR/launchd-poll.err"
+  echo "$(date '+%Y-%m-%dT%H:%M:%S') poll FAILED (scope=$scope, exit=$rc)" >> "$DASH_DIR/launchd-poll.err"
 fi

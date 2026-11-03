@@ -22,7 +22,7 @@ posture to `/cos` and every other draft-only command.
 3. If the entry is an approval-category action (all of them are, by definition) and
    `cos-risk-quality` was generated for this deployment, run it on the revised draft before
    accepting it — same as any other flow.
-4. Update the entry in place: new `proposed_tool_call`, `short_summary`, and `context` (append
+4. Update the entry in place: new `proposed_tool_call`, `short_summary`, and `context` (never change or drop its `account` line: a revision goes out from the same account; append
    a note on what changed and why, don't erase the history of the original draft/rationale).
    Status stays `pending`. This edit goes through `cos-knowledge` like any other workspace
    write, not directly by you.

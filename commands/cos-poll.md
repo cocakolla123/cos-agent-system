@@ -35,7 +35,7 @@ everything from scratch on every tick is not.
 For each connector named in `--scope` that maps to a messaging/email-style connector (fast
 check-in, not the full sweep): run a lightweight "anything new since last check" scan over
 that connector's read/search tool, narrow time window since the last successful run for that
-connector (check `dashboard/poll-log.md` for the timestamp). If nothing looks like it needs
+connector (the last successful run is in `poll-last-completed.json` in `--dashboard`). If nothing looks like it needs
 real attention (routine chatter, already-closed threads), log `<connector>: nothing new` and
 stop for that connector — don't draft anything for noise. Also print that exact line on its own
 in your final reply (for example `slack: nothing new`): the scheduler reads it to check a quiet
@@ -75,7 +75,7 @@ Accounts` (for example `slack: not authorized`), so a source nobody can read is 
   read tool before deciding what it means (the poll grant includes those read tools for
   exactly this). A message saying "updated the doc" is a pointer; the doc is the content.
 - For each `pending` `approval-queue.md` entry, re-check its real source and mark it
-  `superseded` (via `cos-knowledge`, with a one-line reason) if someone else already resolved
+  `superseded` (edit the entry directly, with a one-line `superseded_reason`) if someone else already resolved
   it. Leave unchanged entries alone. **Re-checking the real source means reading the thread,
   not the graph:** for an entry whose task names a mail thread, read that thread's newest
   message and the user's own sent mail to that counterparty (last 14 days) before leaving it
@@ -111,83 +111,62 @@ Accounts` (for example `slack: not authorized`), so a source nobody can read is 
   current `priority`. If it's old (roughly 30+ days with no update, and especially 6+ months)
   and still sitting at `medium`/`high` with no fresh signal, check whether it's actually tied
   to something currently active (cross-check whatever shared-context files this workspace
-  keeps) — if not, demote it to `low` (via `cos-knowledge`, updating `priority` in place, not
+  keeps) — if not, demote it to `low` (edit `priority` in place, not
   creating a new entry). If it *is* still tied to something active, leave/raise the priority
   and set `priority_note` explaining the connection. Don't touch entries that are recent or
   already `low`.
 - **Style-feedback processing.** If `dashboard/style-feedback-queue.md` exists and has any
   entries (the dashboard's "Save edit" button appends a before/after diff here whenever the
   user manually edits a draft), fold each one's specific difference into a personality/style
-  profile file if this workspace keeps one (via `cos-knowledge`) — e.g. "shortened a hedge to
+  profile file if this workspace keeps one (edit it directly) — e.g. "shortened a hedge to
   something direct," not just "they edited it." Then clear the processed entries from the
   queue file. If the queue file is empty or missing, skip this step — not an error.
 - **`linked_domain` refresh.** For each still-`pending` entry that already has a
   `linked_domain` field (or whose text now looks domain-related per `dashboard/config.json`'s
   `domain_keywords` but doesn't have one yet), re-run a targeted `cos-domain` check (if that
-  agent exists for this deployment) against whatever it references and refresh the field via
-  `cos-knowledge` if the situation has materially changed. Don't touch it if nothing's changed
+  agent exists for this deployment) against whatever it references and refresh the field (edit it directly) if the situation has materially changed. Don't touch it if nothing's changed
   — this is a cheap, targeted check, not a full investigation from scratch.
 - If a calendar connector exists, check for meetings that ended in the last ~20 minutes with a
-  recorded-meeting link; for each, invoke `cos-meeting-notes` (if generated), forward its
-  output to `cos-knowledge`, and queue any approval-category follow-up exactly like any other
+  recorded-meeting link; for each, invoke `cos-meeting-notes` (if generated), record its
+  output in the graph or queue directly, and queue any approval-category follow-up exactly like any other
   flow.
 - Also covers the case where a fast-check scope escalated into this scope mid-run — same
   logic, just triggered early instead of waiting for the next general tick.
 
 ## Step 3 — log and report
 
-Append one line per scope run to `dashboard/poll-log.md`:
-`<timestamp> — <scope>: <what happened, one line>`. Forward any `Memory update:` output
-batched to `cos-knowledge`. Keep the report to the caller short — this runs unattended most of
-the time.
+Append one line per scope run to `poll-log.md` in `--dashboard` (with `Edit`; if the file
+does not exist yet, put the line at the end of your reply instead — the scheduler copies the
+reply into its log): `<timestamp> — <scope>: <what happened, one line>`. Keep the report to the
+caller short — this runs unattended most of the time.
 
 ## Recurring-failure task suggestion
 
 If the same `failed` approval-queue entry's `execution_result` error (or same error class,
 e.g. "org policy block" on the same action_type) has now occurred 2+ times, create **one**
-deduped task in `tasks/inbox.md` suggesting the likely fix (e.g. "request org approval for
+deduped task in `tasks/inbox.md` under `--workspace` (if it exists) suggesting the likely fix (e.g. "request org approval for
 this connector's send scope") — keyed by `<action_type>:<error signature>` so repeats of the
 same underlying issue don't spawn a new task each time. Also append the pattern to
-`../lessons-learned.md` the first time it's noticed, even before it recurs enough to trigger a
-task.
+`lessons-learned.md` under `--workspace` (if it exists) the first time it's noticed, even
+before it recurs enough to trigger a task.
 
 ## Hard rule
 
 Never execute anything external — no send, no ticket comment/transition, no calendar/domain
 mutation. Everything actionable goes through the approval queue.
 
-## V2 addendum — continuous learning (see `../ROADMAP-V2.md`)
+## Graph upkeep runs outside polls
 
-When the V2 modules are present, the `general` scope also keeps the knowledge graph and the
-proposed-agent set current — still **read-only against connectors**, still queue-only for
-anything external:
-
-1. **Incremental research.** Run `/cos-research --incremental` so sources changed since the last
-   run are re-read and upserted into the graph. Because upsert dedups by stable id, this only
-   refreshes freshness/confidence on things already known — it never re-asks the user anything
-   already in the graph.
-2. **Freshness refresh.** Anything not re-observed decays; `graph.stale_nodes()` flags nodes past
-   the freshness horizon so the dashboard can show them as ⚠️ rather than as current fact.
-3. **Re-correlate.** Re-run `correlate.correlate(graph)` so new items join (or form) the right
-   `Objective` workstream. It's idempotent — existing objectives are updated in place.
-4. **Re-evaluate agents (propose only).** Run `factory.propose_agents(graph)`. If the graph now
-   justifies an agent that doesn't exist yet (e.g. a new external system appeared), **queue a
-   proposal** — a task in `tasks/inbox.md` describing the agent and its evidence — and **never
-   auto-create it**. Agent creation stays an explicit, approved `/setup` step.
-5. **Regenerate views.** `python3 ../dashboard/graph.py <graph-dir> --render` so the markdown
-   views stay in sync.
-6. **Process corrections (V2.1, M9).** If self-learning is enabled
-   (`learning.self_learning_enabled` on `dashboard/config.json`) and
-   `<workspace>/correction-queue.jsonl` has `pending` entries, run `/cos-learn --next` for each,
-   oldest first — this catches corrections the chat couldn't process at the time (subprocess
-   failed, toggle was off, machine was busy).
-
-All of this is additive: a deployment without the V2 modules runs the original poll scopes
-above unchanged.
+Incremental research, stale-node flags, re-correlation into objectives, agent proposals,
+regenerating the markdown views, and processing queued corrections all need a shell
+(`cos_tool.py`, `graph.py`), which a poll is not granted. They run in the dashboard's own jobs
+instead: Deep sweep and the first scan (`/cos-research`), the ingest that renders views, and
+the self-learning loop (`/cos-learn`). A poll never attempts them and never reports them as
+blocked or skipped.
 
 ## Queue hygiene (M12)
 In the `general` scope, if `approval-queue.md` contains entries in a terminal state
-(`approved`/`rejected`/`stale`/`superseded`) older than **90 days**, move them to
+(`approved`/`rejected`/`stale`/`superseded`/`drafted`) older than **90 days**, move them to
 `approval-queue-archive.md` exactly the way the dashboard's "Clear archive" does (append,
 never delete; the audit log already holds every transition). This keeps the working file —
 and every parse of it — small without waiting for the user to click the button.

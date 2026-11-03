@@ -97,8 +97,14 @@ there:
 - drafted_by: <agent>
 - created: <ISO timestamp>
 - task: <graph node id of the task this answers, when there is one>
+- account: <connector account id the message goes out from, e.g. gmail-personal — required for message_send>
 - context: <why, source links>
 ```
+
+A `message_send` entry must name its `account`: the mailbox (or workspace) the request came in
+on, by its id in `dashboard/config.json`'s `connector_accounts`. With more than one account of a
+kind connected, approval refuses an entry that names none rather than guess which one to send
+from.
 
 Always set `task` when the action answers an open task in the graph: the dashboard shows the
 card on that task in the Command Center instead of in a separate list. When a task's next

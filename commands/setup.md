@@ -10,7 +10,7 @@ role research (Steps 1–2) and re-run Steps 3–7 against the existing `dashboa
 useful after manually editing config.json, or after a connector's tool names changed, without
 re-asking the user everything from scratch.
 
-You run in the main session. Read `../PLAN.md` and `../agents/README.md` first — they contain
+You run in the main session. Read `PLAN.md` and `agents/README.md` (at the repo root, where this runs) first — they contain
 the design rationale and the per-role judgment this command applies; don't duplicate that
 reasoning here, just execute it.
 
@@ -26,6 +26,11 @@ directories this command writes to:
 - Any file matching `~/.claude/agents/global/cos-*.md`
 - Any file matching `~/.claude/commands/global/cos-*.md`
 - An existing `~/.claude/cos/` directory
+
+Files the installer put there are this deployment's own, not a collision:
+`./install.sh` records every command it installed, with its hash, in
+`~/.claude/commands/global/.cos-manifest`. A `cos-*.md` listed there whose hash still
+matches is ours — ignore it for this check. Only an unlisted or changed file counts.
 
 If any of these exist, **stop and tell the user explicitly**: name what you found, explain
 that `/setup` writes to these same shared locations and would overwrite an existing deployment,
@@ -87,7 +92,7 @@ agents will need (not to second-guess their answer to question 1).
 
 ## Step 3 — decide which agents to generate
 
-Apply `../agents/README.md`'s judgment table: "Always generate" unconditionally; "Generate
+Apply `agents/README.md`'s judgment table: "Always generate" unconditionally; "Generate
 when the matching connector exists" per Step 1's table; "Generate exactly one" for
 `cos-domain`, using Step 2's answer. Show the user the resulting list (role name + one-line
 why) before writing anything.
@@ -144,13 +149,13 @@ for the `tools:` frontmatter — never invent a tool name.
 2. Write `<workspace>/APPROVAL_POLICY.md` if Step 2's question 4 produced any never-autonomous
    categories — plain markdown list, one line per category. `/cos`, `/cos-approve`, and
    `/cos-approve-confirmed` already look for this exact filename.
-3. Copy **all ten** orchestration commands into `~/.claude/commands/global/` verbatim
-   (they're already generic — no per-deployment edits needed):
-   `commands/{cos,cos-approve,cos-approve-confirmed,cos-revise,cos-poll,cos-process-inbox,cos-research,cos-learn,cos-accounts,cos-uninstall}.md`.
-   The last three are the V2 commands — the dashboard's chat correction loop, accounts probe,
-   and poll's incremental research all invoke them as `/global:cos-*` subprocesses; omitting
-   them makes every one of those calls fail silently with "Unknown command" (this exact gap
-   shipped once — see `../lessons-learned.md` 2026-07-17).
+3. Install the orchestration commands by running `./install.sh` from the repo root — never by
+   copying files. The installer installs every `commands/*.md` (all of them, including
+   `cos-fix` and `setup`), records each one's hash in `.cos-manifest`, replaces stale copies,
+   and leaves a command the user edited alone (writing the new version beside it as `.new`).
+   Copying by hand bypasses that record and is how installed commands drifted from the repo
+   before. The dashboard's chat correction loop, accounts probe and fix flow all invoke these
+   as `/global:cos-*` subprocesses; a missing one fails silently with "Unknown command".
 
 ### Step 5.1 — point the user at free direct connections
 
@@ -188,7 +193,7 @@ Show the user: agents generated, config.json contents (redact nothing — it's t
 polling registered, and any connector from Step 1 that was found but not wired into any role
 (so nothing silently vanishes). If anything in Steps 1–6 hit a real blocker (a connector
 exists but calls fail, an ambiguous mapping had to be guessed), append it to
-`../lessons-learned.md` now, even as a single occurrence — don't wait for it to recur.
+`lessons-learned.md` now, even as a single occurrence — don't wait for it to recur.
 
 Write `dashboard/.setup-complete` (just a timestamp is fine) once everything above succeeded.
 This is what the Notes section below needs to tell a re-run "this is my own prior setup," not
@@ -203,14 +208,14 @@ with an unrelated deployment.
   time — and Step 0's marker-file check (above) keeps that safe on the deployment's own repeat
   runs.
 
-## V2 addendum — research-first agent generation (see `../ROADMAP-V2.md`)
+## V2 addendum — research-first agent generation (see `ROADMAP-V2.md`)
 
 When the V2 modules are present, `/setup` runs discovery *by research*, not by questionnaire:
 
 1. After Step 1 (connector discovery), run **`/cos-research --full`** to populate the knowledge
    graph from the connectors (read-only). This replaces most of what Step 2 used to *ask* — the
    user's projects, systems, channels, tickets, and workspaces are discovered, not typed.
-2. In Step 3, decide agents with **`factory.propose_agents(graph)`** (`../dashboard/factory.py`)
+2. In Step 3, decide agents with **`factory.propose_agents(graph)`** (`dashboard/factory.py`)
    instead of the connector-only role table. Show the proposal list — each with its mission,
    evidence, and justification — and generate only what the user approves.
 3. In Step 4, write each approved agent with **`factory.render_agent_md(spec)`**, substituting the
@@ -221,7 +226,7 @@ When the V2 modules are present, `/setup` runs discovery *by research*, not by q
    `APPROVAL_POLICY.md`).
 
 **Config check + preflight:** before writing `config.json`, run `validate_config.validate(...)`
-(`../dashboard/validate_config.py`) and fix any `error` findings (missing baseline tool grants,
+(`dashboard/validate_config.py`) and fix any `error` findings (missing baseline tool grants,
 empty/unknown `action_tools`, bad JSON) — these otherwise fail silently. Before crawling in
 Step 1, run the `preflight` probe (see `/cos-research` Step 0) so an unreachable connector is
 reported, not mistaken for "nothing there." New dashboard action types can be added via
@@ -233,7 +238,7 @@ before. This addendum is additive — a pre-V2 deployment that never runs `/cos-
 unaffected.
 
 **Multi-account (V2.2, M10):** during Step 1 discovery, run
-`accounts.detect_instances(<discovered tools>)` (`../dashboard/accounts.py`). If any connector
+`accounts.detect_instances(<discovered tools>)` (`dashboard/accounts.py`). If any connector
 kind has ≥2 instances (two Gmails, two Slacks), create `connector_accounts` entries for each,
 then run `/cos-accounts --probe` to learn each instance's identity and bind it to a workspace
 (ask only if ambiguous). Pass the accounts into `factory.propose_agents(graph,
