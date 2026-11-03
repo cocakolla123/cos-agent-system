@@ -44,6 +44,7 @@ import connections        # noqa: E402
 import sift               # noqa: E402
 import graph as graphlib  # noqa: E402
 import models             # noqa: E402
+import approval           # noqa: E402
 
 INSTRUCTIONS = os.path.join(ROOT, "evals", "instructions", "longrun_v3.md")
 DIRECT_PREAMBLE = """## This run: a direct check (overrides the file and tool notes above)
@@ -120,7 +121,18 @@ def _clip(text, n):
     return text[:n * 2 // 3] + "\n[... middle of the meeting left out ...]\n" + text[-(n // 3):]
 
 
+FENCE = re.compile(r"`{3,}")
+
+
 def render_item(i):
+    """One item, rendered by ``_render_item``, with any run of three or more
+    backticks defused: the items sit inside a fenced block in the prompt, and
+    a source that closed the fence could add a section of its own (a fake
+    "Scenario frame (trusted)") that the model would read as ours."""
+    return FENCE.sub("'''", _render_item(i))
+
+
+def _render_item(i):
     """One item as a compact line: id, date, where, who, and the words. About a
     third of the raw JSON, keeping what decides a task (sender, recipients,
     thread, ticket state, due date, dates of an event)."""
@@ -540,13 +552,21 @@ def pending_queue_tasks(queue_path):
     return out
 
 
-def _queue_value(text, keep_lines):
-    lines = [l.strip() for l in str(text or "").strip().splitlines() if l.strip()]
-    if not lines:
-        return ""
-    if not keep_lines:
-        return " ".join(lines)
-    return lines[0] + "".join("\n  * " + l for l in lines[1:])
+def source_account(evidence, items_by_id):
+    """(connection id, address) of the one mail or chat account a task's
+    sources came in on, or ("", "") when there is none or more than one."""
+    seen = set()
+    for e in evidence:
+        i = items_by_id.get(e) if isinstance(e, str) else None
+        if i and i.get("connector") in ("gmail", "slack") and i.get("source"):
+            seen.add((str(i["source"]), str(i.get("account") or "").lower()))
+    return next(iter(seen)) if len(seen) == 1 else ("", "")
+
+
+def named_account(call):
+    """The account a drafted send names first ("gmail-work.send to ...")."""
+    m = re.match(r"\s*([A-Za-z0-9_-]+)\.send", str(call or ""))
+    return m.group(1).lower() if m else ""
 
 
 def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queue_path, graph_dir=None):
@@ -572,22 +592,31 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
                 src.append(_clip(r, 12000) if i.get("connector") == "transcript" else r)
         about = a.get("detail") or a.get("note") or ""
         thr = a.get("thread") or ""
+        # task fields are model output and may quote a source: one line each,
+        # so none can open a "### task" block of its own
+        one = approval.one_line
         blocks.append("### task %s\nname: %s\nworkspace: %s\ndue: %s\nwaiting on: %s\n%s%ssources:\n%s\n" % (
-            n["id"], n.get("name"), n.get("workspace"), a.get("due", "none"), a.get("blocked_on", "nobody"),
-            ("about: %s\n" % " ".join(str(about).split())) if about else "",
-            ("thread: %s\n" % thr) if thr else "",
+            n["id"], one(n.get("name")), one(n.get("workspace")), one(a.get("due", "none")),
+            one(a.get("blocked_on", "nobody")),
+            ("about: %s\n" % one(about)) if about else "",
+            ("thread: %s\n" % one(thr)) if thr else "",
             "\n".join(src) or "(none)"))
     prompt = DRAFT_RULES.format(name=user.get("name") or "the user", today=now.date().isoformat(),
                                 accounts=accounts, tasks="\n".join(blocks))
     text, cost = call(config_dir, prompt, job="draft_direct")
     drafts = extract_json_array(text) or []
     by_id = {n["id"]: n for n in new_nodes}
+    send_ids = {s["id"] for s in connections.load(config_dir)["sources"] if s["kind"] in ("imap", "slack")}
     import graph as _g
     written = 0
     waits = {}
     stamp = now.strftime("%m%d%H%M")
     with _g.file_lock(queue_path):
         exists = os.path.exists(queue_path)
+        taken = set()
+        if exists:
+            with open(queue_path) as f:
+                taken = approval.queue_ids(f.read())
         with open(queue_path, "a") as f:
             if not exists:
                 f.write("# Approval queue\n\nEvery external action waits here until you approve it.\n\n---\n")
@@ -601,18 +630,35 @@ def draft_new_tasks(config_dir, g, new_nodes, items_by_id, user, now, call, queu
                     continue
                 a = n.get("attrs") or {}
                 ev = a.get("evidence") or []
+                ev = ev if isinstance(ev, list) else [ev]
+                call_text = d.get("proposed_tool_call")
+                acct, addr = source_account(ev, items_by_id)
+                if d["action_type"] == "message_send":
+                    # a reply goes out from the account the ask came in on,
+                    # decided here from the sources: a draft that names another
+                    # of the user's accounts (a source talked the model into
+                    # it) is not queued at all
+                    named = named_account(call_text)
+                    if acct and named in send_ids and named != acct:
+                        continue
                 entry = {
                     "status": "pending", "action_type": d["action_type"],
                     "priority": graphlib.effective_priority(n, now=now),
                     "drafted_by": "cos-direct", "created": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-                    "short_summary": " ".join(str(d.get("short_summary") or "").split()),
-                    "proposed_tool_call": _queue_value(d.get("proposed_tool_call"), d["action_type"] == "self_do"),
+                    "short_summary": d.get("short_summary") or "",
+                    "proposed_tool_call": call_text,
                     "task": n["id"],
-                    "context": "Task: %s. Sources: %s." % (n.get("name"), ", ".join(ev) if isinstance(ev, list) else ev),
+                    "context": "Task: %s. Sources: %s." % (n.get("name"), ", ".join(str(e) for e in ev)),
                 }
-                f.write("\n### q-%s-%s\n" % (stamp, n["id"].split(":action:", 1)[-1][:40]))
-                for k, v in entry.items():
-                    f.write("- %s: %s\n" % (k, v))
+                if acct:
+                    entry["account"] = acct
+                if addr:
+                    entry["account_address"] = addr
+                # every field on one line (a self_do outline as indented lines),
+                # so nothing a source says can start a header or a field
+                f.write(approval.format_entry(
+                    approval.unique_id("q-%s-%s" % (stamp, n["id"].split(":action:", 1)[-1][:40]), taken), entry,
+                    multiline=("proposed_tool_call",) if d["action_type"] == "self_do" else ()))
                 written += 1
     if waits and graph_dir:
         # the graph ``g`` was loaded before the model call, which can take

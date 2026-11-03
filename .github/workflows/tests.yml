@@ -37,6 +37,7 @@ jobs:
           dashboard/preflight.py dashboard/learning.py dashboard/accounts.py
           dashboard/context_intake.py dashboard/privacy.py dashboard/publish.py
           dashboard/codefix.py dashboard/models.py dashboard/theme.py dashboard/usage.py
+          dashboard/approval.py dashboard/directives.py evals/injection_surfaces.py
           evals/schema.py evals/score.py evals/stats.py evals/gen_fixtures.py
           evals/run.py
       - name: Installer syntax

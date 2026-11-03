@@ -7,6 +7,7 @@
   "action_tools": {
     "message_send": "mcp__example__messaging_send_message_draft"
   },
+  "_comment_action_tools": "Each value names exactly ONE tool. With several connector_accounts, map an action_type to {account id: tool} (e.g. {\"gmail-work\": \"mcp__gmail_work__send_message\"}): an approval runs only the tool of the account its entry was drafted from, and a tool in another account's tool_prefix namespace is refused (dashboard/approval.py).",
   "_comment_action_types": "V2 (M8): register extra dashboard action types (icon + label) without editing server.py. Built-ins: message_send, ticket_update, calendar_change.",
   "action_types": {
     "message_send": {
