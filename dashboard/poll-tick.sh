@@ -120,13 +120,18 @@ while IFS= read -r a; do [ -n "$a" ] && model_args+=("$a"); done < <(
   python3 "$SCRIPT_DIR/models.py" claude-args poll "$DASH_DIR" 2>/dev/null)
 
 # usage.py sends only the poll's tools, caps the call and logs its cost
+# run from a neutral folder: inside the repo, Claude Code loads the project's
+# auto-memory into the call (see RUN_DIR in server.py); files come via --add-dir
+RUN_DIR="${COS_RUN_DIR:-$HOME/.cos-agent/run}"
+mkdir -p "$RUN_DIR"
 out_file=$(mktemp)
-if python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
-  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --tool=$SCRIPT_DIR/cos_tool.py --workspace=$DASH_DIR/workspace" ${model_args[@]+"${model_args[@]}"} \
+if (cd "$RUN_DIR" && python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
+  "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --dashboard=$DASH_DIR --workspace=$DASH_DIR/workspace" ${model_args[@]+"${model_args[@]}"} \
+  --add-dir "$DASH_DIR" \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \
-  > "$out_file" 2>> "$DASH_DIR/launchd-poll.err"; then
+  > "$out_file" 2>> "$DASH_DIR/launchd-poll.err"); then
   cat "$out_file" >> "$DASH_DIR/launchd-poll.log"
   for connector in "${due[@]}"; do
     tmp=$(mktemp)

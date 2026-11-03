@@ -199,6 +199,12 @@ if DEMO:
 LIVE_REFRESH = bool(CONFIG.get("live_refresh", False))
 LIVE_REFRESH_SECONDS = int(CONFIG.get("live_refresh_seconds", 20) or 20)
 ORCHESTRATOR_CWD = CONFIG["orchestrator_cwd"]
+# Polls and drafting run from a neutral folder outside the repo: Claude Code
+# loads a project's auto-memory into every headless call made inside it, and
+# here that memory is an old poll ritual — measured 2026-11-03, a one-word
+# reply cost $1.16 from the repo and $0.15 from this folder, and the ritual
+# talked a poll out of reading mail. File access is granted with --add-dir.
+RUN_DIR = os.environ.get("COS_RUN_DIR") or os.path.join(os.path.expanduser("~"), ".cos-agent", "run")
 JIRA_HOST = CONFIG["ticket_host"]
 TICKET_SYSTEM_NAME = CONFIG["ticket_system_name"]
 ACTION_TOOLS = CONFIG["action_tools"]
@@ -1731,7 +1737,7 @@ def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None)
 _POLL_NOW = None
 
 
-def spawn_background(cmd, logname, job=None):
+def spawn_background(cmd, logname, job=None, cwd=None):
     """Popen with output appended to a dashboard log file. Closes the parent's
     handle immediately (the child holds its own dup), so repeated spawns don't
     leak file descriptors. With ``job``, the call runs through usage.py (only
@@ -1741,7 +1747,7 @@ def spawn_background(cmd, logname, job=None):
                "run", job, DASHBOARD_DIR, "--", *cmd]
     log = open(os.path.join(DASHBOARD_DIR, logname), "a")
     try:
-        return subprocess.Popen(cmd, cwd=ORCHESTRATOR_CWD, stdout=log,
+        return subprocess.Popen(cmd, cwd=cwd or ORCHESTRATOR_CWD, stdout=log,
                                 stderr=subprocess.STDOUT)
     finally:
         log.close()
@@ -1762,7 +1768,7 @@ def draft_missing_async(logname="launchd-poll.log"):
                 f.write("\n[draft] drafting next steps for tasks without one...\n")
                 f.flush()
                 subprocess.run(cmd, stdout=f, stderr=subprocess.STDOUT, timeout=1200,
-                               cwd=ORCHESTRATOR_CWD,
+                               cwd=RUN_DIR,
                                env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN})
         except Exception:
             pass
@@ -3513,7 +3519,7 @@ class Handler(BaseHTTPRequestHandler):
             poll_cfg = read_json(os.path.join(DASHBOARD_DIR, "poll-config.json"),
                                  DEFAULT_POLL_CONFIG)
             scopes = ",".join(poll_connectors(poll_cfg))
-            paths = " --tool=%s --workspace=%s" % (COS_TOOL, COS_DIR)
+            paths = " --dashboard=%s --workspace=%s" % (DASHBOARD_DIR, COS_DIR)
             prompt = (("/global:cos-poll --scope=%s --force" % scopes
                       if scopes else "/global:cos-poll --force") + paths)
             # in the background, like a crawl: a sweep that re-reads each
@@ -3529,9 +3535,10 @@ class Handler(BaseHTTPRequestHandler):
                     f.write("\n[poll now] %s\n" % time.strftime("%Y-%m-%dT%H:%M:%S"))
                 proc = spawn_background(
                     [CLAUDE_BIN, "-p", prompt, *model_args("poll"),
+                     "--add-dir", DASHBOARD_DIR, "--add-dir", COS_DIR,
                      "--permission-mode", "dontAsk",
                      "--allowedTools", POLL_TOOLS,
-                     "--output-format", "text"], "launchd-poll.log", job="poll")
+                     "--output-format", "text"], "launchd-poll.log", job="poll", cwd=RUN_DIR)
                 _POLL_NOW = proc
 
                 def _after(p=proc):
@@ -3565,7 +3572,7 @@ class Handler(BaseHTTPRequestHandler):
                 cmd += ["--task", tid]
             try:
                 proc = subprocess.run(cmd, capture_output=True, text=True, timeout=280,
-                                      cwd=ORCHESTRATOR_CWD,
+                                      cwd=RUN_DIR,
                                       env={**os.environ, "CLAUDE_BIN": CLAUDE_BIN})
                 lines = [l for l in (proc.stdout or proc.stderr or "").strip().splitlines() if l.strip()]
                 self._send_json({"message": lines[-1] if lines else "(no output)"})
@@ -3916,6 +3923,7 @@ def main():
     # everything this process and its jobs write (graph, inbox, queue, logs)
     # holds account content: owner-only, whatever the machine's umask
     os.umask(0o077)
+    os.makedirs(RUN_DIR, mode=0o700, exist_ok=True)
     _sync_gmail_accounts()
     _privacy_upkeep()
     if DEMO:
