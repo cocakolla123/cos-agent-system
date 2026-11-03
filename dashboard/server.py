@@ -3855,6 +3855,7 @@ def start_poll_ticker():
                 # whatever the tick minted must not wait for the next tick
                 # to get its draft (free when nothing is missing)
                 draft_missing_async("launchd-poll.log")
+                _privacy_upkeep()
             except Exception as exc:
                 try:
                     with open(os.path.join(DASHBOARD_DIR, "launchd-poll.err"), "a") as f:
@@ -3866,6 +3867,22 @@ def start_poll_ticker():
     t = threading.Thread(target=_loop, daemon=True, name="poll-ticker")
     t.start()
     return t
+
+
+def _privacy_upkeep():
+    """Repair data-file permissions left open by older versions or other
+    writers, and apply retention (privacy.py). Runs at start and every tick;
+    never blocks either."""
+    try:
+        import privacy
+        fixed = privacy.fix_permissions(DASHBOARD_DIR)
+        kept = privacy.enforce_retention(DASHBOARD_DIR)
+        if fixed or kept["inbox_deleted"] or kept["logs_trimmed"]:
+            with open(os.path.join(DASHBOARD_DIR, "server.log"), "a") as f:
+                f.write("privacy upkeep: %d permission fixes, %d inbox days expired, logs trimmed: %s\n"
+                        % (len(fixed), len(kept["inbox_deleted"]), ", ".join(kept["logs_trimmed"]) or "none"))
+    except Exception:
+        pass
 
 
 def _sync_gmail_accounts():
@@ -3886,6 +3903,7 @@ def main():
     # holds account content: owner-only, whatever the machine's umask
     os.umask(0o077)
     _sync_gmail_accounts()
+    _privacy_upkeep()
     if DEMO:
         # nothing is written and nothing runs; bind where --host says
         host = _arg_after("--host") or "127.0.0.1"

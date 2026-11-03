@@ -67,6 +67,17 @@ EXCLUDES = [
 ]
 
 
+def rsync_command(root, dest):
+    """The copy of the template into the staging tree. Besides EXCLUDES it
+    honours every .gitignore in the tree (rsync's dir-merge filter), so a new
+    runtime data file that is gitignored can never be staged just because
+    nobody remembered to add it here as well."""
+    cmd = ["rsync", "-a", "--delete", "--filter=:- .gitignore"]
+    for e in EXCLUDES:
+        cmd += ["--exclude", e]
+    return cmd + [root.rstrip("/") + "/", dest.rstrip("/") + "/"]
+
+
 def _log(msg):
     try:
         with open(LOG_PATH, "a") as f:
@@ -114,10 +125,7 @@ def publish(message, config_path=None, template_root=None, dry_run=False):
         _run(["git", "clean", "-fd"], cwd=STAGE_DIR)
 
     # 2. mirror the template, minus personal/runtime files
-    rsync = ["rsync", "-a", "--delete"]
-    for e in EXCLUDES:
-        rsync += ["--exclude", e]
-    rsync += [root.rstrip("/") + "/", STAGE_DIR.rstrip("/") + "/"]
+    rsync = rsync_command(root, STAGE_DIR)
     r = _run(rsync)
     if r.returncode != 0:
         return False, "rsync failed: " + (r.stderr or "")[-300:]

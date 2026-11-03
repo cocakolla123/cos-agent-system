@@ -44,3 +44,11 @@ dashboard/fetch-state.json
 dashboard/inbox/
 dashboard/pending.jsonl
 dashboard/scan-state.json
+# runtime data (account content) — see PRIVACY.md
+dashboard/approval-queue.md
+dashboard/runs.jsonl
+dashboard/quarantine.jsonl
+dashboard/fix.log
+dashboard/*.tmp
+dashboard/*.log
+dashboard/*.err
