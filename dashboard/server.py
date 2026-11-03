@@ -1447,7 +1447,8 @@ def render_entry(e, node=None):
                             f"data-action-type=\"message_send\" onclick=\"saveEdit(this)\">Save draft</button>")
         else:
             link_label, link_url = external_link_for(e)
-            link_html = f' · <a href="{link_url}" target="_blank">{link_label}</a>' if link_url else ""
+            link_html = (f' · <a href="{html.escape(link_url, quote=True)}" target="_blank" rel="noopener">'
+                         f'{html.escape(link_label)}</a>') if link_url else ""
             actions = (
                 f"<button data-id=\"{safe_id}\" data-copy=\"{html.escape(plain_lines(e.get('proposed_tool_call','')))}\" onclick=\"copyText(this)\">Copy text</button>"
                 f"<button data-id=\"{safe_id}\" onclick=\"markHandled(this)\">Mark handled</button>"

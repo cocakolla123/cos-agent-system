@@ -63,6 +63,39 @@ def _git(cwd, *args, check=True):
     return p.stdout.strip()
 
 
+# Git run against a fix worktree after untrusted code (the agent's edits, the
+# repo's tests) has touched it. That code can rewrite the worktree's ``.git``
+# file to point at a git dir it controls, whose config runs a command on the
+# next ``git status`` (core.fsmonitor) outside the sandbox. So the git dir is
+# looked up in the main repo, which neither can write, and passed explicitly,
+# with fsmonitor and hooks off.
+_HARDEN = ("-c", "core.fsmonitor=false", "-c", "core.hooksPath=/dev/null")
+
+
+def _trusted_gitdir(repo, tree):
+    """The worktree's real git dir, from the main repo's own records."""
+    common = _git(repo, "rev-parse", "--path-format=absolute", "--git-common-dir")
+    want = os.path.realpath(tree)
+    wt = os.path.join(common, "worktrees")
+    for name in sorted(os.listdir(wt)) if os.path.isdir(wt) else []:
+        try:
+            with open(os.path.join(wt, name, "gitdir")) as f:
+                pointed = f.read().strip()
+        except OSError:
+            continue
+        if os.path.realpath(os.path.dirname(pointed)) == want:
+            return os.path.join(wt, name)
+    raise FixError("no worktree record for %s in %s" % (tree, repo))
+
+
+def _tgit(repo, tree, *args, check=True):
+    gd = _trusted_gitdir(repo, tree)
+    p = _run(["git", "--git-dir", gd, "--work-tree", tree, *_HARDEN, *args], tree)
+    if check and p.returncode != 0:
+        raise FixError("git %s failed: %s" % (" ".join(args), (p.stderr or p.stdout).strip()))
+    return p.stdout.strip()
+
+
 def _slug(text):
     s = graph.slug(text)[:40].strip("-")
     if not s:
@@ -135,18 +168,18 @@ def finalize(fix, test_cmd, title, body, task_id, ws_dir, base_branch="main",
     """Commit, test, save the diff and queue the approval card. Returns the
     entry dict. Raises FixError if the agent changed nothing."""
     tree, branch, base = fix["worktree"], fix["branch"], fix["base"]
-    if _git(tree, "status", "--porcelain"):
-        _git(tree, "add", "-A")
-        # no hooks: a hooks dir inside the repo is repo code too, and this
-        # commit runs outside the sandbox
-        _git(tree, "-c", "core.hooksPath=/dev/null", "commit", "-q", "--no-verify", "-m", title)
-    if not _git(tree, "rev-list", "%s..HEAD" % base):
+    repo = fix["repo"]
+    g = lambda *a: _tgit(repo, tree, *a)  # noqa: E731
+    if g("status", "--porcelain"):
+        g("add", "-A")
+        g("commit", "-q", "--no-verify", "-m", title)
+    if not g("rev-list", "%s..HEAD" % base):
         raise FixError("no changes on %s: nothing to propose" % branch)
-    diff = _git(tree, "diff", "%s...HEAD" % base)
-    stat = _git(tree, "diff", "--stat", "%s...HEAD" % base).splitlines()
-    tested = _git(tree, "rev-parse", "HEAD")
+    diff = g("diff", "%s...HEAD" % base)
+    stat = g("diff", "--stat", "%s...HEAD" % base).splitlines()
+    tested = g("rev-parse", "HEAD")
     code, tail = run_tests(tree, test_cmd)
-    if _git(tree, "rev-parse", "HEAD") != tested or _git(tree, "status", "--porcelain", "--untracked-files=no"):
+    if g("rev-parse", "HEAD") != tested or g("status", "--porcelain", "--untracked-files=no"):
         # the test run itself changed the branch or tracked files: what passed
         # is not what would be pushed
         code, tail = (code or 1), tail + "\nthe test run changed the branch or its files; not approvable"
@@ -191,9 +224,20 @@ def finalize(fix, test_cmd, title, body, task_id, ws_dir, base_branch="main",
 
 
 def _append(ws_dir, entry):
+    import approval
     path = os.path.join(ws_dir, QUEUE_FILE)
     with graph.file_lock(path):
         exists = os.path.exists(path)
+        if exists:
+            with open(path) as f:
+                taken = approval.queue_ids(f.read())
+        else:
+            taken = set()
+        # a re-run of the same slug must not share an id with an older card
+        entry["id"] = approval.unique_id(entry["id"], taken)
+        # every value on one line: a value carrying "\n- status: pending" would
+        # otherwise add a field that overrides the real one
+        entry = {k: _field(v) for k, v in entry.items()}
         with open(path, "a") as f:
             if not exists:
                 f.write("# Approval queue\n\n---\n")
@@ -227,14 +271,16 @@ def open_pr(entry, gh="gh", remote="origin"):
     if not branch.startswith(BRANCH_PREFIX) or not re.match(r"^[\w./-]+$", branch):
         raise FixError("unexpected branch name %r" % branch)
     tree = entry["worktree"]
-    p = _run(["git", "merge-base", "--is-ancestor", entry["base_commit"], branch], tree)
+    gd = _trusted_gitdir(entry["repo"], tree)
+    p = _run(["git", "--git-dir", gd, "--work-tree", tree, *_HARDEN,
+              "merge-base", "--is-ancestor", entry["base_commit"], branch], tree)
     if p.returncode != 0:
         raise FixError("branch %s no longer descends from its base commit" % branch)
     # push exactly the commit whose tests passed, nothing added since
     tested = entry.get("tested_commit") or ""
     if not re.match(r"^[0-9a-f]{40}$", tested):
         raise FixError("no tested commit recorded; run the fix flow again")
-    if _git(tree, "rev-parse", "refs/heads/" + branch) != tested:
+    if _tgit(entry["repo"], tree, "rev-parse", "refs/heads/" + branch) != tested:
         raise FixError("branch %s has changed since its tests passed; run the fix flow again" % branch)
     # push from the main checkout: a remote given as a relative path is
     # relative to it, not to the worktree (the branch is shared by both)

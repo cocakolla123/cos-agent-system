@@ -109,7 +109,11 @@ check_deps() {
 # -- commands: installed against a manifest, user edits never overwritten -----
 install_commands() {
   mkdir -p "$DEST"
-  local tmp="$MANIFEST.tmp" installed=0 updated=0 kept=0 base f want have rec
+  local tmp="$MANIFEST.tmp" installed=0 updated=0 kept=0 removed=0 base f want have rec legacy=0
+  # no manifest yet: an install made before manifests existed. Its copies were
+  # always overwritten by the old installer, so keep doing that (with a .bak)
+  # instead of mistaking every stale copy for a user edit and freezing it
+  [ -f "$MANIFEST" ] || legacy=1
   : > "$tmp"
   for f in "$ROOT"/commands/*.md; do
     base="$(basename "$f")"
@@ -123,7 +127,7 @@ install_commands() {
         :
       elif [ -n "$rec" ] && [ "$have" = "$rec" ]; then
         cp "$f" "$DEST/$base"; updated=$((updated + 1))        # ours, unedited: safe to replace
-      elif [ "$FORCE" = "1" ]; then
+      elif [ "$FORCE" = "1" ] || [ "$legacy" = "1" ]; then
         cp "$DEST/$base" "$DEST/$base.bak"; cp "$f" "$DEST/$base"; updated=$((updated + 1))
         echo "  replaced your edited $base (yours saved as $base.bak)"
       else
@@ -135,8 +139,20 @@ install_commands() {
     fi
     echo "$want  $base" >> "$tmp"
   done
+  # commands removed upstream: delete the ones we installed and nobody edited
+  if [ -f "$MANIFEST" ]; then
+    while read -r rec base; do
+      [ -n "$base" ] || continue
+      [ -f "$ROOT/commands/$base" ] && continue
+      if [ -f "$DEST/$base" ] && [ "$(hash_of "$DEST/$base")" = "$rec" ]; then
+        rm -f "${DEST:?}/${base:?}" "${DEST:?}/${base:?}.new"; removed=$((removed + 1))
+      elif [ -f "$DEST/$base" ]; then
+        echo "  $base was removed upstream; left in place because you edited it"
+      fi
+    done < "$MANIFEST"
+  fi
   mv "$tmp" "$MANIFEST"
-  say "commands: $installed new, $updated updated, $kept kept as you edited them ($DEST)"
+  say "commands: $installed new, $updated updated, $kept kept as you edited them, $removed retired ($DEST)"
 }
 
 compiles() {
@@ -165,6 +181,7 @@ if [ "$MODE" = "uninstall" ]; then
         rm -f "${DEST:?}/${base:?}" "${DEST:?}/${base:?}.new"; removed=$((removed + 1))
         if [ -f "$DEST/$base.bak" ]; then mv "$DEST/$base.bak" "$DEST/$base"; echo "  restored your earlier $base"; fi
       elif [ -f "$DEST/$base" ]; then
+        rm -f "${DEST:?}/${base:?}.new"
         echo "  left $base in place: you edited it after install"
       fi
     done < "$MANIFEST"

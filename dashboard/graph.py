@@ -225,6 +225,10 @@ _SLUG_RE = re.compile(r"[^a-z0-9]+")
 _DATE_ONLY_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
+def _view_name(ws):
+    return slug(ws) or "unknown"
+
+
 def slug(value):
     """Normalize an arbitrary string into a stable, id-safe natural key.
 
@@ -489,14 +493,16 @@ class Graph:
             for ws in workspaces:
                 count = sum(1 for n in self.nodes.values()
                             if n.get("workspace") == ws)
-                index.append("- [%s](%s.md) — %d nodes" % (ws, ws, count))
+                index.append("- [%s](%s.md) — %d nodes" % (ws, _view_name(ws), count))
             index.append("")
         index_path = os.path.join(views_dir, "index.md")
         _write_text(index_path, "\n".join(index).rstrip() + "\n")
         written.append(index_path)
 
         for ws in workspaces:
-            path = os.path.join(views_dir, "%s.md" % ws)
+            # the workspace comes from nodes.jsonl as loaded, which a crawl can
+            # edit: never let it name a path ("../x", "/abs") outside views/
+            path = os.path.join(views_dir, "%s.md" % _view_name(ws))
             _write_text(path, self._render_workspace(ws))
             written.append(path)
         return written

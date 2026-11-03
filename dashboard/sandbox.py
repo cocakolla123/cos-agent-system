@@ -108,7 +108,12 @@ def _interpreter_roots(argv0, env):
     # the resolved install, not the symlink's directory (~/.local/bin would
     # expose ~/.local); following a symlink needs only metadata, allowed anyway
     d = os.path.dirname(_real(exe))
-    roots.append(os.path.dirname(d) if os.path.basename(d) == "bin" else d)
+    prefix = os.path.dirname(d) if os.path.basename(d) == "bin" else d
+    if os.path.dirname(prefix) == _home():
+        # a prefix directly in the home dir (~/.cargo, ~/.bun, ~/go) also holds
+        # that tool's credentials and caches: expose only its bin/
+        prefix = d
+    roots.append(prefix)
     if env.get("VIRTUAL_ENV"):
         roots.append(_real(env["VIRTUAL_ENV"]))
     return roots

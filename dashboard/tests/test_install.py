@@ -147,8 +147,8 @@ class TestInstaller(unittest.TestCase):
         with open(os.path.join(self.work, "dashboard", "ok.py")) as f:
             self.assertEqual(f.read(), "x = 2  # my tweak\n")
 
-    def test_first_install_keeps_a_preexisting_command(self):
-        os.makedirs(self.cmds)
+    def test_after_the_first_install_a_users_edit_is_kept(self):
+        self.assertEqual(self.run_install().returncode, 0)        # the manifest now exists
         with open(os.path.join(self.cmds, "cos.md"), "w") as f:
             f.write("someone else's cos\n")
         r = self.run_install()
@@ -156,6 +156,37 @@ class TestInstaller(unittest.TestCase):
         self.assertEqual(self.read("cos.md"), "someone else's cos\n")
         self.assertEqual(self.read("cos.md.new"), "cos v1\n")
 
+
+    def test_a_pre_manifest_install_gets_its_stale_commands_replaced(self):
+        os.makedirs(self.cmds)
+        with open(os.path.join(self.cmds, "cos.md"), "w") as f:
+            f.write("an old copy from before manifests\n")
+        r = self.run_install()
+        self.assertEqual(r.returncode, 0, r.stderr + r.stdout)
+        self.assertEqual(self.read("cos.md"), "cos v1\n")                 # updated, not frozen
+        self.assertEqual(self.read("cos.md.bak"), "an old copy from before manifests\n")
+        with open(os.path.join(self.cmds, ".cos-manifest")) as f:
+            self.assertIn("cos.md", f.read())
+
+    def test_a_command_removed_upstream_is_retired(self):
+        self.assertEqual(self.run_install().returncode, 0)
+        os.remove(os.path.join(self.src, "commands", "cos-poll.md"))
+        self.release("drop cos-poll")
+        r = self.run_install("--update")
+        self.assertEqual(r.returncode, 0, r.stderr + r.stdout)
+        self.assertFalse(os.path.exists(os.path.join(self.cmds, "cos-poll.md")))
+
+    def test_uninstall_leaves_no_new_files_behind(self):
+        self.assertEqual(self.run_install().returncode, 0)
+        with open(os.path.join(self.cmds, "cos.md"), "w") as f:
+            f.write("mine\n")
+        self.write("commands/cos.md", "cos v2\n")
+        self.release("v2")
+        self.assertEqual(self.run_install("--update").returncode, 0)
+        self.assertTrue(os.path.exists(os.path.join(self.cmds, "cos.md.new")))
+        self.assertEqual(self.run_install("--uninstall").returncode, 0)
+        self.assertFalse(os.path.exists(os.path.join(self.cmds, "cos.md.new")))
+        self.assertEqual(self.read("cos.md"), "mine\n")
 
 if __name__ == "__main__":
     unittest.main()

@@ -182,5 +182,24 @@ class TestCodeFix(unittest.TestCase):
         self.assertFalse(os.path.exists(marker))
 
 
+    def test_a_repointed_git_file_cannot_run_code_outside_the_sandbox(self):
+        # the agent or a test rewrites the worktree's .git to a git dir it
+        # controls; the next unsandboxed `git status` must not run its fsmonitor
+        fix = self._fix()
+        tree = fix["worktree"]
+        evil = os.path.join(tree, "evil")
+        sh(self.tmp.name, "git", "init", "-q", "--bare", evil)
+        marker = os.path.join(self.tmp.name, "fsmonitor-ran")
+        sh(self.tmp.name, "git", "--git-dir", evil, "config", "core.fsmonitor", "touch %s; false" % marker)
+        sh(self.tmp.name, "git", "--git-dir", evil, "config", "core.bare", "false")
+        with open(os.path.join(tree, ".git"), "w") as f:
+            f.write("gitdir: %s\n" % evil)
+        with mock.patch.object(sandbox, "backend", return_value=None):
+            try:
+                codefix.finalize(fix, TEST_CMD, "Fix", "", "t", self.ws)
+            except codefix.FixError:
+                pass
+        self.assertFalse(os.path.exists(marker))
+
 if __name__ == "__main__":
     unittest.main()

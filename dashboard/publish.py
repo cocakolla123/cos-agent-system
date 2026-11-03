@@ -45,7 +45,7 @@ LOG_PATH = os.path.join(HERE, "publish.log")
 # Everything personal or runtime, kept out of the staging tree entirely.
 # Mirrors .gitignore; the privacy scan is the backstop for anything new.
 EXCLUDES = [
-    ".git", ".DS_Store", "__pycache__",
+    ".git", ".DS_Store", "__pycache__", ".claude",
     "dashboard/workspace", "dashboard/publish-stage",
     "dashboard/config.json", "dashboard/config.json.lock",
     "dashboard/poll-config.json", "dashboard/poll-last-run.json",

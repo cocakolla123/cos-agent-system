@@ -52,3 +52,4 @@ dashboard/fix.log
 dashboard/*.tmp
 dashboard/*.log
 dashboard/*.err
+.claude/
