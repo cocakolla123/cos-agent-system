@@ -49,8 +49,11 @@ invocation before finishing, rather than waiting for `general`'s own next schedu
 
 ## Scope: `general`
 
-The full narrow check, in this order — the first step always runs, even when the budget
-then runs out before the rest:
+The full narrow check, in this order. A poll on the user's Claude subscription has **no dollar
+cap**: finish every step, including re-checking every pending entry, rather than stopping early
+"to save budget" and leaving entries for the next tick. End the summary with one line per
+discovery connector: `<connector>: checked` or `<connector>: not authorized — connect it in
+Accounts` (for example `slack: not authorized`), so a source nobody can read is never silent.
 - **New since the last poll — first, every time.** Read `poll-last-completed.json` in
   `--dashboard` for the last successful run (if absent, look back 3 days). Then check every
   connected discovery source for what is new since then:
