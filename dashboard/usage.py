@@ -172,6 +172,14 @@ def record(config_dir, job, envelope, ok=True, now=None):
         "turns": env.get("num_turns") or 0,
         "ok": bool(ok) and not env.get("is_error"),
     }
+    try:
+        import runtrace
+        run = runtrace.CURRENT.get()
+        if run is not None:
+            rec["run_id"] = run.run_id
+            run.model_call(rec)
+    except Exception:  # noqa: BLE001  (tracing never breaks a model call)
+        pass
     with open(os.path.join(config_dir, USAGE_FILE), "a") as f:
         f.write(json.dumps(rec) + "\n")
     return rec

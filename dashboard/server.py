@@ -1816,6 +1816,59 @@ def _graph_is_empty():
         return True
 
 
+def render_run_history(limit=15):
+    """Polling → Recent checks: one row per traced run, and a search that
+    says what happened to a given message (runtrace.explain)."""
+    try:
+        import runtrace
+        rows = runtrace.runs(DASHBOARD_DIR, limit=limit)
+    except Exception:
+        return ""
+    def cell(r):
+        srcs = r.get("sources") or {}
+        issues = ["%s: %s" % (k, v.get("error") or v.get("incomplete"))
+                  for k, v in srcs.items() if v.get("error") or v.get("incomplete")]
+        cost = (r.get("model") or {}).get("cost_usd", r.get("cost_usd")) or 0
+        return ("<tr><td>%s</td><td>%s</td><td><b>%s</b></td><td>%s / %s / %s</td><td>$%.3f</td>"
+                "<td class='meta'>%s</td></tr>" % (
+                    html.escape((r.get("started") or "")[5:16].replace("T", " ")),
+                    html.escape(r.get("kind") or ""), html.escape(r.get("outcome") or ""),
+                    r.get("new") if r.get("new") is not None else "-",
+                    r.get("kept") if r.get("kept") is not None else "-",
+                    r.get("records") if r.get("records") is not None else "-",
+                    float(cost),
+                    html.escape("; ".join(filter(None, [r.get("error") or ""] + issues))[:240])))
+    body = "".join(cell(r) for r in reversed(rows)) or \
+        "<tr><td colspan='6' class='meta'>No traced checks yet — they appear once a direct connection runs.</td></tr>"
+    return f"""
+<h2 id="runs">Recent checks</h2>
+<div class="quick-line">Every check leaves a trace: what each source returned, whether its sync finished,
+and what happened to every message — by id only, never its text. Fetched / kept / tasks per run.</div>
+<table class="runs"><tr><th>When (UTC)</th><th>Kind</th><th>Outcome</th><th>Fetched / kept / tasks</th>
+<th>Cost</th><th>Problems</th></tr>{body}</table>
+<div class="pill-row" style="margin:.6rem 0">
+  <input id="explainQ" placeholder="Why was this missed? Type words from a subject or sender" style="flex:1 1 320px">
+  <button class="small" onclick="explainRun()">Explain</button>
+</div>
+<div id="explainOut"></div>
+<style>table.runs{{width:100%;border-collapse:collapse;font-size:12px}}table.runs td,table.runs th{{text-align:left;
+padding:4px 6px;border-bottom:1px solid var(--line,#ddd)}}#explainOut li{{margin:.3rem 0}}</style>
+<script>
+async function explainRun() {{
+  const out = document.getElementById("explainOut");
+  out.textContent = "looking...";
+  const r = await post("/explain", {{q: document.getElementById("explainQ").value}});
+  const esc = s => String(s || "").replace(/[&<>]/g, c => ({{"&":"&amp;","<":"&lt;",">":"&gt;"}})[c]);
+  out.innerHTML = "<ul>" + (r.results || []).map(x =>
+    "<li><b>" + esc(x.label) + "</b> <span class='meta'>" + esc(x.from) + " " + esc((x.date || "").slice(0, 10)) +
+    "</span><br>" + esc(x.verdict) +
+    (x.history && x.history.length > 1 ? "<br><span class='meta'>history: " +
+      x.history.map(h => esc((h.at || "").slice(5, 16)) + " " + esc(h.fate)).join(" → ") + "</span>" : "") +
+    "</li>").join("") + "</ul>";
+}}
+</script>"""
+
+
 def render_cost_intro():
     """One-time popup for a fresh install: scheduled checks spend model usage
     every tick, direct connections make the routine fetch free. Personalized
@@ -2909,7 +2962,7 @@ class Handler(BaseHTTPRequestHandler):
             meetings_html=meetings_html,
             inbox_html=render_inbox(parse_inbox()),
             open_questions=html.escape(open_q) or "(empty)",
-            schedule_html=render_schedule_section(cfg),
+            schedule_html=render_schedule_section(cfg) + render_run_history(),
             selected_days_by_connector_json=json.dumps(
                 {c: list(days) for c, days in selected_by_connector.items()}
             ),
@@ -3477,6 +3530,14 @@ class Handler(BaseHTTPRequestHandler):
                 self._send_json({"message": output[:2000] or "(no output)"})
             except subprocess.TimeoutExpired:
                 self._send_json({"message": "timed out after 300s"}, 504)
+            return
+
+        if self.path == "/explain":
+            try:
+                import runtrace
+                self._send_json({"results": runtrace.explain(DASHBOARD_DIR, data.get("q") or "")})
+            except Exception as exc:
+                self._send_json({"message": f"explain failed: {exc}"}, 500)
             return
 
         if self.path == "/draft-next":

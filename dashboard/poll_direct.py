@@ -720,6 +720,24 @@ def draft_missing(config_dir, graph_dir, task_id=None, now=None, claude_bin=None
 
 def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=None, triage=False,
           scan=False, draft=True):
+    """One direct check, traced: a line in runs.jsonl says what it did and
+    what happened to every item (see runtrace). Returns a summary dict."""
+    import runtrace
+    with runtrace.start(config_dir, "scan" if scan else "check", now=now) as tr:
+        out = _check(config_dir, graph_dir, tr, dry_run=dry_run, now=now, _fetch=_fetch, _model=_model,
+                     triage=triage, scan=scan, draft=draft)
+        outcome = ("dry_run" if out.get("dry_run") else "quiet" if "quiet" in out else
+                   "backoff" if out.get("backoff") else "queued" if out.get("queued") else "read")
+        tr.finish(outcome, new=out.get("new"), kept=out.get("kept"), waiting=out.get("waiting"),
+                  records=out.get("records"), quarantined=out.get("quarantined"),
+                  drafts=out.get("drafts"), cost_usd=out.get("cost_usd"),
+                  draft_error=runtrace.redact(out["draft_error"]) if out.get("draft_error") else None)
+        out["run_id"] = tr.run_id
+    return out
+
+
+def _check(config_dir, graph_dir, tr, dry_run=False, now=None, _fetch=None, _model=None, triage=False,
+           scan=False, draft=True):
     """One direct check. Returns a summary dict.
 
     scan=True: fetch and sift (free), queue what is kept, and call the model only
@@ -740,6 +758,15 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
     people, orgs = graph_people(g, user)
     sifter = sift.Sifter(user, None, tasks, known, people=people, orgs=orgs)
     kept_new, dropped = sifter.sift(new)
+    tr.sources(fetched["per_source"])
+    for per in fetched["per_source"].values():
+        for d in per.get("duplicate_ids") or []:
+            tr.item(d, "duplicate")
+    kept_ids = {i.get("id") for i in kept_new}
+    for i in new:
+        if i.get("id") not in kept_ids:
+            tr.item(i.get("id"), "dropped", connector=i.get("connector"))
+    tr.step("fetch_and_sift", fetched=len(new), kept=len(kept_new), dropped=len(new) - len(kept_new))
     waiting = _read_pending(config_dir)
     have = {r["item"].get("id") for r in waiting}
     for i in kept_new:
@@ -762,12 +789,16 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
         return out
     urgent = [r for r in waiting if r.get("urgent")]
     due = batch_due(config_dir, now) if scan else True
+    for r in waiting:
+        tr.item(r["item"].get("id"), "waiting", reason=r.get("reason"), urgent=bool(r.get("urgent")))
     if scan and not urgent and not due:
         out["queued"] = True
         return out
     if scan and _in_backoff(config_dir, now):
         # the last read failed: wait (1h, 2h, 4h... up to a day) rather than pay
         # for the same failing read every five minutes; Check now still reads
+        for r in waiting:
+            tr.item(r["item"].get("id"), "backoff", reason=r.get("reason"))
         out.update({"queued": True, "backoff": True})
         return out
     out["urgent"] = len(urgent)
@@ -799,12 +830,17 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
             text, c2 = call(config_dir, prompt)
         except Exception:
             _note_failure(config_dir, now)
+            for i in kept:
+                tr.item(i.get("id"), "read_failed")
             raise
         cost += c2 or 0.0
+        tr.step("model_read", items=len(kept))
         parsed = extract_json_array(text)
         if parsed is None:
             # not a JSON array: nothing is acknowledged, the items stay waiting
             _note_failure(config_dir, now)
+            for i in kept:
+                tr.item(i.get("id"), "read_failed", why="reply was not a JSON array")
             raise ExtractionError("the model's reply was not a JSON array; %d items stay waiting"
                                   % len(waiting))
         checked = [(r, record_problems(r)) for r in parsed]
@@ -838,6 +874,22 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
         st["last_batch"] = st["last_flush"]
     _save_scan_state(config_dir, st)
     out.update({"records": len(recs), "read": len(kept)})
+    cites, bad = {}, set()
+    for r in recs:
+        ev = (r.get("attrs") or {}).get("evidence") or []
+        for e in (ev if isinstance(ev, list) else [ev]):
+            cites.setdefault(e, []).append("%s:%s" % (r.get("kind"), r.get("key")))
+    for row in read_quarantine(config_dir)[-(out.get("quarantined") or 0):] if out.get("quarantined") else []:
+        bad |= set(row.get("source_items") or [])
+    for i in kept:
+        iid = i.get("id")
+        if iid in cites:
+            tr.item(iid, "task", records=cites[iid][:10])
+        elif iid in bad:
+            tr.item(iid, "quarantined")
+        else:
+            tr.item(iid, "no_task")
+    tr.step("ingest", records=len(recs), quarantined=out.get("quarantined"))
     if draft and recs:
         queue_path = os.path.join(os.path.dirname(os.path.abspath(graph_dir)), "approval-queue.md")
         covered = pending_queue_tasks(queue_path)

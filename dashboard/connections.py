@@ -224,6 +224,13 @@ def _http_json(url, headers=None, opener=None):
                 wait = float(e.headers.get("Retry-After") or 0)
             except (TypeError, ValueError):
                 wait = 0
+            try:
+                import runtrace
+                run = runtrace.CURRENT.get()
+                if run is not None:
+                    run.rec["retries"] += 1
+            except Exception:  # noqa: BLE001
+                pass
             _sleep(min(RATE_MAX_WAIT, wait or 2 ** attempt))
 
 
@@ -735,9 +742,10 @@ def fetch_all(config_dir, only=None, _fetchers=None, now=None, commit=True):
             # an inclusive bookmark (Jira and GitHub query ">= last time")
             # re-reads its boundary; an id read recently is not a new event
             seen = set(st.get("recent_ids") or [])
-            fresh, ids = [], []
+            fresh, ids, dups = [], [], []
             for i in items:
                 if i.get("id") in seen or i.get("id") in ids:
+                    dups.append(i.get("id"))
                     continue
                 ids.append(i.get("id"))
                 fresh.append(i)
@@ -750,6 +758,8 @@ def fetch_all(config_dir, only=None, _fetchers=None, now=None, commit=True):
                        "last_count": len(fresh), "last_error": None, "incomplete": incomplete,
                        "recent_ids": ((st.get("recent_ids") or []) + ids)[-RECENT_IDS:]})
             per[src["id"]] = {"ok": True, "count": len(fresh), "complete": not incomplete}
+            if dups:
+                per[src["id"]].update({"duplicates": len(dups), "duplicate_ids": dups[:200]})
             if incomplete:
                 per[src["id"]]["incomplete"] = incomplete
         except Exception as e:  # noqa: BLE001  (one broken account must not stop the others)
