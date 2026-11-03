@@ -1752,6 +1752,20 @@ def claude_run(job, cmd, cwd=None, capture_output=True, text=True, timeout=None)
     return _usage.run(cmd, job, DASHBOARD_DIR, cwd=cwd, timeout=timeout)
 
 
+def _stamp_completed(scopes, epoch):
+    """The scheduler's 'last successful poll' record, which the next poll reads
+    as 'look for mail since'. Written only by poll-tick.sh and this server,
+    never by the model (a poll that wrote its own guess of the time skipped
+    about 9 hours of mail on 2026-11-03)."""
+    path = os.path.join(DASHBOARD_DIR, "poll-last-completed.json")
+    with _file_lock(path):
+        d = read_json(path, {})
+        for s in scopes:
+            if s:
+                d[s] = int(epoch)
+        write_json(path, d)
+
+
 _POLL_NOW = None
 _POLL_NOW_LOCK = threading.Lock()
 _DRAFT_LOCK = threading.Lock()
@@ -3578,16 +3592,23 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 with open(os.path.join(DASHBOARD_DIR, "launchd-poll.log"), "a") as f:
                     f.write("\n[poll now] %s\n" % time.strftime("%Y-%m-%dT%H:%M:%S"))
+                started = int(time.time())
+                stamps = [os.path.join(DASHBOARD_DIR, n)
+                          for n in ("poll-last-completed.json", "poll-last-run.json")]
                 proc = spawn_background(
                     [CLAUDE_BIN, "-p", prompt, *model_args("poll"),
                      "--add-dir", DASHBOARD_DIR, "--add-dir", COS_DIR,
+                     "--disallowedTools", ",".join("Edit(/%s)" % p for p in stamps),
                      "--permission-mode", "dontAsk",
                      "--allowedTools", POLL_TOOLS,
                      "--output-format", "text"], "launchd-poll.log", job="poll", cwd=RUN_DIR)
                 _POLL_NOW = proc
 
-                def _after(p=proc):
+                def _after(p=proc, started=started, scopes=scopes):
                     p.wait()
+                    if p.returncode == 0:
+                        # record the run's start: the next poll scans from here
+                        _stamp_completed(scopes.split(",") if scopes else ["general"], started)
                     draft_missing_async("launchd-poll.log")
 
                 import threading

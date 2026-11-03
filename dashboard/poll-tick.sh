@@ -147,6 +147,7 @@ if (cd "$RUN_DIR" && python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
   "$CLAUDE_BIN" -p "/global:cos-poll --scope=$scope --dashboard=$DASH_DIR --workspace=$POLL_WS" ${model_args[@]+"${model_args[@]}"} \
   --add-dir "$POLL_WS" \
   --add-dir "$DASH_DIR" \
+  --disallowedTools "Edit(/$DASH_DIR/poll-last-completed.json),Edit(/$DASH_DIR/poll-last-run.json)" \
   --permission-mode dontAsk \
   --allowedTools "$poll_tools" \
   --output-format text \
@@ -162,10 +163,13 @@ if (cd "$RUN_DIR" && python3 "$SCRIPT_DIR/usage.py" run poll "$DASH_DIR" -- \
     mv "$tmp" "$QUIET"
   done
   rm -f "$out_file"
-  done_epoch=$(TZ="$TZ_NAME" date +%s)
+  # the run's START, not its end: the next poll looks for mail since this
+  # stamp, and mail that arrived while this run was working must not fall
+  # behind it. Only this script and the dashboard write the file; a poll may
+  # not (it once wrote its own guess of the time and hid 9 hours of mail).
   for connector in "${due[@]}"; do
     tmp=$(mktemp)
-    jq --arg c "$connector" --arg now "$done_epoch" '.[$c] = ($now | tonumber)' "$COMPLETED" > "$tmp"
+    jq --arg c "$connector" --arg now "$now_epoch" '.[$c] = ($now | tonumber)' "$COMPLETED" > "$tmp"
     mv "$tmp" "$COMPLETED"
   done
 else

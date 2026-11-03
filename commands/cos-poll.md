@@ -55,7 +55,9 @@ cap**: finish every step, including re-checking every pending entry, rather than
 discovery connector: `<connector>: checked` or `<connector>: not authorized — connect it in
 Accounts` (for example `slack: not authorized`), so a source nobody can read is never silent.
 - **New since the last poll — first, every time.** Read `poll-last-completed.json` in
-  `--dashboard` for the last successful run (if absent, look back 3 days). Then check every
+  `--dashboard` for the last successful run (if absent, look back 3 days). That file and
+  `poll-last-run.json` belong to the scheduler: **never write either one** — you have no
+  reliable clock, and a guessed time there makes the next poll skip real mail. Then check every
   connected discovery source for what is new since then:
   - **mail:** each mailbox's search (`after:<that date>`, and `in:sent` for what the user sent);
   - **messaging:** Slack/Teams DMs, @mentions of the user, and replies in threads the user is in;
