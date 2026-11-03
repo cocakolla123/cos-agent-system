@@ -98,13 +98,27 @@ most active N per connector and record counts in `attrs` (e.g. `attrs.total=1240
 different amounts of *history* per connector, because item density differs by orders of
 magnitude: in this deployment a top-N sweep of Gmail reached back **two days** (the inbox carries
 daily newsletters) while the same N on Drive reached back two months. Anything older than the
-densest connector's N simply does not exist as far as the graph is concerned. So: cover **at
-least the last 90 days** of every connector, paginating past high-volume noise (newsletters,
-notifications, bot traffic) rather than letting it consume the budget — and when a connector is
-too dense to cover 90 days whole, spend the remaining budget on targeted queries (Step 1b, and
-per-org searches for each `attrs.org` already in the graph) instead of simply stopping at the
-cutoff. Record the window you actually achieved as `attrs.window_days` on the records so a later
-gap is diagnosable rather than invisible.
+densest connector's N simply does not exist as far as the graph is concerned. So:
+
+- **`--full` (the first scan and every Deep sweep) reads the whole mailbox**, not a recent
+  slice. Enumerate every message in every connected email account, following every page token
+  until a page comes back without one; a page that comes back full or with a token is never the
+  end. Enumeration is cheap (subject, sender, date). Then read **in full** every message that is
+  from a person rather than a bulk sender, every message the user sent (`in:sent`, all of it),
+  every thread the user replied in, and everything from a person or org already in the graph.
+  Bulk mail (newsletters, notifications, receipts, bot traffic) is counted, not read, unless it
+  names the user's own deadline, payment or account. Use `Agent` sub-agents to split the work
+  by account and by year so no single context has to hold it all. The same "everything, then
+  read what matters" rule covers Slack DMs and mentions, tickets and calendars.
+- `--incremental` covers at least the last 90 days of every connector, paginating past
+  high-volume noise; when a connector is too dense to cover that whole, spend the rest on
+  targeted queries (Step 1b, and per-org searches for each `attrs.org` already in the graph)
+  instead of stopping at the cutoff.
+
+These runs bill the user's Claude subscription through the CLI and carry no dollar cap, so never
+stop early to save budget; stop when the enumeration is complete. Record the window you actually
+achieved as `attrs.window_days` (or `"all"`) on the records so a later gap is diagnosable rather
+than invisible.
 
 ### Step 1a — Currency probe (never mint a Project from a container's name)
 A *container* — a subscribed calendar, a shared drive folder, a board, a channel, a repo — has a

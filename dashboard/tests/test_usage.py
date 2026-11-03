@@ -37,10 +37,30 @@ class TestUsage(unittest.TestCase):
                          ["Read", "Edit", "Agent", "ToolSearch"])
         self.assertEqual(usage.builtin_tools("Read,Bash(python3:*),Glob"), ["Read", "Bash", "Glob"])
         cmd = usage.prepare(["claude", "-p", "x", "--allowedTools", "Read,Agent",
-                             "--output-format", "text"], "chat", self.d)
+                             "--output-format", "text"], "chat", self.d, subscription=False)
         self.assertEqual(cmd[cmd.index("--tools") + 1], "Read,Agent")
         self.assertEqual(cmd[cmd.index("--output-format") + 1], "json")
         self.assertEqual(cmd[cmd.index("--max-budget-usd") + 1], "0.50")
+
+    def test_a_subscription_gets_no_default_cap_but_keeps_a_users_own(self):
+        base = ["claude", "-p", "x", "--allowedTools", "Read"]
+        self.assertNotIn("--max-budget-usd", usage.prepare(base, "research", self.d, subscription=True))
+        usage.save_budget(self.d, None)
+        import json as _j
+        p = os.path.join(self.d, usage.CONFIG_FILE)
+        cfg = _j.load(open(p)) if os.path.exists(p) else {}
+        cfg.setdefault("budget", {})["per_call"] = {"poll": 2.0}
+        _j.dump(cfg, open(p, "w"))
+        cmd = usage.prepare(base, "poll", self.d, subscription=True)
+        self.assertEqual(cmd[cmd.index("--max-budget-usd") + 1], "2.00")
+
+    def test_subscription_detection(self):
+        home = tempfile.mkdtemp()
+        with open(os.path.join(home, ".claude.json"), "w") as f:
+            f.write('{"oauthAccount": {"billingType": "x"}}')
+        self.assertTrue(usage.on_subscription(env={}, home=home))
+        self.assertFalse(usage.on_subscription(env={"ANTHROPIC_API_KEY": "k"}, home=home))
+        self.assertFalse(usage.on_subscription(env={}, home=tempfile.mkdtemp()))
 
     def test_run_returns_text_and_logs_cost(self):
         res = usage.run([self.fake, "-p", "hi", "--allowedTools", "Read"], "poll", self.d)

@@ -106,7 +106,37 @@ def builtin_tools(grant, job=None):
     return names
 
 
-def prepare(cmd, job, config_dir):
+def on_subscription(env=None, home=None):
+    """True when the claude CLI bills a Claude subscription, not an API key:
+    there the dollar figures are only an API-equivalent estimate, and a cap
+    would just cut a crawl or poll off halfway through the user's mail."""
+    env = os.environ if env is None else env
+    if env.get("ANTHROPIC_API_KEY") or env.get("ANTHROPIC_AUTH_TOKEN"):
+        return False
+    try:
+        with open(os.path.join(home or os.path.expanduser("~"), ".claude.json")) as f:
+            return bool((json.load(f) or {}).get("oauthAccount"))
+    except (OSError, ValueError):
+        return False
+
+
+def call_cap(config_dir, job, subscription=None):
+    """The per-call dollar cap for a job, or None. On a subscription only a
+    cap the user set in Settings applies; the built-in defaults are for API
+    billing, where every dollar is real."""
+    sub = on_subscription() if subscription is None else subscription
+    if sub:
+        try:
+            with open(os.path.join(config_dir, CONFIG_FILE)) as f:
+                mine = ((json.load(f) or {}).get("budget") or {}).get("per_call") or {}
+        except (OSError, ValueError):
+            mine = {}
+        v = mine.get(job)
+        return float(v) if isinstance(v, (int, float)) and v > 0 else None
+    return budget(config_dir)["per_call"].get(job)
+
+
+def prepare(cmd, job, config_dir, subscription=None):
     """The command with --tools, --max-budget-usd and JSON output set."""
     cmd = list(cmd)
     if "--tools" not in cmd:
@@ -114,7 +144,7 @@ def prepare(cmd, job, config_dir):
         if grant is not None:
             cmd += ["--tools", ",".join(builtin_tools(grant, job))]
     if "--max-budget-usd" not in cmd:
-        cap = budget(config_dir)["per_call"].get(job)
+        cap = call_cap(config_dir, job, subscription)
         if cap:
             cmd += ["--max-budget-usd", "%.2f" % cap]
     if "--output-format" in cmd:
