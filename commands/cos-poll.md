@@ -49,7 +49,19 @@ invocation before finishing, rather than waiting for `general`'s own next schedu
 
 ## Scope: `general`
 
-The full narrow check:
+The full narrow check, in this order — the first step always runs, even when the budget
+then runs out before the rest:
+- **New since the last poll — first, every time.** Read `poll-last-completed.json` in
+  `--dashboard` for the last successful run (if absent, look back 3 days). Search every
+  connected mailbox (each email account's search tool: `after:<that date>`, and `in:sent`
+  for what the user sent), the calendar, and each messaging/ticketing connector for what is
+  new since then. For each new message that asks the user for something, changes the state
+  of something already in the graph (an offer approved, a start date set, a document now
+  due), or confirms the user did something, update or create the `Action` / record with
+  `attrs.thread` and `attrs.last_activity`, exactly as `cos-research` would. This is the only
+  step that sees mail nobody has mentioned yet; without it a poll can only re-check what it
+  already knew (observed 2026-11-03: an approved offer and a same-day onboarding deadline
+  sat unseen for days while every poll re-checked old drafts).
 - For each `pending` `approval-queue.md` entry, re-check its real source and mark it
   `superseded` (via `cos-knowledge`, with a one-line reason) if someone else already resolved
   it. Leave unchanged entries alone. **Re-checking the real source means reading the thread,
