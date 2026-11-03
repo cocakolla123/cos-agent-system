@@ -100,16 +100,17 @@ magnitude: in this deployment a top-N sweep of Gmail reached back **two days** (
 daily newsletters) while the same N on Drive reached back two months. Anything older than the
 densest connector's N simply does not exist as far as the graph is concerned. So:
 
-- **`--full` (the first scan and every Deep sweep) reads the whole mailbox**, not a recent
-  slice. Enumerate every message in every connected email account, following every page token
-  until a page comes back without one; a page that comes back full or with a token is never the
-  end. Enumeration is cheap (subject, sender, date). Then read **in full** every message that is
-  from a person rather than a bulk sender, every message the user sent (`in:sent`, all of it),
-  every thread the user replied in, and everything from a person or org already in the graph.
-  Bulk mail (newsletters, notifications, receipts, bot traffic) is counted, not read, unless it
-  names the user's own deadline, payment or account. Use `Agent` sub-agents to split the work
-  by account and by year so no single context has to hold it all. The same "everything, then
-  read what matters" rule covers Slack DMs and mentions, tickets and calendars.
+- **`--full` (the first scan and every Deep sweep) reads the last 90 days completely.**
+  Enumerate every message from the last 90 days in every connected email account
+  (`newer_than:90d`), following every page token until a page comes back without one; a page
+  that comes back full or with a token is never the end. Enumeration is cheap (subject, sender,
+  date). Then read **in full** every message in that window that is from a person rather than a
+  bulk sender, every message the user sent (`in:sent`), every thread the user replied in, and
+  everything from a person or org already in the graph. Bulk mail (newsletters, notifications,
+  receipts, bot traffic) is counted, not read, unless it names the user's own deadline, payment
+  or account. Use `Agent` sub-agents to split the work by account and by month so no single
+  context has to hold it all. The same "everything in the window, then read what matters" rule
+  covers Slack DMs and mentions, tickets and calendars.
 - `--incremental` covers at least the last 90 days of every connector, paginating past
   high-volume noise; when a connector is too dense to cover that whole, spend the rest on
   targeted queries (Step 1b, and per-org searches for each `attrs.org` already in the graph)
@@ -117,7 +118,7 @@ densest connector's N simply does not exist as far as the graph is concerned. So
 
 These runs bill the user's Claude subscription through the CLI and carry no dollar cap, so never
 stop early to save budget; stop when the enumeration is complete. Record the window you actually
-achieved as `attrs.window_days` (or `"all"`) on the records so a later gap is diagnosable rather
+achieved as `attrs.window_days` on the records so a later gap is diagnosable rather
 than invisible.
 
 ### Step 1a — Currency probe (never mint a Project from a container's name)
