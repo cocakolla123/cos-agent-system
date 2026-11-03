@@ -46,6 +46,7 @@ import re
 import stat
 import urllib.parse
 import sys
+import urllib.error
 import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -159,7 +160,8 @@ def status(config_dir):
         rows.append({"id": s["id"], "kind": s["kind"], "label": KINDS[s["kind"]]["label"],
                      "account": s.get("user") or s.get("email") or s.get("login") or s.get("path") or "",
                      "workspace": s.get("workspace") or "", "last_ok": st.get("last_ok"),
-                     "last_error": st.get("last_error"), "last_count": st.get("last_count")})
+                     "last_error": st.get("last_error"), "last_count": st.get("last_count"),
+                     "incomplete": st.get("incomplete")})
     return {"me": data["me"], "sources": rows}
 
 
@@ -201,10 +203,28 @@ def _iso(ts):
     return ts.astimezone(_dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+RATE_RETRIES = 4
+RATE_MAX_WAIT = 60
+_sleep = __import__("time").sleep
+
+
 def _http_json(url, headers=None, opener=None):
+    """GET a JSON document. A rate limit (429) or a brief outage (503) is
+    waited out, honouring Retry-After, a few times before it counts as a
+    failure; the caller then keeps its bookmark, so nothing is skipped."""
     req = urllib.request.Request(url, headers=dict(headers or {}, Accept="application/json"))
-    with (opener or urllib.request.urlopen)(req, timeout=TIMEOUT) as r:
-        return json.loads(r.read().decode("utf-8"))
+    for attempt in range(RATE_RETRIES + 1):
+        try:
+            with (opener or urllib.request.urlopen)(req, timeout=TIMEOUT) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            if e.code not in (429, 503) or attempt == RATE_RETRIES:
+                raise
+            try:
+                wait = float(e.headers.get("Retry-After") or 0)
+            except (TypeError, ValueError):
+                wait = 0
+            _sleep(min(RATE_MAX_WAIT, wait or 2 ** attempt))
 
 
 def _http_text(url, opener=None):
@@ -243,7 +263,7 @@ def fetch_imap(src, cursor, _imap=None):
     if isinstance(folders, str):
         folders = [f.strip() for f in folders.split(",") if f.strip()]
     conn = _imap or imaplib.IMAP4_SSL(src["host"], int(src.get("port") or 993))
-    items, cursor = [], dict(cursor or {})
+    items, cursor, notes = [], dict(cursor or {}), []
     try:
         conn.login(src["user"], src["password"])
         for folder in folders:
@@ -262,13 +282,20 @@ def fetch_imap(src, cursor, _imap=None):
                 typ, data = conn.uid("SEARCH", None, "UID", "%d:*" % (last + 1))
             # oldest first, and at most MAX_PER_SOURCE a check: the bookmark stops at the
             # last one read, so a backlog is read over several checks, never skipped
-            uids = sorted(int(x) for x in (data[0] or b"").split() if int(x) > last)[:MAX_PER_SOURCE]
+            waiting = sorted(int(x) for x in (data[0] or b"").split() if int(x) > last)
+            uids = waiting[:MAX_PER_SOURCE]
+            if len(waiting) > len(uids):
+                notes.append("%s: %d more waiting" % (folder, len(waiting) - len(uids)))
             sent = "sent" in folder.lower()
+            read = []
             for uid in uids:
                 typ, msgdata = conn.uid("FETCH", str(uid), "(BODY.PEEK[] X-GM-THRID)")
                 raw = next((p[1] for p in msgdata or [] if isinstance(p, tuple)), None)
                 if not raw:
-                    continue
+                    # the bookmark stops before it: retried next check, never skipped
+                    notes.append("%s: message %d could not be read" % (folder, uid))
+                    break
+                read.append(uid)
                 meta = (msgdata[0][0] if isinstance(msgdata[0], tuple) else b"").decode("ascii", "ignore")
                 thrid = re.search(r"X-GM-THRID (\d+)", meta)
                 msg = email.message_from_bytes(raw)
@@ -286,8 +313,8 @@ def fetch_imap(src, cursor, _imap=None):
                     "cc": [a for _, a in email.utils.getaddresses([msg.get("Cc") or ""]) if a],
                     "subject": _decode(msg.get("Subject")), "body": _body(msg),
                     "threadId": "th-" + (thrid.group(1) if thrid else (refs[0] if refs else (msg.get("Message-ID") or str(uid))))})
-            if uids:
-                cursor[folder] = {"uid": max(uids), "validity": validity}
+            if read:
+                cursor[folder] = {"uid": max(read), "validity": validity}
             else:
                 cursor.setdefault(folder, {"uid": last, "validity": validity})
     finally:
@@ -295,6 +322,8 @@ def fetch_imap(src, cursor, _imap=None):
             conn.logout()
         except Exception:  # noqa: BLE001
             pass
+    if notes:
+        cursor["_incomplete"] = "; ".join(notes)
     return items, cursor
 
 
@@ -324,7 +353,7 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
                 users[uid] = (uid, uid)
         return users.get(uid, (uid, uid))
 
-    items = []
+    items, notes = [], []
     first = (_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=14)).timestamp()
     for c in convs:
         cid = c["id"]
@@ -338,8 +367,12 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
         oldest = cursor.get(cid) or ("%.6f" % first)
         try:
             msgs = _slack_pages(base, "conversations.history", {"channel": cid, "oldest": oldest}, h, opener)
-        except ConnectionError_:
+        except ConnectionError_ as e:
+            # this channel's bookmark stays put and the sync says so
+            notes.append("%s: %s" % (name, str(e)[:120]))
             continue
+        if len(msgs) > MAX_PER_SOURCE:
+            notes.append("%s: %d more waiting" % (name, len(msgs) - MAX_PER_SOURCE))
         for m in list(msgs):        # thread replies arrive only through conversations.replies
             if m.get("reply_count") and float(m.get("latest_reply") or 0) > float(oldest):
                 try:
@@ -365,10 +398,12 @@ def fetch_slack(src, cursor, opener=None, base="https://slack.com/api"):
                           "thread_ts": ("sl-%s-%s" % (cid, m["thread_ts"])) if m.get("thread_ts") and m.get("thread_ts") != ts else None,
                           "reactions": [x.get("name") for x in m.get("reactions") or []]})
         cursor[cid] = newest
+    if notes:
+        cursor["_incomplete"] = "; ".join(notes)
     return items, cursor
 
 
-SLACK_MAX_PAGES = 50
+SLACK_MAX_PAGES = 500       # 100,000 messages; past it the channel is reported, not cut
 
 
 def _slack_pages(base, method, params, h, opener):
@@ -384,8 +419,10 @@ def _slack_pages(base, method, params, h, opener):
         out += r.get("messages") or []
         nxt = (r.get("response_metadata") or {}).get("next_cursor") or ""
         if not (r.get("has_more") or nxt) or not nxt:
-            break
-    return out
+            return out
+    # pages come newest first: stopping here would drop the OLDEST messages
+    # with the bookmark already past them, so the channel fails instead
+    raise ConnectionError_("slack %s: more than %d pages" % (method, SLACK_MAX_PAGES))
 
 
 JIRA_MAX_PAGES = 50
@@ -417,7 +454,19 @@ def fetch_jira(src, cursor, opener=None):
         if not page or r.get("isLast") or start >= int(r.get("total") or 0):
             break
     items, newest = [], since
-    for iss in issues[:MAX_PER_SOURCE]:
+    notes = []
+    if token or (issues and not r.get("isLast") and start < int(r.get("total") or 0)):
+        notes.append("more than %d issues changed" % len(issues))
+    # the query is inclusive (>= the bookmark's minute): drop what was already
+    # read at that minute BEFORE capping, or a minute holding more changes
+    # than the cap would be re-read forever and the sync would never move on
+    done = set((cursor or {}).get("done") or [])
+    jid = lambda iss: "%s@%s" % (iss.get("key"), (iss.get("fields") or {}).get("updated") or "")  # noqa: E731
+    issues = [iss for iss in issues if jid(iss) not in done]
+    if len(issues) > MAX_PER_SOURCE:
+        notes.append("%d more waiting" % (len(issues) - MAX_PER_SOURCE))
+    kept = issues[:MAX_PER_SOURCE]
+    for iss in kept:
         f = iss.get("fields") or {}
         upd = f.get("updated") or ""
         name = lambda x: (x or {}).get("displayName") if x else None  # noqa: E731
@@ -436,7 +485,12 @@ def fetch_jira(src, cursor, opener=None):
                       "changelog": []})
         if upd:
             newest = max(newest, upd[:16].replace("T", " "))
-    return items, {"updated": newest}
+    at_newest = [jid(iss) for iss in kept
+                 if ((iss.get("fields") or {}).get("updated") or "")[:16].replace("T", " ") == newest]
+    out = {"updated": newest, "done": sorted(set(at_newest) | (done if newest == since else set()))}
+    if notes:
+        out["_incomplete"] = "; ".join(notes)
+    return items, out
 
 
 def fetch_github(src, cursor, opener=None, base="https://api.github.com"):
@@ -444,16 +498,21 @@ def fetch_github(src, cursor, opener=None, base="https://api.github.com"):
     login = src.get("login") or _http_json(base + "/user", h, opener).get("login")
     since = (cursor or {}).get("updated_at") or _iso(_dt.datetime.now(_dt.timezone.utc) - _dt.timedelta(days=14))
     q = urllib.parse.quote("involves:%s updated:>=%s" % (login, since))
-    found = []
+    found, total = [], 0
     for page in range(1, 11):         # the search API returns at most 1,000 results
         r = _http_json("%s/search/issues?q=%s&sort=updated&order=asc&per_page=100&page=%d" % (base, q, page),
                        h, opener)
         batch = r.get("items") or []
         found += batch
+        total = max(total, int(r.get("total_count") or 0))
         if len(batch) < 100:
             break
     items, newest = [], since
-    for it in found[:MAX_PER_SOURCE]:
+    done = set((cursor or {}).get("done") or [])
+    gid = lambda it: "%s#%s@%s" % (it.get("repository_url"), it.get("number"), it.get("updated_at"))  # noqa: E731
+    found = [it for it in found if gid(it) not in done]
+    kept = found[:MAX_PER_SOURCE]
+    for it in kept:
         repo = "/".join((it.get("repository_url") or "").split("/")[-2:])
         upd = it.get("updated_at") or since
         items.append({"connector": "github", "id": "gh-%s-%s-%s" % (repo.replace("/", "-"), it.get("number"), re.sub(r"\D", "", upd)),
@@ -464,7 +523,13 @@ def fetch_github(src, cursor, opener=None, base="https://api.github.com"):
                       "requested_reviewers": [], "requested_teams": [], "comments": [], "merged": False,
                       "labels": [x.get("name") for x in it.get("labels") or []], "updated_at": upd})
         newest = max(newest, upd)
-    return items, {"updated_at": newest, "login": login}
+    at_newest = [gid(it) for it in kept if (it.get("updated_at") or since) == newest]
+    out = {"updated_at": newest, "login": login,
+           "done": sorted(set(at_newest) | (done if newest == since else set()))}
+    waiting = max(total - len(done), len(found)) - len(items)
+    if waiting > 0:
+        out["_incomplete"] = "%d more waiting" % waiting
+    return items, out
 
 
 def _ical_events(text):
@@ -646,6 +711,9 @@ FETCHERS = {"imap": fetch_imap, "slack": fetch_slack, "jira": fetch_jira, "githu
             "folder": fetch_folder, "zoom": fetch_zoom}
 
 
+RECENT_IDS = 5000
+
+
 def fetch_all(config_dir, only=None, _fetchers=None, now=None, commit=True):
     """Fetch every connection (or ``only`` these ids). A bookmark moves only
     when its fetch succeeds. Returns {"items": [...], "per_source": {...}}.
@@ -662,14 +730,28 @@ def fetch_all(config_dir, only=None, _fetchers=None, now=None, commit=True):
         st = dict(state.get(src["id"]) or {})
         try:
             items, cursor = fetchers[src["kind"]](src, st.get("cursor") or {})
+            cursor = dict(cursor or {})
+            incomplete = cursor.pop("_incomplete", None)
+            # an inclusive bookmark (Jira and GitHub query ">= last time")
+            # re-reads its boundary; an id read recently is not a new event
+            seen = set(st.get("recent_ids") or [])
+            fresh, ids = [], []
             for i in items:
+                if i.get("id") in seen or i.get("id") in ids:
+                    continue
+                ids.append(i.get("id"))
+                fresh.append(i)
+            for i in fresh:
                 i.setdefault("source", src["id"])
                 if src.get("workspace"):
                     i.setdefault("workspace_hint", src["workspace"])
-            out += items
+            out += fresh
             st.update({"cursor": cursor, "last_ok": _iso(now or _dt.datetime.now(_dt.timezone.utc)),
-                       "last_count": len(items), "last_error": None})
-            per[src["id"]] = {"ok": True, "count": len(items)}
+                       "last_count": len(fresh), "last_error": None, "incomplete": incomplete,
+                       "recent_ids": ((st.get("recent_ids") or []) + ids)[-RECENT_IDS:]})
+            per[src["id"]] = {"ok": True, "count": len(fresh), "complete": not incomplete}
+            if incomplete:
+                per[src["id"]]["incomplete"] = incomplete
         except Exception as e:  # noqa: BLE001  (one broken account must not stop the others)
             st["last_error"] = str(e)[:300]
             per[src["id"]] = {"ok": False, "error": str(e)[:300]}

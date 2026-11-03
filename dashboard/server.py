@@ -2348,7 +2348,7 @@ def render_connections_section():
     rows = "".join(
         f"""<div class="conn-row" data-id="{html.escape(r['id'])}"><b>{html.escape(r['label'])}</b>
   <span>{html.escape(r['id'])}{(' · ' + html.escape(r['account'])) if r['account'] else ''}</span>
-  <span class="meta">{('last check ' + html.escape(r['last_ok'] or '') + ', %s new' % (r['last_count'] if r['last_count'] is not None else 0)) if r['last_ok'] else 'not checked yet'}{(' · error: ' + html.escape(r['last_error'])) if r['last_error'] else ''}</span>
+  <span class="meta">{('last check ' + html.escape(r['last_ok'] or '') + ', %s new' % (r['last_count'] if r['last_count'] is not None else 0)) if r['last_ok'] else 'not checked yet'}{(' · error: ' + html.escape(r['last_error'])) if r['last_error'] else ''}{(' · <b>sync incomplete:</b> ' + html.escape(r.get('incomplete') or '')) if r.get('incomplete') else ''}</span>
   <button class="small" onclick="connTest('{html.escape(r['id'])}', this)">Test</button>
   <button class="small" onclick="connRemove('{html.escape(r['id'])}')">Remove</button></div>"""
         for r in st["sources"]) or "<div class='meta'>No direct connections yet.</div>"
