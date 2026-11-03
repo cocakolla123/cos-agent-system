@@ -138,10 +138,14 @@ class TestNothingLost(Base):
         self.assertIsNotNone(g.get("default:action:q4-numbers"))
 
     def test_private_file_modes(self):
+        import datetime as dt
+        # a fixed afternoon: with the real clock, a run before the day's first
+        # batch slot only queues and writes no graph (CI failed at 00:42 PT)
+        now = dt.datetime(2026, 10, 27, 20, 0, tzinfo=dt.timezone.utc)
         old = os.umask(0o022)
         try:
             self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
-            poll_direct.check(self.dir, self.gdir, scan=True, draft=False,
+            poll_direct.check(self.dir, self.gdir, now=now, scan=True, draft=False,
                               _model=lambda d, p, job="poll_direct": (json.dumps([REC]), 0.01))
         finally:
             os.umask(old)
@@ -151,6 +155,104 @@ class TestNothingLost(Base):
         self.assertEqual(mode(os.path.join(self.dir, "fetch-state.json")), 0o600)
         for f in ("nodes.jsonl", "edges.jsonl"):
             self.assertEqual(mode(os.path.join(self.gdir, f)), 0o600)
+
+
+class TestQuarantine(Base):
+    def test_rejected_records_are_quarantined_with_their_sources(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        bad = [REC, {"kind": "Action", "name": "no key", "attrs": {"evidence": ["sl-1"]}}, "text"]
+        r = poll_direct.check(self.dir, self.gdir, draft=False,
+                              _model=lambda d, p, job="poll_direct": (json.dumps(bad), 0.01))
+        self.assertEqual((r["records"], r["quarantined"]), (1, 2))
+        q = poll_direct.read_quarantine(self.dir)
+        self.assertEqual(len(q), 2)
+        self.assertTrue(all(row["problems"] for row in q))
+        # every rejected record names the item it came from, so nothing is orphaned
+        self.assertTrue(all(row["source_items"] == ["sl-1"] for row in q))
+        self.assertEqual(stat.S_IMODE(os.stat(os.path.join(self.dir, poll_direct.QUARANTINE_FILE)).st_mode),
+                         0o600)
+        # the waiting list cleared only because every record is now somewhere durable
+        self.assertEqual(poll_direct._read_pending(self.dir), [])
+
+    def test_all_valid_writes_no_quarantine_file(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        poll_direct.check(self.dir, self.gdir, draft=False,
+                          _model=lambda d, p, job="poll_direct": (json.dumps([REC]), 0.01))
+        self.assertFalse(os.path.exists(os.path.join(self.dir, poll_direct.QUARANTINE_FILE)))
+
+
+class TestCrashRecovery(Base):
+    """Crash injection at each step between 'items are waiting' and 'waiting
+    list cleared': a restart recovers every item, and the replay never
+    duplicates a task."""
+
+    def actions(self):
+        g = graph.Graph.load(self.gdir)
+        return [n for n in g.query(type_="Action")]
+
+    def run_with_crash(self, target, name):
+        orig = getattr(target, name)
+
+        def boom(*a, **k):
+            raise OSError("crash injected in %s" % name)
+        setattr(target, name, boom)
+        try:
+            with self.assertRaises(OSError):
+                poll_direct.check(self.dir, self.gdir, draft=False,
+                                  _model=lambda d, p, job="poll_direct": (json.dumps([REC]), 0.01))
+        finally:
+            setattr(target, name, orig)
+
+    def recover(self):
+        # the restart: a fresh check with no new items replays what is waiting
+        return poll_direct.check(self.dir, self.gdir, draft=False,
+                                 _model=lambda d, p, job="poll_direct": (json.dumps([REC]), 0.01))
+
+    def test_crash_during_graph_save(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        self.run_with_crash(graph, "_write_jsonl")
+        self.assertEqual(len(poll_direct._read_pending(self.dir)), 1)   # still waiting
+        self.recover()
+        self.assertEqual(len(self.actions()), 1)
+        self.assertEqual(poll_direct._read_pending(self.dir), [])
+
+    def test_crash_after_graph_save_before_clear(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        orig = poll_direct._write_pending
+        calls = []
+
+        def clear_crashes(config_dir, rows):
+            calls.append(rows)
+            if not rows:              # the clear after the graph save
+                raise OSError("crash before the waiting list was cleared")
+            return orig(config_dir, rows)
+        poll_direct._write_pending = clear_crashes
+        try:
+            with self.assertRaises(OSError):
+                poll_direct.check(self.dir, self.gdir, draft=False,
+                                  _model=lambda d, p, job="poll_direct": (json.dumps([REC]), 0.01))
+        finally:
+            poll_direct._write_pending = orig
+        self.assertEqual(len(self.actions()), 1)                       # saved once
+        self.assertEqual(len(poll_direct._read_pending(self.dir)), 1)  # and still waiting
+        self.recover()                                                 # replayed...
+        self.assertEqual(len(self.actions()), 1)                       # ...without a duplicate
+        self.assertEqual(poll_direct._read_pending(self.dir), [])
+
+    def test_crash_during_state_save(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        self.run_with_crash(poll_direct, "_save_scan_state")
+        self.recover()
+        self.assertEqual(len(self.actions()), 1)
+
+    def test_crash_during_bookmark_commit(self):
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        self.run_with_crash(connections, "commit_fetch")
+        self.assertIsNone(self.bookmark())        # not acknowledged: refetched next time
+        self.served = [[slack(1, "Dana can you send the Q4 numbers by Friday?")]]
+        self.recover()
+        self.assertEqual(len(self.actions()), 1)  # the refetch and the waiting copy are one task
+        self.assertEqual(self.bookmark(), {"C1": "1"})
 
 
 class Pages(BaseHTTPRequestHandler):

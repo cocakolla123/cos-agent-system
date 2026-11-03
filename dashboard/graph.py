@@ -801,6 +801,8 @@ def _write_jsonl(path, objects):
     with _private_open(tmp) as f:
         for obj in objects:
             f.write(json.dumps(obj, sort_keys=True, ensure_ascii=False) + "\n")
+        f.flush()
+        os.fsync(f.fileno())      # on disk before the rename makes it the graph
     os.replace(tmp, path)
 
 
@@ -808,6 +810,8 @@ def _write_text(path, text):
     tmp = path + ".tmp"
     with _private_open(tmp) as f:
         f.write(text)
+        f.flush()
+        os.fsync(f.fileno())
     os.replace(tmp, path)
 
 

@@ -366,8 +366,50 @@ def _scan_state(config_dir):
 
 
 def _save_scan_state(config_dir, st):
-    with open(os.path.join(config_dir, SCAN_STATE), "w") as f:
+    path = os.path.join(config_dir, SCAN_STATE)
+    tmp = path + ".tmp"           # swapped in whole: a crash leaves the old state
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as f:
         json.dump(st, f, indent=1)
+        f.flush()
+        os.fsync(f.fileno())
+    os.replace(tmp, path)
+
+
+QUARANTINE_FILE = "quarantine.jsonl"
+
+
+def _quarantine(config_dir, rejected, items, now):
+    """Append records the model returned but the schema rejected, each with
+    why and with the source item ids it cites (or, when it cites none, every
+    item that was in the read), so they can be inspected and replayed."""
+    ids = [i.get("id") for i in items if i.get("id")]
+    path = os.path.join(config_dir, QUARANTINE_FILE)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+    with os.fdopen(fd, "a") as f:
+        for rec, problems in rejected:
+            ev = (rec.get("attrs") or {}).get("evidence") if isinstance(rec, dict) and \
+                isinstance(rec.get("attrs"), dict) else None
+            ev = [e for e in (ev if isinstance(ev, list) else [ev]) if e] if ev else []
+            f.write(json.dumps({"ts": now.strftime("%Y-%m-%dT%H:%M:%SZ"), "problems": problems,
+                                "record": rec, "source_items": ev or ids},
+                               ensure_ascii=False, default=str) + "\n")
+        f.flush()
+        os.fsync(f.fileno())
+
+
+def read_quarantine(config_dir):
+    out = []
+    try:
+        with open(os.path.join(config_dir, QUARANTINE_FILE)) as f:
+            for line in f:
+                try:
+                    out.append(json.loads(line))
+                except ValueError:
+                    continue
+    except OSError:
+        pass
+    return out
 
 
 def _note_failure(config_dir, now):
@@ -710,8 +752,15 @@ def check(config_dir, graph_dir, dry_run=False, now=None, _fetch=None, _model=No
             _note_failure(config_dir, now)
             raise ExtractionError("the model's reply was not a JSON array; %d items stay waiting"
                                   % len(waiting))
-        recs = [r for r in parsed if not record_problems(r)]
-        out["invalid_records"] = len(parsed) - len(recs)
+        checked = [(r, record_problems(r)) for r in parsed]
+        recs = [r for r, p in checked if not p]
+        rejected = [(r, p) for r, p in checked if p]
+        out["invalid_records"] = len(rejected)
+        if rejected:
+            # never silently lost: a rejected record is kept with the items it
+            # came from before the waiting list is cleared below
+            _quarantine(config_dir, rejected, kept, now)
+            out["quarantined"] = len(rejected)
     import research
     # load, change and save under one lock, on the graph as it is now: a
     # dashboard edit made while the model was reading is kept, not overwritten

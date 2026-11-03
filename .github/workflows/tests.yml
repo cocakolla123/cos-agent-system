@@ -7,10 +7,14 @@ on:
 
 jobs:
   unittest:
-    runs-on: ubuntu-latest
+    # pinned: ubuntu-latest moved to an image whose toolcache has no 3.9,
+    # which failed the job before a single test ran (2026-10-28)
+    runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
-        # 3.9 = the oldest interpreter the V2 modules support;
+        # 3.9 = the oldest interpreter the V2 modules support (and what stock
+        # macOS ships, which poll-tick.sh runs them under);
         # 3.12 = the dashboard server's floor (f-string syntax).
         python-version: ["3.9", "3.12"]
     steps:
