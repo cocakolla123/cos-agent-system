@@ -102,15 +102,26 @@ def validate(config, available_tools=None):
             findings.append(_finding("error", "action_tools",
                                      "must be an object mapping action_type -> tool name"))
         else:
-            for k, v in at.items():
-                if not v or not str(v).strip():
-                    findings.append(_finding("warning", "action_tools",
-                                             "action_type '%s' maps to an empty tool" % k))
-                elif available_tools is not None and v not in available_tools:
-                    findings.append(_finding(
-                        "warning", "action_tools",
-                        "tool '%s' for action_type '%s' is not in the discovered "
-                        "tool set" % (v, k)))
+            import re as _re
+            for k, spec in at.items():
+                # a value is one tool, or {account id: one tool} so each
+                # connector account approves only with its own tool
+                pairs = (list(spec.items()) if isinstance(spec, dict) else [(None, spec)])
+                for acct, v in pairs:
+                    where = "action_type '%s'%s" % (k, " account '%s'" % acct if acct else "")
+                    if not v or not str(v).strip():
+                        findings.append(_finding("warning", "action_tools",
+                                                 "%s maps to an empty tool" % where))
+                    elif not _re.match(r"^[A-Za-z0-9_-]+$", str(v).strip()):
+                        findings.append(_finding(
+                            "error", "action_tools",
+                            "%s must name exactly one tool (no list, pattern or rule): %r"
+                            % (where, v)))
+                    elif available_tools is not None and v not in available_tools:
+                        findings.append(_finding(
+                            "warning", "action_tools",
+                            "tool '%s' for %s is not in the discovered "
+                            "tool set" % (v, where)))
 
     # 3. connector accounts (M10) — delegated to accounts.py when present
     try:

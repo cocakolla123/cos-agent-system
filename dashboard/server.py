@@ -404,39 +404,12 @@ def latest_daily_log():
 
 def parse_blocks(text):
     """Generic '### <id>' + '- key: value' block parser, shared by approval-queue.md and any
-    future file following the same convention. Continuation lines fold into the prior field.
-    Only parses content after the first '---' — every one of these files documents its own
-    schema above that line using a '### <id>' example, which would otherwise be mistaken for
-    a real entry (confirmed bug: meeting-notes.md's example rendered as a phantom meeting,
-    since meetings have no status field to filter it out by the way pending entries do)."""
-    parts = re.split(r"^---\s*$", text, maxsplit=1, flags=re.MULTILINE)
-    text = parts[1] if len(parts) > 1 else text
-    blocks = re.split(r"^### ", text, flags=re.MULTILINE)[1:]
-    entries = []
-    for block in blocks:
-        lines = block.splitlines()
-        if not lines:
-            continue
-        fields = {"id": lines[0].strip()}
-        current_key = None
-        for line in lines[1:]:
-            m = re.match(r"^-\s*(\w+):\s*(.*)$", line)
-            if m:
-                current_key = m.group(1)
-                fields[current_key] = m.group(2).strip()
-            elif current_key and line.strip():
-                stripped = line.strip()
-                # A nested bullet (e.g. sub-items under 'linked_domain:') starts a new line
-                # in the reconstructed value instead of being space-joined like ordinary
-                # word-wrapped prose continuation — otherwise every bullet collapses into one
-                # run-on line and render_lite_markdown has no newlines left to split on
-                # (confirmed bug: this exact shape landed for a real entry).
-                if stripped.startswith(("- ", "* ")) and fields[current_key]:
-                    fields[current_key] += "\n" + stripped
-                else:
-                    fields[current_key] += " " + stripped
-        entries.append(fields)
-    return entries
+    future file following the same convention. Continuation lines fold into the prior field;
+    a nested bullet keeps its own line. Only parses content after the first '---' — every one
+    of these files documents its own schema above that line using a '### <id>' example, which
+    would otherwise be mistaken for a real entry. The parser lives in approval.py so the
+    queue's writer (poll_direct) and reader share it."""
+    return _approval.parse_queue(text)
 
 
 # M12: mtime-keyed parse cache — the dashboard re-reads the queue on every GET;
@@ -619,16 +592,37 @@ def append_entry_chat(entry_id, role, text):
 
 
 import directives as _directives
+import approval as _approval
 
 CONNECTOR_SETTINGS_URL = _directives.CONNECTOR_SETTINGS_URL
 
 
-def apply_chat_directives(entry_id, output):
+def apply_chat_directives(entry_id, output, source_text=""):
     """Per-task chat's only write path — parsing/policy lives in
     directives.py; the effect runs through the same locked, audited
-    update_graph_node the task card's buttons use."""
+    update_graph_node the task card's buttons use. A directive copied from
+    ``source_text`` (what the chat was shown) is never applied."""
     return _directives.apply_chat_directives(entry_id, output,
-                                             update_graph_node)
+                                             update_graph_node, source_text=source_text)
+
+
+def _flat_text(v):
+    if isinstance(v, dict):
+        return " ".join(_flat_text(x) for x in v.values())
+    if isinstance(v, (list, tuple)):
+        return " ".join(_flat_text(x) for x in v)
+    return str(v if v is not None else "")
+
+
+def chat_source_text(entry_id, entry=None):
+    """Everything the per-task chat is shown about a task: the queue entry's
+    fields and the graph node's name and attrs. Text from mail, chat,
+    tickets and documents reaches the chat through these."""
+    parts = [_flat_text(entry or {})]
+    node = _graph_node(entry_id)
+    if node:
+        parts += [str(node.get("name") or ""), _flat_text(node.get("attrs") or {})]
+    return "\n".join(parts)
 
 
 def apply_auth_directives(output):
@@ -3165,7 +3159,8 @@ class Handler(BaseHTTPRequestHandler):
                 text, err = api_complete("task_chat", message, CHAT_SYSTEM + "\n\n" + about, hist)
                 output = err
                 if text:
-                    output = apply_chat_directives(entry_id, text)
+                    output = apply_chat_directives(entry_id, text,
+                                                   source_text=chat_source_text(entry_id, entry))
                     output = apply_auth_directives(output) or "(no output)"
                 append_entry_chat(entry_id, "assistant", output[:4000])
                 self._send_json({"message": output[:4000]})
@@ -3217,7 +3212,8 @@ class Handler(BaseHTTPRequestHandler):
                     timeout=300,
                 )
                 output = (result.stdout or result.stderr or "").strip() or "(no output)"
-                output = apply_chat_directives(entry_id, output)
+                output = apply_chat_directives(entry_id, output,
+                                               source_text=chat_source_text(entry_id, entry))
                 output = apply_auth_directives(output) or "(no output)"
                 sess["started"] = True
                 sessions[entry_id] = sess
@@ -3299,7 +3295,8 @@ class Handler(BaseHTTPRequestHandler):
             # no tool grant, and no merge path (see codefix.open_pr).
             entry_id = data.get("id", "")
             entry = next((e for e in parse_approval_queue()
-                          if e.get("id") == entry_id and e.get("status") == "pending"), None)
+                          if e.get("id") == entry_id and e.get("status") == "pending"
+                          and e.get("action_type") == "code_fix"), None)
             if entry is None or _codefix is None:
                 self._send_json({"success": False, "message": "no pending code fix %s" % entry_id}, 400)
                 return
@@ -3316,15 +3313,22 @@ class Handler(BaseHTTPRequestHandler):
 
         if self.path == "/approve":
             entry_id = data.get("id", "")
-            action_type = data.get("action_type", "")
-            tool = ACTION_TOOLS.get(action_type)
-            if not tool:
-                self._send_json(
-                    {"success": False, "message": "no executable tool for this action_type"},
-                    400,
-                )
+            # The grant is read from the STORED entry and config, never from
+            # the request: its action_type picks the tool, the account it was
+            # drafted from must own that tool, and it must still be pending
+            # (approval.approval_tool). The request's action_type has to agree.
+            entry = next((e for e in reversed(parse_approval_queue())
+                          if e.get("id") == entry_id), None)
+            if entry is not None and data.get("action_type") not in (None, "", entry.get("action_type")):
+                allowed, why = None, "the request's action_type does not match the entry"
+            else:
+                allowed, why = _approval.approval_grant(
+                    entry, dict(CONFIG, action_tools=ACTION_TOOLS), BASE_TOOLS)
+            if not allowed:
+                if _audit is not None and entry is not None:
+                    _audit.record(COS_DIR, entry_id, "approve-refused", actor="dashboard", detail=why)
+                self._send_json({"success": False, "message": "not run: %s" % why}, 400)
                 return
-            allowed = f"{tool},{BASE_TOOLS}"
             try:
                 # bypassPermissions, not dontAsk: dontAsk + --allowedTools works for read-only
                 # MCP tools but a real mutating send/write tool can still get denied by an

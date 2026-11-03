@@ -25,22 +25,47 @@ import re
 _COS_ACTION_RE = re.compile(r"^\s*COS-ACTION:\s*(\{.*\})\s*$", re.MULTILINE)
 _COS_AUTH_RE = re.compile(r"^\s*COS-AUTH:\s*(\{.*\})\s*$", re.MULTILINE)
 
+# a directive anywhere in a source's text (it may have been flattened to one line)
+_COS_ACTION_ANYWHERE = re.compile(r"COS-ACTION:\s*(\{[^{}]*\})")
+
 DIRECTIVE_STATUSES = frozenset({"done", "dismissed", "open"})
 DIRECTIVE_PRIORITIES = frozenset({"high", "medium", "low"})
 
 CONNECTOR_SETTINGS_URL = "https://claude.ai/settings/connectors"
 
 
-def apply_chat_directives(entry_id, output, update_node):
+def source_directives(source_text):
+    """The COS-ACTION payloads written in ``source_text`` (the task, draft
+    and evidence the chat was shown), parsed."""
+    out = []
+    for m in _COS_ACTION_ANYWHERE.finditer(source_text or ""):
+        try:
+            d = json.loads(m.group(1))
+        except ValueError:
+            continue
+        if isinstance(d, dict):
+            out.append(d)
+    return out
+
+
+def apply_chat_directives(entry_id, output, update_node, source_text=""):
     """Parse and apply COS-ACTION lines. ``update_node(entry_id, note=...,
     priority=..., status=...) -> (ok, message)`` is the server's locked,
     audited updater. Returns the reply text with directive lines stripped
-    and a visible confirmation appended for every applied change."""
+    and a visible confirmation appended for every applied change.
+
+    ``source_text`` is what the chat was shown about the task (its draft,
+    notes, evidence: text that came from mail, chat, tickets, documents). A
+    directive whose payload is written there is the source speaking, echoed
+    by the model, not the user asking: it is stripped and never applied."""
     applied = []
+    planted = source_directives(source_text)
     for m in _COS_ACTION_RE.finditer(output):
         try:
             d = json.loads(m.group(1))
         except ValueError:
+            continue
+        if not isinstance(d, dict) or d in planted:
             continue
         status = str(d.get("status") or "").strip().lower() or None
         if status not in DIRECTIVE_STATUSES:
