@@ -316,6 +316,8 @@ GUARDRAIL_PATHS = [
     "dashboard/learning.py",
     # pushes branches and opens PRs on approval; the no-merge rule lives here
     "dashboard/codefix.py",
+    # the OS sandbox every untrusted test run goes through
+    "dashboard/sandbox.py",
     "commands/cos-fix.md",
 ]
 GUARDRAIL_BASENAMES = ["APPROVAL_POLICY.md"]

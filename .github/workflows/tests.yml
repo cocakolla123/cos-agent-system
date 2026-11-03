@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Sandbox for untrusted test runs (dashboard/sandbox.py fails closed without it)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq bubblewrap && bwrap --version
       - name: Unit tests (stdlib only — no deps to install)
         run: python -m unittest discover -s dashboard/tests -p 'test_*.py' -v
       - name: Eval scorer/schema/stats tests (model-free; the runner itself never runs in CI)
@@ -36,7 +38,7 @@ jobs:
           dashboard/sections.py dashboard/audit.py dashboard/validate_config.py
           dashboard/preflight.py dashboard/learning.py dashboard/accounts.py
           dashboard/context_intake.py dashboard/privacy.py dashboard/publish.py
-          dashboard/codefix.py dashboard/models.py dashboard/theme.py dashboard/usage.py
+          dashboard/codefix.py dashboard/sandbox.py dashboard/models.py dashboard/theme.py dashboard/usage.py
           dashboard/approval.py dashboard/directives.py evals/injection_surfaces.py
           evals/schema.py evals/score.py evals/stats.py evals/gen_fixtures.py
           evals/run.py

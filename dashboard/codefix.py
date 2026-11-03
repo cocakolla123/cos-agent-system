@@ -8,7 +8,8 @@ user's machine:
    cut from the repo's current HEAD. The agent (``/cos-fix``) writes a test that
    reproduces the bug and the fix there. It never pushes.
 2. ``finalize(...)``: commits what the agent left, runs the repo's test command
-   itself (the agent's own claim that tests pass is not trusted), saves the diff,
+   itself inside ``sandbox.py``'s OS sandbox (the agent's own claim that tests
+   pass is not trusted, and the tests are untrusted code), saves the diff,
    and appends an approval-queue entry of action type ``code_fix`` carrying the
    branch, the diff file and the test result. A fix whose tests fail is queued as
    ``failed``, visible but not approvable.
@@ -30,6 +31,7 @@ import shlex
 import subprocess
 
 import graph
+import sandbox
 
 QUEUE_FILE = "approval-queue.md"
 FIX_DIR = "fixes"
@@ -83,10 +85,6 @@ def prepare(repo, slug, ws_dir):
     return {"repo": repo, "slug": slug, "branch": branch, "base": base, "worktree": tree}
 
 
-# what a test run inherits from the environment: enough to find tools, never
-# the keys and tokens the dashboard or the user's shell may hold
-TEST_ENV_KEEP = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TERM", "PYTHONPATH",
-                 "VIRTUAL_ENV", "JAVA_HOME", "GOPATH", "GOROOT", "NODE_PATH")
 SHELLS = {"sh", "bash", "zsh", "dash", "fish", "ksh", "csh", "tcsh", "cmd", "powershell", "pwsh"}
 
 
@@ -102,15 +100,27 @@ def test_argv(test_cmd):
     return argv
 
 
+# exit codes for a test run that did not complete: the card is queued as
+# failed, with the reason as its summary
+EXIT_NO_SANDBOX = 126
+EXIT_TIMEOUT = 124
+
+
 def run_tests(tree, test_cmd, timeout=900):
     """Run the repo's test command in the worktree. Returns (exit_code, tail).
 
-    Not a sandbox: the tests run as the user, with file and network access.
-    What this does guarantee is no shell parsing of the command and no
-    credentials in the environment it runs with."""
-    env = {k: v for k, v in os.environ.items() if k in TEST_ENV_KEEP}
-    p = subprocess.run(test_argv(test_cmd), cwd=tree, shell=False, capture_output=True,
-                       text=True, timeout=timeout, env=env)
+    The tests are the repo's code plus the agent's patch, so they run inside
+    ``sandbox.run``: no network, no reads outside the worktree and the
+    toolchain (no home directory, no dashboard secrets), no writes outside the
+    worktree and a temp dir, no credentials in the environment, and a hard
+    timeout. Without an OS sandbox they are not run at all (EXIT_NO_SANDBOX)."""
+    argv = test_argv(test_cmd)
+    try:
+        p = sandbox.run(argv, tree, timeout=timeout)
+    except sandbox.SandboxUnavailable as exc:
+        return EXIT_NO_SANDBOX, "tests not run: %s" % exc
+    except sandbox.SandboxTimeout as exc:
+        return EXIT_TIMEOUT, "tests %s" % exc
     out = (p.stdout + "\n" + p.stderr).strip().splitlines()
     return p.returncode, "\n".join(out[-TEST_TAIL_LINES:])
 
@@ -127,7 +137,9 @@ def finalize(fix, test_cmd, title, body, task_id, ws_dir, base_branch="main",
     tree, branch, base = fix["worktree"], fix["branch"], fix["base"]
     if _git(tree, "status", "--porcelain"):
         _git(tree, "add", "-A")
-        _git(tree, "commit", "-q", "-m", title)
+        # no hooks: a hooks dir inside the repo is repo code too, and this
+        # commit runs outside the sandbox
+        _git(tree, "-c", "core.hooksPath=/dev/null", "commit", "-q", "--no-verify", "-m", title)
     if not _git(tree, "rev-list", "%s..HEAD" % base):
         raise FixError("no changes on %s: nothing to propose" % branch)
     diff = _git(tree, "diff", "%s...HEAD" % base)

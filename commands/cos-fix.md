@@ -28,6 +28,11 @@ merge path.
    `python3 -c "import sys; sys.path.insert(0,'dashboard'); import codefix, json; print(json.dumps(codefix.prepare('<repo>', '<short slug>', '<workspace>')))"`
    This creates a worktree under `<workspace>/fixes/<slug>` on branch `cos/fix-<slug>`.
    Do all edits there.
+   **Every test run goes through the sandbox**, never straight to the interpreter: the repo's
+   code and your patch are untrusted, so run them as
+   `python3 dashboard/sandbox.py <worktree> -- <test command>` (no network, no home directory,
+   no secrets, writes only inside the worktree). If it says no sandbox is available, stop and
+   report that; do not run the tests any other way.
 4. **Reproduce first.** Add or extend a test that fails because of the bug, run it, and keep
    its failing output. A fix with no reproducing test is not ready; if the bug cannot be
    reproduced, stop and report what you tried.
@@ -37,7 +42,7 @@ merge path.
 6. **Run the whole test command** in the worktree until it passes. If something unrelated is
    already failing on the base commit, say so in the PR body instead of "fixing" it.
 7. **Queue it** with `codefix.finalize(fix, test_cmd, title, body, task_id, workspace)`. It
-   commits, re-runs the tests itself, saves the diff and adds a `code_fix` card to
+   commits, re-runs the tests itself in the same sandbox, saves the diff and adds a `code_fix` card to
    `approval-queue.md`. Write the PR `title` as the change ("Fix add() returning a - b") and
    the `body` as: the bug, the cause, the fix, and the test that now covers it. If the
    system's own test run fails, the card is queued as `failed` and cannot be approved.
